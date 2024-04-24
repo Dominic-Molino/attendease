@@ -1,1 +1,73 @@
-<p>login works!</p>
+<section class="bg-white-alice_blue w-full h-screen">
+  <div
+    class="flex max-md:flex-col-reverse flex-row justify-center items-center h-screen w-full gap-5 px-52 relative z-20 max-sm:p-1"
+  >
+    <!-- form -->
+    <div class="w-1/2">
+      <h1
+        class="max-sm:flex max-sm:justify-center md:text-center font-primary font-bold mb-5 text-2xl text-nowrap"
+      >
+        Welcome <span class="text-green-500">Gcians!</span>
+      </h1>
+      <form class="max-w-sm mx-auto sm:w-full">
+        <!-- email -->
+        <div class="relative z-0 w-full mb-5 group">
+          <input
+            type="email"
+            name="email"
+            id="email"
+            class="block px-0 w-full text-sm text-black-rich_black bg-transparent border-0 border-b-2 border-green-400 appearance-non focus:outline-none focus:ring-0 focus:border-green-500 peer rounded-sm"
+            placeholder=""
+          />
+          <label
+            for="email"
+            class="text-nowrap peer-focus:font-medium font-primary absolute text-sm text-black-rich_black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-black-midnight_blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >Student email</label
+          >
+        </div>
+
+        <!-- password -->
+        <div class="relative z-0 w-full mb-5 group">
+          <input
+            type="password"
+            name="password"
+            id="password"
+            class="block py-2.5 px-0 w-full text-sm text-black-rich_black bg-transparent border-0 border-b-2 border-green-400 appearance-non focus:outline-none focus:ring-0 focus:border-green-500 peer rounded-sm"
+            placeholder=""
+          />
+          <label
+            for="password"
+            class="peer-focus:font-medium font-primary absolute text-sm text-black-rich_black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-black-midnight_blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >Password</label
+          >
+        </div>
+
+        <div class="flex w-full justify-center">
+          <button
+            type="submit"
+            class="text-white-gainsboro mx-auto block md:w-[50%] bg-green-500 hover:bg-green-600 focus:outline-none font-medium rounded-xl text-sm sm:w-auto px-5 py-2.5 text-center"
+          >
+            Login
+          </button>
+        </div>
+
+        <div class="my-5">
+          <p class="text-center text-sm py-0 font-primary">
+            Don't have an account?
+            <a
+              class="text-green-meduim_sea_green font-semibold hover:text-green-forest_green focus:text-green-sea_green"
+              routerLink="/signup"
+              >Signup here</a
+            >
+          </p>
+        </div>
+      </form>
+    </div>
+
+    <div class="sm:mx-auto">
+      <h1 class="text-center text-4xl font-primary font-bold">
+        Attend<span class="text-green-400">Ease</span>
+      </h1>
+    </div>
+  </div>
+</section>
