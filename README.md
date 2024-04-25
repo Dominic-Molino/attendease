@@ -11,4 +11,5 @@
 ### Backed Developer:
 
 - Neon John Quiroz
+-  Dominic L. Molino
 - Bernard Benedicto
