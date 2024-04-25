@@ -1,0 +1,40 @@
+{
+  "user": [
+    {
+      "id": "92ae",
+      "firstName": "dom",
+      "lastName": "molio",
+      "course": "bscs",
+      "yearLevel": "2",
+      "email": "2022298@gmail.com",
+      "password": "hades2801"
+    },
+    {
+      "id": "e962",
+      "firstName": "dominic ",
+      "lastName": "molino",
+      "course": "BSCS ",
+      "yearLevel": "2",
+      "email": "202210298@gordoncollege.edu.ph",
+      "password": "chunchunmaru28"
+    },
+    {
+      "id": "87fa",
+      "firstName": "Denzel",
+      "lastName": "Perez",
+      "course": "BSCS",
+      "yearLevel": "2",
+      "email": "202219@gordoncollege.edu.ph",
+      "password": "12345678"
+    },
+    {
+      "id": "bab2",
+      "firstName": "dominic",
+      "lastName": "molino",
+      "course": "bscs",
+      "yearLevel": "2",
+      "email": "dommolino28@gmail.com",
+      "password": "hades2801"
+    }
+  ]
+}

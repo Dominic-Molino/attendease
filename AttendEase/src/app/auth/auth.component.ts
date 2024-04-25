@@ -1,15 +1,17 @@
-import { isPlatformBrowser } from '@angular/common';
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { LoginComponent } from './pages/login/login.component';
 import { RouterOutlet } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 import { initFlowbite } from 'flowbite';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-auth',
   standalone: true,
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
+  imports: [LoginComponent, RouterOutlet],
+  templateUrl: './auth.component.html',
+  styleUrl: './auth.component.css',
 })
-export class AppComponent {
+export class AuthComponent {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   ngOnInit(): void {

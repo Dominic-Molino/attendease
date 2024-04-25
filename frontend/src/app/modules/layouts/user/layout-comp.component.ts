@@ -7,7 +7,6 @@ import { AttendanceComponent } from './pages/attendance/attendance.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { EventsComponent } from './pages/events/events.component';
 import { FeedbackComponent } from './pages/feedback/feedback.component';
-import { userInfo } from 'os';
 import { UserComponent } from './pages/user/user.component';
 
 @Component({
