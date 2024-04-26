@@ -1,4 +1,4 @@
-<section class="bg-white-alice_blue w-full h-screen">
+<section class="w-full h-screen">
   <div
     class="flex max-md:flex-col-reverse flex-row justify-center items-center h-screen w-full gap-5 px-52 relative z-20 max-sm:p-1"
   >
@@ -20,7 +20,7 @@
           <div class="grid md:grid-cols-2 md:gap-6">
             <div class="relative z-0 w-full mb-5 group">
               <input
-                formControlName="firstName"
+                formControlName="first_name"
                 type="text"
                 name="firstName"
                 id="firstName"
@@ -37,7 +37,7 @@
             <!-- last name -->
             <div class="relative z-0 w-full mb-5 group">
               <input
-                formControlName="lastName"
+                formControlName="last_name"
                 type="text"
                 name="lastName"
                 id="lastName"
@@ -53,20 +53,37 @@
           </div>
 
           <!-- block/course -->
-          <div class="relative z-0 w-1/2 mb-5 group">
-            <input
-              formControlName="yearLevel"
-              type="text"
-              name="yearLevel"
-              id="yearLevel"
-              class="block px-0 w-full text-sm text-black-rich_black bg-transparent border-0 border-b-2 border-green-400 appearance-non focus:outline-none focus:ring-0 focus:border-green-500 peer rounded-sm"
-              placeholder=""
-            />
-            <label
-              for="yearLevel"
-              class="text-nowrap peer-focus:font-medium font-primary absolute text-sm text-black-rich_black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-black-midnight_blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Year Level</label
-            >
+          <div class="grid md:grid-cols-2 md:gap-6">
+            <div class="relative z-0 w-full mb-5 group">
+              <input
+                formControlName="year_level"
+                type="text"
+                name="yearLevel"
+                id="yearLevel"
+                class="block px-0 w-full text-sm text-black-rich_black bg-transparent border-0 border-b-2 border-green-400 appearance-non focus:outline-none focus:ring-0 focus:border-green-500 peer rounded-sm"
+                placeholder=""
+              />
+              <label
+                for="yearLevel"
+                class="text-nowrap peer-focus:font-medium font-primary absolute text-sm text-black-rich_black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-black-midnight_blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >Year Level</label
+              >
+            </div>
+            <div class="relative z-0 w-full mb-5 group">
+              <input
+                formControlName="student_block"
+                type="text"
+                name="block"
+                id="block"
+                class="block px-0 w-full text-sm text-black-rich_black bg-transparent border-0 border-b-2 border-green-400 appearance-non focus:outline-none focus:ring-0 focus:border-green-500 peer rounded-sm"
+                placeholder=""
+              />
+              <label
+                for="block"
+                class="text-nowrap peer-focus:font-medium font-primary absolute text-sm text-black-rich_black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-black-midnight_blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >Block</label
+              >
+            </div>
           </div>
           <div class="relative z-0 w-1/2 mb-5 group">
             <input
@@ -103,7 +120,7 @@
           <!-- password -->
           <div class="relative z-0 w-full mb-5 group">
             <input
-              formControlName="password"
+              formControlName="pwd"
               type="password"
               name="password"
               id="password"

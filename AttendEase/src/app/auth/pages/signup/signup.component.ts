@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthserviceService } from '../../../service/authservice.service';
+import { AuthserviceService } from '../../../core/service/authservice.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -12,34 +12,39 @@ import Swal from 'sweetalert2';
   styleUrl: './signup.component.css',
 })
 export class SignupComponent {
-  builder = inject(FormBuilder);
-  constructor(private service: AuthserviceService, private router: Router) {}
+  constructor(
+    private builder: FormBuilder,
+    private service: AuthserviceService,
+    private router: Router
+  ) {}
 
   formBuilder = this.builder.group({
-    firstName: [null, Validators.required],
-    lastName: [null, Validators.required],
-    course: [null, Validators.required],
-    yearLevel: [null, Validators.required],
-    email: [null, [Validators.email, Validators.required]],
-    password: [null, Validators.required],
+    first_name: this.builder.control('', Validators.required),
+    last_name: this.builder.control('', Validators.required),
+    year_level: this.builder.control('', Validators.required),
+    student_block: this.builder.control('', Validators.required),
+    course: this.builder.control('', Validators.required),
+    email: this.builder.control(
+      '',
+      Validators.compose([Validators.required, Validators.email])
+    ),
+    pwd: this.builder.control('', Validators.required),
   });
 
   registerStudent(): void {
     if (this.formBuilder.valid) {
       this.service.registerStudent(this.formBuilder.value).subscribe(
         (res) => {
+          Swal.fire('Success', 'Registration Success', 'success');
           this.router.navigate(['login']);
-          Swal.fire('Success', 'Registration successful', 'success');
         },
         (error) => {
-          Swal.fire('Error', 'Registration failed', 'error');
+          console.error('Registration failed:', error);
+          Swal.fire('Error', 'Registration Failed', 'error');
         }
       );
     } else {
-      console.log('Form is invalid. Form control errors:');
-      Object.keys(this.formBuilder.controls).forEach((key) => {
-        Swal.fire('Form is Invalid', 'Please try again', 'warning');
-      });
+      Swal.fire('Form is Invalid', 'Please try again', 'warning');
     }
   }
 }

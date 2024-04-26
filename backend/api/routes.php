@@ -7,21 +7,21 @@ require_once "./modules/get.php";
 require_once "./modules/post.php";
 require_once "./config/database.php";
 
+
+$connection = new Connection();
+$pdo = $connection->connect();
+$get = new Get($pdo);
+$post = new Post($pdo);
+
 // Check if 'request' parameter is set in the request
 if (isset($_REQUEST['request'])) {
     // Split the request into an array based on '/'
     $request = explode('/', $_REQUEST['request']);
 } else {
     // If 'request' parameter is not set, return a 404 response
-    echo json_encode(["error" => "Not Found"]);
+    echo "Not Found";
     http_response_code(404);
-    exit();
 }
-
-$connection = new Connection();
-$pdo = $connection->connect();
-$get = new Get($pdo);
-$post = new Post($pdo);
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'OPTIONS':
@@ -30,44 +30,53 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
     case 'GET':
         switch ($request[0]) {
-            case 'users':
-                echo json_encode($get->get_User());
-                break;
-            case 'user':
-                echo json_encode($get->get_UserID($request[1]));
-                break;
-            case 'event':
-                echo json_encode($get->get_events($request[1]));
-                break;
-            case "events":
-                echo json_encode($get->get_AllEvents());
-                break;
+                // case 'users':
+                //     echo json_encode($get->get_User());
+                //     break;
+                // case 'user':
+                //     echo json_encode($get->get_UserID($request[1]));
+                //     break;
+                // case 'event':
+                //     echo json_encode($get->get_events($request[1]));
+                //     break;
+                // case "events":
+                //     echo json_encode($get->get_AllEvents());
+                //     break;
             default:
-                echo json_encode(["error" => "Endpoint Not Found"]);
+                echo "This is forbidden";
                 http_response_code(404);
-                exit();
+                break;
         }
+        break;
     case 'POST':
         $data = json_decode(file_get_contents("php://input"));
         switch ($request[0]) {
-            case 'adduser':
-                echo json_encode($post->addUser($data));
+            case 'addstudent':
+                echo json_encode($post->addStudent($data));
                 break;
-            case 'edituser':
-                echo json_encode($post->editUser($data, $request[1]));
+            case 'loginstudent':
+                echo json_encode($post->loginStudent($data));
                 break;
-            case 'addevent':
-                echo json_encode($post->addEvent($data));
-                break;
-            case 'editevent':
-                echo json_encode($post->editEvent($data, $request[1]));
-                break;
-            case 'deleteevent':
-                echo json_encode($post->deleteEvent($request[1]));
-                break;
+                // case 'edituser':
+                //     echo json_encode($post->editUser($data, $request[1]));
+                //     break;
+                // case 'addevent':
+                //     echo json_encode($post->addEvent($data));
+                //     break;
+                // case 'editevent' :
+                //     echo json_encode($post->editEvent($data, $request[1]));
+                //     break;
+                // case 'deleteevent':
+                //     echo json_encode($post->deleteEvent($request[1]));
+                //     break;
             default:
-                echo "Method not available";
+                echo json_encode(["error" => "Endpoint Not Found"]);
                 http_response_code(404);
                 break;
         }
+        break;
+    default:
+        echo "Method not available";
+        http_response_code(404);
+        break;
 }

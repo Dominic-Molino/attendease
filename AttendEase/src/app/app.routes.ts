@@ -26,7 +26,7 @@ export const routes: Routes = [
   },
 
   {
-    path: 'user',
+    path: 'student',
     component: UserComponent,
     children: [
       {

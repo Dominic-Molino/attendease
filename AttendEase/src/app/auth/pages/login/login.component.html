@@ -1,4 +1,4 @@
-<section class="bg-white-alice_blue w-full h-screen">
+<section class="w-full h-screen">
   <div
     class="flex max-md:flex-col-reverse flex-row justify-center items-center h-screen w-full gap-5 px-52 relative z-20 max-sm:p-1"
   >
@@ -11,7 +11,7 @@
       </h1>
       <form
         [formGroup]="formBuilder"
-        (ngSubmit)="onLogin()"
+        (ngSubmit)="(loginStudent)"
         class="max-w-sm mx-auto sm:w-full"
       >
         <!-- email -->
@@ -34,7 +34,7 @@
         <!-- password -->
         <div class="relative z-0 w-full mb-5 group">
           <input
-            formControlName="password"
+            formControlName="pwd"
             type="password"
             name="password"
             id="password"
