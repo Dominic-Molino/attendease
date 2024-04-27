@@ -1,34 +1,249 @@
 <main class="!scroll-smooth w-full h-screen">
   <div class="p-4 sm:ml-64">
-    <div class="container -my-6 md:-my-4 sm:mt-5 p -4">
-      <div
-        class="flex items-center justify-center min-h-screen container mx-auto"
-      >
+    <div class="container sm:mt-16">
+      <section class="flex items-center mt-14 flex-col">
+        <header class="flex flex-row justify-start items-end w-full mb-4">
+          <div>
+            <div class="flex flex-row justify-start items-center">
+              <span class="me-1 font-primary text-2xl font-bold tracking-wide"
+                >Upcoming and Latest Events</span
+              >
+            </div>
+          </div>
+        </header>
+        <!-- latest -->
+        <div class="flex justify-start w-full items-center mb-2">
+          <h3 class="text-base font-secondary font-medium">Latest Event</h3>
+        </div>
+        <div class="rounded-xl border-2 shadow-lg container">
+          <div
+            class="p-3.5 flex flex-col lg:flex-row w-full items-center relative"
+          >
+            <div class="rounded-md md:w-1/2">
+              <img
+                src="../../../../../assets/images/gojo.jpg"
+                alt="fetch images"
+                class="block h-full w-full rounded-md object-cover object-center"
+              />
+            </div>
+            <div class="p-5 w-full lg:w-1/2 pr-3">
+              <div class="mb-5">
+                <h1
+                  class="overflow-hidden text-ellipsis text-2xl md:text-2xl font-medium mt-3 font-primary"
+                >
+                  {{ events.eventName }}
+                </h1>
+                <div class="flex items-center">
+                  <svg
+                    class="w-6 h-6 inline flex-shrink-0 text-gray-800 dark:text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
+                    />
+                  </svg>
+                  <span class="ms-2 font-primary">{{ events.eventDate }}</span>
+                </div>
+              </div>
+              <p
+                class="leading-tight text-base overflow-hidden whitespace-pre-line text-ellipsis text-slate-500"
+              >
+                {{ truncateDescription(events.eventDesc, maxChar) }}
+              </p>
+              <button
+                class="border border-gray-400 shadow-sm rounded-full py-2 px-6 relative -bottom-3.5"
+              >
+                Read More
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- other -->
+        <div class="flex justify-start w-full items-center mt-5 mb-2">
+          <h3 class="text-base font-secondary font-medium">Other Events</h3>
+        </div>
+        <!-- grid cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          <!-- cards -->
-          <div class="rounded-xl border-2 shadow-lg">
-            <div class="p-5 flex flex-col">
-              <div class="rounded-xl overflow-hidden">
+          <div class="rounded-xl border-2 shadow-lg container mb-5">
+            <div class="p-3.5 flex flex-col">
+              <div class="rounded-md overflow-hidden">
                 <img
                   src="../../../../../assets/images/gojo.jpg"
                   alt="Event Image"
                 />
               </div>
-              <h5 class="text-xl md:text-2xl font-medium mt-3 font-primary">
+              <h5 class="text-xl md:text-xl font-medium mt-3 font-primary">
                 {{ events.eventName }}
               </h5>
-              <p class="text-slate-500 text-base mt-3 font-secondary">
+              <p class="text-slate-500 text-sm mt-3 font-secondary">
                 {{ truncateDescription(events.eventDesc, maxChar) }}
               </p>
-              <a
+              <!-- <a
                 href="#"
                 class="text-center bg-blue-400 text-blue-700 tracking-wide py-2 rounded-lg font-semibold mt-4 hover:text-white-alice_blue hover:bg-blue-300 focus:scale-95transition-allduration-200ease-out"
                 >Read More</a
-              >
+              > -->
+              <div class="flex w-full justify-start items-center">
+                <button
+                  class="mb-4 border border-gray-400 shadow-sm rounded-full py-2 px-6 relative -bottom-3.5"
+                >
+                  Read More
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="rounded-xl border-2 shadow-lg container mb-5">
+            <div class="p-3.5 flex flex-col">
+              <div class="rounded-md overflow-hidden">
+                <img
+                  src="../../../../../assets/images/gojo.jpg"
+                  alt="Event Image"
+                />
+              </div>
+              <h5 class="text-xl md:text-xl font-medium mt-3 font-primary">
+                {{ events.eventName }}
+              </h5>
+              <p class="text-slate-500 text-sm mt-3 font-secondary">
+                {{ truncateDescription(events.eventDesc, maxChar) }}
+              </p>
+              <!-- <a
+                href="#"
+                class="text-center bg-blue-400 text-blue-700 tracking-wide py-2 rounded-lg font-semibold mt-4 hover:text-white-alice_blue hover:bg-blue-300 focus:scale-95transition-allduration-200ease-out"
+                >Read More</a
+              > -->
+              <div class="flex w-full justify-start items-center">
+                <button
+                  class="mb-4 border border-gray-400 shadow-sm rounded-full py-2 px-6 relative -bottom-3.5"
+                >
+                  Read More
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="rounded-xl border-2 shadow-lg container mb-5">
+            <div class="p-3.5 flex flex-col">
+              <div class="rounded-md overflow-hidden">
+                <img
+                  src="../../../../../assets/images/gojo.jpg"
+                  alt="Event Image"
+                />
+              </div>
+              <h5 class="text-xl md:text-xl font-medium mt-3 font-primary">
+                {{ events.eventName }}
+              </h5>
+              <p class="text-slate-500 text-sm mt-3 font-secondary">
+                {{ truncateDescription(events.eventDesc, maxChar) }}
+              </p>
+              <!-- <a
+                href="#"
+                class="text-center bg-blue-400 text-blue-700 tracking-wide py-2 rounded-lg font-semibold mt-4 hover:text-white-alice_blue hover:bg-blue-300 focus:scale-95transition-allduration-200ease-out"
+                >Read More</a
+              > -->
+              <div class="flex w-full justify-start items-center">
+                <button
+                  class="mb-4 border border-gray-400 shadow-sm rounded-full py-2 px-6 relative -bottom-3.5"
+                >
+                  Read More
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="rounded-xl border-2 shadow-lg container mb-5">
+            <div class="p-3.5 flex flex-col">
+              <div class="rounded-md overflow-hidden">
+                <img
+                  src="../../../../../assets/images/gojo.jpg"
+                  alt="Event Image"
+                />
+              </div>
+              <h5 class="text-xl md:text-xl font-medium mt-3 font-primary">
+                {{ events.eventName }}
+              </h5>
+              <p class="text-slate-500 text-sm mt-3 font-secondary">
+                {{ truncateDescription(events.eventDesc, maxChar) }}
+              </p>
+              <!-- <a
+                href="#"
+                class="text-center bg-blue-400 text-blue-700 tracking-wide py-2 rounded-lg font-semibold mt-4 hover:text-white-alice_blue hover:bg-blue-300 focus:scale-95transition-allduration-200ease-out"
+                >Read More</a
+              > -->
+              <div class="flex w-full justify-start items-center">
+                <button
+                  class="mb-4 border border-gray-400 shadow-sm rounded-full py-2 px-6 relative -bottom-3.5"
+                >
+                  Read More
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="rounded-xl border-2 shadow-lg container mb-5">
+            <div class="p-3.5 flex flex-col">
+              <div class="rounded-md overflow-hidden">
+                <img
+                  src="../../../../../assets/images/gojo.jpg"
+                  alt="Event Image"
+                />
+              </div>
+              <h5 class="text-xl md:text-xl font-medium mt-3 font-primary">
+                {{ events.eventName }}
+              </h5>
+              <p class="text-slate-500 text-sm mt-3 font-secondary">
+                {{ truncateDescription(events.eventDesc, maxChar) }}
+              </p>
+              <!-- <a
+                href="#"
+                class="text-center bg-blue-400 text-blue-700 tracking-wide py-2 rounded-lg font-semibold mt-4 hover:text-white-alice_blue hover:bg-blue-300 focus:scale-95transition-allduration-200ease-out"
+                >Read More</a
+              > -->
+              <div class="flex w-full justify-start items-center">
+                <button
+                  class="mb-4 border border-gray-400 shadow-sm rounded-full py-2 px-6 relative -bottom-3.5"
+                >
+                  Read More
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="rounded-xl border-2 shadow-lg container mb-5">
+            <div class="p-3.5 flex flex-col">
+              <div class="rounded-md overflow-hidden">
+                <img
+                  src="../../../../../assets/images/gojo.jpg"
+                  alt="Event Image"
+                />
+              </div>
+              <h5 class="text-xl md:text-xl font-medium mt-3 font-primary">
+                {{ events.eventName }}
+              </h5>
+              <p class="text-slate-500 text-sm mt-3 font-secondary">
+                {{ truncateDescription(events.eventDesc, maxChar) }}
+              </p>
+              <!-- <a
+                href="#"
+                class="text-center bg-blue-400 text-blue-700 tracking-wide py-2 rounded-lg font-semibold mt-4 hover:text-white-alice_blue hover:bg-blue-300 focus:scale-95transition-allduration-200ease-out"
+                >Read More</a
+              > -->
+              <div class="flex w-full justify-start items-center">
+                <button
+                  class="mb-4 border border-gray-400 shadow-sm rounded-full py-2 px-6 relative -bottom-3.5"
+                >
+                  Read More
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   </div>
 </main>

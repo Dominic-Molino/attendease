@@ -51,9 +51,28 @@ class Get extends GlobalMethods
         return $this->getRecords('students', $conditions);
     }
 
-    public function getStudentId($student_id = null)
+    public function getLoggedinStudent($token)
     {
-        $conditions = ($student_id !== null) ? "student_id=$student_id" : null;
-        return $this->getRecords('students', $conditions);
+        if (isset($_SESSION['token']) && $_SESSION['token'] === $token) {
+            $student_id = $_SESSION['student_id'];
+            return $this->getStudentData($student_id);
+        } else {
+            return null;
+        }
+    }
+
+    public function getAllEvents()
+    {
+        return $this->getRecords('events');
+    }
+
+    public function getStudentData($student_id)
+    {
+        $sql = "SELECT * FROM students WHERE student_id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$student_id]);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $data;
     }
 }

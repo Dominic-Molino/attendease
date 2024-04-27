@@ -1,1 +1,12 @@
-<main class="!scroll-smooth w-full h-screen"></main>
+<main class="!scroll-smooth w-full h-screen">
+  <div class="p-4 mt-16 sm:ml-64">
+    <div class="w-1/2 shadow-lg rounded-md p-10">
+      <full-calendar *ngIf="calendarVisible()" [options]="calendarOptions()">
+        <ng-template #eventContent let-arg>
+          <b>{{ arg.timeText }}</b>
+          <i>{{ arg.event.title }}</i>
+        </ng-template>
+      </full-calendar>
+    </div>
+  </div>
+</main>

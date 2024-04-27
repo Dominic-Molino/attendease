@@ -12,10 +12,14 @@ import { AuthserviceService } from '../../../../core/service/authservice.service
   styleUrl: './profile.component.css',
 })
 export class ProfileComponent implements OnInit {
-  studentData: any[] = [];
+  studentData: any;
   constructor(private dialog: MatDialog, private service: AuthserviceService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.service.getStudent().subscribe((res) => {
+      console.log(res);
+    });
+  }
 
   openEditInfo() {
     this.dialog.open(EditComponent, {

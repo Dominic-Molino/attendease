@@ -17,6 +17,7 @@ module.exports = {
           rich_black: "#020d19",
           dark_green: "#2C3539",
         },
+        main: "4F6F52",
       },
       backgroundColor: {
         white: {
@@ -26,6 +27,9 @@ module.exports = {
         black: {
           charcoal_gray: "#171717",
           rich_black: "#020d19",
+        },
+        main: {
+          dark: "#4F6F52",
         },
       },
       fontFamily: {

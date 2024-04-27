@@ -44,8 +44,8 @@ class Post extends GlobalMethods
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
-            if (password_verify($password, $user['pwd'])) {
-                return $this->sendPayload(null, 'success', 'Login successful', 200);
+            if ($password == $user['pwd']) {
+                return $this->sendPayload(['student_id' => $user['student_id']], 'success', 'Login successful', 200);
             } else {
                 return $this->sendPayload(null, 'failed', 'Incorrect password', 401);
             }

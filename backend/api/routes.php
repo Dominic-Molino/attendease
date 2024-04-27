@@ -1,12 +1,14 @@
 <?php
 header("Access-Control-Allow-Origin: http://localhost:4200");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
 
 require_once "./modules/get.php";
 require_once "./modules/post.php";
 require_once "./config/database.php";
 
+session_start();
 
 $connection = new Connection();
 $pdo = $connection->connect();
@@ -30,18 +32,36 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
     case 'GET':
         switch ($request[0]) {
+            case 'getstudent':
+                $token = $_SESSION['token'] ?? null;
+                if (!$token) {
+                    echo json_encode(["error" => "Token not found in session storage"]);
+                    http_response_code(404);
+                    break;
+                } else {
+                    echo json_encode($get->getLoggedinStudent($token));
+                    break;
+                }
+                break;
                 // case 'users':
-                //     echo json_encode($get->get_User());
+                //     echo json_encode($get->getStudentData($request[1]));
                 //     break;
-                // case 'user':
-                //     echo json_encode($get->get_UserID($request[1]));
-                //     break;
+                // case 'getstudentdata':
+                //     $student_id = $_SESSION['student_id'] ?? null;
+                //     if (!$student_id) {
+                //         echo json_encode(["error" => "Student ID not found in session storage"]);
+                //         http_response_code(404);
+                //         break;
+                //     } else {
+                //         echo json_encode($get->getStudentData($student_id));
+                //         break;
+                //     }
                 // case 'event':
                 //     echo json_encode($get->get_events($request[1]));
                 //     break;
-                // case "events":
-                //     echo json_encode($get->get_AllEvents());
-                //     break;
+            case "events":
+                echo json_encode($get->getAllEvents());
+                break;
             default:
                 echo "This is forbidden";
                 http_response_code(404);
