@@ -15,17 +15,9 @@ export class ProfileComponent implements OnInit {
   studentData: any;
   constructor(private dialog: MatDialog, private service: AuthserviceService) {}
 
-  ngOnInit(): void {
-    this.service.getStudent().subscribe((res) => {
-      console.log(res);
-    });
-  }
+  ngOnInit(): void {}
 
   openEditInfo() {
-    this.dialog.open(EditComponent, {
-      enterAnimationDuration: '1000ms',
-      exitAnimationDuration: '500ms',
-      width: '50%',
-    });
+    this.dialog.open(EditComponent);
   }
 }

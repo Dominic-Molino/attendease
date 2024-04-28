@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Pipe,
+  signal,
+} from '@angular/core';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import {
   CalendarOptions,
@@ -92,4 +98,19 @@ export class DashboardComponent implements OnInit {
     this.currentEvents.set(events);
     this.changeDetector.detectChanges(); // workaround for pressionChangedAfterItHasBeenCheckedError
   }
+
+  events: Events = {
+    eventName: 'Broken Covenant Riven Release!',
+    eventDate: 'March 9, 2023',
+    eventDesc:
+      'New skinline, Broken Covenant is no available for purchase in league of legends store! This batch of skins features a Legendary skin for Riven, a Prestige skin for Miss Fortune as well as a full set of Epic skins! All non-prestige skins are sold separately or as a bundle with border & Icon! All chomas can also be bought together or separate!',
+    eventStats: 'upcoming',
+  };
+}
+
+export interface Events {
+  eventName: string;
+  eventDate: string;
+  eventDesc: string;
+  eventStats: string;
 }

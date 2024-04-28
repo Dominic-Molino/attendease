@@ -1,12 +1,102 @@
 <main class="!scroll-smooth w-full h-screen">
   <div class="p-4 mt-16 sm:ml-64">
-    <div class="w-1/2 shadow-lg rounded-md p-10">
-      <full-calendar *ngIf="calendarVisible()" [options]="calendarOptions()">
-        <ng-template #eventContent let-arg>
-          <b>{{ arg.timeText }}</b>
-          <i>{{ arg.event.title }}</i>
-        </ng-template>
-      </full-calendar>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div class="lg:w-full shadow-lg rounded-md p-10">
+        <full-calendar
+          *ngIf="calendarVisible()"
+          [options]="calendarOptions()"
+          class="rounded-lg"
+        >
+          <ng-template #eventContent let-arg>
+            <b>{{ arg.timeText }}</b>
+            <i>{{ arg.event.title }}</i>
+          </ng-template>
+        </full-calendar>
+      </div>
+
+      <div class="grid-col-2 grid-flow-row">
+        <div
+          class="max-w-full h-2/3 p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
+        >
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center">
+              <span
+                class="text-xl me-1 font-bold leading-none text-gray-900 dark:text-white"
+              >
+                Events
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
+                />
+              </svg>
+            </div>
+
+            <a
+              href="#"
+              class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
+            >
+              View all
+            </a>
+          </div>
+          <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table
+              class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+            >
+              <!-- header -->
+              <thead
+                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+              >
+                <tr>
+                  <th scope="col" class="px-6 py-3">Event Name</th>
+                  <th scope="col" class="px-6 py-3">Date</th>
+                  <th scope="col" class="px-6 py-3">Status</th>
+                </tr>
+              </thead>
+              <!-- body -->
+              <tbody>
+                <tr
+                  class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                >
+                  <td
+                    scope="row"
+                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    {{ events.eventName }}
+                  </td>
+                  <td class="px-6 py-4">{{ events.eventDate }}</td>
+                  <td class="px-6 py-4">{{ events.eventStats }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="mt-2.5">
+          <a
+            href="#"
+            class="block max-w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+          >
+            <h5
+              class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+            >
+              Noteworthy technology acquisitions 2021
+            </h5>
+            <p class="font-normal text-gray-700 dark:text-gray-400">
+              Here are the biggest enterprise technology acquisitions of 2021 so
+              far, in reverse chronological order.
+            </p>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </main>
