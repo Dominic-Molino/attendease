@@ -10,6 +10,9 @@ import { initFlowbite } from 'flowbite';
   templateUrl: './app.component.html',
 })
 export class AppComponent {
+  title(title: any) {
+    throw new Error('Method not implemented.');
+  }
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   ngOnInit(): void {

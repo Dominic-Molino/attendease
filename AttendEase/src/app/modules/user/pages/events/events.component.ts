@@ -1,12 +1,21 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ReadEventComponent } from '../../../organizer/components/read-event/read-event.component';
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, MatDialogModule],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css',
 })
 export class EventsComponent {
+  constructor(private dialog: MatDialog) {}
+
+  viewEvent() {
+    this.dialog.open(ReadEventComponent);
+  }
+
   maxChar: number = 100;
 
   events: Events = {
