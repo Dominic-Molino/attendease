@@ -7,6 +7,10 @@ import { EventsComponent } from './modules/user/pages/events/events.component';
 import { AttendanceComponent } from './modules/user/pages/attendance/attendance.component';
 import { FeedbackComponent } from './modules/user/pages/feedback/feedback.component';
 import { ProfileComponent } from './modules/user/pages/profile/profile.component';
+import { OrganizerComponent } from './modules/organizer/organizer.component';
+import { OrgDashboardComponent } from './modules/organizer/pages/org-dashboard/org-dashboard.component';
+import { EventManager } from '@angular/platform-browser';
+import { OrgEventComponent } from './modules/organizer/pages/org-event/org-event.component';
 
 export const routes: Routes = [
   {
@@ -57,6 +61,16 @@ export const routes: Routes = [
         path: 'feedback',
         component: FeedbackComponent,
       },
+    ],
+  },
+
+  {
+    path: 'organizer',
+    component: OrganizerComponent,
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: OrgDashboardComponent },
+      { path: 'events', component: OrgEventComponent },
     ],
   },
 ];

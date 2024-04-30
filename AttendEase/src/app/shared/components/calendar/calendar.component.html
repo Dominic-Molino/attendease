@@ -1,0 +1,10 @@
+<full-calendar
+  *ngIf="calendarVisible()"
+  [options]="calendarOptions()"
+  class="rounded-lg"
+>
+  <ng-template #eventContent let-arg>
+    <b>{{ arg.timeText }}</b>
+    <i>{{ arg.event.title }}</i>
+  </ng-template>
+</full-calendar>
