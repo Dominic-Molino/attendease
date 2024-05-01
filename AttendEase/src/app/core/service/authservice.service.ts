@@ -20,7 +20,7 @@ export class AuthserviceService {
   getStudentData(token: string): Observable<any> {
     const header = new HttpHeaders({
       Content: 'application/json',
-      Authorization: `Bearer ${token}`,
+      Authorization: `token ${token}`,
     });
 
     return this.http.get<any>(`${this.API_URL}getstudent`, { headers: header });

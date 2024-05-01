@@ -9,7 +9,7 @@ class GlobalMethods
         return array(
             "status" => $status,
             "payload" => $data,
-            "prepared_by" => "Dominic Molino",
+            "prepared_by" => "melon lords",
             "timestamp" => date_create()
         );
     }

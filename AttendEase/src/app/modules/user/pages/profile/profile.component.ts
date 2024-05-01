@@ -13,24 +13,22 @@ import { AuthserviceService } from '../../../../core/service/authservice.service
 })
 export class ProfileComponent implements OnInit {
   studentData: any[] = [];
+  token: string | null = null;
+
   constructor(private dialog: MatDialog, private service: AuthserviceService) {}
 
   ngOnInit(): void {
+    this.token = sessionStorage.getItem('token');
     this.loadProfile();
   }
 
   loadProfile() {
-    const token = sessionStorage.getItem('token');
-    if (token) {
-      this.service.getStudentData(token).subscribe(
-        (res) => {
-          this.studentData = res.payload;
-          console.log(this.studentData);
-        },
-        (error) => {
-          console.error('Failed to fetch student data:', error);
-        }
-      );
+    if (this.token !== null) {
+      this.service.getStudentData(this.token).subscribe((res) => {
+        console.log(res.payload);
+      });
+    } else {
+      console.error('Token is null');
     }
   }
 

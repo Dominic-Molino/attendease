@@ -11,94 +11,88 @@ class Get extends GlobalMethods
         $this->pdo = $pdo;
     }
 
-
-    private function getRecords($table, $conditions = null)
+    private function get_records($table, $conditions = null)
     {
-        $sql = "SELECT * FROM $table";
-
+        $sqlStr = "SELECT * FROM $table";
         if ($conditions != null) {
-            $sql .= " WHERE " . $conditions;
+            $sqlStr = $sqlStr . " WHERE " . $conditions;
         }
-        return $this->executeQuery($sql);
+        $result = $this->executeQuery($sqlStr);
+
+        if ($result['code'] == 200) {
+            // Check if the table contains BLOB data
+            if ($table == 'submissions' && isset($result['data'][0]['file_data'])) {
+                return $this->sendPayload($result['data'], 'success', "Successfully retrieved data.", $result['code'], true);
+            } else {
+                return $this->sendPayload($result['data'], 'success', "Successfully retrieved data.", $result['code']);
+            }
+        }
+        return $this->sendPayload(null, 'failed', "Failed to retrieve data.", $result['code']);
     }
 
     private function executeQuery($sql)
     {
+        $data = array();
+        $errmsg = "";
+        $code = 0;
+
         try {
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute();
+            $statement = $this->pdo->query($sql);
+            if ($statement) {
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($result as $record) {
+                    // Handle BLOB data
+                    if (isset($record['file_data'])) {
 
-            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $rowCount = $stmt->rowCount();
-
-            if ($rowCount > 0) {
+                        $record['file_data'] = base64_encode($record['file_data']);
+                    }
+                    array_push($data, $record);
+                }
                 $code = 200;
-                return $this->sendPayload($data, 'success', "Successfully retrieved data.", 200);
+                return array("code" => $code, "data" => $data);
             } else {
-                return $this->sendPayload(null, 'failed', "No data found.", 404);
+                $errmsg = "No data found.";
+                $code = 404;
             }
-        } catch (PDOException $e) {
-            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+        } catch (\PDOException $e) {
+            $errmsg = $e->getMessage();
+            $code = 403;
         }
+        return array("code" => $code, "errmsg" => $errmsg);
     }
 
-    public function getStudent($student = null)
+    public function get_users($student_id = null)
     {
-        $conditions = null;
-        if ($student != null) {
-            $conditions = "student_id=$student";
+        $condition = null;
+        if ($student_id != null) {
+            $condition = "student_id=$student_id";
         }
-        return $this->getRecords('students', $conditions);
+        return $this->get_records('students', $condition);
     }
 
-    public function getLoggedinStudent($token)
+    public function get_student($student_id = null)
     {
-        if (isset($_SESSION['token']) && $_SESSION['token'] === $token) {
-            $student_id = $_SESSION['student_id'];
-            return $this->getStudentData($student_id);
-        } else {
-            return null;
-        }
-    }
+        $condition = ($student_id !== null) ? "student_id = $student_id" : null;
+        $result = $this->get_records('students', $condition);
 
-    public function getAllEvents()
-    {
-        return $this->getRecords('events');
-    }
-
-    public function getStudentData($student_id)
-    {
-        $sql = "SELECT * FROM students WHERE student_id = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$student_id]);
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $data;
-    }
-
-    public function getStudentInfo()
-    {
-        // Check if token exists in session storage
-        if (isset($_SESSION['token'])) {
-            // Retrieve token from session storage  
-            $token = $_SESSION['token'];
-
-            // Retrieve student information based on the token (assuming token is the student's ID)
-            $sql = "SELECT * FROM students WHERE student_id = ?";
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$token]); // Assuming token is the student ID
-            $student = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($student) {
-                // Student authenticated, return student information
-                return $this->sendPayload($student, 'success', 'Student information retrieved', 200);
+        if ($result['status']['remarks'] === 'success') {
+            $payloadData = $result['payload'];
+            if (is_array($payloadData)) {
+                return $payloadData;
             } else {
-                // Student not found, return error response
-                return $this->sendPayload(null, 'failed', 'Unauthorized', 401);
+                return array();
             }
         } else {
-            // Token not found in session storage, return error response
-            return $this->sendPayload(null, 'failed', 'Unauthorized', 401);
+            return array();
         }
+    }
+
+    public function get_events($event_id = null)
+    {
+        $condition = null;
+        if ($event_id != null) {
+            $condition = "event_id=$event_id";
+        }
+        return $this->get_records('events', $condition);
     }
 }
