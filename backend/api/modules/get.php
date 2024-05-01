@@ -75,4 +75,30 @@ class Get extends GlobalMethods
 
         return $data;
     }
+
+    public function getStudentInfo()
+    {
+        // Check if token exists in session storage
+        if (isset($_SESSION['token'])) {
+            // Retrieve token from session storage  
+            $token = $_SESSION['token'];
+
+            // Retrieve student information based on the token (assuming token is the student's ID)
+            $sql = "SELECT * FROM students WHERE student_id = ?";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$token]); // Assuming token is the student ID
+            $student = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($student) {
+                // Student authenticated, return student information
+                return $this->sendPayload($student, 'success', 'Student information retrieved', 200);
+            } else {
+                // Student not found, return error response
+                return $this->sendPayload(null, 'failed', 'Unauthorized', 401);
+            }
+        } else {
+            // Token not found in session storage, return error response
+            return $this->sendPayload(null, 'failed', 'Unauthorized', 401);
+        }
+    }
 }

@@ -32,16 +32,19 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
     case 'GET':
         switch ($request[0]) {
+                // case 'getstudent':
+                //     $token = $_SESSION['token'] ?? null;
+                //     if (!$token) {
+                //         echo json_encode(["error" => "Token not found in session storage"]);
+                //         http_response_code(404);
+                //         break;
+                //     } else {
+                //         echo json_encode($get->getLoggedinStudent($token));
+                //         break;
+                //     }
+                //     break;
             case 'getstudent':
-                $token = $_SESSION['token'] ?? null;
-                if (!$token) {
-                    echo json_encode(["error" => "Token not found in session storage"]);
-                    http_response_code(404);
-                    break;
-                } else {
-                    echo json_encode($get->getLoggedinStudent($token));
-                    break;
-                }
+                echo json_encode($get->getStudentInfo());
                 break;
                 // case 'users':
                 //     echo json_encode($get->getStudentData($request[1]));

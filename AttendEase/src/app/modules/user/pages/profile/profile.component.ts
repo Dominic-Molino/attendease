@@ -12,10 +12,27 @@ import { AuthserviceService } from '../../../../core/service/authservice.service
   styleUrl: './profile.component.css',
 })
 export class ProfileComponent implements OnInit {
-  studentData: any;
+  studentData: any[] = [];
   constructor(private dialog: MatDialog, private service: AuthserviceService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadProfile();
+  }
+
+  loadProfile() {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      this.service.getStudentData(token).subscribe(
+        (res) => {
+          this.studentData = res.payload;
+          console.log(this.studentData);
+        },
+        (error) => {
+          console.error('Failed to fetch student data:', error);
+        }
+      );
+    }
+  }
 
   openEditInfo() {
     this.dialog.open(EditComponent);

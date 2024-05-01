@@ -32,10 +32,13 @@ export class LoginComponent implements OnInit {
     if (this.formBuilder.valid) {
       this.service.loginStudent(this.formBuilder.value).subscribe(
         (res) => {
-          Swal.fire('Success', 'Login Success', 'success');
-          const token = this.service.setToken();
-          console.log(token);
-          this.router.navigate(['student']);
+          if (res && res.payload.token) {
+            sessionStorage.setItem('token', res.payload.token);
+            Swal.fire('Success', 'Login Success', 'success');
+            this.router.navigate(['student']);
+          } else {
+            Swal.fire('Error', 'Something went wrong', 'error');
+          }
         },
         (error) => {
           Swal.fire('Login Failed', 'Incorrect Credentials', 'error');
