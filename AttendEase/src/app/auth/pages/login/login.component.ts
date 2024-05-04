@@ -28,19 +28,43 @@ export class LoginComponent implements OnInit {
     pwd: this.builder.control('', Validators.required),
   });
 
-  loginStudent(): void {
+  loginStudent() {
     if (this.formBuilder.valid) {
       this.service.loginStudent(this.formBuilder.value).subscribe(
-        (res) => {
-          Swal.fire('Success', 'Login Success', 'success');
-          this.router.navigate(['student']);
+        (response) => {
+          if (response.status.remarks === 'success') {
+            const data = response.payload;
+            console.log(data);
+            Swal.fire('Success', 'Login Success', 'success');
+            this.router.navigate(['student']);
+          } else {
+            Swal.fire('Login Failed', 'Incorrect Credentials', 'error');
+          }
         },
         (error) => {
-          Swal.fire('Login Failed', 'Incorrect Credentials', 'error');
+          Swal.fire('Server Error', 'Please try again', 'warning');
         }
       );
     } else {
-      Swal.fire('Form is Invalid', 'Please try again', 'warning');
+      Swal.fire('Form Error', 'Please fill in all fields correctly', 'warning');
     }
   }
+
+  // loginStudent(): void {
+  //   if (this.formBuilder.valid) {
+  //     this.service.loginStudent(this.formBuilder.value).subscribe(
+  //       (res) => {
+  //         const data = res.payload.data;
+  //         console.log(data);
+  //         Swal.fire('Success', 'Login Success', 'success');
+  //         this.router.navigate(['student']);
+  //       },
+  //       (error) => {
+  //         Swal.fire('Login Failed', 'Incorrect Credentials', 'error');
+  //       }
+  //     );
+  //   } else {
+  //     Swal.fire('Server Error', 'Please try again', 'warning');
+  //   }
+  // }
 }

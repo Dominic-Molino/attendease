@@ -18,19 +18,19 @@ export class ProfileComponent implements OnInit {
   constructor(private dialog: MatDialog, private service: AuthserviceService) {}
 
   ngOnInit(): void {
-    this.token = sessionStorage.getItem('token');
-    this.loadProfile();
+    //  this.token = sessionStorage.getItem('token');
+    // this.loadProfile();
   }
 
-  loadProfile() {
-    if (this.token !== null) {
-      this.service.getStudentData(this.token).subscribe((res) => {
-        console.log(res.payload);
-      });
-    } else {
-      console.error('Token is null');
-    }
-  }
+  // loadProfile() {
+  //   if (this.token !== null) {
+  //     this.service.getStudentData(this.token).subscribe((res) => {
+  //       console.log(res.payload);
+  //     });
+  //   } else {
+  //     console.error('Token is null');
+  //   }
+  // }
 
   openEditInfo() {
     this.dialog.open(EditComponent);

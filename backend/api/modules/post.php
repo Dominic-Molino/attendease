@@ -23,8 +23,7 @@ class Post extends GlobalMethods
 
         if ($student) {
             if ($password == $student['pwd']) {
-
-                return $this->sendPayload(null, 'success', 'Login successful', 200);
+                return $this->sendPayload($student, 'success', 'Login successful', 200);
             } else {
                 return $this->sendPayload(null, 'failed', 'Incorrect password', 401);
             }

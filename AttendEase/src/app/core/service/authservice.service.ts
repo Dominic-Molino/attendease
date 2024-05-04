@@ -17,15 +17,6 @@ export class AuthserviceService {
     return this.http.post<any>(`${this.API_URL}loginstudent`, input);
   }
 
-  getStudentData(token: string): Observable<any> {
-    const header = new HttpHeaders({
-      Content: 'application/json',
-      Authorization: `token ${token}`,
-    });
-
-    return this.http.get<any>(`${this.API_URL}getstudent`, { headers: header });
-  }
-
   getAllEvents(): Observable<any> {
     return this.http.get<any>(`${this.API_URL}events`);
   }
