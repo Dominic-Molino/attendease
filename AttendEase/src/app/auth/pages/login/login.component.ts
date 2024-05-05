@@ -18,7 +18,11 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {}
+  userData: any;
+  ngOnInit(): void {
+    this.userData = this.service.getUser();
+    console.log(this.userData);
+  }
 
   formBuilder = this.builder.group({
     email: this.builder.control(
@@ -27,44 +31,4 @@ export class LoginComponent implements OnInit {
     ),
     pwd: this.builder.control('', Validators.required),
   });
-
-  loginStudent() {
-    if (this.formBuilder.valid) {
-      this.service.loginStudent(this.formBuilder.value).subscribe(
-        (response) => {
-          if (response.status.remarks === 'success') {
-            const data = response.payload;
-            console.log(data);
-            Swal.fire('Success', 'Login Success', 'success');
-            this.router.navigate(['student']);
-          } else {
-            Swal.fire('Login Failed', 'Incorrect Credentials', 'error');
-          }
-        },
-        (error) => {
-          Swal.fire('Server Error', 'Please try again', 'warning');
-        }
-      );
-    } else {
-      Swal.fire('Form Error', 'Please fill in all fields correctly', 'warning');
-    }
-  }
-
-  // loginStudent(): void {
-  //   if (this.formBuilder.valid) {
-  //     this.service.loginStudent(this.formBuilder.value).subscribe(
-  //       (res) => {
-  //         const data = res.payload.data;
-  //         console.log(data);
-  //         Swal.fire('Success', 'Login Success', 'success');
-  //         this.router.navigate(['student']);
-  //       },
-  //       (error) => {
-  //         Swal.fire('Login Failed', 'Incorrect Credentials', 'error');
-  //       }
-  //     );
-  //   } else {
-  //     Swal.fire('Server Error', 'Please try again', 'warning');
-  //   }
-  // }
 }

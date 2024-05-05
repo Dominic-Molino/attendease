@@ -7,13 +7,9 @@
       <h1
         class="max-sm:flex max-sm:justify-center md:text-center font-primary font-bold mb-5 text-2xl text-nowrap"
       >
-        Welcome <span class="text-green-500">Gcians!</span>
+        Welcome <span class="text-darkgreen">Gcians!</span>
       </h1>
-      <form
-        [formGroup]="formBuilder"
-        (ngSubmit)="loginStudent()"
-        class="max-w-sm mx-auto sm:w-full"
-      >
+      <form [formGroup]="formBuilder" class="max-w-sm mx-auto sm:w-full">
         <!-- email -->
         <div class="relative z-0 w-full mb-5 group">
           <input
@@ -51,7 +47,7 @@
         <div class="flex w-full justify-center">
           <button
             type="submit"
-            class="text-white-gainsboro mx-auto block md:w-[50%] bg-green-500 hover:bg-green-600 focus:outline-none font-medium rounded-xl text-sm sm:w-auto px-5 py-2.5 text-center"
+            class="text-white font-semibold mx-auto block md:w-[50%] bg-carribean_green-mint hover:bg-carribean_green-minted focus:outline-none rounded-xl text-sm sm:w-auto px-5 py-2.5 text-center"
           >
             Login
           </button>
@@ -61,7 +57,7 @@
           <p class="text-center text-sm py-0 font-primary">
             Don't have an account?
             <a
-              class="text-green-meduim_sea_green font-semibold hover:text-green-forest_green focus:text-green-sea_green"
+              class="text-carribean_green-mint font-semibold hover:text-green-forest_green focus:text-carribean_green-mint"
               routerLink="/signup"
               >Signup here</a
             >
@@ -72,7 +68,7 @@
 
     <div class="sm:mx-auto">
       <h1 class="text-center text-4xl font-primary font-bold">
-        Attend<span class="text-green-400">Ease</span>
+        Attend<span class="text-darkgreen">Ease</span>
       </h1>
     </div>
   </div>

@@ -17,6 +17,10 @@ export class AuthserviceService {
     return this.http.post<any>(`${this.API_URL}loginstudent`, input);
   }
 
+  getUser() {
+    return this.http.get<any>(`${this.API_URL}user`);
+  }
+
   getAllEvents(): Observable<any> {
     return this.http.get<any>(`${this.API_URL}events`);
   }
