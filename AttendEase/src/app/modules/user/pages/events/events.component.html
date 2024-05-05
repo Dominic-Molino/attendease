@@ -14,7 +14,7 @@
         <div class="flex justify-start w-full items-center mb-2">
           <h3 class="text-lg font-secondary font-medium">Latest Event</h3>
         </div>
-        <div class="rounded-xl border-2 shadow-lg container">
+        <div class="rounded-xl border-2 shadow-lg container bg-gray-50">
           <div
             class="p-3.5 flex flex-col lg:flex-row w-full items-center relative"
           >
@@ -59,7 +59,7 @@
                 {{ truncateDescription(events.eventDesc, maxChar) }}
               </p>
               <button
-                class="border border-gray-400 shadow-sm rounded-full py-2 px-6 relative -bottom-3.5"
+                class="bg-carribean_green-mint hover:bg-carribean_green-minted text-white font-bold font-secondary shadow-sm rounded-full py-2 px-6 relative -bottom-3.5"
                 (click)="viewEvent()"
               >
                 Read More
@@ -74,7 +74,7 @@
         </div>
         <!-- grid cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          <div class="rounded-xl border-2 shadow-lg container mb-5">
+          <div class="rounded-xl border-2 shadow-lg container mb-5 bg-gray-50">
             <div class="p-3.5 flex flex-col">
               <div class="rounded-md overflow-hidden">
                 <img
@@ -108,15 +108,10 @@
               <p class="text-slate-500 text-sm mt-3 font-secondary">
                 {{ truncateDescription(events.eventDesc, maxChar) }}
               </p>
-              <!-- <a
-                href="#"
-                class="text-center bg-blue-400 text-blue-700 tracking-wide py-2 rounded-lg font-semibold mt-4 hover:text-white-alice_blue hover:bg-blue-300 focus:scale-95transition-allduration-200ease-out"
-                >Read More</a
-              > -->
               <div class="flex w-full justify-start items-center">
                 <button
                   (click)="viewEvent()"
-                  class="mb-4 border border-gray-400 shadow-sm rounded-full py-2 px-6 relative -bottom-3.5"
+                  class="bg-carribean_green-mint hover:bg-carribean_green-minted text-white font-bold font-secondary shadow-sm rounded-full py-2 px-6 relative -bottom-3.5 mb-4"
                 >
                   Read More
                 </button>

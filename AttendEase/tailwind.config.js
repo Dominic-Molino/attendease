@@ -14,12 +14,11 @@ module.exports = {
         darkgreen: "#027148",
         custom_black: "#010101",
         smoke: "#F0EEE4",
-        twilight_blue: "#f0ffff",
         martinique: "#332D4F",
         shade: "#E5E4E2",
         carribean_green: {
           mint: "#01CDA9",
-          minted: "#04ba9a",
+          minted: "#03997f",
         },
         silver_sand: "#BBBCBE",
         mandy: "#E54461",

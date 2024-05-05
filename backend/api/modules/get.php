@@ -19,14 +19,7 @@ class Get extends GlobalMethods
         }
         $result = $this->executeQuery($sqlStr);
 
-        if ($result['code'] == 200) {
-            // Check if the table contains BLOB data
-            if ($table == 'submissions' && isset($result['data'][0]['file_data'])) {
-                return $this->sendPayload($result['data'], 'success', "Successfully retrieved data.", $result['code'], true);
-            } else {
-                return $this->sendPayload($result['data'], 'success', "Successfully retrieved data.", $result['code']);
-            }
-        }
+
         return $this->sendPayload(null, 'failed', "Failed to retrieve data.", $result['code']);
     }
 
