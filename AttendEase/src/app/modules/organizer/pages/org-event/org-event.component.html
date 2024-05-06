@@ -1,20 +1,19 @@
 <main class="!scroll-smooth w-full h-screen">
   <div class="p-4 mt-16 sm:ml-64">
-    <header class="flex flex-row justify-start items-end w-full mb-4">
-      <div>
-        <div class="flex flex-row justify-start items-center">
-          <span class="me-1 font-primary text-2xl font-bold tracking-wide"
-            >Upcoming and Latest Events</span
-          >
-        </div>
-      </div>
-    </header>
-    <div class="fixed top-[69px] end-6 group">
+    <div>
+      <p
+        class="font-secondary mb-2 text-custom_black text-2xl tracking-wide font-bold"
+      >
+        Events
+      </p>
+      <hr class="h-px mb-6 bg-gray-200 border-0 dark:bg-gray-700" />
+    </div>
+    <div class="fixed top-[65px] end-6 group">
       <button
         (click)="openDialog()"
         type="button"
         aria-expanded="false"
-        class="flex items-center justify-center text-white bg-green-400 rounded-full w-14 h-14 hover:bg-green-700 focus:outline-none shadow-lg"
+        class="flex items-center justify-center text-white bg-carribean_green-mint rounded-full w-14 h-14 hover:bg-carribean_green-minted focus:outline-none shadow-lg"
       >
         <svg
           class="w-5 h-5 transition-transform group-hover:rotate-45"
@@ -35,7 +34,8 @@
     </div>
     <div class="container">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-        <div class="rounded-xl border-2 shadow-lg container mb-5">
+        @defer{
+        <div class="rounded-xl border-2 shadow-lg container mb-5 bg-gray-50">
           <div class="p-3.5 flex flex-col">
             <div class="rounded-md overflow-hidden">
               <img
@@ -76,7 +76,7 @@
                 <button
                   type="button"
                   (click)="viewEvent()"
-                  class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10"
+                  class="py-2.5 px-5 text-sm text-white font-bold font-secondary focus:outline-none bg-carribean_green-mint rounded-lg border border-gray-200 hover:bg-carribean_green-minted hover:text-primary-700 focus:z-10"
                 >
                   Preview
                 </button>
@@ -88,6 +88,7 @@
             </div>
           </div>
         </div>
+        }
       </div>
     </div>
   </div>

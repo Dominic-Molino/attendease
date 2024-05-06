@@ -1,16 +1,6 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './auth/pages/login/login.component';
-import { SignupComponent } from './auth/pages/signup/signup.component';
 import { UserComponent } from './modules/user/user.component';
-import { DashboardComponent } from './modules/user/pages/dashboard/dashboard.component';
-import { EventsComponent } from './modules/user/pages/events/events.component';
-import { AttendanceComponent } from './modules/user/pages/attendance/attendance.component';
-import { FeedbackComponent } from './modules/user/pages/feedback/feedback.component';
-import { ProfileComponent } from './modules/user/pages/profile/profile.component';
 import { OrganizerComponent } from './modules/organizer/organizer.component';
-import { OrgDashboardComponent } from './modules/organizer/pages/org-dashboard/org-dashboard.component';
-import { EventManager } from '@angular/platform-browser';
-import { OrgEventComponent } from './modules/organizer/pages/org-event/org-event.component';
 
 export const routes: Routes = [
   {
@@ -21,12 +11,18 @@ export const routes: Routes = [
 
   {
     path: 'login',
-    component: LoginComponent,
+    loadComponent: () =>
+      import('./auth/pages/login/login.component').then(
+        (c) => c.LoginComponent
+      ),
   },
 
   {
     path: 'signup',
-    component: SignupComponent,
+    loadComponent: () =>
+      import('./auth/pages/signup/signup.component').then(
+        (c) => c.SignupComponent
+      ),
   },
 
   {
@@ -38,28 +34,45 @@ export const routes: Routes = [
         redirectTo: 'dashboard',
         pathMatch: 'full',
       },
+
       {
         path: 'dashboard',
-        component: DashboardComponent,
+        loadComponent: () =>
+          import('./modules/user/pages/dashboard/dashboard.component').then(
+            (c) => c.DashboardComponent
+          ),
       },
+
       {
         path: 'events',
-        component: EventsComponent,
+        loadComponent: () =>
+          import('./modules/user/pages/events/events.component').then(
+            (c) => c.EventsComponent
+          ),
       },
 
       {
         path: 'profile',
-        component: ProfileComponent,
+        loadComponent: () =>
+          import('./modules/user/pages/profile/profile.component').then(
+            (c) => c.ProfileComponent
+          ),
       },
 
       {
         path: 'attendance',
-        component: AttendanceComponent,
+        loadComponent: () =>
+          import('./modules/user/pages/attendance/attendance.component').then(
+            (c) => c.AttendanceComponent
+          ),
       },
 
       {
         path: 'feedback',
-        component: FeedbackComponent,
+        loadComponent: () =>
+          import('./modules/user/pages/feedback/feedback.component').then(
+            (c) => c.FeedbackComponent
+          ),
       },
     ],
   },
@@ -68,9 +81,27 @@ export const routes: Routes = [
     path: 'organizer',
     component: OrganizerComponent,
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: OrgDashboardComponent },
-      { path: 'events', component: OrgEventComponent },
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
+      },
+
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import(
+            './modules/organizer/pages/org-dashboard/org-dashboard.component'
+          ).then((c) => c.OrgDashboardComponent),
+      },
+
+      {
+        path: 'events',
+        loadComponent: () =>
+          import(
+            './modules/organizer/pages/org-event/org-event.component'
+          ).then((c) => c.OrgEventComponent),
+      },
     ],
   },
 ];

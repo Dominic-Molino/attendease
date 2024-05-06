@@ -21,7 +21,10 @@ module.exports = {
           minted: "#03997f",
         },
         silver_sand: "#BBBCBE",
-        mandy: "#E54461",
+        mandy: {
+          main: "#E54461",
+          shade: "#D13D57",
+        },
       },
       backgroundColor: (theme) => theme("colors"),
     },

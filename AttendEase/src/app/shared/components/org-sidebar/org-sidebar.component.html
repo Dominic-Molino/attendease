@@ -1,4 +1,4 @@
-<nav class="fixed top-0 z-50 w-full bg-black-rich_black">
+<nav class="fixed top-0 z-10 w-full bg-smoke shadow-sm">
   <div class="px-3 py-2 lg:px-5 lg:pl-3">
     <div class="flex items-center justify-between">
       <div class="flex items-center justify-start rtl:justify-end p-1.5">
@@ -9,7 +9,7 @@
           type="button"
           class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
         >
-          <span class="sr-only">Open sidebar</span>
+          <span class="sr-only">Open Sessami</span>
           <svg
             class="w-6 h-6"
             aria-hidden="true"
@@ -31,8 +31,8 @@
             alt="AttendEase"
           />
           <span
-            class="self-center text-xl font-secondary font-semibold sm:text-2xl whitespace-nowrap text-white-bone_white"
-            >Attend<span class="text-green-400">Ease</span></span
+            class="self-center text-xl font-secondary font-semibold sm:text-2xl whitespace-nowrap text-white"
+            >Attend<span class="text-carribean_green">Ease</span></span
           >
         </a>
       </div>
@@ -46,32 +46,41 @@
               data-dropdown-toggle="dropdown-user"
             >
               <span class="sr-only">Open user menu</span>
-              <img
-                class="w-8 h-8 rounded-full"
-                src="../../../../assets/images/star.png"
-                alt="user photo"
-              />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 bg-white rounded-full"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                />
+              </svg>
             </button>
           </div>
 
           <div
-            class="z-50 hidden my-4 text-base list-none bg-black-charcoal_gray rounded shadow"
+            class="z-50 hidden my-4 text-base list-none bg-white rounded shadow"
             id="dropdown-user"
           >
-            <div class="px-4 py-3" role="none">
+            <div class="px-4 py-2 mt-3 hover:bg-shade" role="none">
               <a
                 routerLink="profile"
-                class="text-sm text-white-bone_white font-primary"
+                class="text-sm text-custom_black font-primary"
                 role="none"
               >
                 Dominic Molino
               </a>
             </div>
-            <ul class="mb-5" role="none">
+            <ul class="mb-3" role="none">
               <li>
                 <a
                   routerLink="dashboard"
-                  class="block px-4 py-2 text-sm text-white-bone_white hover:bg-black-dark_green"
+                  class="block px-4 py-2 text-sm text-custom_black hover:bg-shade"
                   role="menuitem"
                   >Dashboard</a
                 >
@@ -79,7 +88,7 @@
 
               <li>
                 <a
-                  class="block px-4 py-2 text-sm text-white-bone_white hover:bg-black-dark_green"
+                  class="block px-4 py-2 text-sm text-custom_black hover:bg-shade"
                   role="menuitem"
                   >Sign out</a
                 >
@@ -94,20 +103,35 @@
 
 <aside
   id="logo-sidebar"
-  class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-black-rich_black border-r border-gray-200 sm:translate-x-0"
+  class="fixed top-0 left-0 z-40 w-64 h-screen pt-10 transition-transform -translate-x-full bg-smoke sm:translate-x-0 shadow-md"
   aria-label="Sidebar"
 >
-  <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+  <div
+    class="h-full px-3 pb-4 overflow-y-auto bg-main-dark_green dark:bg-gray-800"
+  >
+    <div class="flex items-center flex-col gap-3 pb-5 mb-2">
+      <img
+        src="#"
+        class="w-40 h-40 border border-gray-500 rounded-full mx-auto p-4"
+        alt="Star-HUB Logo"
+      />
+      <h1
+        class="self-center text-2xl font-secondary font-bold whitespace-nowrap"
+      >
+        <span class="text-custom_black">Attend</span
+        ><span class="text-carribean_green-mint">Ease</span>
+      </h1>
+    </div>
     <ul class="space-y-2 font-medium">
       <!-- dashboard -->
       <li>
         <a
           routerLink="dashboard"
-          [routerLinkActive]="'bg-black-dark_green group'"
-          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-black-dark_green group"
+          [routerLinkActive]="'bg-shade'"
+          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-shade group"
         >
           <svg
-            class="flex-shrink-0 w-5 h-5 text-white-bone_white transition duration-75 group-hover:text-white-gainsboro"
+            class="flex-shrink-0 w-5 h-5 transition duration-75 text-custom_black"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -123,18 +147,21 @@
               d="M9.143 4H4.857A.857.857 0 0 0 4 4.857v4.286c0 .473.384.857.857.857h4.286A.857.857 0 0 0 10 9.143V4.857A.857.857 0 0 0 9.143 4Zm10 0h-4.286a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286A.857.857 0 0 0 20 9.143V4.857A.857.857 0 0 0 19.143 4Zm-10 10H4.857a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286a.857.857 0 0 0 .857-.857v-4.286A.857.857 0 0 0 9.143 14Zm10 0h-4.286a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286a.857.857 0 0 0 .857-.857v-4.286a.857.857 0 0 0-.857-.857Z"
             />
           </svg>
-          <span class="ms-3 text-white-bone_white font-primary">Dashboard</span>
+          <span
+            class="flex-1 ms-3 text-lg whitespace-nowrap font-primary text-custom_black"
+            >Dashboard</span
+          >
         </a>
       </li>
       <!-- event -->
       <li>
         <a
           routerLink="events"
-          [routerLinkActive]="'bg-black-dark_green group'"
-          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-black-dark_green group"
+          [routerLinkActive]="'bg-shade'"
+          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-shade group"
         >
           <svg
-            class="flex-shrink-0 w-5 h-5 text-white-bone_white transition duration-75 group-hover:text-white-gainsboro"
+            class="flex-shrink-0 w-5 h-5 transition duration-75 text-custom_black"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -152,7 +179,7 @@
           </svg>
 
           <span
-            class="flex-1 ms-3 whitespace-nowrap font-primary text-white-bone_white"
+            class="flex-1 ms-3 text-lg whitespace-nowrap font-primary text-custom_black"
             >Events</span
           >
         </a>
