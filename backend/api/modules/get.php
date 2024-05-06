@@ -6,86 +6,78 @@ class Get extends GlobalMethods
 {
     private $pdo;
 
-    public function __construct(\PDO $pdo)
+    public function __construct(\PDO $pdo) 
     {
         $this->pdo = $pdo;
     }
 
+    // Private method to fetch records from the database table
     private function get_records($table, $conditions = null)
     {
         $sqlStr = "SELECT * FROM $table";
         if ($conditions != null) {
-            $sqlStr = $sqlStr . " WHERE " . $conditions;
+            $sqlStr .= " WHERE " . $conditions;
         }
-        $result = $this->executeQuery($sqlStr);
-
-
-        return $this->sendPayload(null, 'failed', "Failed to retrieve data.", $result['code']);
+        return $this->executeQuery($this->pdo, $sqlStr); // Adjusted call to executeQuery()
     }
 
-    private function executeQuery($sql)
+    // Private method to execute a SQL query and handle exceptions
+    private function executeQuery($pdo, $sql)
     {
-        $data = array();
-        $errmsg = "";
-        $code = 0;
-
         try {
-            $statement = $this->pdo->query($sql);
-            if ($statement) {
-                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-                foreach ($result as $record) {
-                    // Handle BLOB data
-                    if (isset($record['file_data'])) {
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute();
 
-                        $record['file_data'] = base64_encode($record['file_data']);
-                    }
-                    array_push($data, $record);
-                }
-                $code = 200;
-                return array("code" => $code, "data" => $data);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $rowCount = $stmt->rowCount();
+
+            if ($rowCount > 0) {
+                return $this->sendPayload($data, 'success', "Successfully retrieved data.", 200);
             } else {
-                $errmsg = "No data found.";
-                $code = 404;
+                return $this->sendPayload(null, 'failed', "No data found.", 404);
             }
-        } catch (\PDOException $e) {
-            $errmsg = $e->getMessage();
-            $code = 403;
-        }
-        return array("code" => $code, "errmsg" => $errmsg);
-    }
-
-    public function get_users($student_id = null)
-    {
-        $condition = null;
-        if ($student_id != null) {
-            $condition = "student_id=$student_id";
-        }
-        return $this->get_records('students', $condition);
-    }
-
-    public function get_student($student_id = null)
-    {
-        $condition = ($student_id !== null) ? "student_id = $student_id" : null;
-        $result = $this->get_records('students', $condition);
-
-        if ($result['status']['remarks'] === 'success') {
-            $payloadData = $result['payload'];
-            if (is_array($payloadData)) {
-                return $payloadData;
-            } else {
-                return array();
-            }
-        } else {
-            return array();
+        } catch (PDOException $e) {
+            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
 
-    public function get_events($event_id = null)
+    // Method to fetch users from the database
+    public function get_users($id = null)
     {
-        $condition = null;
-        if ($event_id != null) {
-            $condition = "event_id=$event_id";
-        }
-        return $this->get_records('events', $condition);
+        $condition = $id ? "id=$id" : null;
+        return $this->get_records('user', $condition);
+    }
+
+    // Method to fetch roles from the database
+    public function get_roles($id = null)
+    {
+        $condition = $id ? "id=$id" : null;
+        return $this->get_records('role', $condition);
+    }
+
+    // Method to fetch events from the database
+    public function get_events($id = null)
+    {
+        $condition = $id ? "id=$id" : null;
+        return $this->get_records('event', $condition);
+    }
+
+    // Method to fetch all events from the database
+    public function get_all_events()
+    {
+        return $this->get_events();
+    }
+
+    // Method to fetch feedback for a specific event
+    public function get_event_feedback($event_id)
+    {
+        $condition = $event_id ? "Event_Id=$event_id" : null;
+        return $this->get_records('EventFeedback', $condition);
+    }
+
+    // Method to fetch all feedback for a specific event
+    public function get_all_event_feedback()
+    {
+        return $this->get_all_event_feedback();
     }
 }
