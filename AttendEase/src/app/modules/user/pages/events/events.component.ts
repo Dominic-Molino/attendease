@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ReadEventComponent } from '../../../organizer/components/read-event/read-event.component';
+import { AuthserviceService } from '../../../../core/service/authservice.service';
 @Component({
   selector: 'app-events',
   standalone: true,
@@ -9,8 +10,21 @@ import { ReadEventComponent } from '../../../organizer/components/read-event/rea
   templateUrl: './events.component.html',
   styleUrl: './events.component.css',
 })
-export class EventsComponent {
-  constructor(private dialog: MatDialog) {}
+export class EventsComponent implements OnInit {
+  constructor(private dialog: MatDialog, private service: AuthserviceService) {}
+
+  eventData: any;
+
+  ngOnInit(): void {
+    this.service.getAllEvents().subscribe((result) => {
+      this.eventData = result;
+      console.log(this.eventData);
+      if (this.eventData && this.eventData.payload) {
+        const eventsArray = this.eventData.payload;
+        console.log(eventsArray);
+      }
+    });
+  }
 
   viewEvent() {
     this.dialog.open(ReadEventComponent);

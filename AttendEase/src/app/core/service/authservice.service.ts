@@ -1,27 +1,30 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { Observable, retry } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthserviceService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private helper: JwtHelperService) {}
   private API_URL = 'http://localhost/attendease/backend/api/';
+  isLoggedIn: boolean = false;
 
-  registerStudent(input: any): Observable<any> {
-    return this.http.post<any>(`${this.API_URL}addstudent`, input);
+  registerStudent(data: any): Observable<any> {
+    return this.http.post(`${this.API_URL}adduser`, data);
   }
 
-  loginStudent(input: any): Observable<any> {
-    return this.http.post<any>(`${this.API_URL}loginstudent`, input);
+  loginStudent(data: any): Observable<any> {
+    return this.http.post(`${this.API_URL}login`, data);
   }
 
-  getUser() {
-    return this.http.get<any>(`${this.API_URL}user`);
+  isUserLoggedIn(): boolean {
+    const token = sessionStorage.getItem('token');
+    return !this.helper.isTokenExpired(token);
   }
 
   getAllEvents(): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}events`);
+    return this.http.get(`${this.API_URL}events`);
   }
 }

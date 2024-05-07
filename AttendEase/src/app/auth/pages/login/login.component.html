@@ -10,7 +10,11 @@
       >
         Welcome <span class="text-darkgreen">Gcians!</span>
       </h1>
-      <form [formGroup]="formBuilder" class="max-w-sm mx-auto sm:w-full">
+      <form
+        [formGroup]="loginForm"
+        (submit)="loginStudent()"
+        class="max-w-sm mx-auto sm:w-full"
+      >
         <!-- email -->
         <div class="relative z-0 w-full mb-5 group">
           <input
@@ -31,7 +35,7 @@
         <!-- password -->
         <div class="relative z-0 w-full mb-5 group">
           <input
-            formControlName="pwd"
+            formControlName="password"
             type="password"
             name="password"
             id="password"
