@@ -1,7 +1,11 @@
 <?php
 header("Access-Control-Allow-Origin: http://localhost:4200");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Methods: OPTIONS, GET, POST, PUT, DELETE");
+header("Access-Control-Max-Age: 3600");
+header("Access-Control-Allow-Headers: *");
+header("Content-Type: application/json; charset=UTF-8");
+
 
 // Include required modules
 require_once "./modules/get.php";
@@ -21,6 +25,8 @@ if (isset($_REQUEST['request'])) {
     exit();
 }
 
+
+
 // Initialize Get and Post objects
 $con = new Connection();
 $pdo = $con->connect();
@@ -29,17 +35,25 @@ $post = new Post($pdo);
 
 // Handle requests based on HTTP method
 switch ($_SERVER['REQUEST_METHOD']) {
-        // Handle OPTIONS requests
     case 'OPTIONS':
-        // Respond to preflight requests
         http_response_code(200);
         exit();
-
-        // Handle GET requests
+        break;
     case 'GET':
         switch ($request[0]) {
             case 'users':
-                echo json_encode($get->get_users());
+                if (isset($request[1])) {
+                    echo json_encode($get->get_users($request[1]));
+                } else {
+                    echo json_encode($get->get_users());
+                }
+                break;
+            case 'student':
+                if (count($request) > 1) {
+                    echo json_encode($get->get_student($request[1]));
+                } else {
+                    echo json_encode($get->get_student());
+                }
                 break;
             case 'roles':
                 echo json_encode($get->get_roles());
@@ -94,7 +108,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     // Generate JWT token
                     $JwtController = new Jwt($_ENV["SECRET_KEY"]);
                     $token = $JwtController->encode([
-                        "id" => $user['user_id'],
+                        "user_id" => $user['user_id'],
                         "email" => $user['email']
                     ]);
 
@@ -114,10 +128,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($post->add_user($pdo, $data));
                 break;
             case 'edituser':
-                echo json_encode($post->edit_user($pdo, $data, $request[1]));
+                echo json_encode($post->edit_user($data, $request[1]));
                 break;
-            case 'deleteuser':
-                echo json_encode($post->delete_user($pdo, $request[1]));
+            case 'adduserimage':
                 break;
             case 'addevent':
                 echo json_encode($post->add_event($pdo, $data));
@@ -134,9 +147,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             case 'addfeedback':
                 echo json_encode($post->add_event_feedback($pdo, $data));
                 break;
-                // Add more cases for other endpoints if needed
             default:
-                // Return a 403 response for unsupported requests
                 echo "This is forbidden";
                 http_response_code(403);
                 break;
