@@ -13,22 +13,26 @@
     >
       <div class="flex flex-col items-center py-10 px-4">
         <img
-          class="w-24 h-24 mb-3 rounded-full shadow-lg"
+          class="w-40 h-40 mb-3 rounded-full shadow-lg cursor-pointer"
+          (change)="uploadImage($event)"
           src="#"
-          alt="Bonnie image"
         />
         <h5
-          class="mb-1 text-xl lg:text-2xl font-medium text-gray-900 dark:text-white"
+          class="mb-1 text-2xl lg:text-2xl font-medium text-gray-900 font-secondary"
         >
-          Student Name Here
+          {{ studentInfo.first_name | uppercase }}
+          {{ studentInfo.last_name | uppercase }}
         </h5>
-        <span class="text-sm text-white lg:text-xl dark:text-gray-400"
-          >StudentID Here</span
-        >
+        <span class="text-xs text-custom_black lg:text-xl dark:text-gray-400">{{
+          extractStudentId(studentInfo.email)
+        }}</span>
 
         <hr class="h-px w-[80%] my-4 bg-slate-300 border-0" />
 
-        <div class="w-full max-w-md bg-gray-50">
+        <div
+          *ngIf="studentProfile && studentProfile.length > 0"
+          class="w-full max-w-md bg-gray-50"
+        >
           <div class="flow-root">
             <ul role="list">
               <li class="mb-2">
@@ -37,11 +41,12 @@
                     <p
                       class="inline me-1 text-base lg:text-lg font-medium font-primary text-gray-900 truncate dark:text-white"
                     >
-                      Name:
+                      Full Name:
                     </p>
                     <span
                       class="text-sm font-normal lg:text-base font-secondary text-gray-900"
-                      >Student Nmae here</span
+                      >{{ studentInfo.first_name | titlecase }}
+                      {{ studentInfo.last_name | titlecase }}</span
                     >
                   </div>
                 </div>
@@ -56,7 +61,7 @@
                     </p>
                     <span
                       class="text-sm font-normal lg:text-base font-secondary text-gray-900"
-                      >Student email here</span
+                      >{{ studentInfo.email }}</span
                     >
                   </div>
                 </div>
@@ -71,7 +76,7 @@
                     </p>
                     <span
                       class="text-sm font-normal lg:text-base font-secondary text-gray-900"
-                      >Student program here</span
+                      >{{ studentInfo.course | uppercase }}</span
                     >
                   </div>
                 </div>
@@ -86,7 +91,7 @@
                     </p>
                     <span
                       class="text-sm font-normal lg:text-base font-secondary text-gray-900"
-                      >Student block here</span
+                      >{{ studentInfo.block | uppercase }}</span
                     >
                   </div>
                 </div>
@@ -101,7 +106,7 @@
                     </p>
                     <span
                       class="text-sm font-normal lg:text-base font-secondary text-gray-900"
-                      >Student year here</span
+                      >{{ studentInfo.year_level }}</span
                     >
                   </div>
                 </div>
@@ -109,7 +114,7 @@
             </ul>
           </div>
         </div>
-        <div class="flex mt-4 md:mt-6">
+        <div class="flex justify-start mt-4 md:mt-6">
           <button
             (click)="openEditInfo()"
             class="inline-flex items-center px-4 py-2 text-sm font-bold font-secondary text-center text-white bg-carribean_green-mint rounded-lg hover:bg-carribean_green-minted focus:outline-none"

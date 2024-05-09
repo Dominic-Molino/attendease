@@ -4,7 +4,7 @@
       <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">
         Add a new event
       </h2>
-      <form>
+      <form (ngSubmit)="addEvent()" [formGroup]="eventForm">
         <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
           <div class="sm:col-span-2">
             <label
@@ -16,11 +16,13 @@
               type="text"
               name="name"
               id="name"
+              formControlName="event_name"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               placeholder="Type event name"
               required=""
             />
           </div>
+
           <div class="w-full">
             <label
               for="event_location"
@@ -31,9 +33,9 @@
               type="text"
               name="event_location"
               id="event_location"
+              formControlName="event_location"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               placeholder="Event Location"
-              required=""
             />
           </div>
           <div class="w-full">
@@ -44,12 +46,13 @@
             >
             <select
               id="category"
+              formControlName="session"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
             >
-              <option selected="">Select Event Mode</option>
-              <option value="Face to Face">Face to Face</option>
-              <option value="Online">Online</option>
-              <option value="Both">Both</option>
+              <option select="">Select Event Mode</option>
+              <option>Face to Face</option>
+              <option>Online</option>
+              <option>Both</option>
             </select>
           </div>
           <div class="relative max-w-sm">
@@ -58,11 +61,20 @@
               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >Event Start Date</label
             >
+
             <mat-form-field>
               <mat-label>Event Start Date</mat-label>
               <mat-date-range-input [rangePicker]="datepicker">
-                <input matStartDate placeholder="Start date" />
-                <input matEndDate placeholder="End date" />
+                <input
+                  matStartDate
+                  placeholder="Start date"
+                  formControlName="event_start_date"
+                />
+                <input
+                  matEndDate
+                  placeholder="End date"
+                  formControlName="event_end_date"
+                />
               </mat-date-range-input>
               <mat-datepicker-toggle
                 matIconSuffix
@@ -79,15 +91,15 @@
             >
             <mat-form-field id="registration">
               <mat-label>Registration Date</mat-label>
-              <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+              <mat-date-range-input [rangePicker]="picker">
                 <input
                   matStartDate
-                  formControlName="start"
+                  formControlName="event_registration_start"
                   placeholder="Start date"
                 />
                 <input
                   matEndDate
-                  formControlName="end"
+                  formControlName="event_registration_end"
                   placeholder="End date"
                 />
               </mat-date-range-input>
@@ -106,6 +118,7 @@
             >
             <textarea
               id="description"
+              formControlName="event_description"
               rows="8"
               class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               placeholder="Your description here"
@@ -121,7 +134,13 @@
               class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
               id="file_input"
               type="file"
+              accept="image/*"
+              formControlName="selectedFile"
+              (change)="onFileSelected($event)"
             />
+          </div>
+          <div>
+            <input type="text" formControlName="requirement" />
           </div>
         </div>
         <button

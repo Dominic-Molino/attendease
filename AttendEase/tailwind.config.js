@@ -13,9 +13,9 @@ module.exports = {
       colors: {
         darkgreen: "#027148",
         custom_black: "#010101",
-        smoke: "#F0EEE4",
+        smoke: "#e3e3e3",
         martinique: "#332D4F",
-        shade: "#E5E4E2",
+        shade: "#ececec",
         carribean_green: {
           mint: "#01CDA9",
           minted: "#03997f",

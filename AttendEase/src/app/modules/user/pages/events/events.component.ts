@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ReadEventComponent } from '../../../organizer/components/read-event/read-event.component';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
+import { PreviewComponent } from '../../components/preview/preview.component';
 @Component({
   selector: 'app-events',
   standalone: true,
@@ -14,42 +14,37 @@ export class EventsComponent implements OnInit {
   constructor(private dialog: MatDialog, private service: AuthserviceService) {}
 
   eventData: any;
+  latestEvent: any;
+  otherEvents: any[] = [];
+  maxChar: number = 100;
 
   ngOnInit(): void {
     this.service.getAllEvents().subscribe((result) => {
       this.eventData = result;
-      console.log(this.eventData);
       if (this.eventData && this.eventData.payload) {
         const eventsArray = this.eventData.payload;
-        console.log(eventsArray);
+        eventsArray.sort(
+          (a: any, b: any) =>
+            new Date(b.event_start_date).getTime() -
+            new Date(a.event_start_date).getTime()
+        );
+        this.latestEvent = eventsArray[0];
+        this.otherEvents = eventsArray.slice(1);
       }
     });
   }
 
-  viewEvent() {
-    this.dialog.open(ReadEventComponent);
+  viewEvent(event: any) {
+    this.dialog.open(PreviewComponent, {
+      data: { event },
+    });
   }
 
-  maxChar: number = 100;
-
-  events: Events = {
-    eventName: 'Broken Covenant Riven Release!',
-    eventDate: 'March 9, 2023',
-    eventDesc:
-      'New skinline, Broken Covenant is no available for purchase in league of legends store! This batch of skins features a Legendary skin for Riven, a Prestige skin for Miss Fortune as well as a full set of Epic skins! All non-prestige skins are sold separately or as a bundle with border & Icon! All chomas can also be bought together or separate!',
-  };
-
   truncateDescription(text: string, maxLength: number): string {
-    if (text.length > maxLength) {
+    if (text && text.length > maxLength) {
       return text.substring(0, maxLength) + ' ...';
     } else {
       return text;
     }
   }
-}
-
-export interface Events {
-  eventName: string;
-  eventDate: string;
-  eventDesc: string;
 }

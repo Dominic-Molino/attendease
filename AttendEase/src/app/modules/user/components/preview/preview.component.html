@@ -1,0 +1,139 @@
+<section class="bg-white dark:bg-gray-900 p-5">
+  <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow">
+    <div>
+      <img
+        class="rounded-t-lg"
+        src="../../../../../assets/images/gojo.jpg"
+        alt="image here"
+      />
+    </div>
+    <div class="p-5">
+      <div>
+        <h5
+          class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+        >
+          {{ data.event.event_name }}
+        </h5>
+      </div>
+      <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+        {{ data.event.event_description }}
+      </p>
+      <div class="flex items-center my-2.5">
+        <svg
+          class="w-6 h-6 inline flex-shrink-0 text-gray-800 dark:text-white"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+          />
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17.8 13.938h-.011a7 7 0 1 0-11.464.144h-.016l.14.171c.1.127.2.251.3.371L12 21l5.13-6.248c.194-.209.374-.429.54-.659l.13-.155Z"
+          />
+        </svg>
+
+        <span class="ms-2 font-primary text-sm">{{
+          data.event.event_location
+        }}</span>
+      </div>
+      <div class="flex items-center my-2.5">
+        <svg
+          class="w-6 h-6 inline flex-shrink-0 text-gray-800 dark:text-white"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
+          />
+        </svg>
+
+        <span class="ms-2 text-xs font-primary"
+          >{{ data.event.event_start_date | date : "longDate" }}
+        </span>
+        <span class="ms-1"> - </span>
+        <span class="ms-2 text-xs font-primary">{{
+          data.event.event_end_date | date : "longDate"
+        }}</span>
+      </div>
+
+      <div class="flex items-center my-2.5">
+        <svg
+          class="w-6 h-6 inline flex-shrink-0 text-gray-800 dark:text-white"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
+          />
+        </svg>
+
+        <span class="ms-2 text-xs font-primary"
+          >{{ data.event.event_registration_start | date : "longDate" }}
+        </span>
+        <span class="ms-1"> - </span>
+        <span class="ms-2 text-xs font-primary">{{
+          data.event.event_registration_end | date : "longDate"
+        }}</span>
+      </div>
+
+      <div class="flex items-center my-2.5">
+        <svg
+          class="w-6 h-6 inline flex-shrink-0 text-gray-800 dark:text-white"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M11 9H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h6m0-6v6m0-6 5.419-3.87A1 1 0 0 1 18 5.942v12.114a1 1 0 0 1-1.581.814L11 15m7 0a3 3 0 0 0 0-6M6 15h3v5H6v-5Z"
+          />
+        </svg>
+
+        <span class="ms-2 font-primary text-sm">{{
+          data.event.session_id
+        }}</span>
+      </div>
+      <div class="flex w-full justify-start items-center">
+        <button
+          class="bg-carribean_green-mint hover:bg-carribean_green-minted text-white text-sm font-semibold font-secondary shadow-sm rounded-full py-2 px-6 relative -bottom-3.5 mb-4"
+        >
+          Register
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

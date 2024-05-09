@@ -47,21 +47,4 @@ export class SignupComponent {
       Swal.fire('Form is Invalid', 'Please try again', 'warning');
     }
   }
-
-  // registerStudent(): void {
-  //   if (this.formBuilder.valid) {
-  //     this.service.registerStudent(this.formBuilder.value).subscribe(
-  //       (res) => {
-  //         Swal.fire('Success', 'Registration Success', 'success');
-  //         this.router.navigate(['login']);
-  //       },
-  //       (error) => {
-  //         console.error('Registration failed:', error);
-  //         Swal.fire('Error', 'Registration Failed', 'error');
-  //       }
-  //     );
-  //   } else {
-  //     Swal.fire('Form is Invalid', 'Please try again', 'warning');
-  //   }
-  // }
 }

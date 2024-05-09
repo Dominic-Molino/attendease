@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { CalendarComponent } from '../../../../shared/components/calendar/calendar.component';
 import { Router, RouterLink } from '@angular/router';
+import { AuthserviceService } from '../../../../core/service/authservice.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,7 +12,7 @@ import { Router, RouterLink } from '@angular/router';
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private service: AuthserviceService) {}
 
   onClickButton() {
     this.router.navigate(['student/events']);
