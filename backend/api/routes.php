@@ -131,6 +131,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($post->edit_user($data, $request[1]));
                 break;
             case 'adduserimage':
+                echo json_encode($post->upload_user_image($data, $request[1]));
                 break;
             case 'addevent':
                 echo json_encode($post->add_event($pdo, $data));

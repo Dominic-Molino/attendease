@@ -306,7 +306,7 @@ class Post extends GlobalMethods
 
     public function delete_event($pdo, $event_id)
     {
-        $sql = "DELETE FROM Events WHERE Event_Id = ?";
+        $sql = "DELETE FROM events WHERE event_id = ?";
         try {
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$event_id]);
@@ -315,6 +315,36 @@ class Post extends GlobalMethods
                 return $this->sendPayload(null, 'success', "Event deleted successfully.", 200);
             } else {
                 return $this->sendPayload(null, 'failed', "Failed to delete event.", 500);
+            }
+        } catch (PDOException $e) {
+            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+        }
+    }
+
+    public function upload_user_image($data, $user_id)
+    {
+        $fileName = basename($_FILES["file"]["name"]);
+        $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
+        $fileSize = $_FILES["file"]["size"];
+        $fileData = file_get_contents($_FILES["file"]["tmp_name"]);
+
+        $sql = "INSERT INTO user_images (user_id, file_name, file_type, file_size, file_data) VALUES ( ?, ?, ?, ?, ?) WHERE user_id = ?";
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute(
+                [
+
+                    $data->fileName,
+                    $data->fileType,
+                    $data->fileSize,
+                    $data->fileData,
+                    $user_id
+                ]
+            );
+            if ($stmt->rowCount() > 0) {
+                return $this->sendPayload(null, 'success', "Success.", 200);
+            } else {
+                return $this->sendPayload(null, 'failed', "Failed.", 500);
             }
         } catch (PDOException $e) {
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
