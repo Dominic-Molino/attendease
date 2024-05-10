@@ -1,15 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { CalendarComponent } from '../../../../shared/components/calendar/calendar.component';
+import { Router, RouterLink } from '@angular/router';
+import { AuthserviceService } from '../../../../core/service/authservice.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, CalendarComponent],
+  imports: [CommonModule, CalendarComponent, RouterLink],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent {
+  constructor(private router: Router, private service: AuthserviceService) {}
+
+  onClickButton() {
+    this.router.navigate(['student/events']);
+  }
+
   events: Events = {
     eventName: 'Broken Covenant Riven Release!',
     eventDate: 'March 9, 2023',

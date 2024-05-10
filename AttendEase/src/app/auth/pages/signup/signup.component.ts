@@ -18,23 +18,23 @@ export class SignupComponent {
     private router: Router
   ) {}
 
-  formBuilder = this.builder.group({
+  registerForm = this.builder.group({
     first_name: this.builder.control('', Validators.required),
     last_name: this.builder.control('', Validators.required),
     year_level: this.builder.control('', Validators.required),
-    student_block: this.builder.control('', Validators.required),
     course: this.builder.control('', Validators.required),
+    block: this.builder.control('', Validators.required),
     email: this.builder.control(
       '',
       Validators.compose([Validators.required, Validators.email])
     ),
-    pwd: this.builder.control('', Validators.required),
+    password: this.builder.control('', Validators.required),
   });
 
   registerStudent(): void {
-    if (this.formBuilder.valid) {
-      this.service.registerStudent(this.formBuilder.value).subscribe(
-        (res) => {
+    if (this.registerForm.valid) {
+      this.service.registerStudent(this.registerForm.value).subscribe(
+        (result) => {
           Swal.fire('Success', 'Registration Success', 'success');
           this.router.navigate(['login']);
         },

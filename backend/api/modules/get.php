@@ -6,7 +6,7 @@ class Get extends GlobalMethods
 {
     private $pdo;
 
-    public function __construct(\PDO $pdo) 
+    public function __construct(\PDO $pdo)
     {
         $this->pdo = $pdo;
     }
@@ -41,10 +41,23 @@ class Get extends GlobalMethods
         }
     }
 
-    // Method to fetch users from the database
-    public function get_users($id = null)
+    // usergateway
+    public function getByEmail(string $email = null): array|false
     {
-        $condition = $id ? "id=$id" : null;
+        $conditions = ($email !== null) ? "email = '$email'" : null;
+        $result = $this->get_records('user', $conditions);
+
+        if ($result['status']['remarks'] === 'success' && !empty($result['payload'])) {
+            return $result['payload'][0];
+        } else {
+            return false;
+        }
+    }
+
+
+    public function get_users($user_id = null)
+    {
+        $condition = $user_id ? "user_id=$user_id" : null;
         return $this->get_records('user', $condition);
     }
 
@@ -56,16 +69,16 @@ class Get extends GlobalMethods
     }
 
     // Method to fetch events from the database
-    public function get_events($id = null)
+    public function get_events($event_id = null)
     {
-        $condition = $id ? "id=$id" : null;
-        return $this->get_records('event', $condition);
+        $condition = $event_id ? "event_id=$event_id" : null;
+        return $this->get_records('events', $condition);
     }
 
     // Method to fetch all events from the database
     public function get_all_events()
     {
-        return $this->get_events();
+        return $this->get_records('events');
     }
 
     // Method to fetch feedback for a specific event
@@ -79,5 +92,25 @@ class Get extends GlobalMethods
     public function get_all_event_feedback()
     {
         return $this->get_all_event_feedback();
+    }
+
+    public function get_student($user_id = null)
+    {
+        $condition = ($user_id !== null) ? "id = $user_id" : null;
+        $result = $this->get_records('user', $condition);
+
+        if ($result['status']['remarks'] === 'success') {
+
+            $payloadData = $result['payload'];
+
+
+            if (is_array($payloadData)) {
+                return $payloadData;
+            } else {
+                return array();
+            }
+        } else {
+            return array();
+        }
     }
 }

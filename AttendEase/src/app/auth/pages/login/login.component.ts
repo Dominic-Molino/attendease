@@ -16,19 +16,30 @@ export class LoginComponent implements OnInit {
     private builder: FormBuilder,
     private service: AuthserviceService,
     private router: Router
-  ) {}
-
-  userData: any;
-  ngOnInit(): void {
-    this.userData = this.service.getUser();
-    console.log(this.userData);
+  ) {
+    sessionStorage.clear();
   }
 
-  formBuilder = this.builder.group({
+  userData: any;
+  ngOnInit(): void {}
+
+  loginForm = this.builder.group({
     email: this.builder.control(
       '',
       Validators.compose([Validators.required, Validators.email])
     ),
-    pwd: this.builder.control('', Validators.required),
+    password: this.builder.control('', Validators.required),
   });
+
+  loginStudent() {
+    this.service.loginStudent(this.loginForm.value).subscribe((res: any) => {
+      if (res.token) {
+        sessionStorage.setItem('token', res.token);
+        Swal.fire('Success', 'Login Success', 'success');
+        this.router.navigate(['student']);
+      } else {
+        alert('inaliad');
+      }
+    });
+  }
 }

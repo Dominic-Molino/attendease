@@ -1,7 +1,11 @@
 <mat-dialog-content class="bg-white-bone_white">
   <div>
-    <form class="max-w-sm mx-auto p-10 sm:w-full" autocomplete="off">
-      <!-- first name -->
+    <form
+      class="max-w-sm mx-auto p-10 sm:w-full"
+      autocomplete="off"
+      [formGroup]="editForm"
+      (ngSubmit)="updateInfo()"
+    >
       <div class="grid md:grid-cols-2 md:gap-6">
         <div class="relative z-0 w-full mb-5 group">
           <input
@@ -19,7 +23,6 @@
           >
         </div>
 
-        <!-- last name -->
         <div class="relative z-0 w-full mb-5 group">
           <input
             formControlName="last_name"
@@ -37,7 +40,6 @@
         </div>
       </div>
 
-      <!-- block/course -->
       <div class="grid md:grid-cols-2 md:gap-6">
         <div class="relative z-0 w-full mb-5 group">
           <input
@@ -56,7 +58,7 @@
         </div>
         <div class="relative z-0 w-full mb-5 group">
           <input
-            formControlName="student_block"
+            formControlName="block"
             type="text"
             name="block"
             id="block"
@@ -85,7 +87,6 @@
           >Course</label
         >
       </div>
-      <!-- email -->
       <div class="relative z-0 w-full mb-5 group">
         <input
           formControlName="email"
