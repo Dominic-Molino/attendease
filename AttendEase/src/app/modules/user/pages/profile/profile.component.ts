@@ -42,8 +42,6 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  uploadImage(event: any) {}
-
   extractStudentId(email: string): string {
     if (email && email.indexOf('@') !== -1) {
       const indexOf = email.indexOf('@');

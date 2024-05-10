@@ -36,6 +36,10 @@ export class AuthserviceService {
     return null;
   }
 
+  uploadImage(file: File, id: any): Observable<any> {
+    return this.http.post(`${this.API_URL}adduserimage/${id}`, file);
+  }
+
   updateStudent(data: any, id: any): Observable<any> {
     return this.http.post(`${this.API_URL}edituser/${id}`, data);
   }

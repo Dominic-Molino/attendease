@@ -28,7 +28,6 @@ export class CalendarComponent implements OnInit {
 
   fetchEvents() {
     this.service.getAllEvents().subscribe((data) => {
-      console.log(data);
       const events = data.payload;
       this.calendarEvents = events.map((event: any) => ({
         title: event.event_name,

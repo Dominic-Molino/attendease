@@ -11,7 +11,15 @@ export class EventService {
 
   private API_URL = 'http://localhost/attendease/backend/api/';
 
-  addEvent(data: any) {
+  addEvent(data: any): Observable<any> {
     return this.http.post(`${this.API_URL}addevent`, data);
+  }
+
+  getAllEvents(): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}events`);
+  }
+
+  deleteEvent(data: any): Observable<any> {
+    return this.http.post(`${this.API_URL}deleteevent`, data);
   }
 }

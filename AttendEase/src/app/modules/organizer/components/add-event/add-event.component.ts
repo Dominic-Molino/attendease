@@ -48,55 +48,14 @@ export class AddEventComponent {
     event_registration_start: this.builder.control(null),
     event_registration_end: this.builder.control(null),
     session: this.builder.control('', Validators.required),
-    selectedFile: [''],
-    requirement: this.builder.control(null),
+    requirement: this.builder.control('', Validators.required),
   });
 
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
-    this.eventForm.patchValue({ selectedFile: this.selectedFile });
-    console.log(this.selectedFile);
-  }
-
   addEvent() {
-    const formData = new FormData();
-    formData.append('event_name', this.eventForm.value.event_name!);
-    formData.append(
-      'event_description',
-      this.eventForm.value.event_description!
-    );
-    formData.append('event_location', this.eventForm.value.event_location!);
-    formData.append('event_start_date', this.eventForm.value.event_start_date!);
-    formData.append('event_end_date', this.eventForm.value.event_end_date!);
-    formData.append(
-      'event_registration_start',
-      this.eventForm.value.event_registration_start!
-    );
-    formData.append(
-      'event_registration_end',
-      this.eventForm.value.event_registration_end!
-    );
-    formData.append('session', this.eventForm.value.session!);
-
-    formData.append(
-      'selectedFile',
-      this.selectedFile!,
-      this.selectedFile!.name
-    );
-    formData.append('requirement', this.eventForm.value.requirement!);
-
-    //test if formdata has values
-    formData.forEach((value, key) => {
-      console.log(key + ': ' + value);
-    });
-
-    this.eventService.addEvent(formData).subscribe(
-      (res: any) => {
-        console.log('Event Added', res);
-      },
-      (error) => {
-        console.error('Failed to add event', error);
-      }
-    );
+    if (this.eventForm.valid) {
+      this.eventService.addEvent(this.eventForm.value).subscribe((res) => {
+        console.log('sucsess', res);
+      });
+    }
   }
 }

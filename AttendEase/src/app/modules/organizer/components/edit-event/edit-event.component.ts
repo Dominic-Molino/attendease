@@ -14,6 +14,6 @@ export class EditEventComponent {
   constructor(private dialog: MatDialog) {}
 
   editEvent() {
-    this.dialog.open(ViewComponent);
+    const edit = this.dialog.open(ViewComponent);
   }
 }
