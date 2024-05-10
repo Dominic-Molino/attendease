@@ -155,6 +155,49 @@ switch ($_SERVER['REQUEST_METHOD']) {
         }
         break;
 
+<<<<<<< HEAD
+    // Handle POST requests
+   case 'POST':
+    // Retrieves JSON-decoded data from php://input using file_get_contents
+    $data = json_decode(file_get_contents("php://input"));
+    switch ($request[0]) {
+        case 'adduser':
+            echo json_encode($post->add_user($pdo, $data));
+            break;
+        case 'edituser':
+            echo json_encode($post->edit_user($pdo, $data, $request[1]));
+            break;
+        case 'deleteuser':
+            echo json_encode($post->delete_user($pdo, $request[1]));
+            break;
+        case 'addevent':
+            echo json_encode($post->add_event($pdo, $data));
+            break;
+        case 'editevent':
+            echo json_encode($post->edit_event($pdo, $data, $request[1]));
+            break;
+        case 'deleteevent':
+            echo json_encode($post->delete_event($pdo, $request[1]));
+            break;
+        case 'register_for_event':
+            echo json_encode($post->register_for_event($pdo, $data->event_id, $data->user_id));
+            break;
+        case 'markattendance':
+            echo json_encode($post->mark_attendance($pdo, $data->event_id, $data->user_id));
+            break;
+        case 'addfeedback':
+            echo json_encode($post->add_event_feedback($pdo, $data));
+            break;
+        default:
+            // Return a 403 response for unsupported requests
+            echo "This is forbidden";
+            http_response_code(403);
+            break;
+    }
+    break;
+    
+=======
+>>>>>>> 07ec32142dfd8b771c52ac05f86a8100240633df
     default:
         // Return a 404 response for unsupported HTTP methods
         echo "Method not available";
