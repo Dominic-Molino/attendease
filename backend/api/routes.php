@@ -111,10 +111,12 @@ switch ($_SERVER['REQUEST_METHOD']) {
         case 'register_for_event':
             echo json_encode($post->register_for_event($pdo, $data->event_id, $data->user_id));
             break;
+        case 'markattendance':
+            echo json_encode($post->mark_attendance($pdo, $data->event_id, $data->user_id));
+            break;
         case 'addfeedback':
             echo json_encode($post->add_event_feedback($pdo, $data));
             break;
-        // Add more cases for other endpoints if needed
         default:
             // Return a 403 response for unsupported requests
             echo "This is forbidden";
