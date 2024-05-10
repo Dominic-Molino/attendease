@@ -25,8 +25,6 @@ if (isset($_REQUEST['request'])) {
     exit();
 }
 
-
-
 // Initialize Get and Post objects
 $con = new Connection();
 $pdo = $con->connect();
@@ -139,6 +137,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 break;
             case 'register_for_event':
                 echo json_encode($post->register_for_event($pdo, $data->event_id, $data->user_id));
+                break;
+            case 'markattendance':
+                echo json_encode($post->mark_attendance($pdo, $data->event_id, $data->user_id));
                 break;
             case 'addfeedback':
                 echo json_encode($post->add_event_feedback($pdo, $data));
