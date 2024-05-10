@@ -89,8 +89,6 @@ class Post extends GlobalMethods
             $data->event_end_date,
             $data->event_registration_start,
             $data->event_registration_end,
-            $data->requirement,
-            $data->session
         )) {
             return $this->sendPayload(null, 'failed', "Incomplete event data.", 400);
         }
@@ -102,19 +100,17 @@ class Post extends GlobalMethods
         $event_end_date = $data->event_end_date;
         $event_registration_start = $data->event_registration_start;
         $event_registration_end = $data->event_registration_end;
-        $requirement = $data->requirement;
-        $session = $data->session;
 
 
         $sql = "INSERT INTO events (event_name, event_description, event_location, event_start_date, event_end_date, 
-            event_registration_start, event_registration_end, requirement, session
+            event_registration_start, event_registration_end
             ) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 $event_name, $event_description, $event_location, $event_start_date, $event_end_date,
-                $event_registration_start, $event_registration_end, $requirement, $session
+                $event_registration_start, $event_registration_end
             ]);
 
             if ($stmt->rowCount() > 0) {
