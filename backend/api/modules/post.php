@@ -248,7 +248,7 @@ class Post extends GlobalMethods
     public function mark_attendance($pdo, $event_id, $user_id)
     {
         // Check if the event is ongoing (current date is between event start and end dates)
-        $sql = "SELECT Event_Id FROM Events WHERE Event_Id = ? AND Event_Start_Date <= NOW() AND Event_End_Date >= NOW()";
+        $sql = "SELECT Event_Id FROM Events WHERE Event_Id = ? AND Event_Start_Date <= NOW()";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$event_id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -380,14 +380,11 @@ class Post extends GlobalMethods
         $event_end_date = $data->event_end_date;
         $event_registration_start = $data->event_registration_start;
         $event_registration_end = $data->event_registration_end;
-        $session = $data->session;
-        $requirement =  $data->requirement;
 
         $sql = "UPDATE Events 
             SET event_name = ?, event_description = ?, event_location = ?, 
             event_start_date = ?, event_end_date = ?, 
-            event_registration_start = ?, event_registration_end = ?, 
-            requirement = ?, session = ?
+            event_registration_start = ?, event_registration_end = ?
             WHERE event_id = ?";
         try {
             $stmt = $pdo->prepare($sql);
@@ -395,7 +392,7 @@ class Post extends GlobalMethods
                 $event_name, $event_description, $event_location,
                 $event_start_date, $event_end_date,
                 $event_registration_start, $event_registration_end,
-                $session, $requirement, $event_id
+                $event_id
             ]);
 
             if ($stmt->rowCount() > 0) {
@@ -425,33 +422,23 @@ class Post extends GlobalMethods
         }
     }
 
-    public function upload_user_image($data, $user_id)
-    {
-        $fileName = basename($_FILES["file"]["name"]);
-        $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
-        $fileSize = $_FILES["file"]["size"];
-        $fileData = file_get_contents($_FILES["file"]["tmp_name"]);
+    // public function upload_user_image($user_id)
+    // {
+    //     if (isset($_FILES["file"]) && $_FILES["file"]["error"] === UPLOAD_ERR_OK) {
+    //         $fileData = file_get_contents($_FILES["file"]["tmp_name"]);
 
-        $sql = "INSERT INTO user_images (user_id, file_name, file_type, file_size, file_data) VALUES ( ?, ?, ?, ?, ?) WHERE user_id = ?";
-        try {
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute(
-                [
+    //         $sql = "UPDATE user SET avatar = ? WHERE user_id = ?";
 
-                    $data->fileName,
-                    $data->fileType,
-                    $data->fileSize,
-                    $data->fileData,
-                    $user_id
-                ]
-            );
-            if ($stmt->rowCount() > 0) {
-                return $this->sendPayload(null, 'success', "Success.", 200);
-            } else {
-                return $this->sendPayload(null, 'failed', "Failed.", 500);
-            }
-        } catch (PDOException $e) {
-            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
-        }
-    }
+    //         try {
+    //             $stmt = $this->pdo->prepare($sql);
+    //             $stmt->execute([$fileData, $user_id]);
+
+    //             return $this->sendPayload(null, 'success', "Avatar uploaded successfully.", 200);
+    //         } catch (PDOException $e) {
+    //             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+    //         }
+    //     } else {
+    //         return $this->sendPayload(null, 'failed', "File upload failed or file not found.", 400);
+    //     }
+    // }
 }

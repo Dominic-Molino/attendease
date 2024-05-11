@@ -1,10 +1,7 @@
 <?php
 header("Access-Control-Allow-Origin: http://localhost:4200");
-header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: OPTIONS, GET, POST, PUT, DELETE");
-header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: *");
-header("Content-Type: application/json; charset=UTF-8");
 
 
 // Include required modules
@@ -53,9 +50,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     echo json_encode($get->get_student());
                 }
                 break;
-            case 'roles':
-                echo json_encode($get->get_roles());
-                break;
             case 'events':
                 if (isset($request[1])) {
                     echo json_encode($get->get_events($request[1]));
@@ -63,13 +57,44 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     echo json_encode($get->get_all_events());
                 }
                 break;
-            case 'feedback':
+            case 'userevents':
                 if (isset($request[1])) {
-                    echo json_encode($get->get_event_feedback($request[1]));
+                    echo json_encode($get->get_user_events($request[1]));
                 } else {
-                    echo json_encode($get->get_all_event_feedback());
+                    echo "User ID not provided";
+                    http_response_code(400);
                 }
                 break;
+            case 'registeredUser':
+                if (isset($request[1])) {
+                    echo json_encode($get->get_registered_users_for_event($request[1]));
+                } else {
+                    echo "User ID not provided";
+                    http_response_code(400);
+                }
+                break;
+            case 'geteventid':
+                if (isset($request[1])) {
+                    $eventId = $get->getEventById($request[1]);
+                    if ($eventId !== false) {
+                        echo json_encode(['event_id' => $eventId]);
+                    } else {
+                        echo "Event not found";
+                        http_response_code(404);
+                    }
+                } else {
+                    echo "Event id not provided";
+                    http_response_code(400);
+                }
+                break;
+                // case 'getavatar':
+                //     if (isset($request[1])) {
+                //         $get->get_avatar($request[1]);
+                //     } else {
+                //         echo "ID not provided";
+                //         http_response_code(400);
+                //     }
+                //     break;
             default:
                 echo "This is forbidden";
                 http_response_code(403);
@@ -132,10 +157,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
             case 'editevent':
                 echo json_encode($post->edit_event($pdo, $data, $request[1]));
                 break;
-            case 'deleteevent':
-                echo json_encode($post->delete_event($pdo, $request[1]));
-                break;
-            case 'register_for_event':
+                // case 'uploadimage':
+                //     echo json_encode($post->upload_user_image($request[1]));
+                //     break;
+            case 'register':
                 echo json_encode($post->register_for_event($pdo, $data->event_id, $data->user_id));
                 break;
             case 'markattendance':
@@ -148,6 +173,20 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo "This is forbidden";
                 http_response_code(403);
                 break;
+        }
+        break;
+
+    case 'DELETE':
+        switch ($request[0]) {
+            case 'deleteevent':
+                if (isset($request[1])) {
+                    $event_id = $request[1];
+                    echo json_encode($post->delete_event($pdo, $event_id));
+                } else {
+                    // Event ID is not provided
+                    http_response_code(400);
+                    echo json_encode(["message" => "Event ID is required for deletion"]);
+                }
         }
         break;
 
