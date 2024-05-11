@@ -25,7 +25,6 @@ export class EditComponent implements OnInit {
   ) {}
 
   user_id = this.service.getCurrentUserId();
-  editData?: any;
   studentInfo: any = '';
   editForm = this.builder.group({
     first_name: this.builder.control(''),

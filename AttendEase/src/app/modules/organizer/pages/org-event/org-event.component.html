@@ -32,11 +32,12 @@
         </svg>
       </button>
     </div>
+
+    @if(eventData){
     <div class="container">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-        @defer{
         <div
-          *ngFor="let event of eventData"
+          *ngFor="let event of eventData; trackBy: eventData.event_id"
           class="rounded-xl border-2 shadow-lg container mb-5 bg-gray-50"
         >
           <div class="p-3.5 flex flex-col">
@@ -87,14 +88,43 @@
                 </button>
               </div>
               <div class="flex w-full justify-end items-center gap-1">
-                <app-edit-event></app-edit-event>
-                <app-delete-event></app-delete-event>
+                <button
+                  (click)="editEvent(event)"
+                  type="button"
+                  aria-expanded="false"
+                  class="flex items-center border border-gray-200 justify-center text-white bg-silver_sand rounded-full w-10 h-10 hover:bg-slate-400 focus:outline-none shadow-md"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
+                    />
+                  </svg>
+                </button>
+
+                <app-delete-event
+                  [event_id]="event"
+                  (eventDeleted)="loadEvent()"
+                ></app-delete-event>
               </div>
             </div>
           </div>
         </div>
-        }
       </div>
     </div>
+    }@else {
+    <div>HELLOW</div>
+    }
   </div>
 </main>

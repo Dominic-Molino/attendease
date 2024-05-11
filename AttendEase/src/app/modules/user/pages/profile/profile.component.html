@@ -12,18 +12,35 @@
       class="w-full mx-auto max-w-lg bg-gray-50 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
     >
       <div class="flex flex-col items-center py-10 px-4">
-        <img
-          class="w-40 h-40 mb-3 rounded-full shadow-lg cursor-pointer"
-          src="#"
-        />
+        <div class="flex justify-center mt-10 mb-10">
+          <div class="avatar-container">
+            <img
+              *ngIf="avatarUrl; else placeholder"
+              [src]="avatarUrl"
+              class="image-container"
+              alt="Avatar"
+            />
+            <ng-template #placeholder>
+              <div class="image-container avatar-placeholder">
+                <!-- Placeholder content -->
+              </div>
+            </ng-template>
+
+            <label for="avatar-input-file">
+              <div class="icon-wrapper">
+                <input type="file" id="avatar-input-file" accept="image/*" />
+              </div>
+            </label>
+          </div>
+        </div>
         <h5
           class="mb-1 text-2xl lg:text-2xl font-medium text-gray-900 font-secondary"
         >
-          {{ studentInfo.first_name | uppercase }}
-          {{ studentInfo.last_name | uppercase }}
+          {{ studentProfile[0]?.first_name | uppercase }}
+          {{ studentProfile[0]?.last_name | uppercase }}
         </h5>
         <span class="text-xs text-custom_black lg:text-xl dark:text-gray-400">{{
-          extractStudentId(studentInfo.email)
+          extractStudentId(studentProfile[0]?.email)
         }}</span>
 
         <hr class="h-px w-[80%] my-4 bg-slate-300 border-0" />
@@ -44,8 +61,8 @@
                     </p>
                     <span
                       class="text-sm font-normal lg:text-base font-secondary text-gray-900"
-                      >{{ studentInfo.first_name | titlecase }}
-                      {{ studentInfo.last_name | titlecase }}</span
+                      >{{ studentProfile[0]?.first_name | titlecase }}
+                      {{ studentProfile[0]?.last_name | titlecase }}</span
                     >
                   </div>
                 </div>
@@ -60,7 +77,7 @@
                     </p>
                     <span
                       class="text-sm font-normal lg:text-base font-secondary text-gray-900"
-                      >{{ studentInfo.email }}</span
+                      >{{ studentProfile[0]?.email }}</span
                     >
                   </div>
                 </div>
@@ -75,7 +92,7 @@
                     </p>
                     <span
                       class="text-sm font-normal lg:text-base font-secondary text-gray-900"
-                      >{{ studentInfo.course | uppercase }}</span
+                      >{{ studentProfile[0]?.course | uppercase }}</span
                     >
                   </div>
                 </div>
@@ -90,7 +107,7 @@
                     </p>
                     <span
                       class="text-sm font-normal lg:text-base font-secondary text-gray-900"
-                      >{{ studentInfo.block | uppercase }}</span
+                      >{{ studentProfile[0]?.block | uppercase }}</span
                     >
                   </div>
                 </div>
@@ -105,7 +122,7 @@
                     </p>
                     <span
                       class="text-sm font-normal lg:text-base font-secondary text-gray-900"
-                      >{{ studentInfo.year_level }}</span
+                      >{{ studentProfile[0]?.year_level }}</span
                     >
                   </div>
                 </div>

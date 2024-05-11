@@ -1,15 +1,31 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { AuthserviceService } from './authservice.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EventService {
-  constructor(private http: HttpClient, private helper: JwtHelperService) {}
+  constructor(
+    private http: HttpClient,
+    private user: AuthserviceService,
+    private helper: JwtHelperService
+  ) {}
 
   private API_URL = 'http://localhost/attendease/backend/api/';
+
+  getCurrentUserId(): number | null {
+    const mytoken = sessionStorage.getItem('token');
+    if (mytoken) {
+      const decodedToken = this.helper.decodeToken(mytoken);
+      if (decodedToken && decodedToken.user_id) {
+        return decodedToken.user_id;
+      }
+    }
+    return null;
+  }
 
   addEvent(data: any): Observable<any> {
     return this.http.post(`${this.API_URL}addevent`, data);
@@ -20,6 +36,28 @@ export class EventService {
   }
 
   deleteEvent(data: any): Observable<any> {
-    return this.http.post(`${this.API_URL}deleteevent`, data);
+    return this.http.delete(`${this.API_URL}deleteevent/${data}`);
+  }
+
+  getEventId(event_id: any): Observable<any> {
+    return this.http.get(`${this.API_URL}geteventid`, event_id);
+  }
+
+  editEvent(data: any, id: any) {
+    return this.http.post(`${this.API_URL}editevent/${id}`, data);
+  }
+
+  getUserEvent(): Observable<any> {
+    const userId = this.getCurrentUserId();
+    if (userId) {
+      return this.http.get(`${this.API_URL}userevents/${userId}`);
+    } else {
+      return throwError('User ID not found');
+    }
+  }
+
+  registerForEvent(eventId: number, userId: any): Observable<any> {
+    const data = { event_id: eventId, user_id: userId };
+    return this.http.post(`${this.API_URL}register`, data);
   }
 }

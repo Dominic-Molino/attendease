@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { EventService } from '../../../../core/service/event.service';
@@ -12,10 +12,20 @@ import { EventService } from '../../../../core/service/event.service';
   styleUrl: './delete-event.component.css',
 })
 export class DeleteEventComponent {
-  event_id: any;
-  constructor(private dialog: MatDialog, private service: EventService) {}
+  @Output() eventDeleted: EventEmitter<void> = new EventEmitter<void>();
+  @Input() event_id: any;
+  constructor(private service: EventService) {}
 
-  deleteEvent(event_id: any) {
+  deleteEvent() {
+    if (!this.event_id || !this.event_id.event_id) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Invalid event.',
+        icon: 'error',
+      });
+      return;
+    }
+
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -26,13 +36,14 @@ export class DeleteEventComponent {
       confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.service.deleteEvent(event_id).subscribe(
+        this.service.deleteEvent(this.event_id.event_id).subscribe(
           (res) => {
             Swal.fire({
               title: 'Deleted!',
               text: 'Your file has been deleted.',
               icon: 'success',
             });
+            this.eventDeleted.emit();
           },
           (error) => {
             Swal.fire({

@@ -1,5 +1,5 @@
 <full-calendar
-  *ngIf="calendarEvents.length > 0"
+  *ngIf="calendarEvents.length > 0 || calendarEvents.length == 0"
   [options]="calendarOptions()"
   [events]="calendarEvents"
 >

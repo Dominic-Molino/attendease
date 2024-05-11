@@ -14,6 +14,7 @@ import { JsonPipe } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { EventService } from '../../../../core/service/event.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-add-event',
@@ -48,13 +49,12 @@ export class AddEventComponent {
     event_registration_start: this.builder.control(null),
     event_registration_end: this.builder.control(null),
     session: this.builder.control('', Validators.required),
-    requirement: this.builder.control('', Validators.required),
   });
 
   addEvent() {
     if (this.eventForm.valid) {
       this.eventService.addEvent(this.eventForm.value).subscribe((res) => {
-        console.log('sucsess', res);
+        Swal.fire('Success', 'Event Successfully Added', 'success');
       });
     }
   }

@@ -44,8 +44,8 @@ export class AuthserviceService {
     return this.http.post(`${this.API_URL}edituser/${id}`, data);
   }
 
-  getStudentProfile(data: any): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}student`, data);
+  getStudentProfile(id: any): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}student/${id}`);
   }
 
   // events
@@ -56,4 +56,21 @@ export class AuthserviceService {
   addEvent(data: any): Observable<any> {
     return this.http.post(`${this.API_URL}addevent`, data);
   }
+
+  editEvent(data: any) {
+    return this.http.post(`${this.API_URL}editevent`, data);
+  }
+
+  // uploadAvatar(userId: number, file: File) {
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+
+  //   return this.http.post(`${this.API_URL}uploadimage/${userId}`, formData);
+  // }
+
+  // getAvatar(userId: number) {
+  //   return this.http.get(`${this.API_URL}getavatar/${userId}`, {
+  //     responseType: 'blob',
+  //   });
+  // }
 }

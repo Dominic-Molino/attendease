@@ -25,7 +25,7 @@
               <span
                 class="text-xl me-1 font-bold leading-none text-gray-900 dark:text-white"
               >
-                Events
+                Registered Events
               </span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -67,15 +67,16 @@
               <!-- body -->
               <tbody>
                 <tr
+                  *ngFor="let event of events"
                   class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                 >
                   <td
                     scope="row"
                     class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    {{ events.eventName }}
+                    {{ event.event_name }}
                   </td>
-                  <td class="px-6 py-4">{{ events.eventDate }}</td>
+                  <td class="px-6 py-4">{{ event.event_start_date }}</td>
                   <div class="flex items-center">
                     <td class="py-4">
                       <span
@@ -83,7 +84,7 @@
                         ><span
                           class="flex w-2.5 h-2.5 bg-blue-600 rounded-full me-1.5 flex-shrink-0"
                         ></span
-                        >{{ events.eventStats | uppercase }}</span
+                        >{{ event.status_id | uppercase }}</span
                       >
                     </td>
                   </div>

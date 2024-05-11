@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { DeleteEventComponent } from '../../components/delete-event/delete-event.component';
 import { EditEventComponent } from '../../components/edit-event/edit-event.component';
 import { ReadEventComponent } from '../../components/read-event/read-event.component';
-import { Router } from '@angular/router';
 import { EventService } from '../../../../core/service/event.service';
 
 @Component({
@@ -27,14 +26,15 @@ export class OrgEventComponent implements OnInit {
   upcomingEvents: any[] = [];
   ongoingEvents: any[] = [];
   pastEvents: any[] = [];
+  selectedEventId: any;
 
-  constructor(
-    private routes: Router,
-    private service: EventService,
-    private dialog: MatDialog
-  ) {}
+  constructor(private service: EventService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
+    this.loadEvent();
+  }
+
+  loadEvent() {
     this.service.getAllEvents().subscribe((result) => {
       this.eventData = result.payload;
       const today = new Date();
@@ -53,8 +53,23 @@ export class OrgEventComponent implements OnInit {
   }
 
   openDialog() {
-    this.dialog.open(AddEventComponent, {
+    const modal = this.dialog.open(AddEventComponent, {
       width: '50%',
+    });
+
+    modal.afterClosed().subscribe((response) => {
+      this.loadEvent();
+    });
+  }
+
+  editEvent(eventId: any) {
+    this.selectedEventId = eventId;
+    const modal = this.dialog.open(EditEventComponent, {
+      data: { event_id: this.selectedEventId },
+      width: '75%',
+    });
+    modal.afterClosed().subscribe((response) => {
+      this.loadEvent();
     });
   }
 

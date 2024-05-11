@@ -9,14 +9,14 @@
       <hr class="h-px mb-6 bg-gray-200 border-0 dark:bg-gray-700" />
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-      <div class="lg:w-full shadow-lg rounded-md p-10 bg-gray-50">
+      <div class="lg:w-full col-span-2 shadow-lg rounded-md p-10 bg-gray-50">
         <!-- calendar here -->
         <app-calendar></app-calendar>
       </div>
 
-      <div class="grid-col-2 grid-flow-row">
+      <div class="grid-col-1 grid-rows-2 w-full">
         <div
-          class="max-w-full h-2/3 p-4 bg-gray-50 border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
+          class="max-w-full p-4 bg-gray-50 border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
         >
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center">
@@ -59,7 +59,7 @@
                 <tr>
                   <th scope="col" class="px-6 py-3">Event Name</th>
                   <th scope="col" class="px-6 py-3">Date</th>
-                  <th scope="col" class="px-6 py-3">Status</th>
+                  <th scope="col" class="px-6 py-3">Attendees</th>
                 </tr>
               </thead>
               <!-- body -->
@@ -74,28 +74,28 @@
                     EVENT NAME*
                   </td>
                   <td class="px-6 py-4">EVENT DATA*</td>
-                  <td class="px-6 py-4">EVENT STATUS*</td>
+                  <td class="px-6 py-4">Attendees</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
-        <div class="mt-2.5">
-          <a
-            href="#"
-            class="block max-w-full p-6 bg-gray-50 border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+      </div>
+      <div class="mt-2.5 col-span-1">
+        <a
+          href="#"
+          class="block max-w-full p-6 bg-gray-50 border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+        >
+          <h5
+            class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
           >
-            <h5
-              class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
-            >
-              Noteworthy technology acquisitions 2021
-            </h5>
-            <p class="font-normal text-gray-700 dark:text-gray-400">
-              Here are the biggest enterprise technology acquisitions of 2021 so
-              far, in reverse chronological order.
-            </p>
-          </a>
-        </div>
+            Noteworthy technology acquisitions 2021
+          </h5>
+          <p class="font-normal text-gray-700 dark:text-gray-400">
+            Here are the biggest enterprise technology acquisitions of 2021 so
+            far, in reverse chronological order.
+          </p>
+        </a>
       </div>
     </div>
   </div>

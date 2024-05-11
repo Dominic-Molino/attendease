@@ -29,3 +29,101 @@
 .colored-toast .swal2-html-container {
   color: white;
 }
+
+td {
+  padding: 8px;
+}
+
+img {
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  padding: 10px;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+p {
+  font-size: 15px;
+}
+
+.name {
+  font-size: 20px;
+}
+
+b {
+  font-size: 15px;
+}
+
+.personal {
+  text-indent: 50px;
+  padding-left: 25px;
+  font-size: 20px;
+}
+
+table {
+  width: 100%;
+}
+
+.avatar-container {
+  position: relative;
+  width: fit-content;
+}
+
+.box-shadow-avatar {
+  box-shadow: 0 10px 20px 20px rgba(2, 0, 147, 0.102);
+}
+
+.image-container {
+  height: 200px;
+  width: 200px;
+  z-index: 1;
+  border-radius: 50%;
+  background-color: #fff;
+  background-position: center;
+  background-size: cover;
+  box-shadow: 0 10px 20px 20px rgba(2, 0, 147, 0.102);
+}
+.avatar-placeholder {
+  background-image: url("../../../../../assets/images/placeholder.png");
+}
+
+.icon-wrapper {
+  position: absolute;
+  height: 40px;
+  width: 40px;
+  padding: 0.35rem;
+  background-color: #2962ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  right: 0;
+  top: 75%;
+  z-index: 2;
+  cursor: pointer;
+
+  &:hover {
+    transition: all 0.25s;
+    background-color: darken(#2962ff, 15%);
+  }
+
+  .icon {
+    color: white;
+  }
+
+  label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+}

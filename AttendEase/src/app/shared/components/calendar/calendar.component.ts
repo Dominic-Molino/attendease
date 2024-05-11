@@ -8,7 +8,6 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import { AuthserviceService } from '../../../core/service/authservice.service';
 import { MatDialog } from '@angular/material/dialog';
-import { PreviewComponent } from '../../../modules/user/components/preview/preview.component';
 
 @Component({
   selector: 'app-calendar',
@@ -19,6 +18,7 @@ import { PreviewComponent } from '../../../modules/user/components/preview/previ
 })
 export class CalendarComponent implements OnInit {
   calendarEvents: EventInput[] = [];
+  calendarVisible = signal(true);
 
   constructor(private service: AuthserviceService, private dialog: MatDialog) {}
 
@@ -45,7 +45,10 @@ export class CalendarComponent implements OnInit {
     },
     initialView: 'dayGridMonth',
     weekends: true,
-    editable: true,
     dayMaxEvents: true,
   });
+
+  handleCalendarToggle() {
+    this.calendarVisible.update((bool) => !bool);
+  }
 }
