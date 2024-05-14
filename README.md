@@ -48,39 +48,43 @@ attendease
 │  │              ├─ @fullcalendar_list.js.map
 │  │              ├─ @fullcalendar_timegrid.js
 │  │              ├─ @fullcalendar_timegrid.js.map
-│  │              ├─ browser-4VAH6LQK.js
-│  │              ├─ browser-4VAH6LQK.js.map
+│  │              ├─ browser-GIDGLFRQ.js
+│  │              ├─ browser-GIDGLFRQ.js.map
+│  │              ├─ chunk-3GPB7H2Q.js
+│  │              ├─ chunk-3GPB7H2Q.js.map
 │  │              ├─ chunk-4DQH4TUT.js
 │  │              ├─ chunk-4DQH4TUT.js.map
-│  │              ├─ chunk-5BOHQTYV.js
-│  │              ├─ chunk-5BOHQTYV.js.map
-│  │              ├─ chunk-6D6BH7UG.js
-│  │              ├─ chunk-6D6BH7UG.js.map
-│  │              ├─ chunk-7XD6OI56.js
-│  │              ├─ chunk-7XD6OI56.js.map
-│  │              ├─ chunk-BTAZUEZB.js
-│  │              ├─ chunk-BTAZUEZB.js.map
+│  │              ├─ chunk-67ES5REE.js
+│  │              ├─ chunk-67ES5REE.js.map
+│  │              ├─ chunk-B6UBDKRX.js
+│  │              ├─ chunk-B6UBDKRX.js.map
 │  │              ├─ chunk-D4JZ3PIA.js
 │  │              ├─ chunk-D4JZ3PIA.js.map
-│  │              ├─ chunk-G57MPUXY.js
-│  │              ├─ chunk-G57MPUXY.js.map
-│  │              ├─ chunk-OEDVBG3D.js
-│  │              ├─ chunk-OEDVBG3D.js.map
-│  │              ├─ chunk-PE6MOQXT.js
-│  │              ├─ chunk-PE6MOQXT.js.map
-│  │              ├─ chunk-PLEK45SQ.js
-│  │              ├─ chunk-PLEK45SQ.js.map
-│  │              ├─ chunk-QB6LZAGC.js
-│  │              ├─ chunk-QB6LZAGC.js.map
+│  │              ├─ chunk-FWRLQZ4B.js
+│  │              ├─ chunk-FWRLQZ4B.js.map
+│  │              ├─ chunk-FWZY5YU6.js
+│  │              ├─ chunk-FWZY5YU6.js.map
+│  │              ├─ chunk-IW3OMNBM.js
+│  │              ├─ chunk-IW3OMNBM.js.map
+│  │              ├─ chunk-M77FFSMG.js
+│  │              ├─ chunk-M77FFSMG.js.map
+│  │              ├─ chunk-QOP6FLBN.js
+│  │              ├─ chunk-QOP6FLBN.js.map
+│  │              ├─ chunk-RBRO5LZE.js
+│  │              ├─ chunk-RBRO5LZE.js.map
 │  │              ├─ chunk-T7UM46HU.js
 │  │              ├─ chunk-T7UM46HU.js.map
-│  │              ├─ chunk-TAGZ4G36.js
-│  │              ├─ chunk-TAGZ4G36.js.map
+│  │              ├─ chunk-VK3DUFV4.js
+│  │              ├─ chunk-VK3DUFV4.js.map
 │  │              ├─ chunk-WKYGNSYM.js
 │  │              ├─ chunk-WKYGNSYM.js.map
+│  │              ├─ chunk-WSA2QMXP.js
+│  │              ├─ chunk-WSA2QMXP.js.map
 │  │              ├─ flowbite.js
 │  │              ├─ flowbite.js.map
 │  │              ├─ package.json
+│  │              ├─ rxjs.js
+│  │              ├─ rxjs.js.map
 │  │              ├─ sweetalert2.js
 │  │              ├─ sweetalert2.js.map
 │  │              └─ _metadata.json
@@ -139,12 +143,6 @@ attendease
 │  │  │  │  │  │  │  ├─ delete-event.component.spec.ts
 │  │  │  │  │  │  │  └─ delete-event.component.ts
 │  │  │  │  │  │  ├─ edit-event
-│  │  │  │  │  │  │  ├─ component
-│  │  │  │  │  │  │  │  └─ view
-│  │  │  │  │  │  │  │     ├─ view.component.css
-│  │  │  │  │  │  │  │     ├─ view.component.html
-│  │  │  │  │  │  │  │     ├─ view.component.spec.ts
-│  │  │  │  │  │  │  │     └─ view.component.ts
 │  │  │  │  │  │  │  ├─ edit-event.component.css
 │  │  │  │  │  │  │  ├─ edit-event.component.html
 │  │  │  │  │  │  │  ├─ edit-event.component.spec.ts
@@ -196,8 +194,7 @@ attendease
 │  │  │  │     │  │  ├─ dashboard.component.css
 │  │  │  │     │  │  ├─ dashboard.component.html
 │  │  │  │     │  │  ├─ dashboard.component.spec.ts
-│  │  │  │     │  │  ├─ dashboard.component.ts
-│  │  │  │     │  │  └─ events.utils.ts
+│  │  │  │     │  │  └─ dashboard.component.ts
 │  │  │  │     │  ├─ events
 │  │  │  │     │  │  ├─ events.component.css
 │  │  │  │     │  │  ├─ events.component.html
@@ -223,8 +220,7 @@ attendease
 │  │  │        │  ├─ calendar.component.css
 │  │  │        │  ├─ calendar.component.html
 │  │  │        │  ├─ calendar.component.spec.ts
-│  │  │        │  ├─ calendar.component.ts
-│  │  │        │  └─ events.utils.ts
+│  │  │        │  └─ calendar.component.ts
 │  │  │        ├─ org-sidebar
 │  │  │        │  ├─ org-sidebar.component.css
 │  │  │        │  ├─ org-sidebar.component.html
@@ -237,9 +233,10 @@ attendease
 │  │  │           └─ sidebar.component.ts
 │  │  ├─ assets
 │  │  │  ├─ images
+│  │  │  │  ├─ attendease_logo.png
 │  │  │  │  ├─ gojo.jpg
 │  │  │  │  ├─ man.png
-│  │  │  │  ├─ star.png
+│  │  │  │  ├─ placeholder.png
 │  │  │  │  └─ ughh.png
 │  │  │  └─ placeholder.jpg
 │  │  ├─ custom-theme.scss
@@ -258,22 +255,27 @@ attendease
 │  │  ├─ bootstrap.php
 │  │  ├─ config
 │  │  │  └─ database.php
-│  │  ├─ files
-│  │  │  └─ event_img
 │  │  ├─ index.php
-│  │  ├─ login.php
 │  │  ├─ migration
-│  │  │  ├─ attendease_v1.sql
-│  │  │  └─ students.sql
+│  │  │  ├─ attendease_.sql
+│  │  │  └─ attendease_db-latest.sql
 │  │  ├─ modules
 │  │  │  ├─ get.php
 │  │  │  ├─ global.php
 │  │  │  └─ post.php
 │  │  ├─ routes.php
-│  │  └─ src
-│  │     ├─ ErrorHandler.php
-│  │     ├─ InvalidSignatureException.php
-│  │     └─ Jwt.php
+│  │  ├─ src
+│  │  │  ├─ ErrorHandler.php
+│  │  │  ├─ InvalidSignatureException.php
+│  │  │  └─ Jwt.php
+│  │  └─ uploads
+│  │     └─ students
+│  │        ├─ 11
+│  │        │  └─ dom.jpg
+│  │        ├─ 5
+│  │        │  └─ gc.png
+│  │        └─ 9
+│  │           └─ dom.jpg
 │  ├─ composer.json
 │  ├─ composer.lock
 │  └─ vendor

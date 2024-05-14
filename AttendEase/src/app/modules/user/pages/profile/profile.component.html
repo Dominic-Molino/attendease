@@ -12,7 +12,8 @@
       class="w-full mx-auto max-w-lg bg-gray-50 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
     >
       <div class="flex flex-col items-center py-10 px-4">
-        <div class="flex justify-center mt-10 mb-10">
+        <div class="flex justify-center mt-10">
+          @defer{
           <div class="avatar-container">
             <img
               *ngIf="avatarUrl; else placeholder"
@@ -28,11 +29,18 @@
 
             <label for="avatar-input-file">
               <div class="icon-wrapper">
-                <input type="file" id="avatar-input-file" accept="image/*" />
+                <input
+                  type="file"
+                  id="avatar-input-file"
+                  accept="image/*"
+                  (change)="onFileChange($event)"
+                />
               </div>
             </label>
           </div>
+          }
         </div>
+
         <h5
           class="mb-1 text-2xl lg:text-2xl font-medium text-gray-900 font-secondary"
         >

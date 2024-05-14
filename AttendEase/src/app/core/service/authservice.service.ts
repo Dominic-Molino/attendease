@@ -36,8 +36,8 @@ export class AuthserviceService {
     return null;
   }
 
-  uploadImage(file: File, id: any): Observable<any> {
-    return this.http.post(`${this.API_URL}adduserimage/${id}`, file);
+  uploadImage(id: any, file: FormData): Observable<any> {
+    return this.http.post(`${this.API_URL}uploadimage/${id}`, file);
   }
 
   updateStudent(data: any, id: any): Observable<any> {
@@ -45,7 +45,7 @@ export class AuthserviceService {
   }
 
   getStudentProfile(id: any): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}student/${id}`);
+    return this.http.get<any>(`${this.API_URL}users/${id}`);
   }
 
   // events
@@ -61,16 +61,22 @@ export class AuthserviceService {
     return this.http.post(`${this.API_URL}editevent`, data);
   }
 
-  // uploadAvatar(userId: number, file: File) {
-  //   const formData = new FormData();
-  //   formData.append('file', file);
+  uploadAvatar(userId: number, file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
 
-  //   return this.http.post(`${this.API_URL}uploadimage/${userId}`, formData);
-  // }
+    return this.http.post(
+      `http://localhost/attendease/backend/api/uploadimage/${userId}`,
+      formData
+    );
+  }
 
-  // getAvatar(userId: number) {
-  //   return this.http.get(`${this.API_URL}getavatar/${userId}`, {
-  //     responseType: 'blob',
-  //   });
-  // }
+  getAvatar(userId: number) {
+    return this.http.get(
+      `http://localhost/attendease/backend/api/getavatar/${userId}`,
+      {
+        responseType: 'blob',
+      }
+    );
+  }
 }

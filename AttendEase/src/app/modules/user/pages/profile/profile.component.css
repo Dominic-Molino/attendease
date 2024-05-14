@@ -47,18 +47,6 @@ img {
   margin-right: auto;
 }
 
-p {
-  font-size: 15px;
-}
-
-.name {
-  font-size: 20px;
-}
-
-b {
-  font-size: 15px;
-}
-
 .personal {
   text-indent: 50px;
   padding-left: 25px;
@@ -74,10 +62,6 @@ table {
   width: fit-content;
 }
 
-.box-shadow-avatar {
-  box-shadow: 0 10px 20px 20px rgba(2, 0, 147, 0.102);
-}
-
 .image-container {
   height: 200px;
   width: 200px;
@@ -86,8 +70,8 @@ table {
   background-color: #fff;
   background-position: center;
   background-size: cover;
-  box-shadow: 0 10px 20px 20px rgba(2, 0, 147, 0.102);
 }
+
 .avatar-placeholder {
   background-image: url("../../../../../assets/images/placeholder.png");
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   Router,
   RouterLink,
@@ -16,8 +16,26 @@ import Swal from 'sweetalert2';
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',
 })
-export class SidebarComponent {
-  constructor(private service: AuthserviceService, private router: Router) {}
+export class SidebarComponent implements OnInit {
+  userId = this.service.getCurrentUserId();
+  studentProfile: any[] = [];
+
+  constructor(private service: AuthserviceService, private router: Router) {
+    this.userId = this.service.getCurrentUserId();
+  }
+
+  ngOnInit(): void {
+    this.loadInfo();
+  }
+
+  loadInfo() {
+    if (this.userId) {
+      console.log(this.userId);
+      this.service.getStudentProfile(this.userId).subscribe((res) => {
+        this.studentProfile = res;
+      });
+    }
+  }
 
   logout(): void {
     Swal.fire({

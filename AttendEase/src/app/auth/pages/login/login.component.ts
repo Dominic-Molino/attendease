@@ -32,14 +32,17 @@ export class LoginComponent implements OnInit {
   });
 
   loginStudent() {
-    this.service.loginStudent(this.loginForm.value).subscribe((res: any) => {
-      if (res.token) {
-        sessionStorage.setItem('token', res.token);
-        Swal.fire('Success', 'Login Success', 'success');
-        this.router.navigate(['student']);
-      } else {
-        alert('inaliad');
+    this.service.loginStudent(this.loginForm.value).subscribe(
+      (res: any) => {
+        if (res.token) {
+          sessionStorage.setItem('token', res.token);
+          Swal.fire('Success', 'Login Success', 'success');
+          this.router.navigate(['student']);
+        }
+      },
+      (error) => {
+        Swal.fire('Incorrect Credentials', 'Please try again', 'warning');
       }
-    });
+    );
   }
 }

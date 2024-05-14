@@ -67,7 +67,7 @@
               <!-- body -->
               <tbody>
                 <tr
-                  *ngFor="let event of events"
+                  *ngFor="let event of events; let i = index"
                   class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                 >
                   <td
@@ -81,16 +81,103 @@
                     <td class="py-4">
                       <span
                         class="flex items-center text-sm font-normal text-gray-900 dark:text-white me-3"
-                        ><span
-                          class="flex w-2.5 h-2.5 bg-blue-600 rounded-full me-1.5 flex-shrink-0"
-                        ></span
-                        >{{ event.status_id | uppercase }}</span
                       >
+                        <span
+                          *ngIf="event.eventState === 'upcoming'"
+                          class="flex w-2.5 h-2.5 bg-yellow-300 rounded-full me-1.5 flex-shrink-0"
+                        ></span>
+                        <span
+                          *ngIf="event.eventState === 'done'"
+                          class="flex w-2.5 h-2.5 bg-carribean_green-mint rounded-full me-1.5 flex-shrink-0"
+                        ></span>
+                        <span
+                          *ngIf="event.eventState === 'ongoing'"
+                          class="flex w-2.5 h-2.5 bg-blue-500 rounded-full me-1.5 flex-shrink-0"
+                        ></span>
+                        {{ event.eventState | uppercase }}
+                      </span>
                     </td>
                   </div>
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+
+        <div class="relative overflow-x-auto mt-2 shadow-md sm:rounded-lg">
+          <div
+            class="w-full bg-white shadow-lg border border-grey-200 rounded-sm"
+          >
+            <div
+              class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+            >
+              <table
+                class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+              >
+                <thead
+                  class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
+                >
+                  <tr>
+                    <th scope="col" class="px-6 py-3">Status</th>
+                    <th scope="col" class="px-6 py-3">Event Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                  >
+                    <td class="p-2">
+                      <span
+                        class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"
+                        ><span
+                          class="flex items-center w-2.5 h-2.5 bg-blue-600 rounded-full me-1.5 flex-shrink-0"
+                        >
+                        </span
+                        >Ongoing
+                      </span>
+                    </td>
+                    <td class="p-2">
+                      Event status blue, the blue dot means that the event is
+                      currently being held and will end soon
+                    </td>
+                  </tr>
+                  <tr
+                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                  >
+                    <td class="p-2">
+                      <span
+                        class="flex items-center font-medium text-sm text-gray-900 dark:text-white me-3"
+                        ><span
+                          class="flex items-center w-2.5 h-2.5 bg-carribean_green-mint rounded-full me-1.5 flex-shrink-0"
+                        >
+                        </span
+                        >Done
+                      </span>
+                    </td>
+                    <td class="p-2">
+                      Event status green, the green dot means that the event is
+                      currently over
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="p-2">
+                      <span
+                        class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"
+                        ><span
+                          class="flex items-center w-2.5 h-2.5 bg-yellow-300 rounded-full me-1.5 flex-shrink-0"
+                        >
+                        </span
+                        >Upcoming
+                      </span>
+                    </td>
+                    <td class="p-2">
+                      Event status yellow, the yellow dot means that the event
+                      has not yet been held or will be held soon
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
