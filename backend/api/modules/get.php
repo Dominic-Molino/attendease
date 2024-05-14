@@ -11,42 +11,64 @@ class Get extends GlobalMethods
         $this->pdo = $pdo;
     }
 
-    // Private method to fetch records from the database table
-    private function get_records($table, $conditions = null)
+    private function get_records($table, $conditions = null, $columns = '*')
     {
-        $sqlStr = "SELECT * FROM $table";
+        $sqlStr = "SELECT $columns FROM $table";
         if ($conditions != null) {
             $sqlStr .= " WHERE " . $conditions;
         }
-        return $this->executeQuery($sqlStr); // Adjusted call to executeQuery()
+        $result = $this->executeQuery($sqlStr);
+
+        if ($result['code'] == 200) {
+            return $this->sendPayload($result['data'], 'success', "Successfully retrieved data.", $result['code']);
+        }
+        return $this->sendPayload(null, 'failed', "Failed to retrieve data.", $result['code']);
     }
 
-    // Private method to execute a SQL query and handle exceptions
+    //nageexecute ng query
     private function executeQuery($sql)
     {
+        $data = array();
+        $errmsg = "";
+        $code = 0;
+
         try {
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute();
+            $statement = $this->pdo->query($sql);
+            if ($statement) {
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($result as $record) {
+                    // Handle BLOB data
+                    if (isset($record['file_data'])) {
 
-            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $rowCount = $stmt->rowCount();
-
-            if ($rowCount > 0) {
-                return $this->sendPayload($data, 'success', "Successfully retrieved data.", 200);
+                        $record['file_data'] = base64_encode($record['file_data']);
+                    }
+                    array_push($data, $record);
+                }
+                $code = 200;
+                return array("code" => $code, "data" => $data);
             } else {
-                return $this->sendPayload(null, 'failed', "No data found.", 404);
+                $errmsg = "No data found.";
+                $code = 404;
             }
-        } catch (PDOException $e) {
-            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+        } catch (\PDOException $e) {
+            $errmsg = $e->getMessage();
+            $code = 403;
         }
+        return array("code" => $code, "errmsg" => $errmsg);
     }
 
 
     public function get_user_events($user_id)
     {
-        $sql = "SELECT events.* FROM events 
-            INNER JOIN event_registration ON events.event_id = event_registration.event_id 
-            WHERE event_registration.user_id = :user_id";
+        $sql = "SELECT events.*, 
+                CASE
+                    WHEN events.event_registration_end < CURDATE() THEN 'done'
+                    WHEN events.event_start_date <= CURDATE() THEN 'ongoing'
+                    ELSE 'upcoming'
+                END AS event_state
+                FROM events
+                INNER JOIN event_registration ON events.event_id = event_registration.event_id
+                WHERE event_registration.user_id = :user_id";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
@@ -62,7 +84,6 @@ class Get extends GlobalMethods
         }
     }
 
-
     public function getByEmail(string $email = null): array|false
     {
         $conditions = ($email !== null) ? "email = '$email'" : null;
@@ -77,48 +98,46 @@ class Get extends GlobalMethods
 
     public function get_users($user_id = null)
     {
-        $condition = $user_id ? "user_id=$user_id" : null;
-        return $this->get_records('user', $condition);
+        $columns = "user_id, first_name, last_name, year_level, block, course, email, password";
+        $condition = ($user_id !== null) ? "user_id = $user_id" : null;
+        return $this->get_records('user', $condition, $columns);
     }
 
 
-    // Method to fetch roles from the database
     public function get_roles($id = null)
     {
         $condition = $id ? "id=$id" : null;
         return $this->get_records('role', $condition);
     }
 
-    // Method to fetch events from the database
     public function get_events($event_id = null)
     {
-        $condition = $event_id ? "event_id = $event_id" : null;
-        return $this->get_records('events', $condition);
+        $columns = "event_id, event_name, event_description, event_location, event_start_date, event_end_date, event_registration_start, event_registration_end, session";
+        $condition = ($event_id !== null) ? "event_id = $event_id" : null;
+        return $this->get_records('events', $condition, $columns);
     }
 
-    // Method to fetch all events from the database
     public function get_all_events()
     {
         return $this->get_records('events');
     }
 
-    // Method to fetch feedback for a specific event
     public function get_event_feedback($event_id)
     {
-        $condition = $event_id ? "Event_Id=$event_id" : null;
+        $condition = $event_id ? "event_Id=$event_id" : null;
         return $this->get_records('EventFeedback', $condition);
     }
 
-    // Method to fetch all feedback for a specific event
     public function get_all_event_feedback()
     {
-        return $this->get_records('EventFeedback'); // Corrected method call
+        return $this->get_records('EventFeedback');
     }
 
     public function get_student($user_id = null)
     {
+        $columns = "user_id, first_name, last_name, year_level, block, course, email, password";
         $condition = ($user_id !== null) ? "user_id = $user_id" : null;
-        $result = $this->get_records('user', $condition);
+        $result = $this->get_records('user', $condition, $columns);
 
         if ($result['status']['remarks'] === 'success') {
 
@@ -158,21 +177,17 @@ class Get extends GlobalMethods
 
     public function get_registered_users_for_event($event_id)
     {
-        // SQL query to fetch users registered for the specified event
         $sql = "SELECT u.first_name, u.last_name, u.email FROM user u
         INNER JOIN event_registration er ON u.user_id = er.user_id 
         WHERE er.event_id = :event_id";
 
-        // Prepare the SQL statement
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
         $stmt->execute();
 
-        // Fetch the data
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $rowCount = $stmt->rowCount();
 
-        // Check if users are found
         if ($rowCount > 0) {
             return $this->sendPayload($data, 'success', "Successfully retrieved users registered for the event.", 200);
         } else {
@@ -201,35 +216,68 @@ class Get extends GlobalMethods
         }
     }
 
+    public function get_avatar($user_id)
+    {
+        $fileInfo = $this->get_imageData($user_id);
 
-    // public function get_avatar($id)
-    // {
-    //     $fileInfo = $this->get_imageData($id);
+        // Check if file info exists
+        if ($fileInfo) {
+            $fileData = $fileInfo['avatar'];
 
-    //     // Check if file info exists            
-    //     if ($fileInfo) {
-    //         $fileData = $fileInfo['avatar'];
+            // Set headers for file download
+            header('Content-Type: image/png');
+            echo $fileData;
+            exit();
+        } else {
+            echo "User has not uploaded an avatar yet.";
+            http_response_code(404);
+        }
+    }
 
-    //         // Set headers for file download
-    //         header('Content-Type: image/png');
-    //         echo $fileData;
-    //         exit();
-    //     } else {
-    //         echo "User has not uploaded an avatar yet.";
-    //         http_response_code(404);
-    //     }
-    // }
-    // public function get_imageData($user_id = null)
-    // {
-    //     $columns = "avatar";
-    //     $condition = ($user_id !== null) ? "user_id = $user_id" : null;
-    //     $result = $this->get_records('user', $condition, $columns);
+    public function get_imageData($user_id = null)
+    {
+        $columns = "avatar";
+        $condition = ($user_id !== null) ? "user_id = $user_id" : null;
+        $result = $this->get_records('user', $condition, $columns);
 
-    //     if ($result['status']['remarks'] === 'success' && isset($result['payload'][0]['avatar'])) {
-    //         $fileData = $result['payload'][0]['avatar'];
-    //         return array("avatar" => $fileData);
-    //     } else {
-    //         return array("avatar" => null);
-    //     }
-    // }
+        if ($result['status']['remarks'] === 'success' && isset($result['payload'][0]['avatar'])) {
+            $fileData = $result['payload'][0]['avatar'];
+            return array("avatar" => $fileData);
+        } else {
+            return array("avatar" => null);
+        }
+    }
+
+
+    public function getEventImage($event_id)
+    {
+        $fileInfo = $this->geteventImg($event_id);
+
+        // Check if file info exists
+        if ($fileInfo) {
+            $fileData = $fileInfo['event_image'];
+
+            // Set headers for file download
+            header('Content-Type: image/png');
+            echo $fileData;
+            exit();
+        } else {
+            echo "User has not uploaded an avatar yet.";
+            http_response_code(404);
+        }
+    }
+
+    public function geteventImg($event_id = null)
+    {
+        $columns = "event_image";
+        $condition = ($event_id !== null) ? "event_id = $event_id" : null;
+        $result = $this->get_records('events', $condition, $columns);
+
+        if ($result['status']['remarks'] === 'success' && isset($result['payload'][0]['avatar'])) {
+            $fileData = $result['payload'][0]['avatar'];
+            return array("avatar" => $fileData);
+        } else {
+            return array("avatar" => null);
+        }
+    }
 }
