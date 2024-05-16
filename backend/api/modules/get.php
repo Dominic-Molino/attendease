@@ -253,11 +253,9 @@ class Get extends GlobalMethods
     {
         $fileInfo = $this->geteventImg($event_id);
 
-        // Check if file info exists
         if ($fileInfo) {
             $fileData = $fileInfo['event_image'];
 
-            // Set headers for file download
             header('Content-Type: image/png');
             echo $fileData;
             exit();

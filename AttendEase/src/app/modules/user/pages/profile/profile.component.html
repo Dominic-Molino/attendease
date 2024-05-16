@@ -14,7 +14,9 @@
       <div class="flex flex-col items-center py-10 px-4">
         <div class="flex justify-center mt-10">
           @defer{
-          <div class="avatar-container">
+          <div
+            class="avatar-container border border-gray-300 rounded-full shadow-md"
+          >
             <img
               *ngIf="avatarUrl; else placeholder"
               [src]="avatarUrl"
@@ -22,9 +24,7 @@
               alt="Avatar"
             />
             <ng-template #placeholder>
-              <div class="image-container avatar-placeholder">
-                <!-- Placeholder content -->
-              </div>
+              <div class="image-container avatar-placeholder"></div>
             </ng-template>
 
             <label for="avatar-input-file">
