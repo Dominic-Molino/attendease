@@ -26,8 +26,8 @@ $post = new Post($pdo);
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'OPTIONS':
         http_response_code(200);
-        exit();
         break;
+
     case 'GET':
         switch ($request[0]) {
             case 'users':
@@ -43,6 +43,13 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     echo json_encode($get->get_student($request[1]));
                 } else {
                     echo json_encode($get->get_student());
+                }
+                break;
+            case 'roles':
+                if (isset($request[1])) {
+                    echo json_encode($get->get_roles($request[1]));
+                } else {
+                    echo json_encode($get->get_roles());
                 }
                 break;
 
@@ -156,6 +163,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
             case 'edituser':
                 echo json_encode($post->edit_user($data, $request[1]));
+                break;
+            case 'edituserrole':
+                echo json_encode($post->edit_user_role($data, $request[1]));
                 break;
 
             case 'addevent':

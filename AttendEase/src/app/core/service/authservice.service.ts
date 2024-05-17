@@ -7,9 +7,32 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthserviceService {
-  constructor(private http: HttpClient, private helper: JwtHelperService) {}
+  constructor(private http: HttpClient, private helper: JwtHelperService) { }
   private API_URL = 'http://localhost/attendease/backend/api/';
   isLoggedIn: boolean = false;
+
+  //get a user or all users
+  getUsers(id: any = null): Observable<any> {
+    if (id) {
+      return this.http.get<any>(`${this.API_URL}users/${id}`);
+    }
+    else {
+      return this.http.get<any>(`${this.API_URL}users`);
+    }
+  }
+  getRoles(id: any = null): Observable<any> {
+    if (id) {
+      return this.http.get<any>(`${this.API_URL}roles/${id}`);
+    }
+    else {
+      return this.http.get<any>(`${this.API_URL}roles`);
+    }
+  }
+  editUserRole(id: number, inputdata: any) {
+    return this.http.post<any>(`${this.API_URL}edituserrole/${id}`, inputdata);
+  }
+
+
 
   // auth
   registerStudent(data: any): Observable<any> {
@@ -40,7 +63,7 @@ export class AuthserviceService {
     if (mytoken) {
       const decodedToken = this.helper.decodeToken(mytoken);
       if (decodedToken && decodedToken.role_id) {
-        console.log (decodedToken.role_id);
+        console.log(decodedToken.role_id);
         return decodedToken.role_id;
       }
     }

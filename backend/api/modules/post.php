@@ -11,7 +11,8 @@ class Post extends GlobalMethods
 
     public function add_user($pdo, $data)
     {
-        if (!isset(
+        if (
+            !isset(
             $data->first_name,
             $data->last_name,
             $data->year_level,
@@ -19,7 +20,8 @@ class Post extends GlobalMethods
             $data->block,
             $data->email,
             $data->password
-        )) {
+        )
+        ) {
             return $this->sendPayload(null, 'failed', "Incomplete user data.", 400);
         }
 
@@ -76,10 +78,31 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
+    public function edit_user_role($data, $user_id)
+    {
+        $sql = "UPDATE user 
+                SET role_id = ?
+                WHERE user_id = ?";
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([
+                $data->role_id,               
+                $user_id
+            ]);
 
+            if ($stmt->rowCount() > 0) {
+                return $this->sendPayload(null, 'success', "User updated successfully.", 200);
+            } else {
+                return $this->sendPayload(null, 'failed', "Failed to update user.", 500);
+            }
+        } catch (PDOException $e) {
+            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+        }
+    }
     public function add_event($pdo, $data)
     {
-        if (!isset(
+        if (
+            !isset(
             $data->event_name,
             $data->event_description,
             $data->event_location,
@@ -88,7 +111,8 @@ class Post extends GlobalMethods
             $data->event_registration_start,
             $data->event_registration_end,
             $data->session
-        )) {
+        )
+        ) {
             return $this->sendPayload(null, 'failed', "Incomplete event data.", 400);
         }
 
@@ -109,8 +133,14 @@ class Post extends GlobalMethods
         try {
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
-                $event_name, $event_description, $event_location, $event_start_date, $event_end_date,
-                $event_registration_start, $event_registration_end, $session
+                $event_name,
+                $event_description,
+                $event_location,
+                $event_start_date,
+                $event_end_date,
+                $event_registration_start,
+                $event_registration_end,
+                $session
             ]);
 
             if ($stmt->rowCount() > 0) {
@@ -357,9 +387,13 @@ class Post extends GlobalMethods
         try {
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
-                $event_name, $event_description, $event_location,
-                $event_start_date, $event_end_date,
-                $event_registration_start, $event_registration_end,
+                $event_name,
+                $event_description,
+                $event_location,
+                $event_start_date,
+                $event_end_date,
+                $event_registration_start,
+                $event_registration_end,
                 $event_id
             ]);
 
