@@ -119,7 +119,8 @@ class Get extends GlobalMethods
 
     public function get_all_events()
     {
-        return $this->get_records('events');
+        $columns = "event_id, event_name, event_description, event_location, event_start_date, event_end_date, event_registration_start, event_registration_end, session";
+        return $this->get_records('events', null, $columns);
     }
 
     public function get_event_feedback($event_id)
@@ -271,11 +272,11 @@ class Get extends GlobalMethods
         $condition = ($event_id !== null) ? "event_id = $event_id" : null;
         $result = $this->get_records('events', $condition, $columns);
 
-        if ($result['status']['remarks'] === 'success' && isset($result['payload'][0]['avatar'])) {
-            $fileData = $result['payload'][0]['avatar'];
-            return array("avatar" => $fileData);
+        if ($result['status']['remarks'] === 'success' && isset($result['payload'][0]['event_image'])) {
+            $fileData = $result['payload'][0]['event_image'];
+            return array("event_image" => $fileData);
         } else {
-            return array("avatar" => null);
+            return array("event_image" => null);
         }
     }
 }

@@ -30,22 +30,11 @@
   color: white;
 }
 
-td {
-  padding: 8px;
-}
-
-img {
-  border-radius: 50%;
-  width: 200px;
-  height: 200px;
-  padding: 10px;
-}
-
-.center {
+/* .center {
   display: block;
   margin-left: auto;
   margin-right: auto;
-}
+} */
 
 .personal {
   text-indent: 50px;
@@ -81,7 +70,7 @@ table {
   height: 40px;
   width: 40px;
   padding: 0.35rem;
-  background-color: #2962ff;
+  background-color: #01CDA9;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -90,15 +79,6 @@ table {
   top: 75%;
   z-index: 2;
   cursor: pointer;
-
-  &:hover {
-    transition: all 0.25s;
-    background-color: darken(#2962ff, 15%);
-  }
-
-  .icon {
-    color: white;
-  }
 
   label {
     cursor: pointer;

@@ -433,4 +433,66 @@ class Post extends GlobalMethods
 
         return $this->sendPayload(null, "failed", $errmsg, $code);
     }
+
+    public function assign_organizer_role($admin_user_id, $user_id)
+    {
+        try {
+            // Check if the admin user exists and is an admin
+            if ($this->has_admin_role($admin_user_id)) {
+                // Check if the user to be assigned the organizer role exists
+                if (!$this->has_organizer_role($user_id)) {
+                    // Proceed to assign the organizer role to the user
+                    $organizer_role_id = 2; // Role ID for organizer
+                    $sql = "UPDATE user SET role_id = ? WHERE user_id = ?";
+                    $stmt = $this->pdo->prepare($sql);
+                    $stmt->execute([$organizer_role_id, $user_id]);
+
+                    if ($stmt->rowCount() > 0) {
+                        return $this->sendPayload(null, 'success', "Organizer role assigned successfully.", 200);
+                    } else {
+                        return $this->sendPayload(null, 'failed', "Failed to assign organizer role.", 500);
+                    }
+                } else {
+                    // User already has the organizer role
+                    return $this->sendPayload(null, 'failed', "User already has the organizer role.", 400);
+                }
+            } else {
+                // Admin user is not authorized to assign roles
+                return $this->sendPayload(null, 'failed', "You are not authorized to assign roles.", 401);
+            }
+        } catch (PDOException $e) {
+            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+        }
+    }
+
+    // Function to check if a user has the admin role
+    private function has_admin_role($user_id)
+    {
+        $sql = "SELECT COUNT(*) AS count FROM user WHERE user_id = ? AND role_id = 1";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$user_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return ($result['count'] > 0);
+    }
+
+    // Function to check i  f a user has the organizer role
+    private function has_organizer_role($user_id)
+    {
+        $sql = "SELECT COUNT(*) AS count FROM user WHERE user_id = ? AND role_id = 2";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$user_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return ($result['count'] > 0);
+    }
+
+    // Function to retrieve the user's role from the database based on their user_id
+    private function getUserRoleById($pdo, $user_id)
+    {
+        // Query the database to retrieve the user's role
+        $sql = "SELECT role_id FROM user WHERE user_id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$user_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result['role_id'] : null;
+    }
 }

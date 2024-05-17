@@ -20,7 +20,7 @@
             <img
               *ngIf="avatarUrl; else placeholder"
               [src]="avatarUrl"
-              class="image-container"
+              class="aspect-square rounded-[50%] w-52 h-52 object-contain object-center"
               alt="Avatar"
             />
             <ng-template #placeholder>
@@ -29,6 +29,23 @@
 
             <label for="avatar-input-file">
               <div class="icon-wrapper">
+                <svg
+                  class="w-6 h-6 text-gray-800 dark:text-white relative left-[2px]"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M16 12h4m-2 2v-4M4 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                  />
+                </svg>
                 <input
                   type="file"
                   id="avatar-input-file"
@@ -42,7 +59,7 @@
         </div>
 
         <h5
-          class="mb-1 text-2xl lg:text-2xl font-medium text-gray-900 font-secondary"
+          class="mb-1 text-2xl mt-2 lg:text-2xl font-medium text-gray-900 font-secondary"
         >
           {{ studentProfile[0]?.first_name | uppercase }}
           {{ studentProfile[0]?.last_name | uppercase }}

@@ -1,12 +1,14 @@
 import { Routes } from '@angular/router';
 import { UserComponent } from './modules/user/user.component';
 import { OrganizerComponent } from './modules/organizer/organizer.component';
+import { authGuard } from './core/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full',
+    canActivate: [authGuard],
   },
 
   {
