@@ -136,7 +136,8 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     $JwtController = new Jwt($_ENV["SECRET_KEY"]);
                     $token = $JwtController->encode([
                         "user_id" => $user['user_id'],
-                        "email" => $user['email']
+                        "email" => $user['email'],
+                        "role_id" => $user['role_id'],
                     ]);
 
                     http_response_code(200);
