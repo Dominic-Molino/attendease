@@ -35,6 +35,17 @@ export class AuthserviceService {
     }
     return null;
   }
+  getCurrentUserRole(): number | null {
+    const mytoken = sessionStorage.getItem('token');
+    if (mytoken) {
+      const decodedToken = this.helper.decodeToken(mytoken);
+      if (decodedToken && decodedToken.role_id) {
+        console.log (decodedToken.role_id);
+        return decodedToken.role_id;
+      }
+    }
+    return null;
+  }
 
   uploadImage(id: any, file: FormData): Observable<any> {
     return this.http.post(`${this.API_URL}uploadimage/${id}`, file);

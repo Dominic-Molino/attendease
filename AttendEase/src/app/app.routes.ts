@@ -1,14 +1,13 @@
 import { Routes } from '@angular/router';
 import { UserComponent } from './modules/user/user.component';
 import { OrganizerComponent } from './modules/organizer/organizer.component';
-import { authGuard } from './core/auth.guard';
+import { authenGuard } from './core/authen.guard';
 
 export const routes: Routes = [
   {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full',
-    canActivate: [authGuard],
   },
 
   {
@@ -30,6 +29,7 @@ export const routes: Routes = [
   {
     path: 'student',
     component: UserComponent,
+    canActivate: [authenGuard],
     children: [
       {
         path: '',
@@ -82,6 +82,7 @@ export const routes: Routes = [
   {
     path: 'organizer',
     component: OrganizerComponent,
+    canActivate: [authenGuard],
     children: [
       {
         path: '',
