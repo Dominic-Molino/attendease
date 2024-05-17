@@ -27,6 +27,27 @@ export const routes: Routes = [
   },
 
   {
+    path: 'admin',
+    component: OrganizerComponent,
+    canActivate: [authenGuard],
+    children: [
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./modules/admin/pages/admin-dashboard/admin-dashboard.component').then(
+            (c) => c.AdminDashboardComponent
+          ),
+      },
+    ],
+  },
+
+
+  {
     path: 'student',
     component: UserComponent,
     canActivate: [authenGuard],
@@ -107,4 +128,6 @@ export const routes: Routes = [
       },
     ],
   },
+
+
 ];

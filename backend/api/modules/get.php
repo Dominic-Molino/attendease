@@ -98,7 +98,7 @@ class Get extends GlobalMethods
 
     public function get_users($user_id = null)
     {
-        $columns = "user_id, first_name, last_name, year_level, block, course, email, password";
+        $columns = "user_id, first_name, last_name, year_level, block, course, email, password, role_id";
         $condition = ($user_id !== null) ? "user_id = $user_id" : null;
         return $this->get_records('user', $condition, $columns);
     }
@@ -106,8 +106,8 @@ class Get extends GlobalMethods
 
     public function get_roles($id = null)
     {
-        $condition = $id ? "id=$id" : null;
-        return $this->get_records('role', $condition);
+        $condition = $id ? "role_id=$id" : null;
+        return $this->get_records('roles', $condition);
     }
 
     public function get_events($event_id = null)

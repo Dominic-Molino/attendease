@@ -1,0 +1,11 @@
+<form [formGroup]="updateform">
+    <div>
+      <select formControlName="role_id" id="roles">
+        <option value="" disabled>Select Role:</option>
+        <option *ngFor="let role of rolelist" [value]="role.role_id">{{ role.role_name }}</option>
+      </select>
+    </div>
+    <div>
+      <button type="submit" (click)="proceedUpdate()">Update User</button>
+    </div>
+  </form>
