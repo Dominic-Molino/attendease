@@ -9,37 +9,31 @@ class Post extends GlobalMethods
         $this->pdo = $pdo;
     }
 
-    public function add_user($pdo, $data)
+    public function add_user($data)
     {
         if (
             !isset(
-            $data->first_name,
-            $data->last_name,
-            $data->year_level,
-            $data->course,
-            $data->block,
-            $data->email,
-            $data->password
-        )
+                $data->first_name,
+                $data->last_name,
+                $data->email,
+                $data->password
+            )
         ) {
             return $this->sendPayload(null, 'failed', "Incomplete user data.", 400);
         }
 
         $first_name = $data->first_name;
         $last_name = $data->last_name;
-        $year_level = $data->year_level;
-        $course = $data->course;
-        $block = $data->block;
         $email = $data->email;
         $password = $data->password;
 
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-        $sql = "INSERT INTO user (first_name, last_name, year_level, course, block, email, password) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO user (first_name, last_name, email, password) 
+                VALUES (?, ?, ?, ?)";
         try {
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([$first_name, $last_name, $year_level, $course, $block, $email, $hashed_password]);
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$first_name, $last_name, $email, $hashed_password]);
 
             if ($stmt->rowCount() > 0) {
                 return $this->sendPayload(null, 'success', "User added successfully.", 200);
@@ -47,6 +41,7 @@ class Post extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "Failed to add user.", 500);
             }
         } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
@@ -75,6 +70,7 @@ class Post extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "Failed to update user.", 500);
             }
         } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
@@ -86,7 +82,7 @@ class Post extends GlobalMethods
         try {
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
-                $data->role_id,               
+                $data->role_id,
                 $user_id
             ]);
 
@@ -96,22 +92,24 @@ class Post extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "Failed to update user.", 500);
             }
         } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
-    public function add_event($pdo, $data)
+    
+    public function add_event($data)
     {
         if (
             !isset(
-            $data->event_name,
-            $data->event_description,
-            $data->event_location,
-            $data->event_start_date,
-            $data->event_end_date,
-            $data->event_registration_start,
-            $data->event_registration_end,
-            $data->session
-        )
+                $data->event_name,
+                $data->event_description,
+                $data->event_location,
+                $data->event_start_date,
+                $data->event_end_date,
+                $data->event_registration_start,
+                $data->event_registration_end,
+                $data->session
+            )
         ) {
             return $this->sendPayload(null, 'failed', "Incomplete event data.", 400);
         }
@@ -119,10 +117,10 @@ class Post extends GlobalMethods
         $event_name = $data->event_name;
         $event_description = $data->event_description;
         $event_location = $data->event_location;
-        $event_start_date = $data->event_start_date;
-        $event_end_date = $data->event_end_date;
-        $event_registration_start = $data->event_registration_start;
-        $event_registration_end = $data->event_registration_end;
+        $event_start_date = date('Y-m-d H:i:s', strtotime($data->event_start_date));
+        $event_end_date = date('Y-m-d H:i:s', strtotime($data->event_end_date));
+        $event_registration_start = date('Y-m-d H:i:s', strtotime($data->event_registration_start));
+        $event_registration_end = date('Y-m-d H:i:s', strtotime($data->event_registration_end));
         $session = $data->session;
 
 
@@ -131,7 +129,7 @@ class Post extends GlobalMethods
             ) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
-            $stmt = $pdo->prepare($sql);
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
                 $event_name,
                 $event_description,
@@ -149,16 +147,17 @@ class Post extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "Failed to add event.", 500);
             }
         } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
 
 
-    public function register_for_event($pdo, $event_id, $user_id)
+    public function register_for_event($event_id, $user_id)
     {
         try {
-            $userExists = $this->checkUserExists($pdo, $user_id);
-            $eventExists = $this->checkEventExists($pdo, $event_id);
+            $userExists = $this->checkUserExists($user_id);
+            $eventExists = $this->checkEventExists($event_id);
 
             if (!$userExists) {
                 return $this->sendPayload(null, 'failed', "User does not exist.", 400);
@@ -169,16 +168,16 @@ class Post extends GlobalMethods
             }
 
             $sql = "SELECT COUNT(*) AS count FROM event_registration WHERE Event_Id = ? AND User_Id = ?";
-            $stmt = $pdo->prepare($sql);
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id, $user_id]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($row['count'] != 0) {
+            if ($row['count'] !== 0) {
                 return $this->sendPayload(null, 'failed', "User is already registered for this event.", 400);
             }
 
             $sql = "SELECT event_registration_end FROM Events WHERE Event_Id = ?";
-            $stmt = $pdo->prepare($sql);
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id]);
             $event = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -193,7 +192,7 @@ class Post extends GlobalMethods
                 LEFT JOIN Feedback ON Events.Event_Id = Feedback.Event_Id 
                 WHERE Events.Event_End_Date < NOW() AND event_registration.User_Id = ? 
                 AND attendance.User_Id = ? AND Feedback.User_Id = ?";
-            $stmt = $pdo->prepare($sql);
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$user_id, $user_id, $user_id]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -203,7 +202,7 @@ class Post extends GlobalMethods
 
 
             $sql = "INSERT INTO event_registration (Event_Id, User_Id) VALUES (?, ?)";
-            $stmt = $pdo->prepare($sql);
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id, $user_id]);
 
             if ($stmt->rowCount() != 0) {
@@ -212,59 +211,60 @@ class Post extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "Failed to register user for event.", 500);
             }
         } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
 
-    private function checkUserExists($pdo, $user_id)
+    private function checkUserExists($user_id)
     {
         $sql = "SELECT COUNT(*) AS count FROM User WHERE User_Id = ?";
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$user_id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row['count'] > 0;
     }
 
-    private function checkEventExists($pdo, $event_id)
+    private function checkEventExists($event_id)
     {
         $sql = "SELECT COUNT(*) AS count FROM Events WHERE Event_Id = ?";
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row['count'] > 0;
     }
 
 
-    public function unregister_from_event($pdo, $event_id, $user_id)
+    public function unregister_from_event($event_id, $user_id)
     {
         $sql = "DELETE FROM event_registration WHERE Event_Id = ? AND User_Id = ?";
         try {
-            $stmt = $pdo->prepare($sql);
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id, $user_id]);
 
             if ($stmt->rowCount() > 0) {
-                $this->decrementRegistrationCount($pdo, $event_id);
+                $this->decrementRegistrationCount($event_id);
                 return $this->sendPayload(null, 'success', "User unregistered from event successfully.", 200);
             } else {
                 return $this->sendPayload(null, 'failed', "Failed to unregister user from event.", 500);
             }
         } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
 
-    private function decrementRegistrationCount($pdo, $event_id)
+    private function decrementRegistrationCount($event_id)
     {
         $sql = "UPDATE Events SET registration_count = registration_count - 1 WHERE Event_Id = ?";
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id]);
     }
 
-
-    public function mark_attendance($pdo, $event_id, $user_id)
+    public function mark_attendance($event_id, $user_id)
     {
         $sql = "SELECT Event_Id FROM Events WHERE Event_Id = ? AND Event_Start_Date <= NOW()";
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!$row) {
@@ -272,7 +272,7 @@ class Post extends GlobalMethods
         }
 
         $sql = "SELECT COUNT(*) AS count FROM event_registration WHERE Event_Id = ? AND User_Id = ?";
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id, $user_id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($row['count'] == 0) {
@@ -280,7 +280,7 @@ class Post extends GlobalMethods
         }
 
         $sql = "SELECT COUNT(*) AS count FROM attendance WHERE Event_Id = ? AND User_Id = ?";
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id, $user_id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($row['count'] > 0) {
@@ -289,28 +289,28 @@ class Post extends GlobalMethods
 
         $sql = "INSERT INTO attendance (Event_Id, User_Id) VALUES (?, ?)";
         try {
-            $stmt = $pdo->prepare($sql);
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id, $user_id]);
 
             if ($stmt->rowCount() > 0) {
-                $this->incrementAttendanceCount($pdo, $event_id);
                 return $this->sendPayload(null, 'success', "Attendance marked successfully.", 200);
             } else {
                 return $this->sendPayload(null, 'failed', "Failed to mark attendance.", 500);
             }
         } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
 
-    private function incrementAttendanceCount($pdo, $event_id)
+    private function incrementAttendanceCount($event_id)
     {
         $sql = "UPDATE Events SET attendance_count = attendance_count + 1 WHERE Event_Id = ?";
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id]);
     }
 
-    public function add_event_feedback($pdo, $data)
+    public function add_event_feedback($data)
     {
         if (!isset($data->event_id, $data->user_id, $data->feedback_given)) {
             error_log("Incomplete feedback data. Please provide event_id, user_id, and feedback_given.");
@@ -324,7 +324,7 @@ class Post extends GlobalMethods
         $sql = "SELECT COUNT(*) AS count 
             FROM event_registration 
             WHERE Event_Id = ? AND User_Id = ?";
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id, $user_id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -336,7 +336,7 @@ class Post extends GlobalMethods
         $sql = "SELECT COUNT(*) AS count 
             FROM attendance 
             WHERE Event_Id = ? AND User_Id = ?";
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id, $user_id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -347,11 +347,11 @@ class Post extends GlobalMethods
 
         $sql = "INSERT INTO EventFeedback (Event_Id, User_Id, feedback_given) VALUES (?, ?, ?)";
         try {
-            $stmt = $pdo->prepare($sql);
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id, $user_id, $feedback_given]);
 
             if ($stmt->rowCount() > 0) {
-                $this->markFeedbackGiven($pdo, $event_id, $user_id);
+                $this->markFeedbackGiven($event_id, $user_id);
                 return $this->sendPayload(null, 'success', "Feedback added successfully.", 200);
             } else {
                 return $this->sendPayload(null, 'failed', "Failed to add feedback.", 500);
@@ -362,14 +362,14 @@ class Post extends GlobalMethods
         }
     }
 
-    private function markFeedbackGiven($pdo, $event_id, $user_id)
+    private function markFeedbackGiven($event_id, $user_id)
     {
         $sql = "UPDATE event_registration SET Feedback_Given = 1 WHERE Event_Id = ? AND User_Id = ?";
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id, $user_id]);
     }
 
-    public function edit_event($pdo, $data, $event_id)
+    public function edit_event($data, $event_id)
     {
         $event_name = $data->event_name;
         $event_description = $data->event_description;
@@ -385,7 +385,7 @@ class Post extends GlobalMethods
             event_registration_start = ?, event_registration_end = ?
             WHERE event_id = ?";
         try {
-            $stmt = $pdo->prepare($sql);
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
                 $event_name,
                 $event_description,
@@ -403,15 +403,16 @@ class Post extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "Failed to update event.", 500);
             }
         } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
 
-    public function delete_event($pdo, $event_id)
+    public function delete_event($event_id)
     {
         $sql = "DELETE FROM events WHERE event_id = ?";
         try {
-            $stmt = $pdo->prepare($sql);
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id]);
 
             if ($stmt->rowCount() > 0) {
@@ -420,6 +421,7 @@ class Post extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "Failed to delete event.", 500);
             }
         } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
@@ -439,6 +441,8 @@ class Post extends GlobalMethods
             );
             return $this->sendPayload(null, "success", "Successfully uploaded file", 200);
         } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+
             $errmsg = $e->getMessage();
             $code = 400;
         }
@@ -450,7 +454,6 @@ class Post extends GlobalMethods
     {
         $fileData = file_get_contents($_FILES["file"]["tmp_name"]);
 
-
         $sql = "UPDATE events SET event_image = ? WHERE event_id = $event_id";
         try {
             $stmt = $this->pdo->prepare($sql);
@@ -461,72 +464,12 @@ class Post extends GlobalMethods
             );
             return $this->sendPayload(null, "success", "Successfully uploaded file", 200);
         } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+
             $errmsg = $e->getMessage();
             $code = 400;
         }
 
         return $this->sendPayload(null, "failed", $errmsg, $code);
-    }
-
-    public function assign_organizer_role($admin_user_id, $user_id)
-    {
-        try {
-            // Check if the admin user exists and is an admin
-            if ($this->has_admin_role($admin_user_id)) {
-                // Check if the user to be assigned the organizer role exists
-                if (!$this->has_organizer_role($user_id)) {
-                    // Proceed to assign the organizer role to the user
-                    $organizer_role_id = 2; // Role ID for organizer
-                    $sql = "UPDATE user SET role_id = ? WHERE user_id = ?";
-                    $stmt = $this->pdo->prepare($sql);
-                    $stmt->execute([$organizer_role_id, $user_id]);
-
-                    if ($stmt->rowCount() > 0) {
-                        return $this->sendPayload(null, 'success', "Organizer role assigned successfully.", 200);
-                    } else {
-                        return $this->sendPayload(null, 'failed', "Failed to assign organizer role.", 500);
-                    }
-                } else {
-                    // User already has the organizer role
-                    return $this->sendPayload(null, 'failed', "User already has the organizer role.", 400);
-                }
-            } else {
-                // Admin user is not authorized to assign roles
-                return $this->sendPayload(null, 'failed', "You are not authorized to assign roles.", 401);
-            }
-        } catch (PDOException $e) {
-            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
-        }
-    }
-
-    // Function to check if a user has the admin role
-    private function has_admin_role($user_id)
-    {
-        $sql = "SELECT COUNT(*) AS count FROM user WHERE user_id = ? AND role_id = 1";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$user_id]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return ($result['count'] > 0);
-    }
-
-    // Function to check i  f a user has the organizer role
-    private function has_organizer_role($user_id)
-    {
-        $sql = "SELECT COUNT(*) AS count FROM user WHERE user_id = ? AND role_id = 2";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$user_id]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return ($result['count'] > 0);
-    }
-
-    // Function to retrieve the user's role from the database based on their user_id
-    private function getUserRoleById($pdo, $user_id)
-    {
-        // Query the database to retrieve the user's role
-        $sql = "SELECT role_id FROM user WHERE user_id = ?";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([$user_id]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result ? $result['role_id'] : null;
     }
 }

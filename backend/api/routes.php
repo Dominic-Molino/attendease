@@ -169,11 +169,11 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 break;
 
             case 'addevent':
-                echo json_encode($post->add_event($pdo, $data));
+                echo json_encode($post->add_event($data));
                 break;
 
             case 'editevent':
-                echo json_encode($post->edit_event($pdo, $data, $request[1]));
+                echo json_encode($post->edit_event($data, $request[1]));
                 break;
 
             case 'uploadimage':
@@ -185,15 +185,15 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 break;
 
             case 'register':
-                echo json_encode($post->register_for_event($pdo, $data->event_id, $data->user_id));
+                echo json_encode($post->register_for_event($data->event_id, $data->user_id));
                 break;
 
             case 'markattendance':
-                echo json_encode($post->mark_attendance($pdo, $data->event_id, $data->user_id));
+                echo json_encode($post->mark_attendance($data->event_id, $data->user_id));
                 break;
 
             case 'addfeedback':
-                echo json_encode($post->add_event_feedback($pdo, $data));
+                echo json_encode($post->add_event_feedback($data));
                 break;
 
             default:

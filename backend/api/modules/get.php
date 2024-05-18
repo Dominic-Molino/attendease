@@ -57,18 +57,19 @@ class Get extends GlobalMethods
         return array("code" => $code, "errmsg" => $errmsg);
     }
 
-
     public function get_user_events($user_id)
     {
-        $sql = "SELECT events.*, 
+        $sql = "
+            SELECT 
+                events.*, 
                 CASE
-                    WHEN events.event_registration_end < CURDATE() THEN 'done'
+                    WHEN events.event_end_date < CURDATE() THEN 'done'
                     WHEN events.event_start_date <= CURDATE() THEN 'ongoing'
                     ELSE 'upcoming'
                 END AS event_state
-                FROM events
-                INNER JOIN event_registration ON events.event_id = event_registration.event_id
-                WHERE event_registration.user_id = :user_id";
+            FROM events
+            INNER JOIN event_registration ON events.event_id = event_registration.event_id
+            WHERE event_registration.user_id = :user_id";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
@@ -83,6 +84,7 @@ class Get extends GlobalMethods
             return $this->sendPayload(null, 'failed', "User has not registered for any events.", 404);
         }
     }
+
 
     public function getByEmail(string $email = null): array|false
     {
