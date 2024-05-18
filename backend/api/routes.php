@@ -6,6 +6,7 @@ header("Access-Control-Allow-Headers: *");
 
 require_once "./modules/get.php";
 require_once "./modules/post.php";
+require_once "./modules/delete.php";
 require_once "./config/database.php";
 require_once __DIR__ . '/bootstrap.php';
 require_once "./src/Jwt.php";
@@ -22,6 +23,7 @@ $con = new Connection();
 $pdo = $con->connect();
 $get = new Get($pdo);
 $post = new Post($pdo);
+$delete = new Delete($pdo);
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'OPTIONS':
@@ -208,7 +210,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             case 'deleteevent':
                 if (isset($request[1])) {
                     $event_id = $request[1];
-                    echo json_encode($post->delete_event($pdo, $event_id));
+                    echo json_encode($delete->delete_event($event_id));
                 } else {
                     http_response_code(400);
                     echo json_encode(["message" => "Event ID is required for deletion"]);

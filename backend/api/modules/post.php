@@ -74,6 +74,7 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
+
     public function edit_user_role($data, $user_id)
     {
         $sql = "UPDATE user 
@@ -96,7 +97,7 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
-    
+
     public function add_event($data)
     {
         if (
@@ -371,29 +372,23 @@ class Post extends GlobalMethods
 
     public function edit_event($data, $event_id)
     {
-        $event_name = $data->event_name;
-        $event_description = $data->event_description;
-        $event_location = $data->event_location;
-        $event_start_date = $data->event_start_date;
-        $event_end_date = $data->event_end_date;
-        $event_registration_start = $data->event_registration_start;
-        $event_registration_end = $data->event_registration_end;
-
         $sql = "UPDATE Events 
-            SET event_name = ?, event_description = ?, event_location = ?, 
-            event_start_date = ?, event_end_date = ?, 
-            event_registration_start = ?, event_registration_end = ?
-            WHERE event_id = ?";
+                SET event_name = ?, event_description = ?, event_location = ?, 
+                    event_start_date = ?, event_end_date = ?, 
+                    event_registration_start = ?, event_registration_end = ? , session = ?
+                WHERE event_id = ?";
+
         try {
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
-                $event_name,
-                $event_description,
-                $event_location,
-                $event_start_date,
-                $event_end_date,
-                $event_registration_start,
-                $event_registration_end,
+                $data->event_name,
+                $data->event_description,
+                $data->event_location,
+                $data->event_start_date,
+                $data->event_end_date,
+                $data->event_registration_start,
+                $data->event_registration_end,
+                $data->session,
                 $event_id
             ]);
 
@@ -407,6 +402,7 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
+
 
     public function delete_event($event_id)
     {
