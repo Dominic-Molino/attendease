@@ -6,6 +6,19 @@ import { DeleteEventComponent } from '../../components/delete-event/delete-event
 import { EditEventComponent } from '../../components/edit-event/edit-event.component';
 import { ReadEventComponent } from '../../components/read-event/read-event.component';
 import { EventService } from '../../../../core/service/event.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+
+interface Event {
+  event_id: number;
+  event_name: string;
+  event_description: string;
+  event_location: string;
+  event_start_date: Date;
+  event_end_date: Date;
+  event_registration_start: Date;
+  event_registration_end: Date;
+  event_image: SafeResourceUrl | undefined;
+}
 
 @Component({
   selector: 'app-org-event',
@@ -21,12 +34,15 @@ import { EventService } from '../../../../core/service/event.service';
 })
 export class OrgEventComponent implements OnInit {
   eventData: any;
-  upcomingEvents: any[] = [];
-  ongoingEvents: any[] = [];
-  pastEvents: any[] = [];
   selectedEventId: any;
+  eventList: Event[] = [];
+  eventImage: any[] = [];
 
-  constructor(private service: EventService, private dialog: MatDialog) {}
+  constructor(
+    private service: EventService,
+    private dialog: MatDialog,
+    private sanitizer: DomSanitizer
+  ) {}
 
   ngOnInit(): void {
     this.loadEvent();
@@ -34,19 +50,29 @@ export class OrgEventComponent implements OnInit {
 
   loadEvent() {
     this.service.getAllEvents().subscribe((result) => {
-      this.eventData = result.payload;
-      // const today = new Date();
-      // this.eventData.forEach((event: any) => {
-      //   const startDate = new Date(event.event_start_date);
-      //   const endDate = new Date(event.event_end_date);
-      //   if (endDate < today) {
-      //     this.pastEvents.push(event);
-      //   } else if (startDate <= today && endDate >= today) {
-      //     this.ongoingEvents.push(event);
-      //   } else {
-      //     this.upcomingEvents.push(event);
-      //   }
-      // });
+      this.eventList = result.payload.map((data: any): Event => {
+        const eventId = data.event_id;
+        const eventObject: Event = {
+          event_id: data.event_id,
+          event_name: data.event_name,
+          event_description: data.event_description,
+          event_location: data.event_location,
+          event_start_date: data.event_start_date,
+          event_end_date: data.event_end_date,
+          event_registration_start: data.event_registration_start,
+          event_registration_end: data.event_registration_end,
+          event_image: undefined,
+        };
+
+        this.service.getEventImage(eventId).subscribe((imageResult) => {
+          if (imageResult.size > 0) {
+            const url = URL.createObjectURL(imageResult);
+            eventObject.event_image =
+              this.sanitizer.bypassSecurityTrustResourceUrl(url);
+          }
+        });
+        return eventObject;
+      });
     });
   }
 
@@ -69,6 +95,7 @@ export class OrgEventComponent implements OnInit {
     modal.afterClosed().subscribe((response) => {
       this.loadEvent();
     });
+    console.log(this.selectedEventId);
   }
 
   viewEvent(event: any) {

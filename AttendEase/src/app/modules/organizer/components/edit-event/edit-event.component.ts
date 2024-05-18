@@ -47,10 +47,10 @@ export class EditEventComponent implements OnInit {
     event_name: this.builder.control(''),
     event_description: this.builder.control(''),
     event_location: this.builder.control(''),
-    event_start_date: this.builder.control(null),
-    event_end_date: this.builder.control(null),
-    event_registration_start: this.builder.control(null),
-    event_registration_end: this.builder.control(null),
+    event_start_date: this.builder.control(''),
+    event_end_date: this.builder.control(''),
+    event_registration_start: this.builder.control(''),
+    event_registration_end: this.builder.control(''),
     session: this.builder.control(''),
   });
 
@@ -74,7 +74,7 @@ export class EditEventComponent implements OnInit {
   updateEvent() {
     if (this.eventForm.valid) {
       this.service
-        .editEvent(this.eventForm.value, this.eventId)
+        .editEvent(this.eventId, this.eventForm.value)
         .subscribe((res) => {
           Swal.fire('Success', 'Successfully updated event!', 'success');
         });

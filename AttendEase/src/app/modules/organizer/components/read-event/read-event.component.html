@@ -64,11 +64,14 @@
         </svg>
 
         <span class="ms-2 text-base font-primary"
-          >Start Date: {{ data.event.event_start_date | date : "longDate" }}
+          >Start Date:
+          {{ data.event.event_start_date | date : "MMM d, y, h:mm a" }}
         </span>
         <span class="ms-1"> - </span>
         <span class="ms-2 text-base font-primary"
-          >End Date{{ data.event.event_end_date | date : "longDate" }}</span
+          >End Date{{
+            data.event.event_end_date | date : "MMM d, y, h:mm a"
+          }}</span
         >
       </div>
 

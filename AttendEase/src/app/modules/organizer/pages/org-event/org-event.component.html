@@ -21,7 +21,7 @@
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 18 18"
-        > 
+        >
           <path
             stroke="currentColor"
             stroke-linecap="round"
@@ -33,16 +33,16 @@
       </button>
     </div>
 
-    @if(eventData){
+    @if(eventList && eventList.length){
     <div class="container">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         <div
-          *ngFor="let event of eventData; trackBy: eventData.event_id"
+          *ngFor="let event of eventList"
           class="rounded-xl border-2 shadow-lg container mb-5 bg-gray-50"
         >
           <div class="p-3.5 flex flex-col">
             <div class="rounded-md overflow-hidden">
-              <img src="#" alt="Event Image" />
+              <img [src]="event.event_image" />
             </div>
             <h5 class="text-xl md:text-xl font-medium mt-3 font-primary">
               {{ event.event_name }}
@@ -121,7 +121,7 @@
       </div>
     </div>
     }@else {
-    <div>HELLOW</div>
+    <div #noEvents>HELLOW</div>
     }
   </div>
 </main>

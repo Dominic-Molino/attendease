@@ -43,7 +43,7 @@ export class EventService {
     return this.http.get(`${this.API_URL}geteventid`, event_id);
   }
 
-  editEvent(data: any, id: any) {
+  editEvent(id: any, data: any) {
     return this.http.post(`${this.API_URL}editevent/${id}`, data);
   }
 
@@ -59,5 +59,17 @@ export class EventService {
   registerForEvent(eventId: number, userId: any): Observable<any> {
     const data = { event_id: eventId, user_id: userId };
     return this.http.post(`${this.API_URL}register`, data);
+  }
+
+  uploadEvent(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(`${this.API_URL}uploadevent`, formData);
+  }
+
+  getEventImage(event_id: number): Observable<any> {
+    return this.http.get(`${this.API_URL}geteventimage/${event_id}`, {
+      responseType: 'blob',
+    });
   }
 }

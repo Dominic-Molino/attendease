@@ -6,13 +6,13 @@ import {
   ReactiveFormsModule,
   FormBuilder,
   Validators,
-  FormGroup,
 } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { EventService } from '../../../../core/service/event.service';
 import Swal from 'sweetalert2';
+import { co } from '@fullcalendar/core/internal-common';
 
 @Component({
   selector: 'app-add-event',
@@ -31,7 +31,7 @@ import Swal from 'sweetalert2';
   encapsulation: ViewEncapsulation.None,
 })
 export class AddEventComponent {
-  selectedFile: any;
+  selectedFile: File | null = null;
   constructor(
     private builder: FormBuilder,
     private eventService: EventService
@@ -47,6 +47,24 @@ export class AddEventComponent {
     event_registration_end: [null, Validators.required],
     session: ['', Validators.required],
   });
+
+  onFileChange(event: any) {
+    const fileList: FileList = event.target.files;
+    if (fileList.length > 0) {
+      this.selectedFile = fileList[0];
+      console.log(this.selectedFile);
+      this.eventService.uploadEvent(this.selectedFile).subscribe((data) => {
+        Swal.fire('Success', 'Successfully uploaded photo', 'success');
+      });
+    }
+  }
+
+  resetInput() {
+    const input = document.getElementById('file_input') as HTMLInputElement;
+    if (input) {
+      input.value = '';
+    }
+  }
 
   addEvent() {
     if (this.eventForm.valid) {
