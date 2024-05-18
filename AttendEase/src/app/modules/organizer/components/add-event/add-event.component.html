@@ -55,61 +55,41 @@
               <option>Both</option>
             </select>
           </div>
-          <div class="relative max-w-sm">
-            <label
-              for="start_date"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >Event Start Date</label
-            >
+          <label for="event_start_date">Event Start Date</label>
+          <input
+            type="datetime-local"
+            id="event_start_date"
+            formControlName="event_start_date"
+            required
+          />
 
-            <mat-form-field>
-              <mat-label>Event Start Date</mat-label>
-              <mat-date-range-input [rangePicker]="datepicker">
-                <input
-                  matStartDate
-                  placeholder="Start date"
-                  formControlName="event_start_date"
-                />
-                <input
-                  matEndDate
-                  placeholder="End date"
-                  formControlName="event_end_date"
-                />
-              </mat-date-range-input>
-              <mat-datepicker-toggle
-                matIconSuffix
-                [for]="datepicker"
-              ></mat-datepicker-toggle>
-              <mat-date-range-picker #datepicker></mat-date-range-picker>
-            </mat-form-field>
-          </div>
-          <div class="relative max-w-sm">
-            <label
-              for="registration"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >Registration Date</label
-            >
-            <mat-form-field id="registration">
-              <mat-label>Registration Date</mat-label>
-              <mat-date-range-input [rangePicker]="picker">
-                <input
-                  matStartDate
-                  formControlName="event_registration_start"
-                  placeholder="Start date"
-                />
-                <input
-                  matEndDate
-                  formControlName="event_registration_end"
-                  placeholder="End date"
-                />
-              </mat-date-range-input>
-              <mat-datepicker-toggle
-                matIconSuffix
-                [for]="picker"
-              ></mat-datepicker-toggle>
-              <mat-date-range-picker #picker></mat-date-range-picker>
-            </mat-form-field>
-          </div>
+          <label for="event_end_date">Event End Date</label>
+          <input
+            type="datetime-local"
+            id="event_end_date"
+            formControlName="event_end_date"
+            required
+          />
+
+          <label for="event_registration_start"
+            >Event Registration Start Date</label
+          >
+          <input
+            type="datetime-local"
+            id="event_registration_start"
+            formControlName="event_registration_start"
+            required
+          />
+
+          <label for="event_registration_end"
+            >Event Registration End Date</label
+          >
+          <input
+            type="datetime-local"
+            id="event_registration_end"
+            formControlName="event_registration_end"
+            required
+          />
           <div class="sm:col-span-2 -mt-5">
             <label
               for="description"

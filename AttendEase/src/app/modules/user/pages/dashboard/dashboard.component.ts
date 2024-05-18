@@ -24,14 +24,15 @@ export class DashboardComponent implements OnInit {
   getUserEvents(): void {
     this.eventService.getUserEvent().subscribe(
       (res) => {
+        console.log('User events:', res);
         if (res) {
           this.events = res.payload.map((event: any) => {
             const currentDate = new Date();
-            const regEndDate = new Date(event.event_registration_end);
+            const endDate = new Date(event.event_end_date);
             const eventStartDate = new Date(event.event_start_date);
             event.eventState = '';
 
-            if (regEndDate < currentDate) {
+            if (endDate < currentDate) {
               event.eventState = 'done';
             } else if (eventStartDate <= currentDate) {
               event.eventState = 'ongoing';

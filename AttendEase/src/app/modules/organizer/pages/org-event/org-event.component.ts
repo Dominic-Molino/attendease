@@ -21,8 +21,6 @@ import { EventService } from '../../../../core/service/event.service';
 })
 export class OrgEventComponent implements OnInit {
   eventData: any;
-  latestEvent: any;
-  otherEvents: any[] = [];
   upcomingEvents: any[] = [];
   ongoingEvents: any[] = [];
   pastEvents: any[] = [];
@@ -37,18 +35,18 @@ export class OrgEventComponent implements OnInit {
   loadEvent() {
     this.service.getAllEvents().subscribe((result) => {
       this.eventData = result.payload;
-      const today = new Date();
-      this.eventData.forEach((event: any) => {
-        const startDate = new Date(event.event_start_date);
-        const endDate = new Date(event.event_end_date);
-        if (endDate < today) {
-          this.pastEvents.push(event);
-        } else if (startDate <= today && endDate >= today) {
-          this.ongoingEvents.push(event);
-        } else {
-          this.upcomingEvents.push(event);
-        }
-      });
+      // const today = new Date();
+      // this.eventData.forEach((event: any) => {
+      //   const startDate = new Date(event.event_start_date);
+      //   const endDate = new Date(event.event_end_date);
+      //   if (endDate < today) {
+      //     this.pastEvents.push(event);
+      //   } else if (startDate <= today && endDate >= today) {
+      //     this.ongoingEvents.push(event);
+      //   } else {
+      //     this.upcomingEvents.push(event);
+      //   }
+      // });
     });
   }
 

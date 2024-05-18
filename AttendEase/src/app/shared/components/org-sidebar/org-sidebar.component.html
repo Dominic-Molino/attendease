@@ -87,11 +87,13 @@
               </li>
 
               <li>
-                <a
-                  class="block px-4 py-2 text-sm text-custom_black hover:bg-shade"
+                <button
+                  (click)="logout()"
+                  class="flex justify-start px-4 py-2 text-sm text-custom_black w-full hover:bg-shade"
                   role="menuitem"
-                  >Sign out</a
                 >
+                  Sign out
+                </button>
               </li>
             </ul>
           </div>

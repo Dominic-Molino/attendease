@@ -38,7 +38,7 @@ export class EditComponent implements OnInit {
   ngOnInit(): void {
     if (this.user_id) {
       this.service.getStudentProfile(this.user_id).subscribe((res) => {
-        for (const student of res) {
+        for (const student of res.payload) {
           if (this.user_id === student.user_id) {
             this.studentInfo = student;
             this.editForm.patchValue({

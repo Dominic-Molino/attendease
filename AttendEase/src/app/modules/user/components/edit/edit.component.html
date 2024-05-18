@@ -1,4 +1,4 @@
-<mat-dialog-content class="bg-white-bone_white">
+<mat-dialog-content class="bg-slate-100">
   <div>
     <form
       class="max-w-sm mx-auto p-10 sm:w-full"
@@ -6,101 +6,105 @@
       [formGroup]="editForm"
       (ngSubmit)="updateInfo()"
     >
-      <div class="grid md:grid-cols-2 md:gap-6">
-        <div class="relative z-0 w-full mb-5 group">
-          <input
-            formControlName="first_name"
-            type="text"
-            name="firstName"
-            id="firstName"
-            class="block px-0 w-full text-sm text-black-rich_black bg-transparent border-0 border-b-2 border-green-400 appearance-non focus:outline-none focus:ring-0 focus:border-green-500 peer rounded-sm"
-            placeholder=""
-          />
-          <label
-            for="firstName"
-            class="text-nowrap peer-focus:font-medium font-primary absolute text-sm text-black-rich_black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-black-midnight_blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >First Name</label
-          >
-        </div>
-
-        <div class="relative z-0 w-full mb-5 group">
-          <input
-            formControlName="last_name"
-            type="text"
-            name="lastName"
-            id="lastName"
-            class="block px-0 w-full text-sm text-black-rich_black bg-transparent border-0 border-b-2 border-green-400 appearance-non focus:outline-none focus:ring-0 focus:border-green-500 peer rounded-sm"
-            placeholder=""
-          />
-          <label
-            for="lastName"
-            class="text-nowrap peer-focus:font-medium font-primary absolute text-sm text-black-rich_black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-black-midnight_blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Last Name</label
-          >
-        </div>
-      </div>
-
-      <div class="grid md:grid-cols-2 md:gap-6">
-        <div class="relative z-0 w-full mb-5 group">
-          <input
-            formControlName="year_level"
-            type="text"
-            name="yearLevel"
-            id="yearLevel"
-            class="block px-0 w-full text-sm text-black-rich_black bg-transparent border-0 border-b-2 border-green-400 appearance-non focus:outline-none focus:ring-0 focus:border-green-500 peer rounded-sm"
-            placeholder=""
-          />
-          <label
-            for="yearLevel"
-            class="text-nowrap peer-focus:font-medium font-primary absolute text-sm text-black-rich_black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-black-midnight_blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Year Level</label
-          >
-        </div>
-        <div class="relative z-0 w-full mb-5 group">
-          <input
-            formControlName="block"
-            type="text"
-            name="block"
-            id="block"
-            class="block px-0 w-full text-sm text-black-rich_black bg-transparent border-0 border-b-2 border-green-400 appearance-non focus:outline-none focus:ring-0 focus:border-green-500 peer rounded-sm"
-            placeholder=""
-          />
-          <label
-            for="block"
-            class="text-nowrap peer-focus:font-medium font-primary absolute text-sm text-black-rich_black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-black-midnight_blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Block</label
-          >
-        </div>
-      </div>
-      <div class="relative z-0 w-1/2 mb-5 group">
+      <div class="mb-5">
+        <label
+          for="first_name"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >First Name</label
+        >
         <input
-          formControlName="course"
           type="text"
-          name="course"
-          id="course"
-          class="block px-0 w-full text-sm text-black-rich_black bg-transparent border-0 border-b-2 border-green-400 appearance-non focus:outline-none focus:ring-0 focus:border-green-500 peer rounded-sm"
+          id="first_name"
+          formControlName="first_name"
+          name="first_name"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder=""
+          required
         />
+      </div>
+
+      <div class="mb-5">
+        <label
+          for="last_name"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Last Name</label
+        >
+        <input
+          type="text"
+          id="last_name"
+          formControlName="last_name"
+          name="last_name"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder=""
+          required
+        />
+      </div>
+
+      <div class="mb-5">
+        <label
+          for="year_level"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Year Level</label
+        >
+        <input
+          type="text"
+          id="year_level"
+          formControlName="year_level"
+          name="year_level"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder=""
+          required
+        />
+      </div>
+
+      <div class="mb-5">
+        <label
+          for="block"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Block</label
+        >
+        <input
+          type="text"
+          id="block"
+          formControlName="block"
+          name="block"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder=""
+          required
+        />
+      </div>
+
+      <div class="mb-5">
         <label
           for="course"
-          class="text-nowrap peer-focus:font-medium font-primary absolute text-sm text-black-rich_black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-black-midnight_blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >Course</label
         >
-      </div>
-      <div class="relative z-0 w-full mb-5 group">
         <input
-          formControlName="email"
-          type="email"
-          name="email"
-          id="email"
-          class="block px-0 w-full text-sm text-black-rich_black bg-transparent border-0 border-b-2 border-green-400 appearance-non focus:outline-none focus:ring-0 focus:border-green-500 peer rounded-sm"
+          type="text  "
+          id="course"
+          formControlName="course"
+          name="course"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder=""
+          required
         />
+      </div>
+
+      <div class="mb-5">
         <label
           for="email"
-          class="text-nowrap peer-focus:font-medium font-primary absolute text-sm text-black-rich_black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-black-midnight_blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >Student email</label
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Email</label
         >
+        <input
+          type="email"
+          formControlName="email"
+          name="email"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder=""
+          required
+        />
       </div>
 
       <div class="flex w-full justify-center">

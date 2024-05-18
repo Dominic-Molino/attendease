@@ -2,13 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, ViewEncapsulation } from '@angular/core';
 import { MatDialogContent } from '@angular/material/dialog';
 import {
-  FormGroup,
-  FormControl,
   FormsModule,
   ReactiveFormsModule,
   FormBuilder,
   Validators,
-  NonNullableFormBuilder,
+  FormGroup,
 } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -34,21 +32,20 @@ import Swal from 'sweetalert2';
 })
 export class AddEventComponent {
   selectedFile: any;
-
   constructor(
     private builder: FormBuilder,
     private eventService: EventService
   ) {}
 
   eventForm = this.builder.group({
-    event_name: this.builder.control('', Validators.required),
-    event_description: this.builder.control('', Validators.required),
-    event_location: this.builder.control('', Validators.required),
-    event_start_date: this.builder.control(null),
-    event_end_date: this.builder.control(null),
-    event_registration_start: this.builder.control(null),
-    event_registration_end: this.builder.control(null),
-    session: this.builder.control('', Validators.required),
+    event_name: ['', Validators.required],
+    event_description: ['', Validators.required],
+    event_location: ['', Validators.required],
+    event_start_date: [null, Validators.required],
+    event_end_date: [null, Validators.required],
+    event_registration_start: [null, Validators.required],
+    event_registration_end: [null, Validators.required],
+    session: ['', Validators.required],
   });
 
   addEvent() {

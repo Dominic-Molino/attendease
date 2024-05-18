@@ -10,10 +10,14 @@ import { MatDialog } from '@angular/material/dialog';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './admin-dashboard.component.html',
-  styleUrl: './admin-dashboard.component.css'
+  styleUrl: './admin-dashboard.component.css',
 })
 export class AdminDashboardComponent implements OnInit {
-  constructor(private routes: Router, private service: AuthserviceService, private dialog: MatDialog) { }
+  constructor(
+    private routes: Router,
+    private service: AuthserviceService,
+    private dialog: MatDialog
+  ) {}
 
   datalist: any;
 
@@ -24,21 +28,17 @@ export class AdminDashboardComponent implements OnInit {
   loadData() {
     this.service.getUsers().subscribe((res: any) => {
       this.datalist = res.payload;
-    })
+    });
   }
 
   updateUser(id: number) {
     const popup = this.dialog.open(UpdateroleComponent, {
-      enterAnimationDuration: "350ms",
-      exitAnimationDuration: "300ms",
-      width: "50%",
       data: {
-        user_id: id
-      }
-    })
-    popup.afterClosed().subscribe((res:any) => {
-      this.loadData()
+        user_id: id,
+      },
     });
-
+    popup.afterClosed().subscribe((res: any) => {
+      this.loadData();
+    });
   }
 }

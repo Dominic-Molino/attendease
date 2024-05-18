@@ -30,7 +30,7 @@
             <label for="avatar-input-file">
               <div class="icon-wrapper">
                 <svg
-                  class="w-6 h-6 text-gray-800 dark:text-white relative left-[2px]"
+                  class="w-6 h-6 text-white dark:text-white relative left-[2px]"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -61,8 +61,8 @@
         <h5
           class="mb-1 text-2xl mt-2 lg:text-2xl font-medium text-gray-900 font-secondary"
         >
-          {{ studentProfile[0]?.first_name | uppercase }}
-          {{ studentProfile[0]?.last_name | uppercase }}
+          {{ studentProfile[0]?.first_name | titlecase }}
+          {{ studentProfile[0]?.last_name | titlecase }}
         </h5>
         <span class="text-xs text-custom_black lg:text-xl dark:text-gray-400">{{
           extractStudentId(studentProfile[0]?.email)
