@@ -160,7 +160,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 break;
 
             case 'adduser':
-                echo json_encode($post->add_user($pdo, $data));
+                echo json_encode($post->add_user($data));
                 break;
 
             case 'edituser':

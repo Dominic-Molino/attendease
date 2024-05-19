@@ -59,17 +59,23 @@ class Get extends GlobalMethods
 
     public function get_user_events($user_id)
     {
+        $columns = "
+         event_name, event_description, event_location,
+            event_start_date, event_end_date, event_registration_start, event_registration_end,
+            CASE
+                WHEN events.event_end_date < CURDATE() THEN 'done'
+                WHEN events.event_start_date <= CURDATE() THEN 'ongoing'
+                ELSE 'upcoming'
+            END AS event_state
+        ";
+
         $sql = "
             SELECT 
-                events.*, 
-                CASE
-                    WHEN events.event_end_date < CURDATE() THEN 'done'
-                    WHEN events.event_start_date <= CURDATE() THEN 'ongoing'
-                    ELSE 'upcoming'
-                END AS event_state
+                $columns
             FROM events
             INNER JOIN event_registration ON events.event_id = event_registration.event_id
-            WHERE event_registration.user_id = :user_id";
+            WHERE event_registration.user_id = :user_id
+        ";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
