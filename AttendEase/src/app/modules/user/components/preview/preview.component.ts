@@ -28,16 +28,11 @@ export class PreviewComponent implements OnInit {
   registerForEvent(eventId: number) {
     this.service.registerForEvent(eventId, this.userId).subscribe(
       (response) => {
-        Swal.fire('Success', 'Successfully registered :>', 'success');
+        Swal.fire('Success', 'Successfully registered', 'success');
         console.log('Registered for event:', response);
       },
       (error) => {
-        console.error('Failed to register for event:', error);
-        Swal.fire(
-          'Warning',
-          'You already registered to this event :>',
-          'warning'
-        );
+        Swal.fire('Warning', 'Event registration has ended.', 'warning');
       }
     );
   }

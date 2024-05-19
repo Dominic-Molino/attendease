@@ -13,6 +13,8 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrl: './admin-dashboard.component.css',
 })
 export class AdminDashboardComponent implements OnInit {
+  title = 'AttendEase';
+
   constructor(
     private routes: Router,
     private service: AuthserviceService,

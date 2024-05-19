@@ -73,6 +73,7 @@ export class EventsComponent implements OnInit {
   viewEvent(event: any) {
     this.dialog.open(PreviewComponent, {
       data: { event },
+      width: '50%',
     });
   }
 

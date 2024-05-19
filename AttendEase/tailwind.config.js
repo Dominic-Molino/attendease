@@ -3,14 +3,10 @@ module.exports = {
   content: ["./src/**/*.{html,ts}", "./node_modules/flowbite/**/*.js"],
   theme: {
     extend: {
-      fontFamily: {
-        primary: "Sora",
-        secondary: "Poppins",
-      },
       colors: {
         //NEW CUSTOM COLORS HERE
-        dark_color: "#3e362e",
-        light_brown: "#865d36",
+        // dark_color: "#3e362e",
+        // light_brown: "#865d36",
 
         //OLD CUSTOM COLORS
         darkgreen: "#027148",
@@ -29,6 +25,10 @@ module.exports = {
         },
       },
       backgroundColor: (theme) => theme("colors"),
+      fontFamily: {
+        primary: "Sora",
+        secondary: "Poppins",
+      },
     },
   },
   plugins: [require("flowbite/plugin")],

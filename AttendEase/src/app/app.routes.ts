@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { UserComponent } from './modules/user/user.component';
 import { OrganizerComponent } from './modules/organizer/organizer.component';
 import { authenGuard } from './core/authen.guard';
+import { AdminDashboardComponent } from './modules/admin/pages/admin-dashboard/admin-dashboard.component';
 
 export const routes: Routes = [
   {
@@ -28,7 +29,7 @@ export const routes: Routes = [
 
   {
     path: 'admin',
-    component: OrganizerComponent,
+    component: AdminDashboardComponent,
     canActivate: [authenGuard],
     children: [
       {
@@ -39,13 +40,12 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () =>
-          import('./modules/admin/pages/admin-dashboard/admin-dashboard.component').then(
-            (c) => c.AdminDashboardComponent
-          ),
+          import(
+            './modules/admin/pages/admin-dashboard/admin-dashboard.component'
+          ).then((c) => c.AdminDashboardComponent),
       },
     ],
   },
-
 
   {
     path: 'student',
@@ -128,6 +128,4 @@ export const routes: Routes = [
       },
     ],
   },
-
-
 ];

@@ -1,8 +1,8 @@
 <section class="bg-white dark:bg-gray-900 w-full">
-  <div class="max-w-full bg-white rounded-lg">
+  <div class="max-w-full bg-white max-h-[500px] overflow-scroll">
     <div class="w-full">
       <img
-        class="rounded-md object-cover object-center max-h-72 w-full"
+        class="object-cover object-center max-h-72 w-full"
         alt="image here"
         [src]="data.event.event_image"
       />
@@ -99,11 +99,11 @@
         </svg>
         <span class="ms-2 text-base font-primary"
           >Registration Date:
-          {{ data.event.event_registration_start | date : "longDate" }}
+          {{ data.event.event_registration_start | date : "MMM d, y, h:mm a" }}
         </span>
         <span class="ms-1"> - </span>
         <span class="ms-2 text-base font-primary">{{
-          data.event.event_registration_end | date : "longDate"
+          data.event.event_registration_end | date : "MMM d, y, h:mm a"
         }}</span>
       </div>
 
@@ -125,8 +125,8 @@
             d="M11 9H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h6m0-6v6m0-6 5.419-3.87A1 1 0 0 1 18 5.942v12.114a1 1 0 0 1-1.581.814L11 15m7 0a3 3 0 0 0 0-6M6 15h3v5H6v-5Z"
           />
         </svg>
-        <span class="ms-2 font-primary text-sm">{{
-          data.event.session_id
+        <span class="ms-2 font-primary text-base">{{
+          data.event.session
         }}</span>
       </div>
 
@@ -156,9 +156,7 @@
           />
         </svg>
 
-        <span class="ms-2 font-primary text-sm">{{
-          data.event.status_id
-        }}</span>
+        <span class="ms-2 font-primary text-sm">{{ data.event.status }}</span>
       </div>
 
       <div class="flex items-center my-2.5">

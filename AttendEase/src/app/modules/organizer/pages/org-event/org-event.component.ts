@@ -39,7 +39,7 @@ export class OrgEventComponent implements OnInit {
   eventData: any;
   selectedEventId: any;
   eventList: Event[] = [];
-  getClickEventId: any;
+  maxChar = 100;
 
   constructor(
     private service: EventService,
@@ -112,7 +112,7 @@ export class OrgEventComponent implements OnInit {
     this.selectedEventId = eventId;
     const modal = this.dialog.open(EditEventComponent, {
       data: { event_id: this.selectedEventId },
-      width: '75%',
+      width: '50%',
     });
     modal.afterClosed().subscribe((response) => {
       this.loadEvent();
@@ -124,5 +124,13 @@ export class OrgEventComponent implements OnInit {
       data: { event },
       width: '50%',
     });
+  }
+
+  truncateDescription(text: string, maxLength: number): string {
+    if (text && text.length > maxLength) {
+      return text.substring(0, maxLength) + ' ...';
+    } else {
+      return text;
+    }
   }
 }
