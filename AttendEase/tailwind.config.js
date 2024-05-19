@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{html,ts}",
-    "./node_modules/flowbite/**/*.js", // add this line
-  ],
+  content: ["./src/**/*.{html,ts}", "./node_modules/flowbite/**/*.js"],
   theme: {
     extend: {
       fontFamily: {
@@ -11,6 +8,11 @@ module.exports = {
         secondary: "Poppins",
       },
       colors: {
+        //NEW CUSTOM COLORS HERE
+        dark_color: "#3e362e",
+        light_brown: "#865d36",
+
+        //OLD CUSTOM COLORS
         darkgreen: "#027148",
         custom_black: "#010101",
         smoke: "#e3e3e3",

@@ -1,0 +1,26 @@
+.personal {
+  text-indent: 50px;
+  padding-left: 25px;
+  font-size: 20px;
+}
+
+table {
+  width: 100%;
+}
+
+.avatar-container {
+  position: relative;
+  width: fit-content;
+}
+
+.image-container {
+
+  z-index: 0;
+  background-color: #cdcdcd;
+  background-position: center;
+  background-size: cover;
+}
+
+.event-placeholder {
+  background-image: url("../../../../../assets/images/event_placeholder.png");
+}

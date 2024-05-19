@@ -3,6 +3,22 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
 import { PreviewComponent } from '../../components/preview/preview.component';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { EventService } from '../../../../core/service/event.service';
+
+interface Event {
+  event_id: number;
+  event_name: string;
+  event_description: string;
+  event_location: string;
+  event_start_date: Date;
+  event_end_date: Date;
+  event_registration_start: Date;
+  event_registration_end: Date;
+  session: string;
+  event_image: SafeResourceUrl | undefined;
+}
+
 @Component({
   selector: 'app-events',
   standalone: true,
@@ -11,26 +27,46 @@ import { PreviewComponent } from '../../components/preview/preview.component';
   styleUrl: './events.component.css',
 })
 export class EventsComponent implements OnInit {
-  constructor(private dialog: MatDialog, private service: AuthserviceService) {}
+  constructor(
+    private dialog: MatDialog,
+    private service: AuthserviceService,
+    private sanitizer: DomSanitizer,
+    private eventService: EventService
+  ) {}
 
   eventData: any;
   latestEvent: any;
   otherEvents: any[] = [];
   maxChar: number = 100;
+  eventList: Event[] = [];
 
   ngOnInit(): void {
     this.service.getAllEvents().subscribe((result) => {
       this.eventData = result;
-      if (this.eventData && this.eventData.payload) {
-        const eventsArray = this.eventData.payload;
-        eventsArray.sort(
-          (a: any, b: any) =>
-            new Date(b.event_start_date).getTime() -
-            new Date(a.event_start_date).getTime()
-        );
-        this.latestEvent = eventsArray[0];
-        this.otherEvents = eventsArray.slice(1);
-      }
+      this.eventList = result.payload.map((data: any): Event => {
+        const eventId = data.event_id;
+        const eventObject: Event = {
+          event_id: data.event_id,
+          event_name: data.event_name,
+          event_description: data.event_description,
+          event_location: data.event_location,
+          event_start_date: data.event_start_date,
+          event_end_date: data.event_end_date,
+          event_registration_start: data.event_registration_start,
+          event_registration_end: data.event_registration_end,
+          session: data.session,
+          event_image: undefined,
+        };
+
+        this.eventService.getEventImage(eventId).subscribe((imageResult) => {
+          if (imageResult.size > 0) {
+            const url = URL.createObjectURL(imageResult);
+            eventObject.event_image =
+              this.sanitizer.bypassSecurityTrustResourceUrl(url);
+          }
+        });
+        return eventObject;
+      });
     });
   }
 

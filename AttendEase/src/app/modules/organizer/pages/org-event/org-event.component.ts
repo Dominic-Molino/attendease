@@ -7,6 +7,8 @@ import { EditEventComponent } from '../../components/edit-event/edit-event.compo
 import { ReadEventComponent } from '../../components/read-event/read-event.component';
 import { EventService } from '../../../../core/service/event.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { trigger } from '@angular/animations';
+import Swal from 'sweetalert2';
 
 interface Event {
   event_id: number;
@@ -17,6 +19,7 @@ interface Event {
   event_end_date: Date;
   event_registration_start: Date;
   event_registration_end: Date;
+  session: string;
   event_image: SafeResourceUrl | undefined;
 }
 
@@ -36,17 +39,13 @@ export class OrgEventComponent implements OnInit {
   eventData: any;
   selectedEventId: any;
   eventList: Event[] = [];
-  eventImage: any[] = [];
+  getClickEventId: any;
 
   constructor(
     private service: EventService,
     private dialog: MatDialog,
     private sanitizer: DomSanitizer
   ) {}
-
-  ngOnInit(): void {
-    this.loadEvent();
-  }
 
   loadEvent() {
     this.service.getAllEvents().subscribe((result) => {
@@ -61,6 +60,7 @@ export class OrgEventComponent implements OnInit {
           event_end_date: data.event_end_date,
           event_registration_start: data.event_registration_start,
           event_registration_end: data.event_registration_end,
+          session: data.session,
           event_image: undefined,
         };
 
@@ -74,6 +74,28 @@ export class OrgEventComponent implements OnInit {
         return eventObject;
       });
     });
+  }
+
+  ngOnInit(): void {
+    this.loadEvent();
+  }
+
+  onFileChange(event: any, eventId: number) {
+    const files = event.target.files as FileList;
+    if (files.length > 0) {
+      const file = files[0];
+      this.service.uploadEvent(eventId, file).subscribe((data) => {
+        Swal.fire('Success', 'Image uploaded successfully', 'success');
+        this.loadEvent();
+        this.resetInput(event.target);
+      });
+    }
+  }
+
+  resetInput(inputElement: HTMLInputElement) {
+    if (inputElement) {
+      inputElement.value = '';
+    }
   }
 
   openDialog() {
@@ -95,7 +117,6 @@ export class OrgEventComponent implements OnInit {
     modal.afterClosed().subscribe((response) => {
       this.loadEvent();
     });
-    console.log(this.selectedEventId);
   }
 
   viewEvent(event: any) {

@@ -124,7 +124,6 @@ class Post extends GlobalMethods
         $event_registration_end = date('Y-m-d H:i:s', strtotime($data->event_registration_end));
         $session = $data->session;
 
-
         $sql = "INSERT INTO events (event_name, event_description, event_location, event_start_date, event_end_date, 
             event_registration_start, event_registration_end, session
             ) 
@@ -139,7 +138,7 @@ class Post extends GlobalMethods
                 $event_end_date,
                 $event_registration_start,
                 $event_registration_end,
-                $session
+                $session,
             ]);
 
             if ($stmt->rowCount() > 0) {
@@ -426,7 +425,6 @@ class Post extends GlobalMethods
     {
         $fileData = file_get_contents($_FILES["file"]["tmp_name"]);
 
-
         $sql = "UPDATE user SET avatar = ? WHERE user_id = $user_id";
         try {
             $stmt = $this->pdo->prepare($sql);
@@ -437,12 +435,10 @@ class Post extends GlobalMethods
             );
             return $this->sendPayload(null, "success", "Successfully uploaded file", 200);
         } catch (PDOException $e) {
-            error_log("Database error: " . $e->getMessage());
 
             $errmsg = $e->getMessage();
             $code = 400;
         }
-
         return $this->sendPayload(null, "failed", $errmsg, $code);
     }
 
@@ -460,12 +456,10 @@ class Post extends GlobalMethods
             );
             return $this->sendPayload(null, "success", "Successfully uploaded file", 200);
         } catch (PDOException $e) {
-            error_log("Database error: " . $e->getMessage());
 
             $errmsg = $e->getMessage();
             $code = 400;
         }
-
         return $this->sendPayload(null, "failed", $errmsg, $code);
     }
 }

@@ -174,16 +174,16 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($post->add_event($data));
                 break;
 
+            case 'uploadevent':
+                echo json_encode($post->uploadEvent($request[1]));
+                break;
+
             case 'editevent':
                 echo json_encode($post->edit_event($data, $request[1]));
                 break;
 
             case 'uploadimage':
                 echo json_encode($post->uploadAvatar($request[1]));
-                break;
-
-            case 'uploadevent':
-                echo json_encode($post->uploadEvent($request[1]));
                 break;
 
             case 'register':

@@ -26,14 +26,12 @@ export class PreviewComponent implements OnInit {
   }
 
   registerForEvent(eventId: number) {
-    // You need to get the user ID from somewhere, perhaps from authentication
     this.service.registerForEvent(eventId, this.userId).subscribe(
       (response) => {
         Swal.fire('Success', 'Successfully registered :>', 'success');
         console.log('Registered for event:', response);
       },
       (error) => {
-        // Handle error
         console.error('Failed to register for event:', error);
         Swal.fire(
           'Warning',

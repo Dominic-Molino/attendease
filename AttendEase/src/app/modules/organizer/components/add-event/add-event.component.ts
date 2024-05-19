@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogContent } from '@angular/material/dialog';
 import {
   FormsModule,
@@ -12,7 +12,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { EventService } from '../../../../core/service/event.service';
 import Swal from 'sweetalert2';
-import { co } from '@fullcalendar/core/internal-common';
 
 @Component({
   selector: 'app-add-event',
@@ -32,6 +31,7 @@ import { co } from '@fullcalendar/core/internal-common';
 })
 export class AddEventComponent {
   selectedFile: File | null = null;
+
   constructor(
     private builder: FormBuilder,
     private eventService: EventService
@@ -48,29 +48,23 @@ export class AddEventComponent {
     session: ['', Validators.required],
   });
 
-  onFileChange(event: any) {
-    const fileList: FileList = event.target.files;
-    if (fileList.length > 0) {
-      this.selectedFile = fileList[0];
-      console.log(this.selectedFile);
-      this.eventService.uploadEvent(this.selectedFile).subscribe((data) => {
-        Swal.fire('Success', 'Successfully uploaded photo', 'success');
-      });
-    }
-  }
-
-  resetInput() {
-    const input = document.getElementById('file_input') as HTMLInputElement;
-    if (input) {
-      input.value = '';
-    }
-  }
-
   addEvent() {
     if (this.eventForm.valid) {
-      this.eventService.addEvent(this.eventForm.value).subscribe((res) => {
-        Swal.fire('Success', 'Event Successfully Added', 'success');
-      });
+      this.eventService.addEvent(this.eventForm.value).subscribe(
+        (res) => {
+          Swal.fire('Success', 'Event added successfully', 'success');
+        },
+        (error) => {
+          Swal.fire('Error', 'Something went wrong', 'error');
+        }
+      );
     }
   }
+
+  // onFileSelected(event: any) {
+  //   const files = event.target.files as FileList;
+  //   if (files.length > 0) {
+  //     this.selectedFile = files[0];
+  //   }
+  // }
 }

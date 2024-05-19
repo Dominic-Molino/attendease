@@ -61,10 +61,11 @@ export class EventService {
     return this.http.post(`${this.API_URL}register`, data);
   }
 
-  uploadEvent(file: File): Observable<any> {
+  uploadEvent(eventId: number, file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post(`${this.API_URL}uploadevent`, formData);
+
+    return this.http.post(`${this.API_URL}uploadevent/${eventId}`, formData);
   }
 
   getEventImage(event_id: number): Observable<any> {
