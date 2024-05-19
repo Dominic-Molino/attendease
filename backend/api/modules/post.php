@@ -312,14 +312,14 @@ class Post extends GlobalMethods
 
     public function add_event_feedback($data)
     {
-        if (!isset($data->event_id, $data->user_id, $data->feedback_given)) {
-            error_log("Incomplete feedback data. Please provide event_id, user_id, and feedback_given.");
-            return $this->sendPayload(null, 'failed', "Incomplete feedback data. Please provide event_id, user_id, and feedback_given.", 400);
+        if (!isset($data->event_id, $data->user_id, $data->Feedback_Given)) {
+            error_log("Incomplete feedback data. Please provide event_id, user_id, and Feedback_Given.");
+            return $this->sendPayload(null, 'failed', "Incomplete feedback data. Please provide event_id, user_id, and Feedback_Given.", 400);
         }
 
         $event_id = $data->event_id;
         $user_id = $data->user_id;
-        $feedback_given = $data->feedback_given;
+        $Feedback_Given = $data->Feedback_Given;
 
         $sql = "SELECT COUNT(*) AS count 
             FROM event_registration 
@@ -345,10 +345,10 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', "You have not attended this event.", 400);
         }
 
-        $sql = "INSERT INTO EventFeedback (Event_Id, User_Id, feedback_given) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO Feedback (Event_Id, User_Id, Feedback_Given) VALUES (?, ?, ?)";
         try {
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$event_id, $user_id, $feedback_given]);
+            $stmt->execute([$event_id, $user_id, $Feedback_Given]);
 
             if ($stmt->rowCount() > 0) {
                 $this->markFeedbackGiven($event_id, $user_id);
@@ -401,7 +401,6 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
-
 
     public function delete_event($event_id)
     {
