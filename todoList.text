@@ -1,8 +1,8 @@
 Student Module
 [x] Login and Signup Page
-    -[] POPUP
-[] Dashboard
-    -[] Events
+    -[x] POPUP
+[x] Dashboard
+    -[x] Events
 [x] Profile
 [x] Events - unfinish - colors
 [] Feedback
@@ -10,8 +10,8 @@ Student Module
 
 [] Tomorrow Task -> Feedback and Attendance UI
 
-[] Week task Finish 2 module UI
+[x] Week task Finish 2 module UI
 
 [x] Backend - need revision
 
-[] - whole system - new color palette needed 
+[x] - whole system - new color palette needed 
