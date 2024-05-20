@@ -56,9 +56,13 @@ export class AttendanceComponent {
     );
   }
 
-  openFile(eventState: string) {
+  
+
+  openFile(eventState: string, event: number) {
     if (eventState === 'done') {
-      const dialogRef = this.dialog.open(SubmitAttendanceComponent);
+      const dialogRef = this.dialog.open(SubmitAttendanceComponent, {
+        data: { eventId: event },
+      });
     } else if (eventState === 'ongoing') {
       Swal.fire('Event is ongoing', 'Please wait for the event to end', 'info');
     } else {

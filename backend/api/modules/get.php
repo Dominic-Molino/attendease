@@ -60,7 +60,7 @@ class Get extends GlobalMethods
     public function get_user_events($user_id)
     {
         $columns = "
-         event_name, event_description, event_location,
+         events.event_id, event_name, event_description, event_location,
             event_start_date, event_end_date, event_registration_start, event_registration_end,
             CASE
                 WHEN events.event_end_date < CURDATE() THEN 'done'
@@ -365,5 +365,4 @@ class Get extends GlobalMethods
             return array("image" => null);
         }
     }
-
 }

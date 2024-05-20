@@ -5,7 +5,6 @@ import { CommonModule, TitleCasePipe } from '@angular/common';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
-import { EventService } from '../../../../core/service/event.service';
 
 @Component({
   selector: 'app-profile',
