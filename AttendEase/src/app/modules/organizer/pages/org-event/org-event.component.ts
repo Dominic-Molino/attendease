@@ -7,7 +7,6 @@ import { EditEventComponent } from '../../components/edit-event/edit-event.compo
 import { ReadEventComponent } from '../../components/read-event/read-event.component';
 import { EventService } from '../../../../core/service/event.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { trigger } from '@angular/animations';
 import Swal from 'sweetalert2';
 
 interface Event {

@@ -126,6 +126,14 @@ export const routes: Routes = [
             './modules/organizer/pages/org-event/org-event.component'
           ).then((c) => c.OrgEventComponent),
       },
+
+      {
+        path: 'attendance',
+        loadComponent: () =>
+          import(
+            './modules/organizer/pages/attendance/attendance.component'
+          ).then((c) => c.AttendanceComponent),
+      },
     ],
   },
 ];

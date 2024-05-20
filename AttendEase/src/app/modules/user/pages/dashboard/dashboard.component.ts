@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { CalendarComponent } from '../../../../shared/components/calendar/calendar.component';
 import { Router, RouterLink } from '@angular/router';
-import { AuthserviceService } from '../../../../core/service/authservice.service';
 import { EventService } from '../../../../core/service/event.service';
 
 @Component({
