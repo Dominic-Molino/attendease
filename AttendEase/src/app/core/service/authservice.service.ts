@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthserviceService {
-  constructor(private http: HttpClient, private helper: JwtHelperService) { }
+  constructor(private http: HttpClient, private helper: JwtHelperService) {}
   private API_URL = 'http://localhost/attendease/backend/api/';
   isLoggedIn: boolean = false;
 
@@ -15,24 +15,22 @@ export class AuthserviceService {
   getUsers(id: any = null): Observable<any> {
     if (id) {
       return this.http.get<any>(`${this.API_URL}users/${id}`);
-    }
-    else {
+    } else {
       return this.http.get<any>(`${this.API_URL}users`);
     }
   }
+
   getRoles(id: any = null): Observable<any> {
     if (id) {
       return this.http.get<any>(`${this.API_URL}roles/${id}`);
-    }
-    else {
+    } else {
       return this.http.get<any>(`${this.API_URL}roles`);
     }
   }
+
   editUserRole(id: number, inputdata: any) {
     return this.http.post<any>(`${this.API_URL}edituserrole/${id}`, inputdata);
   }
-
-
 
   // auth
   registerStudent(data: any): Observable<any> {
@@ -112,5 +110,11 @@ export class AuthserviceService {
         responseType: 'blob',
       }
     );
+  }
+
+  // attendance
+  markAttendance(eventId: number, userId: number): Observable<any> {
+    const data = { event_id: eventId, user_id: userId };
+    return this.http.post<any>(`${this.API_URL}markattendance`, data);
   }
 }

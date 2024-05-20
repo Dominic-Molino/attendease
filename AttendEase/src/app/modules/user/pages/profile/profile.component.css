@@ -70,7 +70,7 @@ table {
   height: 40px;
   width: 40px;
   padding: 0.35rem;
-  background-color: #01CDA9;
+  background-color: #283106;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -91,3 +91,5 @@ table {
     display: none;
   }
 }
+
+

@@ -1,7 +1,5 @@
-<nav
-  class="fixed top-0 z-10 w-full bg-white border-b border-gray-200 shadow-sm"
->
-  <div class="px-3.5 lg:px-5 lg:pl-3">
+<nav class="fixed top-0 z-10 w-full bg-beige shadow-md">
+  <div class="px-3.5 lg:px-5">
     <div class="flex items-center justify-between">
       <div class="flex items-center justify-start rtl:justify-end p-1.5">
         <button
@@ -29,7 +27,7 @@
         <a routerLink="organizer/dashboard" class="flex md:me-24">
           <img
             src="../../../../assets/images/attendease_logo.png"
-            class="h-14 w-14 rounded-full me-3"
+            class="h-14 w-14 me-3 border-none"
             alt="AttendEase"
           />
           <span
@@ -110,21 +108,21 @@
 
 <aside
   id="logo-sidebar"
-  class="fixed top-0 left-0 z-40 w-64 h-screen pt-10 transition-transform border-r border-gray-200 -translate-x-full bg-white sm:translate-x-0 shadow-md"
+  class="fixed top-0 left-0 z-40 w-64 h-screen pt-10 transition-transform border-r border-serpentine -translate-x-full bg-ivy sm:translate-x-0 shadow-lg"
   aria-label="Sidebar"
 >
-  <div class="h-full px-3 pb-4 bg-white overflow-y-auto dark:bg-gray-800">
+  <div class="h-full px-3 pb-4 bg-ivy overflow-y-auto dark:bg-gray-800">
     <div class="flex items-center flex-col gap-3 mb-5">
       <img
         src="../../../../assets/images/attendease_logo.png"
-        class="w-44 h-44 border border-slate-100 shadow-md rounded-full mx-auto p-4"
+        class="w-44 h-44 shadow-md rounded-full mx-auto p-4"
         alt="Star-HUB Logo"
       />
       <h1
         class="self-center text-3xl font-secondary font-bold whitespace-nowrap"
       >
-        <span class="text-custom_black">Attend</span
-        ><span class="text-carribean_green-mint">Ease</span>
+        <span class="text-white">Attend</span
+        ><span class="text-darkgreen">Ease</span>
       </h1>
     </div>
     <ul class="space-y-2 font-medium">
@@ -132,11 +130,11 @@
       <li>
         <a
           routerLink="dashboard"
-          [routerLinkActive]="'bg-slate-100'"
-          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-shade group"
+          [routerLinkActive]="'bg-ivy'"
+          class="flex items-center p-2 text-white rounded-lg hover:bg-ivy group"
         >
           <svg
-            class="flex-shrink-0 w-5 h-5 transition duration-75 text-custom_black"
+            class="flex-shrink-0 w-5 h-5 transition duration-75 text-first_frost"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -153,7 +151,7 @@
             />
           </svg>
           <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-custom_black"
+            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-first_frost"
             >Dashboard</span
           >
         </a>
@@ -162,11 +160,11 @@
       <li>
         <a
           routerLink="profile"
-          [routerLinkActive]="'bg-slate-100'"
-          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-shade group"
+          [routerLinkActive]="'bg-ivy'"
+          class="flex items-center p-2 text-white rounded-lg hover:bg-ivy group"
         >
           <svg
-            class="flex-shrink-0 w-5 h-5 transition duration-75 text-custom_black"
+            class="flex-shrink-0 w-5 h-5 transition duration-75 text-first_frost"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -184,7 +182,7 @@
           </svg>
 
           <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-custom_black"
+            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-first_frost"
             >Profile</span
           >
         </a>
@@ -193,11 +191,11 @@
       <li>
         <a
           routerLink="events"
-          [routerLinkActive]="'bg-slate-100'"
-          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-shade group"
+          [routerLinkActive]="'bg-ivy'"
+          class="flex items-center p-2 text-white rounded-lg hover:bg-ivy group"
         >
           <svg
-            class="flex-shrink-0 w-5 h-5 transition duration-75 text-custom_black"
+            class="flex-shrink-0 w-5 h-5 transition duration-75 text-first_frost"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -215,7 +213,7 @@
           </svg>
 
           <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-custom_black"
+            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-first_frost"
             >Events</span
           >
         </a>
@@ -225,11 +223,11 @@
       <li>
         <a
           routerLink="attendance"
-          [routerLinkActive]="'bg-slate-100'"
-          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-shade group"
+          [routerLinkActive]="'bg-ivy'"
+          class="flex items-center p-2 text-white rounded-lg hover:bg-ivy group"
         >
           <svg
-            class="flex-shrink-0 w-5 h-5 transition duration-75 text-custom_black"
+            class="flex-shrink-0 w-5 h-5 transition duration-75 text-first_frost"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -245,7 +243,7 @@
           </svg>
 
           <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-custom_black"
+            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-first_frost"
             >Attendance</span
           >
         </a>
@@ -255,11 +253,11 @@
       <li>
         <a
           routerLink="feedback"
-          [routerLinkActive]="'bg-slate-100'"
-          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-shade group"
+          [routerLinkActive]="'bg-ivy'"
+          class="flex items-center p-2 text-white rounded-lg hover:bg-ivy group"
         >
           <svg
-            class="flex-shrink-0 w-5 h-5 transition duration-75 text-custom_black"
+            class="flex-shrink-0 w-5 h-5 transition duration-75 text-first_frost"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -277,7 +275,7 @@
           </svg>
 
           <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-custom_black"
+            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-first_frost"
             >Feedback</span
           >
         </a>

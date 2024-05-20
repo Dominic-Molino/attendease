@@ -4,11 +4,15 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        //NEW CUSTOM COLORS HERE
-        // dark_color: "#3e362e",
-        // light_brown: "#865d36",
+        ivy: "#777E5C",
+        serpentine: "#283106",
+        spring: "#D1D8BD",
+        beige: "#F5F5DC",
+        linen: "#C7C2AB",
+        first_frost: "#dfe0dc",
+        pebble: "#B0B6BC",
 
-        //OLD CUSTOM COLORS
+        // Custom Colors
         darkgreen: "#027148",
         custom_black: "#010101",
         smoke: "#e3e3e3",
