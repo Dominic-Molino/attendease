@@ -114,6 +114,30 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 }
                 break;
 
+            case 'getattendanceimage':
+                //first request: event id
+                //second request: user id
+                // third request: attendance id
+                if (isset($request[3])) {
+                    $get->getAttendanceImage($request[1], $request[2], $request[3]);
+                } elseif (isset($request[2])) {
+                    $get->getAttendanceImage($request[1], $request[2]);
+                } else {
+                    echo "IDs not provided";
+                    http_response_code(400);
+                }
+                break;
+
+            case 'getusersbyeventattendance':
+                if (isset($request[1])) {
+                    echo json_encode($get->getUsersByEventAttendance($request[1]));
+                } else {
+                    echo "ID not provided";
+                    http_response_code(400);
+                }
+                break;
+
+
             default:
                 echo "This is forbidden";
                 http_response_code(403);
@@ -157,7 +181,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     echo json_encode(["message" => "User not found or invalid credentials"]);
                     exit;
                 }
-                break;
+            // break;
 
             case 'adduser':
                 echo json_encode($post->add_user($data));
@@ -196,6 +220,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
             case 'addfeedback':
                 echo json_encode($post->add_event_feedback($data));
+                break;
+
+            case 'uploadattendanceimage':
+                echo json_encode($post->uploadAttendanceImage($request[1], $request[2]));
                 break;
 
             default:

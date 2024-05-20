@@ -13,11 +13,11 @@ class Post extends GlobalMethods
     {
         if (
             !isset(
-                $data->first_name,
-                $data->last_name,
-                $data->email,
-                $data->password
-            )
+            $data->first_name,
+            $data->last_name,
+            $data->email,
+            $data->password
+        )
         ) {
             return $this->sendPayload(null, 'failed', "Incomplete user data.", 400);
         }
@@ -102,15 +102,15 @@ class Post extends GlobalMethods
     {
         if (
             !isset(
-                $data->event_name,
-                $data->event_description,
-                $data->event_location,
-                $data->event_start_date,
-                $data->event_end_date,
-                $data->event_registration_start,
-                $data->event_registration_end,
-                $data->session
-            )
+            $data->event_name,
+            $data->event_description,
+            $data->event_location,
+            $data->event_start_date,
+            $data->event_end_date,
+            $data->event_registration_start,
+            $data->event_registration_end,
+            $data->session
+        )
         ) {
             return $this->sendPayload(null, 'failed', "Incomplete event data.", 400);
         }
@@ -461,4 +461,30 @@ class Post extends GlobalMethods
         }
         return $this->sendPayload(null, "failed", $errmsg, $code);
     }
+
+    public function uploadAttendanceImage($event_id, $user_id)
+    {
+        $fileData = file_get_contents($_FILES["file"]["tmp_name"]);
+
+        // $sql = "INSERT INTO attendance SET image = ? WHERE event_id = $event_id AND user_id = $user_id";
+        $sql = "INSERT INTO attendance (user_id, event_id, image) VALUES (?, ?, ?)";
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute(
+                [
+                    $user_id,
+                    $event_id,
+                    $fileData
+                ]
+            );
+            return $this->sendPayload(null, "success", "Successfully uploaded file", 200);
+        } catch (PDOException $e) {
+
+            $errmsg = $e->getMessage();
+            $code = 400;
+        }
+        return $this->sendPayload(null, "failed", $errmsg, $code);
+    }
+
+
 }
