@@ -1,0 +1,44 @@
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg p-5">
+    <div class="max-h-96 h-96 over">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">Submission ID</th>
+            <th scope="col" class="px-6 py-3">Date Uploaded</th>
+            <th scope="col" class="px-6 py-3">Status</th> 
+            <th scope="col" class="px-6 py-3">File</th>
+            <th scope="col" class="px-6 py-3">Remarks</th>        
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of datalist"   class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <td>
+              {{data.attendance_id}}             
+            </td>
+            <td>
+              {{data.created_at}} 
+            </td>
+            <td>
+                {{data.remarks}} 
+              </td>
+            <td class="px-6 py-4">
+                <button (click)="viewAttendance(data.attendance_id)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                  View File
+                </button>
+              </td>           
+              <td class="px-6 py-4">
+                <button (click)="approveAttendance(data.attendance_id, data.remarks)"
+                    class="btn-toggle">
+                    <p *ngIf="data.remarks > 0" class="text-green-600">
+                        APPROVED
+                    </p>
+                    <p *ngIf="data.remarks == 0" class="text-orange-500">
+                        UNAPPROVED
+                    </p>
+                </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

@@ -487,4 +487,19 @@ class Post extends GlobalMethods
     }
 
 
+    public function toggleAttendanceRemark($submissionId, $newRemark)
+    {
+        
+    
+        $sql = "UPDATE attendance SET remarks = ? WHERE attendance_id = ?";
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$newRemark, $submissionId]);
+            return $this->sendPayload(null, "success", "Remark toggled successfully", 200);
+        } catch (PDOException $e) {
+            $errmsg = $e->getMessage();
+            return $this->sendPayload(null, "failed", $errmsg, 400);
+        }
+    }
+
 }

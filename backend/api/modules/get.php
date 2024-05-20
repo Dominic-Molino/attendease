@@ -205,9 +205,9 @@ class Get extends GlobalMethods
     }
 
     public function getUsersByEventAttendance($event_id)
-    {   
+    {
 
-        $sql = "SELECT u.user_id, u.first_name, u.last_name, u.year_level, u.block, u.course
+        $sql = "SELECT DISTINCT u.user_id, u.first_name, u.last_name, u.year_level, u.block, u.course
         FROM `attendance` a
         INNER JOIN `user` u ON a.user_id = u.user_id
         WHERE a.event_id = :event_id";
@@ -225,6 +225,32 @@ class Get extends GlobalMethods
             return $this->sendPayload(null, 'failed', "No users registered for the event.", 404);
         }
     }
+
+    public function getAttendancebyUser($userId, $eventId)
+    {
+        try {
+            $sql = "SELECT attendance_id, remarks, created_at FROM attendance WHERE user_id = :user_id AND event_id = :event_id";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Fetch all rows as an associative array
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (!empty($data)) {
+                return $this->sendPayload($data, 'success', "Successfully retrieved users registered for the event.", 200);
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            // Optionally log the error message
+            return false;
+        }
+    }
+
+
 
     public function getEventById($eventId)
     {
@@ -310,9 +336,9 @@ class Get extends GlobalMethods
         }
     }
 
-    public function getAttendanceImage($event_id, $user_id, $id = null)
+    public function getAttendanceImage($id = null)
     {
-        $fileInfo = $this->getattendanceImg($event_id, $user_id, $id);
+        $fileInfo = $this->getattendanceImg($id);
 
         if ($fileInfo) {
             $fileData = $fileInfo['image'];
@@ -326,10 +352,10 @@ class Get extends GlobalMethods
         }
     }
 
-    public function getattendanceImg($event_id, $user_id, $id = null)
+    public function getattendanceImg($id = null)
     {
         $columns = "image";
-        $condition = ($id !== null) ? "event_id = $event_id AND user_id = $user_id AND attendance_id = $id" : "event_id = $event_id AND user_id = $user_id";
+        $condition = ($id !== null) ? "attendance_id = $id" : null;
         $result = $this->get_records('attendance', $condition, $columns);
 
         if ($result['status']['remarks'] === 'success' && isset($result['payload'][0]['image'])) {

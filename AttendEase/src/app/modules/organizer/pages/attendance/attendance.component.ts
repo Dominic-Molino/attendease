@@ -36,10 +36,11 @@ export class AttendanceComponent implements OnInit {
     private service: EventService,
     private dialog: MatDialog,
     private sanitizer: DomSanitizer
-  ) {}
+  ) { }
 
   loadEvent() {
     this.service.getAllEvents().subscribe((result) => {
+      
       this.eventList = result.payload.map((data: any): Event => {
         const eventId = data.event_id;
         const eventObject: Event = {
@@ -64,6 +65,7 @@ export class AttendanceComponent implements OnInit {
         });
         return eventObject;
       });
+      console.log(this.eventList);
     });
   }
 
@@ -71,10 +73,13 @@ export class AttendanceComponent implements OnInit {
     this.loadEvent();
   }
 
-  viewEvent(event: any) {
+  viewEvent(eventId: any) {
+    console.log(eventId);
     this.dialog.open(MarkattendanceeComponent, {
       width: '75%',
-      data: event,
+      data: { 
+        selectedEvent: eventId 
+      }
     });
   }
 
