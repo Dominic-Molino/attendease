@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthserviceService {
-  constructor(private http: HttpClient, private helper: JwtHelperService) {}
+  constructor(private http: HttpClient, private helper: JwtHelperService) { }
   private API_URL = 'http://localhost/attendease/backend/api/';
   isLoggedIn: boolean = false;
 
@@ -111,6 +111,36 @@ export class AuthserviceService {
       }
     );
   }
+
+  //ATTENDANCE API FUNCTIONS - Denz
+
+  getUsersByEventAttendance(eventId: number) {
+    return this.http.get(`${this.API_URL}getusersbyeventattendance/${eventId}`);
+  }
+
+  getAttendanceByUser(userId: number, eventId: number) {
+    return this.http.get(`${this.API_URL}getattendancebyuser/${userId}/${eventId}`);
+  }
+
+  getAttendanceImage(attendanceId: number) {
+    return this.http.get(`${this.API_URL}getattendanceimage/${attendanceId}`,
+      {
+        responseType: 'blob',
+      }
+    );
+  }
+toggleAttendanceRemark(data: any) {
+    return this.http.post(`${this.API_URL}/toggleattendanceremark`, data);
+  }
+
+
+  uploadAttendanceImage(eventId: number, userId: number, file: any) {
+    //IMPORTANT! key name must be named 'file'
+    return this.http.post(`${this.API_URL}editevent/${eventId}/${userId}`, file);
+  }
+
+
+
 
   // attendance
   markAttendance(eventId: number, userId: number): Observable<any> {

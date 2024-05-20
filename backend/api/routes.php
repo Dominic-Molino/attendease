@@ -114,20 +114,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 }
                 break;
 
-            case 'getattendanceimage':
-                //first request: event id
-                //second request: user id
-                // third request: attendance id
-                if (isset($request[3])) {
-                    $get->getAttendanceImage($request[1], $request[2], $request[3]);
-                } elseif (isset($request[2])) {
-                    $get->getAttendanceImage($request[1], $request[2]);
-                } else {
-                    echo "IDs not provided";
-                    http_response_code(400);
-                }
-                break;
-
             case 'getusersbyeventattendance':
                 if (isset($request[1])) {
                     echo json_encode($get->getUsersByEventAttendance($request[1]));
@@ -136,6 +122,25 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     http_response_code(400);
                 }
                 break;
+
+            case 'getattendancebyuser':
+                if (isset($request[1]) && isset($request[2])) {
+                    echo json_encode($get->getAttendancebyUser($request[1], $request[2]));
+                } else {
+                    echo "IDs not provided";
+                    http_response_code(400);
+                }
+                break;
+
+            case 'getattendanceimage':
+                if (isset($request[1])) {
+                    $get->getAttendanceImage($request[1]);
+                } else {
+                    echo "IDs not provided";
+                    http_response_code(400);
+                }
+                break;
+
 
 
             default:
@@ -216,6 +221,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
             case 'markattendance':
                 echo json_encode($post->mark_attendance($data->event_id, $data->user_id));
+                break;
+
+            case 'toggleattendanceremark':
+                echo json_encode($post->toggleAttendanceRemark($data->attendance_id, $data->newRemark));
                 break;
 
             case 'addfeedback':

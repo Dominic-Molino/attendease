@@ -1,54 +1,32 @@
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg p-5">
   <div class="max-h-96 h-96 over">
-    <table
-      class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-    >
-      <thead
-        class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-      >
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
+          <th scope="col" class="px-6 py-3">ID</th>
           <th scope="col" class="px-6 py-3">Student Name</th>
           <th scope="col" class="px-6 py-3">Program</th>
-          <th scope="col" class="px-6 py-3">Block</th>
-          <th scope="col" class="px-6 py-3">Status</th>
-          <th scope="col" class="px-6 py-3">Image</th>
-          <th scope="col" class="px-6 py-3">Action</th>
+          <th scope="col" class="px-6 py-3">Block</th>          
+          <th scope="col" class="px-6 py-3">Attendance</th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-        >
-          <td
-            scope="row"
-            class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
-          >
-            <div class="ps-3">
-              <div class="text-base font-semibold">Neil Sims</div>
-              <div class="font-normal text-gray-500">neil.sims.com</div>
-            </div>
+        <tr *ngFor="let data of datalist"   class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+          <td>
+            {{data.user_id}}             
           </td>
-          <td class="px-6 py-4">Event Name</td>
-          <td class="px-6 py-4">React Developer</td>
-          <td class="px-6 py-4">
-            <div class="flex items-center">
-              <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
-              Pending
-            </div>
+          <td>
+            {{data.first_name}} {{data.last_name}}
+          </td>
+          <td>
+            {{data.program || "Not set" }}
+          </td>
+          <td>
+            {{data.block || "Not set" }} 
           </td>
           <td class="px-6 py-4">
-            <img
-              class="w-10 h-10 rounded-full"
-              src="/docs/images/people/profile-picture-1.jpg"
-              alt="Jese image"
-            />
-          </td>
-          <td class="px-6 py-4">
-            <button
-              (click)="hello()"
-              class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-            >
-              Approve Attendance
+            <button (click)="viewAttendances(data.user_id)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+              View Submissions
             </button>
           </td>
         </tr>
