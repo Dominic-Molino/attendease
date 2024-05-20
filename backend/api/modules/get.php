@@ -204,6 +204,28 @@ class Get extends GlobalMethods
         }
     }
 
+    public function getUsersByEventAttendance($event_id)
+    {   
+
+        $sql = "SELECT u.user_id, u.first_name, u.last_name, u.year_level, u.block, u.course
+        FROM `attendance` a
+        INNER JOIN `user` u ON a.user_id = u.user_id
+        WHERE a.event_id = :event_id";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $rowCount = $stmt->rowCount();
+
+        if ($rowCount > 0) {
+            return $this->sendPayload($data, 'success', "Successfully retrieved users registered for the event.", 200);
+        } else {
+            return $this->sendPayload(null, 'failed', "No users registered for the event.", 404);
+        }
+    }
+
     public function getEventById($eventId)
     {
         try {
@@ -287,4 +309,35 @@ class Get extends GlobalMethods
             return array("event_image" => null);
         }
     }
+
+    public function getAttendanceImage($event_id, $user_id, $id = null)
+    {
+        $fileInfo = $this->getattendanceImg($event_id, $user_id, $id);
+
+        if ($fileInfo) {
+            $fileData = $fileInfo['image'];
+
+            header('Content-Type: image/png');
+            echo $fileData;
+            exit();
+        } else {
+            echo "User has not uploaded an image yet.";
+            http_response_code(404);
+        }
+    }
+
+    public function getattendanceImg($event_id, $user_id, $id = null)
+    {
+        $columns = "image";
+        $condition = ($id !== null) ? "event_id = $event_id AND user_id = $user_id AND attendance_id = $id" : "event_id = $event_id AND user_id = $user_id";
+        $result = $this->get_records('attendance', $condition, $columns);
+
+        if ($result['status']['remarks'] === 'success' && isset($result['payload'][0]['image'])) {
+            $fileData = $result['payload'][0]['image'];
+            return array("image" => $fileData);
+        } else {
+            return array("image" => null);
+        }
+    }
+
 }
