@@ -61,7 +61,7 @@ class Get extends GlobalMethods
     {
         $columns = "
          events.event_id, event_name, event_description, event_location,
-            event_start_date, event_end_date, event_registration_start, event_registration_end,
+            event_start_date, event_end_date, event_registration_start, event_registration_end, session,
             CASE
                 WHEN events.event_end_date < CURDATE() THEN 'done'
                 WHEN events.event_start_date <= CURDATE() THEN 'ongoing'
@@ -134,12 +134,12 @@ class Get extends GlobalMethods
     public function get_event_feedback($event_id)
     {
         $condition = $event_id ? "event_Id=$event_id" : null;
-        return $this->get_records('EventFeedback', $condition);
+        return $this->get_records('eventfeedback', $condition);
     }
 
     public function get_all_event_feedback()
     {
-        return $this->get_records('EventFeedback');
+        return $this->get_records('eventfeedback');
     }
 
     public function get_student($user_id = null)

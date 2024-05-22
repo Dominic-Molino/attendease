@@ -9,10 +9,11 @@ set_time_limit(1000);
 
 //define constants for server credentials/configuration
 define("SERVER", "localhost");
-define("DATABASE", "attendease_db");
+define("DATABASE", "attendease");
 define("USER", "root");
 define("PASSWORD", "");
 define("DRIVER", "mysql");
+
 
 class Connection
 {
@@ -23,10 +24,9 @@ class Connection
         \PDO::ATTR_EMULATE_PREPARES => false
     ];
 
+
     public function connect()
     {
-        $pdo = new \PDO($this->connectionString, USER, PASSWORD, $this->options);
-        $pdo->exec("SET time_zone = '+08:00'");
-        return $pdo;
+        return new \PDO($this->connectionString, USER, PASSWORD, $this->options);
     }
 }

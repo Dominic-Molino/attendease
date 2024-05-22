@@ -13,11 +13,11 @@ class Post extends GlobalMethods
     {
         if (
             !isset(
-            $data->first_name,
-            $data->last_name,
-            $data->email,
-            $data->password
-        )
+                $data->first_name,
+                $data->last_name,
+                $data->email,
+                $data->password
+            )
         ) {
             return $this->sendPayload(null, 'failed', "Incomplete user data.", 400);
         }
@@ -48,7 +48,7 @@ class Post extends GlobalMethods
 
     public function edit_user($data, $user_id)
     {
-        $sql = "UPDATE User 
+        $sql = "UPDATE user 
                 SET first_name = ?, last_name = ?, year_level = ?, block = ?, course = ?,  
                 email = ?
                 WHERE user_id = ?";
@@ -102,15 +102,15 @@ class Post extends GlobalMethods
     {
         if (
             !isset(
-            $data->event_name,
-            $data->event_description,
-            $data->event_location,
-            $data->event_start_date,
-            $data->event_end_date,
-            $data->event_registration_start,
-            $data->event_registration_end,
-            $data->session
-        )
+                $data->event_name,
+                $data->event_description,
+                $data->event_location,
+                $data->event_start_date,
+                $data->event_end_date,
+                $data->event_registration_start,
+                $data->event_registration_end,
+                $data->session
+            )
         ) {
             return $this->sendPayload(null, 'failed', "Incomplete event data.", 400);
         }
@@ -167,7 +167,7 @@ class Post extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "Event does not exist.", 400);
             }
 
-            $sql = "SELECT COUNT(*) AS count FROM event_registration WHERE Event_Id = ? AND User_Id = ?";
+            $sql = "SELECT COUNT(*) AS count FROM event_registration WHERE event_id = ? AND user_id = ?";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id, $user_id]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -176,7 +176,7 @@ class Post extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "User is already registered for this event.", 400);
             }
 
-            $sql = "SELECT event_registration_end FROM Events WHERE Event_Id = ?";
+            $sql = "SELECT event_registration_end FROM events WHERE event_id = ?";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id]);
             $event = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -186,12 +186,12 @@ class Post extends GlobalMethods
             }
 
             $sql = "SELECT COUNT(*) AS count 
-                FROM Events 
-                LEFT JOIN event_registration ON Events.Event_Id = event_registration.Event_Id 
-                LEFT JOIN attendance ON Events.Event_Id = attendance.Event_Id 
-                LEFT JOIN Feedback ON Events.Event_Id = Feedback.Event_Id 
-                WHERE Events.Event_End_Date < NOW() AND event_registration.User_Id = ? 
-                AND attendance.User_Id = ? AND Feedback.User_Id = ?";
+                FROM events 
+                LEFT JOIN event_registration ON events.event_id = event_registration.event_id 
+                LEFT JOIN attendance ON events.event_id = attendance.event_id 
+                LEFT JOIN feedback ON events.event_id = feedback.event_id 
+                WHERE events.event_end_date < NOW() AND event_registration.user_id = ? 
+                AND attendance.user_id = ? AND feedback.user_id = ?";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$user_id, $user_id, $user_id]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -201,7 +201,7 @@ class Post extends GlobalMethods
             }
 
 
-            $sql = "INSERT INTO event_registration (Event_Id, User_Id) VALUES (?, ?)";
+            $sql = "INSERT INTO event_registration (event_id, user_id) VALUES (?, ?)";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id, $user_id]);
 
@@ -218,7 +218,7 @@ class Post extends GlobalMethods
 
     private function checkUserExists($user_id)
     {
-        $sql = "SELECT COUNT(*) AS count FROM User WHERE User_Id = ?";
+        $sql = "SELECT COUNT(*) AS count FROM user WHERE user_id = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$user_id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -227,7 +227,7 @@ class Post extends GlobalMethods
 
     private function checkEventExists($event_id)
     {
-        $sql = "SELECT COUNT(*) AS count FROM Events WHERE Event_Id = ?";
+        $sql = "SELECT COUNT(*) AS count FROM events WHERE event_id = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -237,7 +237,7 @@ class Post extends GlobalMethods
 
     public function unregister_from_event($event_id, $user_id)
     {
-        $sql = "DELETE FROM event_registration WHERE Event_Id = ? AND User_Id = ?";
+        $sql = "DELETE FROM event_registration WHERE event_id = ? AND user_id = ?";
         try {
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id, $user_id]);
@@ -256,14 +256,14 @@ class Post extends GlobalMethods
 
     private function decrementRegistrationCount($event_id)
     {
-        $sql = "UPDATE Events SET registration_count = registration_count - 1 WHERE Event_Id = ?";
+        $sql = "UPDATE events SET registration_count = registration_count - 1 WHERE event_id = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id]);
     }
 
     public function mark_attendance($event_id, $user_id)
     {
-        $sql = "SELECT Event_Id FROM Events WHERE Event_Id = ? AND Event_Start_Date <= NOW()";
+        $sql = "SELECT event_id FROM events WHERE event_id = ? AND event_start_date <= NOW()";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -271,7 +271,7 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', "Event is not ongoing.", 400);
         }
 
-        $sql = "SELECT COUNT(*) AS count FROM event_registration WHERE Event_Id = ? AND User_Id = ?";
+        $sql = "SELECT COUNT(*) AS count FROM event_registration WHERE event_id = ? AND user_id = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id, $user_id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -279,7 +279,7 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', "User is not registered for this event.", 400);
         }
 
-        $sql = "SELECT COUNT(*) AS count FROM attendance WHERE Event_Id = ? AND User_Id = ?";
+        $sql = "SELECT COUNT(*) AS count FROM attendance WHERE event_id = ? AND user_id = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id, $user_id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -287,7 +287,7 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', "User is already marked as attended for this event.", 400);
         }
 
-        $sql = "INSERT INTO attendance (Event_Id, User_Id) VALUES (?, ?)";
+        $sql = "INSERT INTO attendance (event_id, user_id) VALUES (?, ?)";
         try {
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id, $user_id]);
@@ -319,11 +319,11 @@ class Post extends GlobalMethods
 
         $event_id = $data->event_id;
         $user_id = $data->user_id;
-        $Feedback_Given = $data->Feedback_Given;
+        $feedback_given = $data->feedback_given;
 
         $sql = "SELECT COUNT(*) AS count 
             FROM event_registration 
-            WHERE Event_Id = ? AND User_Id = ?";
+            WHERE event_id = ? AND user_id = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id, $user_id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -335,7 +335,7 @@ class Post extends GlobalMethods
 
         $sql = "SELECT COUNT(*) AS count 
             FROM attendance 
-            WHERE Event_Id = ? AND User_Id = ?";
+            WHERE event_id = ? AND user_id = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id, $user_id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -345,10 +345,10 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', "You have not attended this event.", 400);
         }
 
-        $sql = "INSERT INTO Feedback (Event_Id, User_Id, Feedback_Given) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO feedback (event_id, user_id, feedback_given) VALUES (?, ?, ?)";
         try {
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$event_id, $user_id, $Feedback_Given]);
+            $stmt->execute([$event_id, $user_id, $feedback_given]);
 
             if ($stmt->rowCount() > 0) {
                 $this->markFeedbackGiven($event_id, $user_id);
@@ -364,14 +364,14 @@ class Post extends GlobalMethods
 
     private function markFeedbackGiven($event_id, $user_id)
     {
-        $sql = "UPDATE event_registration SET Feedback_Given = 1 WHERE Event_Id = ? AND User_Id = ?";
+        $sql = "UPDATE event_registration SET feedback_given = 1 WHERE event_id = ? AND user_id = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id, $user_id]);
     }
 
     public function edit_event($data, $event_id)
     {
-        $sql = "UPDATE Events 
+        $sql = "UPDATE events 
                 SET event_name = ?, event_description = ?, event_location = ?, 
                     event_start_date = ?, event_end_date = ?, 
                     event_registration_start = ?, event_registration_end = ? , session = ?
@@ -489,8 +489,8 @@ class Post extends GlobalMethods
 
     public function toggleAttendanceRemark($submissionId, $newRemark)
     {
-        
-    
+
+
         $sql = "UPDATE attendance SET remarks = ? WHERE attendance_id = ?";
         try {
             $stmt = $this->pdo->prepare($sql);
@@ -501,5 +501,4 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, "failed", $errmsg, 400);
         }
     }
-
 }

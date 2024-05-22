@@ -1,7 +1,8 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:4200");
-header("Access-Control-Allow-Methods: OPTIONS, GET, POST, PUT, DELETE");
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: *");
 header("Access-Control-Allow-Headers: *");
+header('Access-Control-Allow-Credentials: true');
 
 
 require_once "./modules/get.php";
@@ -186,7 +187,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     echo json_encode(["message" => "User not found or invalid credentials"]);
                     exit;
                 }
-            // break;
+                // break;
 
             case 'adduser':
                 echo json_encode($post->add_user($data));
