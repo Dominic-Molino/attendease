@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UpdateroleComponent } from '../../components/updaterole/updaterole.component';
 import { MatDialog } from '@angular/material/dialog';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -18,7 +19,8 @@ export class AdminDashboardComponent implements OnInit {
   constructor(
     private routes: Router,
     private service: AuthserviceService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {}
 
   datalist: any;
@@ -41,6 +43,26 @@ export class AdminDashboardComponent implements OnInit {
     });
     popup.afterClosed().subscribe((res: any) => {
       this.loadData();
+    });
+  }
+
+  logout(): void {
+    Swal.fire({
+      title: 'Logout?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Logout Successfully',
+          icon: 'success',
+        });
+        sessionStorage.removeItem('token');
+        this.router.navigate(['login']);
+      }
     });
   }
 }

@@ -129,8 +129,9 @@ export class AuthserviceService {
       responseType: 'blob',
     });
   }
+  
   toggleAttendanceRemark(data: any) {
-    return this.http.post(`${this.API_URL}/toggleattendanceremark`, data);
+    return this.http.post(`${this.API_URL}toggleattendanceremark`, data);
   }
 
   uploadAttendanceImage(eventId: number, userId: number, file: File) {

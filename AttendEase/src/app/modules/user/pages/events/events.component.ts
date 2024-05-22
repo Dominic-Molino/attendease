@@ -5,6 +5,20 @@ import { AuthserviceService } from '../../../../core/service/authservice.service
 import { PreviewComponent } from '../../components/preview/preview.component';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { EventService } from '../../../../core/service/event.service';
+import { Observable, of, switchMap } from 'rxjs';
+
+// interface Event {
+//   event_id: number;
+//   event_name: string;
+//   event_description: string;
+//   event_location: string;
+//   event_start_date: Date;
+//   event_end_date: Date;
+//   event_registration_start: Date;
+//   event_registration_end: Date;
+//   session: string;
+//   event_image: Observable<SafeResourceUrl | undefined>;
+// }
 
 interface Event {
   event_id: number;
@@ -16,7 +30,7 @@ interface Event {
   event_registration_start: Date;
   event_registration_end: Date;
   session: string;
-  event_image: SafeResourceUrl | undefined;
+  event_image$: Observable<SafeResourceUrl | undefined>;
 }
 
 @Component({
@@ -35,16 +49,42 @@ export class EventsComponent implements OnInit {
   ) {}
 
   eventData: any;
-  latestEvent: any;
-  otherEvents: any[] = [];
   maxChar: number = 100;
   eventList: Event[] = [];
 
+  // ngOnInit(): void {
+  //   this.service.getAllEvents().subscribe((result) => {
+  //     this.eventData = result;
+  //     this.eventList = result.payload.map((data: any): Event => {
+  //       const eventId = data.event_id;
+  //       const eventObject: Event = {
+  //         event_id: data.event_id,
+  //         event_name: data.event_name,
+  //         event_description: data.event_description,
+  //         event_location: data.event_location,
+  //         event_start_date: data.event_start_date,
+  //         event_end_date: data.event_end_date,
+  //         event_registration_start: data.event_registration_start,
+  //         event_registration_end: data.event_registration_end,
+  //         session: data.session,
+  //         event_image: undefined,
+  //       };
+
+  //       this.eventService.getEventImage(eventId).subscribe((imageResult) => {
+  //         if (imageResult.size > 0) {
+  //           const url = URL.createObjectURL(imageResult);
+  //           eventObject.event_image =
+  //             this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  //         }
+  //       });
+  //       return eventObject;
+  //     });
+  //   });
+  // }
+
   ngOnInit(): void {
     this.service.getAllEvents().subscribe((result) => {
-      this.eventData = result;
       this.eventList = result.payload.map((data: any): Event => {
-        const eventId = data.event_id;
         const eventObject: Event = {
           event_id: data.event_id,
           event_name: data.event_name,
@@ -55,16 +95,17 @@ export class EventsComponent implements OnInit {
           event_registration_start: data.event_registration_start,
           event_registration_end: data.event_registration_end,
           session: data.session,
-          event_image: undefined,
+          event_image$: this.eventService.getEventImage(data.event_id).pipe(
+            switchMap((imageResult) => {
+              if (imageResult.size > 0) {
+                const url = URL.createObjectURL(imageResult);
+                return of(this.sanitizer.bypassSecurityTrustResourceUrl(url));
+              } else {
+                return of(undefined);
+              }
+            })
+          ),
         };
-
-        this.eventService.getEventImage(eventId).subscribe((imageResult) => {
-          if (imageResult.size > 0) {
-            const url = URL.createObjectURL(imageResult);
-            eventObject.event_image =
-              this.sanitizer.bypassSecurityTrustResourceUrl(url);
-          }
-        });
         return eventObject;
       });
     });

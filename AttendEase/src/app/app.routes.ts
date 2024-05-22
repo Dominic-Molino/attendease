@@ -33,13 +33,8 @@ export const routes: Routes = [
     canActivate: [authenGuard],
     children: [
       {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full',
-      },
-      {
         path: 'dashboard',
-        loadComponent: () =>
+        loadChildren: () =>
           import(
             './modules/admin/pages/admin-dashboard/admin-dashboard.component'
           ).then((c) => c.AdminDashboardComponent),

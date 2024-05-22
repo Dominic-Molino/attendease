@@ -39,8 +39,8 @@ export class EventService {
     return this.http.delete(`${this.API_URL}deleteevent/${data}`);
   }
 
-  getEventId(event_id: any): Observable<any> {
-    return this.http.get(`${this.API_URL}geteventid`, event_id);
+  getEventById(eventId: any): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}events/${eventId}`);
   }
 
   editEvent(id: any, data: any) {

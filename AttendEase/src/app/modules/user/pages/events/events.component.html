@@ -1,4 +1,4 @@
-<main class=" w-full h-screen">
+<main class="w-full h-screen">
   <div class="p-4 sm:ml-64 mt-16">
     <div>
       <p
@@ -21,28 +21,29 @@
         </div>
         <div
           *ngFor="let event of eventList.slice(0, 1)"
-          class="rounded-xl border-2 shadow-lg container bg-ivy"
+          class="rounded-xl shadow-md border border-linen container bg-linen"
         >
           <div
             class="p-3.5 md:h-80 flex flex-col md:flex-row w-full items-center"
           >
             <div class="rounded-md md:w-1/2">
               <img
-                [src]="event.event_image"
+                *ngIf="event.event_image$ | async as eventImage"
+                [src]="eventImage"
                 alt="fetch images"
                 class="rounded-md object-cover object-center max-h-72 w-full"
               />
             </div>
             <div class="p-5 w-full lg:w-1/2 pr-3">
-              <div class="mb-5">
+              <div class="mb-3">
                 <h1
-                  class="overflow-hidden text-ellipsis text-2xl md:text-2xl font-medium mt-3 font-primary"
+                  class="overflow-hidden text-ellipsis text-black text-2xl md:text-2xl font-medium mt-3 font-primary"
                 >
                   {{ event.event_name }}
                 </h1>
                 <div class="flex items-center">
                   <svg
-                    class="w-5 h-5 inline flex-shrink-0 text-gray-800 dark:text-white"
+                    class="w-5 h-5 inline flex-shrink-0 text-black"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -58,22 +59,22 @@
                       d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
                     />
                   </svg>
-                  <span class="ms-2 text-xs font-primary"
+                  <span class="ms-2 text-xs font-primary text-black"
                     >{{ event.event_start_date | date : "longDate" }}
                   </span>
-                  <span class="ms-1"> - </span>
-                  <span class="ms-2 text-xs font-primary">{{
+                  <span class="ms-1 text-black"> - </span>
+                  <span class="ms-2 text-xs font-primary text-black">{{
                     event.event_end_date | date : "longDate"
                   }}</span>
                 </div>
               </div>
               <p
-                class="leading-tight text-base overflow-hidden whitespace-pre-line text-ellipsis text-slate-500"
+                class="leading-tight text-base font-secondary overflow-hidden whitespace-pre-line text-ellipsis text-slate-500"
               >
                 {{ truncateDescription(event.event_description, maxChar) }}
               </p>
               <button
-                class="bg-carribean_green-mint hover:bg-carribean_green-minted text-white text-sm font-semibold font-secondary shadow-sm rounded-full py-2 px-6 relative -bottom-3.5"
+                class="bg-ivy hover:bg-serpentine text-white text-sm font-semibold font-secondary shadow-sm rounded-full py-2 px-6 relative -bottom-3.5"
                 (click)="viewEvent(event)"
               >
                 Read More
@@ -90,14 +91,15 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           <div
             *ngFor="let event of eventList.slice(1)"
-            class="rounded-xl border-2 shadow-lg container p-3.5 mb-5 bg-gray-50"
+            class="rounded-xl border border-linen shadow-md container p-3.5 mb-5 bg-linen"
           >
             <div class="flex flex-col">
               <div class="rounded-md overflow-hidden max-h-44">
                 <img
-                  [src]="event.event_image"
+                  *ngIf="event.event_image$ | async as eventImage"
+                  [src]="eventImage"
                   alt="Event Image"
-                  class="rounded-md object-cover  object-center max-h-44 h-44 w-full"
+                  class="rounded-md object-cover object-center max-h-44 h-44 w-full"
                 />
               </div>
               <h5 class="text-xl md:text-xl font-medium mt-3 font-primary">
@@ -135,7 +137,7 @@
               <div class="flex w-full justify-start items-center">
                 <button
                   (click)="viewEvent(event)"
-                  class="bg-carribean_green-mint hover:bg-carribean_green-minted text-white text-sm font-semibold font-secondary shadow-sm rounded-full py-2 px-6 relative -bottom-3.5 mb-4"
+                  class="bg-ivy hover:bg-serpentine text-white text-sm font-semibold font-secondary shadow-sm rounded-full py-2 px-6 relative -bottom-3.5 mb-4"
                 >
                   Read More
                 </button>

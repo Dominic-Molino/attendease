@@ -6,7 +6,7 @@
       >
         Events
       </p>
-      <hr class="h-px mb-6 bg-gray-200 border-0 dark:bg-gray-700" />
+      <hr class="h-px mb-6 bg-linen border-0 dark:bg-gray-700" />
     </div>
     <div class="fixed z-50 top-[70px] end-6 group">
       <button
@@ -38,7 +38,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         <div
           *ngFor="let event of eventList; let i = index"
-          class="rounded-xl border-2 shadow-lg container mb-5 bg-gray-50"
+          class="rounded-xl border-2 shadow-lg container mb-5 bg-linen"
         >
           <div class="p-3.5 flex flex-col">
             <div class="rounded-md overflow-hidden max-h-60 h-60">
@@ -59,7 +59,7 @@
                 [for]="'event-input-file-' + i"
               >
                 <div
-                  class="relative -top-10 rounded-full w-10 h-10 p-1 bg-carribean_green-mint hover:bg-carribean_green-minted flex items-center justify-center z-0 cursor-pointer"
+                  class="relative -top-10 rounded-full w-10 h-10 p-1 bg-ivy hover:bg-serpentine flex items-center justify-center z-0 cursor-pointer"
                 >
                   <svg
                     class="w-6 h-6 text-white dark:text-white"
@@ -125,7 +125,7 @@
                 <button
                   type="button"
                   (click)="viewEvent(event)"
-                  class="py-2.5 px-5 text-sm text-white font-bold font-secondary focus:outline-none bg-carribean_green-mint rounded-lg border border-gray-200 hover:bg-carribean_green-minted hover:text-primary-700 focus:z-10"
+                  class="py-2.5 px-5 text-sm text-white font-bold font-secondary rounded-lg bg-ivy hover:bg-serpentine hover:text-primary-700 focus:z-10"
                 >
                   Preview
                 </button>
@@ -135,7 +135,7 @@
                   (click)="editEvent(event)"
                   type="button"
                   aria-expanded="false"
-                  class="flex items-center border border-gray-200 justify-center text-white bg-silver_sand rounded-full w-10 h-10 hover:bg-slate-400 focus:outline-none shadow-md"
+                  class="flex items-center justify-center text-white bg-pebble rounded-full w-10 h-10 hover:bg-slate-400 focus:outline-none shadow-md"
                 >
                   <svg
                     class="w-5 h-5"

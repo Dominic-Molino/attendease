@@ -1,5 +1,5 @@
-<nav class="fixed top-0 z-4 0 w-full bg-white shadow-sm">
-  <div class="px-3.5 lg:px-5 lg:pl-3">
+<nav class="fixed top-0 z-40 w-full bg-beige shadow-md">
+  <div class="px-3.5 lg:px-5">
     <div class="flex items-center justify-between">
       <div class="flex items-center justify-start rtl:justify-end p-1.5">
         <button
@@ -24,16 +24,12 @@
             ></path>
           </svg>
         </button>
-        <a routerLink="organizer/dashboard" class="flex ms-2 md:me-24">
+        <a class="flex md:me-24">
           <img
             src="../../../../assets/images/attendease_logo.png"
-            class="h-14 w-14 rounded-full me-3"
+            class="h-14 w-14 me-3 border-none"
             alt="AttendEase"
           />
-          <span
-            class="self-center text-xl font-secondary font-semibold sm:text-2xl whitespace-nowrap text-white"
-            >Attend<span class="text-carribean_green">Ease</span></span
-          >
         </a>
       </div>
       <div class="flex items-center">
@@ -46,20 +42,22 @@
               data-dropdown-toggle="dropdown-user"
             >
               <span class="sr-only">Open user menu</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="w-8 h-8 bg-white rounded-full"
+              <div
+                class="relative w-7 h-7 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                />
-              </svg>
+                <svg
+                  class="absolute w-9 h-8 text-gray-400 -left-1"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </div>
             </button>
           </div>
 
@@ -67,15 +65,6 @@
             class="z-50 hidden my-4 text-base list-none bg-white rounded shadow"
             id="dropdown-user"
           >
-            <div class="px-4 py-2 mt-3 hover:bg-shade" role="none">
-              <a
-                routerLink="profile"
-                class="text-sm text-custom_black font-primary"
-                role="none"
-              >
-                Dominic Molino
-              </a>
-            </div>
             <ul class="mb-3" role="none">
               <li>
                 <a
@@ -105,23 +94,21 @@
 
 <aside
   id="logo-sidebar"
-  class="fixed top-0 left-0 z-50 w-64 h-screen pt-10 transition-transform -translate-x-full bg-smoke sm:translate-x-0 shadow-md"
+  class="fixed top-0 left-0 z-50 w-64 h-screen pt-10 transition-transform border-r border-serpentine -translate-x-full bg-ivy sm:translate-x-0 shadow-lg"
   aria-label="Sidebar"
 >
-  <div
-    class="h-full px-3 pb-4 overflow-y-auto bg-main-dark_green dark:bg-gray-800"
-  >
-    <div class="flex items-center flex-col gap-3 pb-5 mb-5">
+  <div class="h-full px-3 pb-4 bg-ivy overflow-y-auto dark:bg-gray-800">
+    <div class="flex items-center flex-col gap-3 mb-5">
       <img
         src="../../../../assets/images/attendease_logo.png"
-        class="w-44 h-44 border border-white bg-white rounded-full mx-auto p-4"
+        class="w-44 h-44 shadow-md rounded-full mx-auto p-4"
         alt="Star-HUB Logo"
       />
       <h1
-        class="self-center text-2xl font-secondary font-bold whitespace-nowrap"
+        class="self-center text-3xl font-secondary font-bold whitespace-nowrap"
       >
-        <span class="text-custom_black">Attend</span
-        ><span class="text-carribean_green-mint">Ease</span>
+        <span class="text-white">Attend</span
+        ><span class="text-darkgreen">Ease</span>
       </h1>
     </div>
     <ul class="space-y-2 font-medium">
@@ -129,11 +116,11 @@
       <li>
         <a
           routerLink="dashboard"
-          [routerLinkActive]="'bg-shade'"
-          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-shade group"
+          [routerLinkActive]="'bg-spring'"
+          class="flex items-center p-2 text-white rounded-lg hover:bg-spring group"
         >
           <svg
-            class="flex-shrink-0 w-5 h-5 transition duration-75 text-custom_black"
+            class="flex-shrink-0 w-5 h-5 transition duration-75 text-serpentine"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -150,51 +137,51 @@
             />
           </svg>
           <span
-            class="flex-1 ms-3 text-lg whitespace-nowrap font-primary text-custom_black"
+            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-serpentine"
             >Dashboard</span
+          >
+        </a>
+      </li>
+      <!-- user -->
+      <li>
+        <a
+          routerLink="events"
+          [routerLinkActive]="'bg-spring'"
+          class="flex items-center p-2 text-white rounded-lg hover:bg-spring group"
+        >
+          <svg
+            class="flex-shrink-0 w-5 h-5 transition duration-75 text-serpentine"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 9h3m-3 3h3m-3 3h3m-6 1c-.306-.613-.933-1-1.618-1H7.618c-.685 0-1.312.387-1.618 1M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm7 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"
+            />
+          </svg>
+
+          <span
+            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-serpentine"
+            >Events</span
           >
         </a>
       </li>
       <!-- event -->
       <li>
         <a
-          routerLink="events"
-          [routerLinkActive]="'bg-shade'"
-          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-shade group"
-        >
-          <svg
-            class="flex-shrink-0 w-5 h-5 transition duration-75 text-custom_black"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
-            />
-          </svg>
-
-          <span
-            class="flex-1 ms-3 text-lg whitespace-nowrap font-primary text-custom_black"
-            >Events</span
-          >
-        </a>
-      </li>
-      <!-- attendance -->
-      <li>
-        <a
           routerLink="attendance"
-          [routerLinkActive]="'bg-shade'"
-          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-shade group"
+          [routerLinkActive]="'bg-spring'"
+          class="flex items-center p-2 text-white rounded-lg hover:bg-spring group"
         >
           <svg
-            class="flex-shrink-0 w-5 h-5 transition duration-75 text-custom_black"
+            class="flex-shrink-0 w-5 h-5 transition duration-75 text-serpentine"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -212,7 +199,7 @@
           </svg>
 
           <span
-            class="flex-1 ms-3 text-lg whitespace-nowrap font-primary text-custom_black"
+            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-serpentine"
             >Attendance</span
           >
         </a>

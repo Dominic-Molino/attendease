@@ -46,6 +46,10 @@ export class OrgEventComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {}
 
+  ngOnInit(): void {
+    this.loadEvent();
+  }
+
   loadEvent() {
     this.service.getAllEvents().subscribe((result) => {
       this.eventList = result.payload.map((data: any): Event => {
@@ -73,10 +77,6 @@ export class OrgEventComponent implements OnInit {
         return eventObject;
       });
     });
-  }
-
-  ngOnInit(): void {
-    this.loadEvent();
   }
 
   onFileChange(event: any, eventId: number) {

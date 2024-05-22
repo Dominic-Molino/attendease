@@ -1,5 +1,3 @@
-
-
 <main class="!scroll-smooth w-full h-screen">
   <div class="p-4 mt-16 sm:ml-64">
     <div>
@@ -8,7 +6,7 @@
       >
         Mark Attendance
       </p>
-      <hr class="h-px mb-6 bg-gray-200 border-0 dark:bg-gray-700" />
+      <hr class="h-px mb-6 bg-gray-200 dark:bg-gray-700" />
     </div>
 
     @if(eventList && eventList.length ){
@@ -16,7 +14,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         <div
           *ngFor="let event of eventList; let i = index"
-          class="rounded-xl border-2 shadow-lg container mb-5 bg-gray-50"
+          class="rounded-xl border-2 shadow-lg container mb-5 bg-linen"
         >
           <div class="p-3.5 flex flex-col">
             <div class="rounded-md overflow-hidden max-h-60 h-60">
@@ -66,7 +64,7 @@
                 <button
                   type="button"
                   (click)="viewEvent(event.event_id)"
-                  class="py-2.5 px-5 text-sm text-white font-bold font-secondary focus:outline-none bg-carribean_green-mint rounded-lg border border-gray-200 hover:bg-carribean_green-minted hover:text-primary-700 focus:z-10"
+                  class="py-2.5 px-5 text-sm text-white font-bold font-secondary focus:outline-none rounded-lg bg-ivy hover:bg-serpentine hover:text-primary-700 focus:z-10"
                 >
                   Preview
                 </button>

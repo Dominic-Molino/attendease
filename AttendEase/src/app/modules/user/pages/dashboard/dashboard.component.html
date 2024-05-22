@@ -10,7 +10,7 @@
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
       <div
-        class="lg:w-full md:col-span-1 border border-gray-200 shadow-lg rounded-md p-10 bg-ivy"
+        class="lg:w-full md:col-span-1 border border-gray-200 shadow-lg rounded-md p-10 bg-gray-50"
       >
         <!-- calendar here -->
         <app-calendar class="sm:max-w-[400px]"></app-calendar>
@@ -18,13 +18,11 @@
 
       <div class="grid-col-2 grid-flow-row">
         <div
-          class="max-w-full max-h-80 bg-ivy border border-gray-200 rounded-lg shadow p-4 dark:bg-gray-800 dark:border-gray-700"
+          class="max-w-full max-h-80 bg-linen border border-gray-200 rounded-lg shadow p-4 dark:bg-gray-800 dark:border-gray-700"
         >
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center">
-              <span
-                class="text-xl me-1 font-bold leading-none text-first_frost"
-              >
+              <span class="text-xl me-1 font-bold leading-none text-black">
                 Registered Events
               </span>
               <svg
@@ -33,7 +31,7 @@
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="w-6 h-6 text-first_frost"
+                class="w-6 h-6 text-black"
               >
                 <path
                   stroke-linecap="round"
@@ -45,12 +43,12 @@
 
             <button
               (click)="onClickButton()"
-              class="text-sm font-medium text-first_frost hover:underline"
+              class="text-sm font-medium text-serpentine hover:underline"
             >
               View all
             </button>
           </div>
-          
+
           <div
             class="relative overflow-x-auto shadow-md sm:rounded-lg max-h-52 overflow-y-auto border border-gray-200"
           >
@@ -108,7 +106,7 @@
         </div>
 
         <div class="relative overflow-x-auto mt-2 shadow-md sm:rounded-lg">
-          <div class="w-full bg-white shadow-lg border border-ivy rounded-sm">
+          <div class="w-full bg-white shadow-lg rounded-sm">
             <div
               class="w-full text-sm rounded-lg text-left rtl:text-right text-gray-500 dark:text-gray-400"
             >
@@ -116,7 +114,7 @@
                 class="w-full text-sm text-left rtl:text-right rounded-b-lg text-gray-500 dark:text-gray-400"
               >
                 <thead
-                  class="text-xs text-first_frost uppercase bg-ivy dark:bg-gray-700 dark:text-gray-400"
+                  class="text-xs text-black uppercase bg-linen dark:bg-gray-700 dark:text-gray-400"
                 >
                   <tr>
                     <th scope="col" class="px-6 py-3">Status</th>

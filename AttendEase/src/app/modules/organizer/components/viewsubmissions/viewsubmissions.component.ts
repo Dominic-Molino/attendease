@@ -36,7 +36,7 @@ export class ViewsubmissionsComponent {
   viewAttendance(attendance_id: number) {
     console.log(attendance_id);
     this.dialog2.open(ViewattendanceimageComponent, {
-      width: '80%',
+      width: '50%',
       data: {
         selectedAttendance: attendance_id,
       }
