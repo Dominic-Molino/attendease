@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CalendarComponent } from '../../../../shared/components/calendar/calendar.component';
 import { Router, RouterLink } from '@angular/router';
 import { EventService } from '../../../../core/service/event.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
