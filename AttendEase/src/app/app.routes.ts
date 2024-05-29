@@ -30,7 +30,6 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminDashboardComponent,
-    canActivate: [authenGuard],
     children: [
       {
         path: 'dashboard',
@@ -38,6 +37,7 @@ export const routes: Routes = [
           import(
             './modules/admin/pages/admin-dashboard/admin-dashboard.component'
           ).then((c) => c.AdminDashboardComponent),
+        canActivate: [authenGuard],
       },
     ],
   },
@@ -45,7 +45,6 @@ export const routes: Routes = [
   {
     path: 'student',
     component: UserComponent,
-    canActivate: [authenGuard],
     children: [
       {
         path: '',
@@ -59,6 +58,8 @@ export const routes: Routes = [
           import('./modules/user/pages/dashboard/dashboard.component').then(
             (c) => c.DashboardComponent
           ),
+
+        canActivate: [authenGuard],
       },
 
       {
@@ -67,6 +68,8 @@ export const routes: Routes = [
           import('./modules/user/pages/events/events.component').then(
             (c) => c.EventsComponent
           ),
+
+        canActivate: [authenGuard],
       },
 
       {
@@ -75,6 +78,8 @@ export const routes: Routes = [
           import('./modules/user/pages/profile/profile.component').then(
             (c) => c.ProfileComponent
           ),
+
+        canActivate: [authenGuard],
       },
 
       {
@@ -83,6 +88,7 @@ export const routes: Routes = [
           import('./modules/user/pages/attendance/attendance.component').then(
             (c) => c.AttendanceComponent
           ),
+        canActivate: [authenGuard],
       },
 
       {
@@ -91,6 +97,7 @@ export const routes: Routes = [
           import('./modules/user/pages/feedback/feedback.component').then(
             (c) => c.FeedbackComponent
           ),
+        canActivate: [authenGuard],
       },
     ],
   },
@@ -98,7 +105,6 @@ export const routes: Routes = [
   {
     path: 'organizer',
     component: OrganizerComponent,
-    canActivate: [authenGuard],
     children: [
       {
         path: '',
@@ -112,6 +118,7 @@ export const routes: Routes = [
           import(
             './modules/organizer/pages/org-dashboard/org-dashboard.component'
           ).then((c) => c.OrgDashboardComponent),
+        canActivate: [authenGuard],
       },
 
       {
@@ -120,6 +127,7 @@ export const routes: Routes = [
           import(
             './modules/organizer/pages/org-event/org-event.component'
           ).then((c) => c.OrgEventComponent),
+        canActivate: [authenGuard],
       },
 
       {
@@ -128,6 +136,7 @@ export const routes: Routes = [
           import(
             './modules/organizer/pages/attendance/attendance.component'
           ).then((c) => c.AttendanceComponent),
+        canActivate: [authenGuard],
       },
     ],
   },

@@ -8,7 +8,9 @@ import { Observable } from 'rxjs';
 })
 export class AuthserviceService {
   constructor(private http: HttpClient, private helper: JwtHelperService) {}
-  private API_URL = 'http://localhost/attendease/backend/api/';
+  private API_URL = 'https://gc-attendease.online/backend/api/';
+  // private API_URL = 'http://localhost/attendease/backend/api/';
+
   isLoggedIn: boolean = false;
 
   //get a user or all users
@@ -97,22 +99,14 @@ export class AuthserviceService {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.http.post(
-      `http://localhost/attendease/backend/api/uploadimage/${userId}`,
-      formData
-    );
+    return this.http.post(`${this.API_URL}uploadimage/${userId}`, formData);
   }
 
   getAvatar(userId: number) {
-    return this.http.get(
-      `http://localhost/attendease/backend/api/getavatar/${userId}`,
-      {
-        responseType: 'blob',
-      }
-    );
+    return this.http.get(`${this.API_URL}getavatar/${userId}`, {
+      responseType: 'blob',
+    });
   }
-
-  //ATTENDANCE API FUNCTIONS - Denz
 
   getUsersByEventAttendance(eventId: number) {
     return this.http.get(`${this.API_URL}getusersbyeventattendance/${eventId}`);
@@ -129,7 +123,7 @@ export class AuthserviceService {
       responseType: 'blob',
     });
   }
-  
+
   toggleAttendanceRemark(data: any) {
     return this.http.post(`${this.API_URL}toggleattendanceremark`, data);
   }

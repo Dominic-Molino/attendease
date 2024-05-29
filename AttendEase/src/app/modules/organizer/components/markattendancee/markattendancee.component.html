@@ -1,31 +1,39 @@
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg p-5">
   <div class="max-h-96 h-96 over">
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <table
+      class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+    >
+      <thead
+        class="text-xs text-white uppercase bg-ivy dark:bg-gray-700 dark:text-gray-400"
+      >
         <tr>
           <th scope="col" class="px-6 py-3">ID</th>
           <th scope="col" class="px-6 py-3">Student Name</th>
           <th scope="col" class="px-6 py-3">Program</th>
-          <th scope="col" class="px-6 py-3">Block</th>          
+          <th scope="col" class="px-6 py-3">Block</th>
           <th scope="col" class="px-6 py-3">Attendance</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let data of datalist"   class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+        <tr
+          *ngFor="let data of datalist"
+          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+        >
           <td>
-            {{data.user_id}}             
+            {{ data.user_id }}
+          </td>
+          <td>{{ data.first_name }} {{ data.last_name }}</td>
+          <td>
+            {{ data.program || "Not set" }}
           </td>
           <td>
-            {{data.first_name}} {{data.last_name}}
-          </td>
-          <td>
-            {{data.program || "Not set" }}
-          </td>
-          <td>
-            {{data.block || "Not set" }} 
+            {{ data.block || "Not set" }}
           </td>
           <td class="px-6 py-4">
-            <button (click)="viewAttendances(data.user_id)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+            <button
+              (click)="viewAttendances(data.user_id)"
+              class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+            >
               View Submissions
             </button>
           </td>

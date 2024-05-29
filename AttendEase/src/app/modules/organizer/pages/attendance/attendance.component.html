@@ -14,7 +14,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         <div
           *ngFor="let event of eventList; let i = index"
-          class="rounded-xl border-2 shadow-lg container mb-5 bg-linen"
+          class="rounded-md shadow-lg container mb-5 bg-linen"
         >
           <div class="p-3.5 flex flex-col">
             <div class="rounded-md overflow-hidden max-h-60 h-60">
@@ -55,7 +55,7 @@
                 {{ event.event_end_date | date }}</span
               >
             </div>
-            <p class="text-slate-500 text-sm mt-3 font-secondary">
+            <p class="text-gray-800 text-sm mt-3 font-secondary">
               {{ truncateDescription(event.event_description, maxChar) }}
             </p>
             <!-- buttons -->
@@ -64,9 +64,9 @@
                 <button
                   type="button"
                   (click)="viewEvent(event.event_id)"
-                  class="py-2.5 px-5 text-sm text-white font-bold font-secondary focus:outline-none rounded-lg bg-ivy hover:bg-serpentine hover:text-primary-700 focus:z-10"
+                  class="py-2.5 px-5 text-sm text-white font-bold font-secondary focus:outline-none rounded-md bg-ivy hover:bg-serpentine hover:text-primary-700 focus:z-10"
                 >
-                  Preview
+                  View Submissions
                 </button>
               </div>
             </div>

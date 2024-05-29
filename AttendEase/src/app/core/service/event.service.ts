@@ -14,7 +14,8 @@ export class EventService {
     private helper: JwtHelperService
   ) {}
 
-  private API_URL = 'http://localhost/attendease/backend/api/';
+  private API_URL = 'https://gc-attendease.online/backend/api/';
+  // private API_URL = 'http://localhost/attendease/backend/api/';
 
   getCurrentUserId(): number | null {
     const mytoken = sessionStorage.getItem('token');
@@ -72,5 +73,9 @@ export class EventService {
     return this.http.get(`${this.API_URL}geteventimage/${event_id}`, {
       responseType: 'blob',
     });
+  }
+
+  getEventAttendeesTotal(event_id: number): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}total/${event_id}`);
   }
 }
