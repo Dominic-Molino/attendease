@@ -2,8 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: *");
 header("Access-Control-Allow-Headers: *");
-header('Access-Control-Allow-Credentials: true');
-
+header("Cache-Control: no-cache, must-revalidate");
 
 require_once "./modules/get.php";
 require_once "./modules/post.php";
@@ -16,6 +15,7 @@ if (isset($_REQUEST['request'])) {
     $request = explode('/', $_REQUEST['request']);
 } else {
     echo "Not Found";
+
     http_response_code(404);
     exit();
 }
@@ -142,7 +142,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 }
                 break;
 
-
+            case 'total':
+                echo json_encode($get->get_attendees_total($request[1]));
+                break;
 
             default:
                 echo "This is forbidden";

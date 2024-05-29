@@ -365,4 +365,25 @@ class Get extends GlobalMethods
             return array("image" => null);
         }
     }
+
+    public function get_attendees_total($event_id)
+    {
+        try {
+            $sql = "SELECT COUNT(*) AS total_attendees FROM event_registration WHERE event_id = :event_id";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            $total_attendees = $data['total_attendees'];
+
+            if ($total_attendees !== false) {
+                return $this->sendPayload($total_attendees, 'success', "Successfully retrieved total attendees for the event.", 200);
+            } else {
+                return $this->sendPayload(null, 'failed', "Failed to retrieve total attendees.", 404);
+            }
+        } catch (PDOException $e) {
+            return $this->sendPayload(null, 'error', $e->getMessage(), 500);
+        }
+    }
 }
