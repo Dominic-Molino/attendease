@@ -17,43 +17,37 @@ export class DeleteEventComponent {
   constructor(private service: EventService) {}
 
   deleteEvent() {
-    if (!this.event_id || !this.event_id.event_id) {
+    console.log(this.event_id);
+    if (this.event_id.event_id) {
       Swal.fire({
-        title: 'Error!',
-        text: 'Invalid event.',
-        icon: 'error',
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+      }).then((result) => {
+        if (result.isConfirmed && this.event_id.event_id) {
+          this.service.deleteEvent(this.event_id.event_id).subscribe(
+            (res) => {
+              Swal.fire({
+                title: 'Deleted!',
+                text: 'Your file has been deleted.',
+                icon: 'success',
+              });
+              this.eventDeleted.emit();
+            },
+            (error) => {
+              Swal.fire({
+                title: 'Error!',
+                text: 'Failed to delete event.',
+                icon: 'error',
+              });
+            }
+          );
+        }
       });
-      return;
     }
-
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.service.deleteEvent(this.event_id.event_id).subscribe(
-          (res) => {
-            Swal.fire({
-              title: 'Deleted!',
-              text: 'Your file has been deleted.',
-              icon: 'success',
-            });
-            this.eventDeleted.emit();
-          },
-          (error) => {
-            Swal.fire({
-              title: 'Error!',
-              text: 'Failed to delete event.',
-              icon: 'error',
-            });
-          }
-        );
-      }
-    });
   }
 }

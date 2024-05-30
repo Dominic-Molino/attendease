@@ -33,10 +33,14 @@ import Swal from 'sweetalert2';
   encapsulation: ViewEncapsulation.None,
 })
 export class AddEventComponent {
+  minDate: Date;
+
   constructor(
     private builder: FormBuilder,
     private eventService: EventService
-  ) {}
+  ) {
+    this.minDate = new Date();
+  }
 
   eventForm = this.builder.group({
     event_name: ['', Validators.required],
@@ -65,6 +69,8 @@ export class AddEventComponent {
           Swal.fire('Error', 'Something went wrong', 'error');
         }
       );
+    } else {
+      Swal.fire('Incomplete Form', 'Please fill in all fields', 'warning');
     }
   }
 
@@ -73,6 +79,13 @@ export class AddEventComponent {
       const currentDate = new Date();
       const selectedDate = new Date(control.value);
       if (control.value && selectedDate < currentDate) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Invalid Date',
+          text: "You've enter a past date!",
+        }).then(() => {
+          control.reset();
+        });
         return { pastDate: true };
       }
       return null;

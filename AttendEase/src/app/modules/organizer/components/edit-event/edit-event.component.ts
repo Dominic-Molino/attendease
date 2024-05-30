@@ -55,8 +55,6 @@ export class EditEventComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    console.log(this.eventId);
-    console.log(this.eventVal);
     if (this.eventId) {
       this.eventForm.patchValue({
         event_name: this.eventVal.event_name,

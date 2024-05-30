@@ -1,13 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AddEventComponent } from '../../components/add-event/add-event.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DeleteEventComponent } from '../../components/delete-event/delete-event.component';
 import { EditEventComponent } from '../../components/edit-event/edit-event.component';
 import { ReadEventComponent } from '../../components/read-event/read-event.component';
 import { EventService } from '../../../../core/service/event.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
+import { initFlowbite } from 'flowbite';
+import { CalendarComponent } from '../../../../shared/components/calendar/calendar.component';
+import { Observable, map } from 'rxjs';
 
 interface Event {
   event_id: number;
@@ -20,6 +23,8 @@ interface Event {
   event_registration_end: Date;
   session: string;
   event_image: SafeResourceUrl | undefined;
+  event_image$?: Observable<SafeResourceUrl>;
+  status?: string;
 }
 
 @Component({
@@ -32,6 +37,7 @@ interface Event {
     CommonModule,
     DeleteEventComponent,
     EditEventComponent,
+    CalendarComponent,
   ],
 })
 export class OrgEventComponent implements OnInit {
@@ -43,10 +49,12 @@ export class OrgEventComponent implements OnInit {
   constructor(
     private service: EventService,
     private dialog: MatDialog,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) initFlowbite();
     this.loadEvent();
   }
 
@@ -65,6 +73,8 @@ export class OrgEventComponent implements OnInit {
           event_registration_end: data.event_registration_end,
           session: data.session,
           event_image: undefined,
+          status: this.getEventStatus(data),
+          event_image$: undefined,
         };
 
         this.service.getEventImage(eventId).subscribe((imageResult) => {
@@ -130,6 +140,20 @@ export class OrgEventComponent implements OnInit {
       return text.substring(0, maxLength) + ' ...';
     } else {
       return text;
+    }
+  }
+
+  getEventStatus(event: any): string {
+    const currentDate = new Date();
+    const startDate = new Date(event.event_start_date);
+    const endDate = new Date(event.event_end_date);
+
+    if (endDate < currentDate) {
+      return 'Done';
+    } else if (startDate <= currentDate && endDate >= currentDate) {
+      return 'Ongoing';
+    } else {
+      return 'Upcoming';
     }
   }
 }

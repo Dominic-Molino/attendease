@@ -19,7 +19,6 @@ export class ViewattendanceimageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(`Attendance: ${this.data.selectedAttendance}`);
     this.loadImage();
   }
 

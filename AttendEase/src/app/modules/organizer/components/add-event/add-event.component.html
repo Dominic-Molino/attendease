@@ -62,15 +62,6 @@
             formControlName="event_start_date"
             required
           />
-          <div
-            *ngIf="
-              eventForm.get('event_start_date')?.hasError('pastDate') &&
-              eventForm.get('event_start_date')?.touched
-            "
-            class="text-red-500 text-sm absolute top-1/2 left-1/2 bg-white border rounded-md border-black"
-          >
-            Date cannot be in the past
-          </div>
 
           <label for="event_end_date">Event End Date</label>
           <input
@@ -79,15 +70,6 @@
             formControlName="event_end_date"
             required
           />
-          <div
-            *ngIf="
-              eventForm.get('event_end_date')?.hasError('pastDate') &&
-              eventForm.get('event_end_date')?.touched
-            "
-            class="text-red-500 text-sm absolute top-1/2 left-1/2 bg-white border rounded-md border-black"
-          >
-            Date cannot be in the past
-          </div>
 
           <label for="event_registration_start"
             >Event Registration Start Date</label
@@ -98,15 +80,6 @@
             formControlName="event_registration_start"
             required
           />
-          <div
-            *ngIf="
-              eventForm.get('event_registration_start')?.hasError('pastDate') &&
-              eventForm.get('event_registration_start')?.touched
-            "
-            class="text-red-500 text-sm absolute top-1/2 left-1/2 bg-white border rounded-md border-black"
-          >
-            Date cannot be in the past
-          </div>
 
           <label for="event_registration_end"
             >Event Registration End Date</label
@@ -117,15 +90,6 @@
             formControlName="event_registration_end"
             required
           />
-          <div
-            *ngIf="
-              eventForm.get('event_registration_end')?.hasError('pastDate') &&
-              eventForm.get('event_registration_end')?.touched
-            "
-            class="text-red-500 text-sm absolute top-1/2 left-1/2 bg-white border rounded-md border-black"
-          >
-            Date cannot be in the past
-          </div>
 
           <div class="sm:col-span-2 -mt-5">
             <label
@@ -144,7 +108,7 @@
         </div>
         <button
           type="submit"
-          class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white-bone_white bg-ivy rounded-lg hover:bg-serpentine"
+          class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-semibold text-center text-white bg-ivy rounded-lg hover:bg-serpentine"
         >
           Add Event
         </button>

@@ -34,103 +34,102 @@
     </div>
 
     @if(eventList && eventList.length ){
-    <div class="container">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-        <div
-          *ngFor="let event of eventList; let i = index"
-          class="rounded-md shadow-lg container mb-5 bg-linen"
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div
+        class="lg:w-full md:col-span-2 border border-gray-200 shadow-lg rounded-md p-10 bg-gray-50"
+      >
+        <!-- calendar here -->
+        <app-calendar></app-calendar>
+      </div>
+
+      <div
+        class="overflow-x-auto shadow-md sm:rounded-lg bg-white relative z-0 col-span-2"
+      >
+        <table
+          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
         >
-          <div class="p-3.5 flex flex-col">
-            <div class="rounded-md overflow-hidden max-h-60 h-60">
-              <img
-                *ngIf="event.event_image; else placeholder"
-                [src]="event.event_image"
-                class="rounded-md object-cover object-center h-60 w-full"
-              />
-              <ng-template #placeholder>
-                <div
-                  class="event-placeholder image-container relative w-full h-60 bg-event_placeholder object-center object-contain"
-                ></div>
-              </ng-template>
-
-              <label
-                class="cursor-pointer flex items-center justify-end relative right-1 bottom-1"
-                for="event-input-file"
-                [for]="'event-input-file-' + i"
+          <thead
+            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+          >
+            <tr>
+              <th scope="col" class="px-6 py-3 font-secondary">Event Name</th>
+              <th scope="col" class="px-6 py-3 font-secondary">Start Date</th>
+              <th scope="col" class="px-6 py-3 font-secondary">Status</th>
+              <th scope="col" class="px-6 py-3 font-secondary">Session</th>
+              <th scope="col" class="px-6 py-3 font-secondary text-center">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let event of eventList; let i = index">
+            <tr
+              class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+            >
+              <th
+                scope="row"
+                class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
               >
-                <div
-                  class="relative -top-10 rounded-full w-10 h-10 p-1 bg-ivy hover:bg-serpentine flex items-center justify-center z-0 cursor-pointer"
-                >
-                  <svg
-                    class="w-6 h-6 text-white dark:text-white"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="m3 16 5-7 6 6.5m6.5 2.5L16 13l-4.286 6M14 10h.01M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
-                    />
-                  </svg>
-
-                  <input
-                    type="file"
-                    class="hidden"
-                    id="event-input-file"
-                    accept="image/*"
-                    [id]="'event-input-file-' + i"
-                    (change)="onFileChange($event, event.event_id)"
-                  />
+                <div class="ps-3">
+                  <div class="text-base font-semibold font-primary">
+                    {{ event.event_name }}
+                  </div>
                 </div>
-              </label>
-            </div>
-            <h5 class="text-xl md:text-xl font-medium mt-3 font-primary">
-              {{ event.event_name }}
-            </h5>
-            <div class="flex items-center">
-              <svg
-                class="w-6 h-6 inline flex-shrink-0 text-gray-800 dark:text-white"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
-                />
-              </svg>
-              <span class="ms-2 font-primary text-sm"
-                >{{ event.event_start_date | date }} to
-                {{ event.event_end_date | date }}</span
-              >
-            </div>
-            <p class="text-gray-800 text-sm mt-3 font-secondary">
-              {{ truncateDescription(event.event_description, maxChar) }}
-            </p>
-            <!-- buttons -->
-            <div class="w-full flex justify-between items-center mt-2">
-              <div>
-                <button
-                  type="button"
-                  (click)="viewEvent(event)"
-                  class="py-2.5 px-5 text-sm text-white font-bold font-secondary rounded-md bg-ivy hover:bg-serpentine hover:text-primary-700 focus:z-10"
-                >
-                  Preview
-                </button>
-              </div>
-              <div class="flex w-full justify-end items-center gap-1">
+              </th>
+
+              <td class="px-6 py-4 font-primary">
+                {{ event.event_start_date | date }}
+              </td>
+
+              <td class="px-6 py-4 font-primary">
+                <div class="flex items-center">
+                  <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
+                  {{ event.status | titlecase }}
+                </div>
+              </td>
+
+              <td class="px-6 py-4 font-primary">
+                {{ event.session | titlecase }}
+              </td>
+
+              <td class="px-6 py-4 flex items-center gap-2 justify-center">
+                <div class="rounded-md">
+                  <label
+                    class="cursor-pointer flex items-center justify-end"
+                    for="event-input-file"
+                    [for]="'event-input-file-' + i"
+                  >
+                    <div
+                      class="rounded-full w-10 h-10 bg-ivy hover:bg-serpentine flex items-center justify-center cursor-pointer"
+                    >
+                      <svg
+                        class="w-5 h-5 text-white dark:text-white"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="m3 16 5-7 6 6.5m6.5 2.5L16 13l-4.286 6M14 10h.01M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
+                        />
+                      </svg>
+
+                      <input
+                        type="file"
+                        class="hidden"
+                        id="event-input-file"
+                        accept="image/*"
+                        [id]="'event-input-file-' + i"
+                        (change)="onFileChange($event, event.event_id)"
+                      />
+                    </div>
+                  </label>
+                </div>
                 <button
                   (click)="editEvent(event)"
                   type="button"
@@ -155,19 +154,119 @@
                     />
                   </svg>
                 </button>
-
                 <app-delete-event
                   [event_id]="event"
                   (eventDeleted)="loadEvent()"
                 ></app-delete-event>
-              </div>
-            </div>
-          </div>
-        </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
+
     }@else {
-    <div #noEvents>HELLOW</div>
+    <section #noEvents>
+      <div class="py-4 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+        <div class="max-w-screen-sm text-center mx-auto">
+          <svg
+            class="emoji-404 mx-auto"
+            enable-background="new 0 0 226 249.135"
+            height="249.135"
+            id="Layer_1"
+            overflow="visible"
+            version="1.1"
+            viewBox="0 0 226 249.135"
+            width="226"
+            xml:space="preserve"
+          >
+            <circle cx="113" cy="113" fill="#FFE585" r="109" />
+            <line
+              enable-background="new    "
+              fill="none"
+              opacity="0.29"
+              stroke="#6E6E96"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="8"
+              x1="88.866"
+              x2="136.866"
+              y1="245.135"
+              y2="245.135"
+            />
+            <line
+              enable-background="new    "
+              fill="none"
+              opacity="0.17"
+              stroke="#6E6E96"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="8"
+              x1="154.732"
+              x2="168.732"
+              y1="245.135"
+              y2="245.135"
+            />
+            <line
+              enable-background="new    "
+              fill="none"
+              opacity="0.17"
+              stroke="#6E6E96"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="8"
+              x1="69.732"
+              x2="58.732"
+              y1="245.135"
+              y2="245.135"
+            />
+            <circle cx="68.732" cy="93" fill="#6E6E96" r="9" />
+            <path
+              d="M115.568,5.947c-1.026,0-2.049,0.017-3.069,0.045  c54.425,1.551,98.069,46.155,98.069,100.955c0,55.781-45.219,101-101,101c-55.781,0-101-45.219-101-101  c0-8.786,1.124-17.309,3.232-25.436c-3.393,10.536-5.232,21.771-5.232,33.436c0,60.199,48.801,109,109,109s109-48.801,109-109  S175.768,5.947,115.568,5.947z"
+              enable-background="new    "
+              fill="#FF9900"
+              opacity="0.24"
+            />
+            <circle cx="156.398" cy="93" fill="#6E6E96" r="9" />
+            <ellipse
+              cx="67.732"
+              cy="140.894"
+              enable-background="new    "
+              fill="#FF0000"
+              opacity="0.18"
+              rx="17.372"
+              ry="8.106"
+            />
+            <ellipse
+              cx="154.88"
+              cy="140.894"
+              enable-background="new    "
+              fill="#FF0000"
+              opacity="0.18"
+              rx="17.371"
+              ry="8.106"
+            />
+            <path
+              d="M13,118.5C13,61.338,59.338,15,116.5,15c55.922,0,101.477,44.353,103.427,99.797  c0.044-1.261,0.073-2.525,0.073-3.797C220,50.802,171.199,2,111,2S2,50.802,2,111c0,50.111,33.818,92.318,79.876,105.06  C41.743,201.814,13,163.518,13,118.5z"
+              fill="#FFEFB5"
+            />
+            <circle
+              cx="113"
+              cy="113"
+              fill="none"
+              r="109"
+              stroke="#6E6E96"
+              stroke-width="8"
+            />
+          </svg>
+
+          <h1 class="text-gray-500 text-6xl block">No Events Found</h1>
+          <p class="text-gray-500 text-xl">
+            It looks like there are no events scheduled at the moment.
+          </p>
+        </div>
+      </div>
+    </section>
     }
   </div>
 </main>

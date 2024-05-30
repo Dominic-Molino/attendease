@@ -15,12 +15,10 @@ export class ReadEventComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
 
   ngOnInit(): void {
-    console.log(this.data);
     this.eventWithStatus = {
       ...this.data.event,
       status: this.getEventStatus(this.data.event),
     };
-    console.log(this.eventWithStatus);
   }
 
   getEventStatus(event: any): string {

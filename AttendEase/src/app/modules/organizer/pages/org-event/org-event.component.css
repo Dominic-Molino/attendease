@@ -14,7 +14,6 @@ table {
 }
 
 .image-container {
-
   z-index: 0;
   background-color: #cdcdcd;
   background-position: center;
@@ -23,4 +22,21 @@ table {
 
 .event-placeholder {
   background-image: url("../../../../../assets/images/event_placeholder.png");
+}
+
+.emoji-404 {
+  position: relative;
+  animation: mymove 2.5s infinite;
+}
+
+@keyframes mymove {
+  33% {
+    top: 0px;
+  }
+  66% {
+    top: 20px;
+  }
+  100% {
+    top: 0px;
+  }
 }
