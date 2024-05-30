@@ -234,33 +234,6 @@ class Post extends GlobalMethods
         return $row['count'] > 0;
     }
 
-
-    public function unregister_from_event($event_id, $user_id)
-    {
-        $sql = "DELETE FROM event_registration WHERE event_id = ? AND user_id = ?";
-        try {
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$event_id, $user_id]);
-
-            if ($stmt->rowCount() > 0) {
-                $this->decrementRegistrationCount($event_id);
-                return $this->sendPayload(null, 'success', "User unregistered from event successfully.", 200);
-            } else {
-                return $this->sendPayload(null, 'failed', "Failed to unregister user from event.", 500);
-            }
-        } catch (PDOException $e) {
-            error_log("Database error: " . $e->getMessage());
-            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
-        }
-    }
-
-    private function decrementRegistrationCount($event_id)
-    {
-        $sql = "UPDATE events SET registration_count = registration_count - 1 WHERE event_id = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$event_id]);
-    }
-
     public function mark_attendance($event_id, $user_id)
     {
         $sql = "SELECT event_id FROM events WHERE event_id = ? AND event_start_date <= NOW()";

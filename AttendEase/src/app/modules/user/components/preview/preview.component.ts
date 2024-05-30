@@ -23,13 +23,10 @@ export class PreviewComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.userId);
-    console.log(this.data);
     this.eventWithStatus = {
       ...this.data.event,
       status: this.getEventStatus(this.data.event),
     };
-    console.log(this.eventWithStatus);
   }
 
   getEventStatus(event: any): string {
@@ -47,14 +44,25 @@ export class PreviewComponent implements OnInit {
   }
 
   registerForEvent(eventId: number) {
-    this.service.registerForEvent(eventId, this.userId).subscribe(
-      (response) => {
-        Swal.fire('Success', 'Successfully registered', 'success');
-        console.log('Registered for event:', response);
-      },
-      (error) => {
-        Swal.fire('Warning', 'Event registration has ended.', 'warning');
+    Swal.fire({
+      title: 'Register to this event?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.service.registerForEvent(eventId, this.userId).subscribe(
+          (response) => {
+            Swal.fire('Success', 'Successfully registered', 'success');
+            console.log('Registered for event:', response);
+          },
+          (error) => {
+            Swal.fire('Warning', `${error.error.status.message}`, 'warning');
+          }
+        );
       }
-    );
+    });
   }
 }

@@ -8,8 +8,8 @@ import { Observable } from 'rxjs';
 })
 export class AuthserviceService {
   constructor(private http: HttpClient, private helper: JwtHelperService) {}
-  private API_URL = 'https://gc-attendease.online/backend/api/';
-  // private API_URL = 'http://localhost/attendease/backend/api/';
+  // private API_URL = 'https://gc-attendease.online/backend/api/';
+  private API_URL = 'http://localhost/attendease/backend/api/';
 
   isLoggedIn: boolean = false;
 

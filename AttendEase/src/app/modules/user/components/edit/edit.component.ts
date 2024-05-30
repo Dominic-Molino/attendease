@@ -58,12 +58,17 @@ export class EditComponent implements OnInit {
 
   updateInfo() {
     if (this.editForm.valid) {
-      this.service
-        .updateStudent(this.editForm.value, this.user_id)
-        .subscribe((res) => {
+      this.service.updateStudent(this.editForm.value, this.user_id).subscribe(
+        (res) => {
           Swal.fire('Success', 'Update Successfully', 'success');
           this.dialog.close();
-        });
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    } else {
+      Swal.fire('Incomplete User Data', 'Please fill in all fields', 'warning');
     }
   }
 }

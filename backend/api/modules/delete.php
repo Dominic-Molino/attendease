@@ -46,4 +46,22 @@ class Delete extends GlobalMethods
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
+
+    public function unregister_from_event($event_id, $user_id)
+    {
+        $sql = "DELETE FROM event_registration WHERE Event_Id = ? AND User_Id = ?";
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$event_id, $user_id]);
+
+            if ($stmt->rowCount() > 0) {
+                return $this->sendPayload(null, 'success', "User unregistered from event successfully.", 200);
+            } else {
+                return $this->sendPayload(null, 'failed', "Failed to unregister user from event. No matching record found.", 404);
+            }
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+        }
+    }
 }

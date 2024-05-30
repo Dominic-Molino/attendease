@@ -8,14 +8,10 @@ import { AuthserviceService } from './authservice.service';
   providedIn: 'root',
 })
 export class EventService {
-  constructor(
-    private http: HttpClient,
-    private user: AuthserviceService,
-    private helper: JwtHelperService
-  ) {}
+  constructor(private http: HttpClient, private helper: JwtHelperService) {}
 
-  private API_URL = 'https://gc-attendease.online/backend/api/';
-  // private API_URL = 'http://localhost/attendease/backend/api/';
+  // private API_URL = 'https://gc-attendease.online/backend/api/';
+  private API_URL = 'http://localhost/attendease/backend/api/';
 
   getCurrentUserId(): number | null {
     const mytoken = sessionStorage.getItem('token');

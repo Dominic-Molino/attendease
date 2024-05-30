@@ -40,55 +40,64 @@
         />
       </div>
 
-      <div class="mb-5">
+      <div class="w-full">
         <label
-          for="year_level"
+          for="category"
           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >Year Level</label
         >
-        <input
-          type="text"
-          id="year_level"
-          formControlName="year_level"
+        <select
+          id="category"
           name="year_level"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder=""
-          required
-        />
+          formControlName="year_level"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+        >
+          <option select="">Select Event Mode</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+        </select>
       </div>
 
-      <div class="mb-5">
+      <div class="w-full">
         <label
-          for="block"
+          for="category2"
           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >Block</label
         >
-        <input
-          type="text"
-          id="block"
-          formControlName="block"
+        <select
+          id="category2"
           name="block"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder=""
-          required
-        />
+          formControlName="block"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+        >
+          <option select="">Select Block</option>
+          <option>A</option>
+          <option>B</option>
+          <option>C</option>
+          <option>D</option>
+        </select>
       </div>
 
-      <div class="mb-5">
+      <div class="w-full">
         <label
-          for="course"
+          for="category3"
           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >Course</label
         >
-        <input
-          type="text  "
-          id="course"
-          formControlName="course"
+        <select
+          id="category3"
           name="course"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder=""
-          required
-        />
+          formControlName="course"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+        >
+          <option select="">Select Course</option>
+          <option>BSCS</option>
+          <option>BSIT</option>
+          <option>BSEMC</option>
+          <option>ACT</option>
+        </select>
       </div>
 
       <div class="mb-5">

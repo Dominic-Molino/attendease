@@ -146,6 +146,14 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($get->get_attendees_total($request[1]));
                 break;
 
+            case 'getcourse':
+                if (isset($request[1])) {
+                    echo json_encode($get->get_course($request[1]));
+                } else {
+                    echo json_encode($get->get_course());
+                }
+                break;
+
             default:
                 echo "This is forbidden";
                 http_response_code(403);
@@ -255,11 +263,21 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     http_response_code(400);
                     echo json_encode(["message" => "Event ID is required for deletion"]);
                 }
+
+            case 'unregister':
+                if (isset($request[1]) && isset($request[2])) {
+                    $event_id = $request[1];
+                    $user_id = $request[2];
+                    echo json_encode($delete->unregister_from_event($event_id, $user_id));
+                } else {
+                    http_response_code(400);
+                    echo json_encode(["message" => "Event ID and User ID are required for unregistration"]);
+                }
         }
         break;
 
     default:
-        echo "Method not available";
-        http_response_code(404);
+        echo "This is forbidden";
+        http_response_code(403);
         break;
 }

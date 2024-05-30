@@ -111,6 +111,12 @@ class Get extends GlobalMethods
         return $this->get_records('user', $condition, $columns);
     }
 
+    public function get_course($user_id = null)
+    {
+        $columns = "course";
+        $condition = ($user_id !== null) ? "user_id = $user_id" : null;
+        return $this->get_records('user', $condition, $columns);
+    }
 
     public function get_roles($id = null)
     {
@@ -283,6 +289,7 @@ class Get extends GlobalMethods
 
             // Set headers for file download
             header('Content-Type: image/png');
+            header('Cache-Control: no-cache, no-store, must-revalidate');
             echo $fileData;
             exit();
         } else {
@@ -314,6 +321,7 @@ class Get extends GlobalMethods
             $fileData = $fileInfo['event_image'];
 
             header('Content-Type: image/png');
+            header('Cache-Control: no-cache, no-store, must-revalidate');
             echo $fileData;
             exit();
         } else {
@@ -344,6 +352,7 @@ class Get extends GlobalMethods
             $fileData = $fileInfo['image'];
 
             header('Content-Type: image/png');
+            header('Cache-Control: no-cache, no-store, must-revalidate');
             echo $fileData;
             exit();
         } else {
@@ -374,10 +383,9 @@ class Get extends GlobalMethods
             $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
             $stmt->execute();
 
-            $data = $stmt->fetch(PDO::FETCH_ASSOC);
-            $total_attendees = $data['total_attendees'];
+            $total_attendees = $stmt->fetchColumn();
 
-            if ($total_attendees !== false) {
+            if (is_numeric($total_attendees)) {
                 return $this->sendPayload($total_attendees, 'success', "Successfully retrieved total attendees for the event.", 200);
             } else {
                 return $this->sendPayload(null, 'failed', "Failed to retrieve total attendees.", 404);

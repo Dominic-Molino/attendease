@@ -6,6 +6,9 @@ import {
   ReactiveFormsModule,
   FormBuilder,
   Validators,
+  AbstractControl,
+  ValidatorFn,
+  ValidationErrors,
 } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -30,8 +33,6 @@ import Swal from 'sweetalert2';
   encapsulation: ViewEncapsulation.None,
 })
 export class AddEventComponent {
-  selectedFile: File | null = null;
-
   constructor(
     private builder: FormBuilder,
     private eventService: EventService
@@ -41,10 +42,16 @@ export class AddEventComponent {
     event_name: ['', Validators.required],
     event_description: ['', Validators.required],
     event_location: ['', Validators.required],
-    event_start_date: [null, Validators.required],
-    event_end_date: [null, Validators.required],
-    event_registration_start: [null, Validators.required],
-    event_registration_end: [null, Validators.required],
+    event_start_date: [null, [Validators.required, this.futureDateValidator()]],
+    event_end_date: [null, [Validators.required, this.futureDateValidator()]],
+    event_registration_start: [
+      null,
+      [Validators.required, this.futureDateValidator()],
+    ],
+    event_registration_end: [
+      null,
+      [Validators.required, this.futureDateValidator()],
+    ],
     session: ['', Validators.required],
   });
 
@@ -61,10 +68,14 @@ export class AddEventComponent {
     }
   }
 
-  // onFileSelected(event: any) {
-  //   const files = event.target.files as FileList;
-  //   if (files.length > 0) {
-  //     this.selectedFile = files[0];
-  //   }
-  // }
+  futureDateValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const currentDate = new Date();
+      const selectedDate = new Date(control.value);
+      if (control.value && selectedDate < currentDate) {
+        return { pastDate: true };
+      }
+      return null;
+    };
+  }
 }
