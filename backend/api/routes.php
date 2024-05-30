@@ -263,6 +263,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     http_response_code(400);
                     echo json_encode(["message" => "Event ID is required for deletion"]);
                 }
+                break;
 
             case 'unregister':
                 if (isset($request[1]) && isset($request[2])) {
@@ -273,6 +274,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     http_response_code(400);
                     echo json_encode(["message" => "Event ID and User ID are required for unregistration"]);
                 }
+                break;
         }
         break;
 
