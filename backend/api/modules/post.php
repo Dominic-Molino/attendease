@@ -109,7 +109,8 @@ class Post extends GlobalMethods
                 $data->event_end_date,
                 $data->event_registration_start,
                 $data->event_registration_end,
-                $data->session
+                $data->session,
+                $data->max_attendees
             )
         ) {
             return $this->sendPayload(null, 'failed', "Incomplete event data.", 400);
@@ -123,11 +124,12 @@ class Post extends GlobalMethods
         $event_registration_start = date('Y-m-d H:i:s', strtotime($data->event_registration_start));
         $event_registration_end = date('Y-m-d H:i:s', strtotime($data->event_registration_end));
         $session = $data->session;
+        $max_attendees = $data->max_attendees;
 
         $sql = "INSERT INTO events (event_name, event_description, event_location, event_start_date, event_end_date, 
-            event_registration_start, event_registration_end, session
+            event_registration_start, event_registration_end, session, max_attendees
             ) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
@@ -139,6 +141,7 @@ class Post extends GlobalMethods
                 $event_registration_start,
                 $event_registration_end,
                 $session,
+                $max_attendees
             ]);
 
             if ($stmt->rowCount() > 0) {
@@ -167,6 +170,7 @@ class Post extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "Event does not exist.", 400);
             }
 
+            // Check if the user is already registered for the event
             $sql = "SELECT COUNT(*) AS count FROM event_registration WHERE event_id = ? AND user_id = ?";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id, $user_id]);
@@ -176,6 +180,7 @@ class Post extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "User is already registered for this event.", 400);
             }
 
+            // Check if the event registration is still open
             $sql = "SELECT event_registration_end FROM events WHERE event_id = ?";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id]);
@@ -185,22 +190,22 @@ class Post extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "Event registration has ended.", 400);
             }
 
-            $sql = "SELECT COUNT(*) AS count 
-                FROM events 
-                LEFT JOIN event_registration ON events.event_id = event_registration.event_id 
-                LEFT JOIN attendance ON events.event_id = attendance.event_id 
-                LEFT JOIN feedback ON events.event_id = feedback.event_id 
-                WHERE events.event_end_date < NOW() AND event_registration.user_id = ? 
-                AND attendance.user_id = ? AND feedback.user_id = ?";
+            // Check if the event has reached maximum attendees
+            $sql = "SELECT COUNT(*) AS count FROM event_registration WHERE event_id = ?";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$user_id, $user_id, $user_id]);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->execute([$event_id]);
+            $attendeeCount = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
 
-            if ($row['count'] != 0) {
-                return $this->sendPayload(null, 'failed', "Please give feedback for all previous events before registering for another event.", 400);
+            $sql = "SELECT max_attendees FROM events WHERE event_id = ?";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$event_id]);
+            $maxAttendees = $stmt->fetch(PDO::FETCH_ASSOC)['max_attendees'];
+
+            if ($attendeeCount >= $maxAttendees) {
+                return $this->sendPayload(null, 'failed', "Event has reached maximum attendees.", 400);
             }
 
-
+            // Register the user for the event
             $sql = "INSERT INTO event_registration (event_id, user_id) VALUES (?, ?)";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id, $user_id]);
@@ -347,7 +352,7 @@ class Post extends GlobalMethods
         $sql = "UPDATE events 
                 SET event_name = ?, event_description = ?, event_location = ?, 
                     event_start_date = ?, event_end_date = ?, 
-                    event_registration_start = ?, event_registration_end = ? , session = ?
+                    event_registration_start = ?, event_registration_end = ? , session = ?, max_attendees = ?
                 WHERE event_id = ?";
 
         try {
@@ -361,6 +366,7 @@ class Post extends GlobalMethods
                 $data->event_registration_start,
                 $data->event_registration_end,
                 $data->session,
+                $data->max_attendees,
                 $event_id
             ]);
 

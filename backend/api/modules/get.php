@@ -126,14 +126,14 @@ class Get extends GlobalMethods
 
     public function get_events($event_id = null)
     {
-        $columns = "event_id, event_name, event_description, event_location, event_start_date, event_end_date, event_registration_start, event_registration_end, session";
+        $columns = "event_id, event_name, event_description, event_location, event_start_date, event_end_date, event_registration_start, event_registration_end, session, max_attendees";
         $condition = ($event_id !== null) ? "event_id = $event_id" : null;
         return $this->get_records('events', $condition, $columns);
     }
 
     public function get_all_events()
     {
-        $columns = "event_id, event_name, event_description, event_location, event_start_date, event_end_date, event_registration_start, event_registration_end, session";
+        $columns = "event_id, event_name, event_description, event_location, event_start_date, event_end_date, event_registration_start, event_registration_end, session, max_attendees";
         return $this->get_records('events', null, $columns);
     }
 
