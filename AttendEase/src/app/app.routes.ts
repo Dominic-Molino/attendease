@@ -3,6 +3,7 @@ import { UserComponent } from './modules/user/user.component';
 import { OrganizerComponent } from './modules/organizer/organizer.component';
 import { authenGuard } from './core/authen.guard';
 import { AdminDashboardComponent } from './modules/admin/pages/admin-dashboard/admin-dashboard.component';
+import { AdminComponent } from './modules/admin/admin.component';
 
 export const routes: Routes = [
   {
@@ -29,14 +30,29 @@ export const routes: Routes = [
 
   {
     path: 'admin',
-    component: AdminDashboardComponent,
+    component: AdminComponent,
     children: [
       {
-        path: 'dashboard',
-        loadChildren: () =>
+        path: '',
+        redirectTo: 'admin-dashboard',
+        pathMatch: 'full',
+      },
+
+      {
+        path: 'admin-dashboard',
+        loadComponent: () =>
           import(
             './modules/admin/pages/admin-dashboard/admin-dashboard.component'
           ).then((c) => c.AdminDashboardComponent),
+        canActivate: [authenGuard],
+      },
+
+      {
+        path: 'attendance',
+        loadComponent: () =>
+          import(
+            './modules/organizer/pages/attendance/attendance.component'
+          ).then((c) => c.AttendanceComponent),
         canActivate: [authenGuard],
       },
     ],
@@ -127,15 +143,6 @@ export const routes: Routes = [
           import(
             './modules/organizer/pages/org-event/org-event.component'
           ).then((c) => c.OrgEventComponent),
-        canActivate: [authenGuard],
-      },
-
-      {
-        path: 'attendance',
-        loadComponent: () =>
-          import(
-            './modules/organizer/pages/attendance/attendance.component'
-          ).then((c) => c.AttendanceComponent),
         canActivate: [authenGuard],
       },
     ],

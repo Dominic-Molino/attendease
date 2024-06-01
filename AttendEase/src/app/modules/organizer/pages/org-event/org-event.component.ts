@@ -26,6 +26,7 @@ interface Event {
   event_image: SafeResourceUrl | undefined;
   event_image$?: Observable<SafeResourceUrl>;
   status?: string;
+  total_attendees?: number;
 }
 
 @Component({
@@ -58,12 +59,10 @@ export class OrgEventComponent implements OnInit {
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) initFlowbite();
     this.loadEvent();
-    this.getTotal();
   }
 
   loadEvent() {
     this.service.getAllEvents().subscribe((result) => {
-      console.log(result);
       this.eventList = result.payload.map((data: any): Event => {
         this.eventId = data.event_id;
         const eventObject: Event = {
@@ -89,14 +88,13 @@ export class OrgEventComponent implements OnInit {
               this.sanitizer.bypassSecurityTrustResourceUrl(url);
           }
         });
+
+        this.service.getTotal(this.eventId).subscribe((res) => {
+          eventObject.total_attendees = res.payload;
+        });
+
         return eventObject;
       });
-    });
-  }
-
-  getTotal() {
-    this.service.getTotal(this.eventId).subscribe((res) => {
-      console.log(res);
     });
   }
 

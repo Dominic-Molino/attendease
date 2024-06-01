@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, throwError } from 'rxjs';
 import { AuthserviceService } from './authservice.service';
+import { TotalAttendeesResponse } from '../total_attendees';
 
 @Injectable({
   providedIn: 'root',
@@ -62,8 +63,10 @@ export class EventService {
     return this.http.delete(`${this.API_URL}unregister/${eventId}/${userId}`);
   }
 
-  getTotal(eventId: number) {
-    return this.http.get(`${this.API_URL}total/${eventId}`);
+  getTotal(eventId: number): Observable<TotalAttendeesResponse> {
+    return this.http.get<TotalAttendeesResponse>(
+      `${this.API_URL}total/${eventId}`
+    );
   }
 
   uploadEvent(eventId: number, file: File): Observable<any> {

@@ -24,12 +24,16 @@
             ></path>
           </svg>
         </button>
-        <a class="flex md:me-24">
+        <a routerLink="organizer/dashboard" class="flex md:me-24">
           <img
             src="../../../../assets/images/attendease_logo.png"
             class="h-14 w-14 me-3 border-none"
             alt="AttendEase"
           />
+          <span
+            class="self-center text-xl font-secondary font-semibold sm:text-2xl whitespace-nowrap text-serpentine"
+            >Attend<span class="text-darkgreen">Ease</span></span
+          >
         </a>
       </div>
       <div class="flex items-center">
@@ -77,6 +81,7 @@
 
               <li>
                 <button
+                  (click)="logout()"
                   class="flex justify-start px-4 py-2 text-sm text-custom_black w-full hover:bg-shade"
                   role="menuitem"
                 >
@@ -90,7 +95,6 @@
     </div>
   </div>
 </nav>
-
 <aside
   id="logo-sidebar"
   class="fixed top-0 left-0 z-50 w-64 h-screen pt-10 transition-transform -translate-x-full bg-white sm:translate-x-0 shadow-lg"
@@ -114,7 +118,8 @@
       <!-- dashboard -->
       <li>
         <a
-          routerLink="dashboard"
+          [routerLinkActive]="'bg-spring'"
+          routerLink="admin-dashboard"
           class="flex items-center p-2 text-white rounded-lg hover:bg-spring group"
         >
           <svg
@@ -140,39 +145,9 @@
           >
         </a>
       </li>
-      <!-- user -->
       <li>
         <a
-          routerLink="events"
-          class="flex items-center p-2 text-white rounded-lg hover:bg-spring group"
-        >
-          <svg
-            class="flex-shrink-0 w-5 h-5 transition duration-75 text-serpentine"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 9h3m-3 3h3m-3 3h3m-6 1c-.306-.613-.933-1-1.618-1H7.618c-.685 0-1.312.387-1.618 1M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm7 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"
-            />
-          </svg>
-
-          <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-serpentine"
-            >Events</span
-          >
-        </a>
-      </li>
-      <!-- event -->
-      <li>
-        <a
+          [routerLinkActive]="'bg-spring'"
           routerLink="attendance"
           class="flex items-center p-2 text-white rounded-lg hover:bg-spring group"
         >

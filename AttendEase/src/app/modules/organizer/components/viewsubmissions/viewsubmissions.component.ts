@@ -15,6 +15,7 @@ import { ViewattendanceimageComponent } from '../viewattendanceimage/viewattenda
 })
 export class ViewsubmissionsComponent {
   datalist: any;
+  imageUrl: string | null = null;
 
   constructor(
     private service: AuthserviceService,

@@ -16,6 +16,7 @@ interface Event {
   event_registration_start: Date;
   event_registration_end: Date;
   session: string;
+  status?: string;
   event_image: SafeResourceUrl | undefined;
 }
 
@@ -52,6 +53,7 @@ export class AttendanceComponent implements OnInit {
           event_registration_start: data.event_registration_start,
           event_registration_end: data.event_registration_end,
           session: data.session,
+          status: this.getEventStatus(data),
           event_image: undefined,
         };
 
@@ -62,7 +64,24 @@ export class AttendanceComponent implements OnInit {
               this.sanitizer.bypassSecurityTrustResourceUrl(url);
           }
         });
+
         return eventObject;
+      });
+
+      this.eventList.sort((a, b) => {
+        if (a.status === 'done' && b.status !== 'done') {
+          return -1;
+        }
+        if (a.status !== 'done' && b.status === 'done') {
+          return 1;
+        }
+        if (a.status === 'ongoing' && b.status === 'upcoming') {
+          return -1;
+        }
+        if (a.status === 'upcoming' && b.status === 'ongoing') {
+          return 1;
+        }
+        return 0;
       });
     });
   }
@@ -85,6 +104,20 @@ export class AttendanceComponent implements OnInit {
       return text.substring(0, maxLength) + ' ...';
     } else {
       return text;
+    }
+  }
+
+  getEventStatus(event: any): string {
+    const currentDate = new Date();
+    const startDate = new Date(event.event_start_date);
+    const endDate = new Date(event.event_end_date);
+
+    if (endDate < currentDate) {
+      return 'done';
+    } else if (startDate <= currentDate && endDate >= currentDate) {
+      return 'ongoing';
+    } else {
+      return 'upcoming';
     }
   }
 }

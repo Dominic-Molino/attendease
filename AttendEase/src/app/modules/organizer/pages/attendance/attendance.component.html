@@ -9,70 +9,73 @@
       <hr class="h-px mb-6 bg-gray-200 dark:bg-gray-700" />
     </div>
 
-    @if(eventList && eventList.length ){
-    <div class="container">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-        <div
-          *ngFor="let event of eventList; let i = index"
-          class="rounded-md shadow-lg container mb-5 bg-linen"
+    @if(eventList && eventList.length > 0 ){
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <table
+        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      >
+        <thead
+          class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
         >
-          <div class="p-3.5 flex flex-col">
-            <div class="rounded-md overflow-hidden max-h-60 h-60">
+          <tr>
+            <th scope="col" class="px-6 py-3">
+              <span class="sr-only">Image</span>
+            </th>
+            <th scope="col" class="px-6 py-3">Event Name</th>
+            <th scope="col" class="px-6 py-3">Status</th>
+            <th scope="col" class="px-6 py-3 text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let event of eventList; let i = index"
+            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+          >
+            <td class="w-16 md:w-32 h-12 max-w-full max-h-full">
               <img
                 *ngIf="event.event_image; else placeholder"
                 [src]="event.event_image"
-                class="rounded-md object-cover object-center h-60 w-full"
+                class="w-16 md:w-32 h-16 max-w-full max-h-full object-contain"
               />
               <ng-template #placeholder>
                 <div
-                  class="event-placeholder image-container relative w-full h-60 bg-event_placeholder object-center object-contain"
+                  class="w-16 md:w-32 h-12 max-w-full max-h-full bg-gray-50 rounded-full"
                 ></div>
               </ng-template>
-            </div>
-            <h5 class="text-xl md:text-xl font-medium mt-3 font-primary">
+            </td>
+            <td class="font-semibold text-gray-900 dark:text-white text-left">
               {{ event.event_name }}
-            </h5>
-            <div class="flex items-center">
-              <svg
-                class="w-6 h-6 inline flex-shrink-0 text-gray-800 dark:text-white"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
+            </td>
+            <td class="font-semibold text-gray-900 dark:text-white">
+              <span class="flex items-center text-sm font-normal me-3"
+                ><span
+                  *ngIf="event.status === 'upcoming'"
+                  class="flex w-2.5 h-2.5 bg-yellow-300 rounded-full me-1.5 flex-shrink-0"
+                ></span>
+                <span
+                  *ngIf="event.status === 'done'"
+                  class="flex w-2.5 h-2.5 bg-green-500 rounded-full me-1.5 flex-shrink-0"
+                ></span>
+                <span
+                  *ngIf="event.status === 'ongoing'"
+                  class="flex w-2.5 h-2.5 bg-blue-500 rounded-full me-1.5 flex-shrink-0"
+                ></span>
+                {{ event.status | titlecase }}
+              </span>
+            </td>
+            <td>
+              <button
+                type="button"
+                (click)="viewEvent(event.event_id)"
+                [disabled]="event.status !== 'done'"
+                class="py-2.5 px-5 text-sm block mx-auto text-white font-bold font-secondary rounded-md bg-ivy hover:bg-serpentine"
               >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
-                />
-              </svg>
-              <span class="ms-2 font-primary text-sm"
-                >{{ event.event_start_date | date }} to
-                {{ event.event_end_date | date }}</span
-              >
-            </div>
-            <p class="text-gray-800 text-sm mt-3 font-secondary">
-              {{ truncateDescription(event.event_description, maxChar) }}
-            </p>
-            <!-- buttons -->
-            <div class="w-full flex justify-between items-center mt-2">
-              <div>
-                <button
-                  type="button"
-                  (click)="viewEvent(event.event_id)"
-                  class="py-2.5 px-5 text-sm text-white font-bold font-secondary focus:outline-none rounded-md bg-ivy hover:bg-serpentine hover:text-primary-700 focus:z-10"
-                >
-                  View Submissions
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+                View Submissions
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     }@else {
     <div #noEvents>HELLOW</div>

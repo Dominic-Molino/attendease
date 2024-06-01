@@ -30,7 +30,6 @@ export class SidebarComponent implements OnInit {
 
   loadInfo() {
     if (this.userId) {
-      console.log(this.userId);
       this.service.getStudentProfile(this.userId).subscribe((res) => {
         this.studentProfile = res;
       });

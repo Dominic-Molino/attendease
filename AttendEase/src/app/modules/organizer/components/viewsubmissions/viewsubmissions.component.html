@@ -36,13 +36,19 @@
               View File
             </button>
           </td>
+
           <td class="px-6 py-4">
             <button
               (click)="approveAttendance(data.attendance_id, data.remarks)"
               class="btn-toggle"
             >
-              <p *ngIf="data.remarks > 0" class="text-green-600">APPROVED</p>
-              <p *ngIf="data.remarks == 0" class="text-orange-500">
+              <p *ngIf="data.remarks > 0" class="text-green-600 font-secondary">
+                APPROVED
+              </p>
+              <p
+                *ngIf="data.remarks == 0"
+                class="text-orange-500 font-secondary"
+              >
                 UNAPPROVED
               </p>
             </button>

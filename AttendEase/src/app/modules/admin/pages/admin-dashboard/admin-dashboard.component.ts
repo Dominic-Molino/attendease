@@ -45,24 +45,4 @@ export class AdminDashboardComponent implements OnInit {
       this.loadData();
     });
   }
-
-  logout(): void {
-    Swal.fire({
-      title: 'Logout?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: 'Logout Successfully',
-          icon: 'success',
-        });
-        sessionStorage.removeItem('token');
-        this.router.navigate(['login']);
-      }
-    });
-  }
 }

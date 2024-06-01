@@ -27,7 +27,6 @@ export class ViewattendanceimageComponent implements OnInit {
       .getAttendanceImage(this.data.selectedAttendance)
       .subscribe((res: Blob) => {
         this.imageUrl = URL.createObjectURL(res);
-        console.log(this.imageUrl);
       });
   }
 }
