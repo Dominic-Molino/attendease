@@ -58,6 +58,14 @@ export class EventService {
     return this.http.post(`${this.API_URL}register`, data);
   }
 
+  unregisterForEvent(eventId: number, userId: any) {
+    return this.http.delete(`${this.API_URL}unregister/${eventId}/${userId}`);
+  }
+
+  getTotal(eventId: number) {
+    return this.http.get(`${this.API_URL}total/${eventId}`);
+  }
+
   uploadEvent(eventId: number, file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
