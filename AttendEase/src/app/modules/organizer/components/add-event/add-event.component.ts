@@ -57,6 +57,7 @@ export class AddEventComponent {
       [Validators.required, this.futureDateValidator()],
     ],
     session: ['', Validators.required],
+    max_attendees: ['', Validators.required],
   });
 
   addEvent() {
