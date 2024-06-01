@@ -17,10 +17,10 @@
       >
         <!-- latest -->
         <div class="flex justify-start w-full items-center mb-2">
-          <h3 class="text-lg font-secondary font-medium">Latest Event</h3>
+          <h3 class="text-lg font-secondary font-medium">Upcoming Event</h3>
         </div>
         <div
-          *ngFor="let event of eventList.slice(0, 1)"
+          *ngIf="eventList.length > 0"
           class="rounded-md shadow-md border border-linen container bg-linen"
         >
           <div
@@ -28,7 +28,10 @@
           >
             <div class="rounded-md md:w-1/2">
               <img
-                *ngIf="event.event_image$ | async as eventImage"
+                *ngIf="
+                  eventList[eventList.length - 1].event_image$
+                    | async as eventImage
+                "
                 [src]="eventImage"
                 alt="fetch images"
                 class="rounded-md object-cover object-center max-h-72 w-full"
@@ -39,7 +42,7 @@
                 <h1
                   class="overflow-hidden text-ellipsis text-black text-2xl md:text-2xl font-medium mt-3 font-primary"
                 >
-                  {{ event.event_name }}
+                  {{ eventList[eventList.length - 1].event_name }}
                 </h1>
                 <div class="flex items-center">
                   <svg
@@ -60,22 +63,31 @@
                     />
                   </svg>
                   <span class="ms-2 text-xs font-primary text-black"
-                    >{{ event.event_start_date | date : "longDate" }}
+                    >{{
+                      eventList[eventList.length - 1].event_start_date
+                        | date : "longDate"
+                    }}
                   </span>
                   <span class="ms-1 text-black"> - </span>
                   <span class="ms-2 text-xs font-primary text-black">{{
-                    event.event_end_date | date : "longDate"
+                    eventList[eventList.length - 1].event_end_date
+                      | date : "longDate"
                   }}</span>
                 </div>
               </div>
               <p
                 class="leading-tight text-base font-secondary overflow-hidden whitespace-pre-line text-ellipsis text-gray-800"
               >
-                {{ truncateDescription(event.event_description, maxChar) }}
+                {{
+                  truncateDescription(
+                    eventList[eventList.length - 1].event_description,
+                    maxChar
+                  )
+                }}
               </p>
               <button
                 class="bg-ivy hover:bg-serpentine text-white text-sm font-semibold font-secondary shadow-sm rounded-md py-2 px-6 relative -bottom-3.5"
-                (click)="viewEvent(event)"
+                (click)="viewEvent(eventList[eventList.length - 1])"
               >
                 Read More
               </button>
@@ -90,7 +102,7 @@
         <!-- grid cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           <div
-            *ngFor="let event of eventList.slice(1)"
+            *ngFor="let event of eventList.slice(0, -1)"
             class="rounded-md border border-linen shadow-md container p-3.5 mb-5 bg-linen"
           >
             <div class="flex flex-col">

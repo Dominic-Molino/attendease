@@ -3,11 +3,12 @@ import { isPlatformBrowser } from '@angular/common';
 import { Route, Router, RouterOutlet } from '@angular/router';
 import { initFlowbite } from 'flowbite';
 import Swal from 'sweetalert2';
+import { AdminSidebarComponent } from '../../shared/components/admin-sidebar/admin-sidebar.component';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, AdminSidebarComponent],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css',
 })

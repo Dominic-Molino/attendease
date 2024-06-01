@@ -60,6 +60,7 @@ export class OrgEventComponent implements OnInit {
 
   loadEvent() {
     this.service.getAllEvents().subscribe((result) => {
+      console.log(result);
       this.eventList = result.payload.map((data: any): Event => {
         const eventId = data.event_id;
         const eventObject: Event = {
@@ -86,6 +87,10 @@ export class OrgEventComponent implements OnInit {
         });
         return eventObject;
       });
+
+      this.eventList.sort(
+        (a, b) => b.event_start_date.getTime() - a.event_start_date.getTime()
+      );
     });
   }
 
@@ -149,11 +154,11 @@ export class OrgEventComponent implements OnInit {
     const endDate = new Date(event.event_end_date);
 
     if (endDate < currentDate) {
-      return 'Done';
+      return 'done';
     } else if (startDate <= currentDate && endDate >= currentDate) {
-      return 'Ongoing';
+      return 'ongoing';
     } else {
-      return 'Upcoming';
+      return 'upcoming';
     }
   }
 }
