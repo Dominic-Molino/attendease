@@ -22,6 +22,7 @@ interface Event {
   event_registration_start: Date;
   event_registration_end: Date;
   session: string;
+  max_attendees: number;
   event_image: SafeResourceUrl | undefined;
   event_image$?: Observable<SafeResourceUrl>;
   status?: string;
@@ -45,6 +46,7 @@ export class OrgEventComponent implements OnInit {
   selectedEventId: any;
   eventList: Event[] = [];
   maxChar = 100;
+  eventId: any;
 
   constructor(
     private service: EventService,
@@ -56,13 +58,14 @@ export class OrgEventComponent implements OnInit {
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) initFlowbite();
     this.loadEvent();
+    this.getTotal();
   }
 
   loadEvent() {
     this.service.getAllEvents().subscribe((result) => {
       console.log(result);
       this.eventList = result.payload.map((data: any): Event => {
-        const eventId = data.event_id;
+        this.eventId = data.event_id;
         const eventObject: Event = {
           event_id: data.event_id,
           event_name: data.event_name,
@@ -73,12 +76,13 @@ export class OrgEventComponent implements OnInit {
           event_registration_start: data.event_registration_start,
           event_registration_end: data.event_registration_end,
           session: data.session,
+          max_attendees: data.max_attendees,
           event_image: undefined,
           status: this.getEventStatus(data),
           event_image$: undefined,
         };
 
-        this.service.getEventImage(eventId).subscribe((imageResult) => {
+        this.service.getEventImage(this.eventId).subscribe((imageResult) => {
           if (imageResult.size > 0) {
             const url = URL.createObjectURL(imageResult);
             eventObject.event_image =
@@ -87,10 +91,12 @@ export class OrgEventComponent implements OnInit {
         });
         return eventObject;
       });
+    });
+  }
 
-      this.eventList.sort(
-        (a, b) => b.event_start_date.getTime() - a.event_start_date.getTime()
-      );
+  getTotal() {
+    this.service.getTotal(this.eventId).subscribe((res) => {
+      console.log(res);
     });
   }
 
