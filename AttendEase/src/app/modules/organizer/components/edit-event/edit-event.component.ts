@@ -52,6 +52,7 @@ export class EditEventComponent implements OnInit {
     event_registration_start: this.builder.control(''),
     event_registration_end: this.builder.control(''),
     session: this.builder.control(''),
+    max_attendees: this.builder.control(''),
   });
 
   ngOnInit(): void {
@@ -65,6 +66,7 @@ export class EditEventComponent implements OnInit {
         event_registration_start: this.eventVal.event_registration_start,
         event_registration_end: this.eventVal.event_registration_end,
         session: this.eventVal.session,
+        max_attendees: this.eventVal.max_attendees,
       });
     }
   }
