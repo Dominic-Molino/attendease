@@ -17,6 +17,7 @@ interface Event {
   event_registration_start: Date;
   event_registration_end: Date;
   session: string;
+  max_attendees: number;
   event_image$: Observable<SafeResourceUrl | undefined>;
 }
 
@@ -52,6 +53,7 @@ export class EventsComponent implements OnInit {
           event_registration_start: data.event_registration_start,
           event_registration_end: data.event_registration_end,
           session: data.session,
+          max_attendees: data.max_attendees,
           event_image$: this.eventService.getEventImage(data.event_id).pipe(
             switchMap((imageResult) => {
               if (imageResult.size > 0) {

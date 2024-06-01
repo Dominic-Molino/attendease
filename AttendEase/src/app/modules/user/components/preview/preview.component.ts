@@ -23,6 +23,7 @@ export class PreviewComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.data);
     this.eventWithStatus = {
       ...this.data.event,
       status: this.getEventStatus(this.data.event),
@@ -57,6 +58,29 @@ export class PreviewComponent implements OnInit {
           (response) => {
             Swal.fire('Success', 'Successfully registered', 'success');
             console.log('Registered for event:', response);
+          },
+          (error) => {
+            Swal.fire('Warning', `${error.error.status.message}`, 'warning');
+          }
+        );
+      }
+    });
+  }
+
+  unregister(eventId: number) {
+    Swal.fire({
+      title: 'Unregister to this event?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.service.unregisterForEvent(eventId, this.userId).subscribe(
+          (response) => {
+            Swal.fire('Success', 'Successfully unregistered', 'success');
+            console.log('unregistered for event:', response);
           },
           (error) => {
             Swal.fire('Warning', `${error.error.status.message}`, 'warning');
