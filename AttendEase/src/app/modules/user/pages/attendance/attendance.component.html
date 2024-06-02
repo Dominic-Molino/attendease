@@ -11,10 +11,11 @@
           class="text-xs text-gray-700 uppercase bg-linen dark:bg-gray-700 dark:text-gray-400 sticky top-0 z-10"
         >
           <tr>
-            <th scope="col" class="px-6 py-3">Event Name</th>
-            <th scope="col" class="px-6 py-3">Date</th>
-            <th scope="col" class="px-6 py-3">Event Status</th>
-            <th scope="col" class="px-6 py-3">Action</th>
+            <th scope="col" class="px-6 py-3 text-center">Event Name</th>
+            <th scope="col" class="px-6 py-3 text-center">Date</th>
+            <th scope="col" class="px-6 py-3 text-center">Event Status</th>
+            <th scope="col" class="px-6 py-3 text-center">Remarks</th>
+            <th scope="col" class="px-6 py-3 text-center">Action</th>
           </tr>
         </thead>
         <!-- body -->
@@ -25,36 +26,59 @@
           >
             <td
               scope="row"
-              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center"
             >
               {{ event.event_name }}
             </td>
-            <td class="px-6 py-4">{{ event.event_start_date | date }}</td>
-            <div class="flex items-center">
-              <td class="py-4">
+            <td class="px-6 py-4 text-center">
+              {{ event.event_start_date | date }}
+            </td>
+            <div class="block mx-auto text-center">
+              <td class="py-4 text-center">
                 <span
-                  class="flex items-center text-sm font-normal text-gray-900 dark:text-white me-3"
+                  class="flex items-center text-center text-sm font-normal text-gray-900 dark:text-white me-3"
                 >
                   <span
                     *ngIf="event.eventState === 'upcoming'"
-                    class="flex w-2.5 h-2.5 bg-yellow-300 rounded-full me-1.5 flex-shrink-0"
+                    class="flex w-2.5 h-2.5 bg-yellow-300 text-center rounded-full me-1.5 flex-shrink-0"
                   ></span>
                   <span
                     *ngIf="event.eventState === 'done'"
-                    class="flex w-2.5 h-2.5 bg-green-500 rounded-full me-1.5 flex-shrink-0"
+                    class="flex w-2.5 h-2.5 bg-green-500 rounded-full text-center me-1.5 flex-shrink-0"
                   ></span>
                   <span
                     *ngIf="event.eventState === 'ongoing'"
-                    class="flex w-2.5 h-2.5 bg-blue-500 rounded-full me-1.5 flex-shrink-0"
+                    class="flex w-2.5 h-2.5 bg-blue-500 rounded-full me-1.5 flex-shrink-0 text-center"
                   ></span>
                   {{ event.eventState | uppercase }}
                 </span>
               </td>
             </div>
+            <td class="px-6 py-4 text-center">
+              <span
+                [ngClass]="{
+                  'text-green-500 font-medium font-secondary':
+                    attendanceRemarks[event.event_id] === 1,
+                  'text-red-500 font-medium font-secondary':
+                    attendanceRemarks[event.event_id] === 0,
+                  'text-gray-500 font-medium font-secondary':
+                    attendanceRemarks[event.event_id] !== 0 &&
+                    attendanceRemarks[event.event_id] !== 1
+                }"
+              >
+                {{
+                  attendanceRemarks[event.event_id] === 1
+                    ? "Approved"
+                    : attendanceRemarks[event.event_id] === 0
+                    ? "Not Approved"
+                    : "Loading..."
+                }}
+              </span>
+            </td>
             <td>
               <button
                 (click)="openFile(event.eventState, event)"
-                class="flex items-center px-4 py-2 text-sm text-white font-semibold font-secondary bg-ivy hover:bg-serpentine border border-gray-200 rounded-md focus:outline-none"
+                class="block mx-auto px-4 py-2 text-sm text-white font-semibold font-secondary bg-ivy hover:bg-serpentine border border-gray-200 rounded-md focus:outline-none"
               >
                 Submit
               </button>

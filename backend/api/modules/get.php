@@ -242,7 +242,6 @@ class Get extends GlobalMethods
             $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
             $stmt->execute();
 
-            // Fetch all rows as an associative array
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if (!empty($data)) {
@@ -251,7 +250,6 @@ class Get extends GlobalMethods
                 return false;
             }
         } catch (PDOException $e) {
-            // Optionally log the error message
             return false;
         }
     }

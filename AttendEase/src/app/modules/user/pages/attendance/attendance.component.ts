@@ -5,6 +5,7 @@ import { SubmitAttendanceComponent } from '../../components/submit-attendance/su
 import { EventService } from '../../../../core/service/event.service';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { AuthserviceService } from '../../../../core/service/authservice.service';
 
 @Component({
   selector: 'app-attendance',
@@ -15,8 +16,16 @@ import Swal from 'sweetalert2';
 })
 export class AttendanceComponent {
   events: any[] = [];
+  userId?: any;
+  attendanceRemarks: { [key: number]: number } = {};
 
-  constructor(private eventService: EventService, private dialog: MatDialog) {}
+  constructor(
+    private eventService: EventService,
+    private dialog: MatDialog,
+    private service: AuthserviceService
+  ) {
+    this.userId = this.service.getCurrentUserId();
+  }
 
   ngOnInit(): void {
     this.getUserEvents();
@@ -25,7 +34,6 @@ export class AttendanceComponent {
   getUserEvents(): void {
     this.eventService.getUserEvent().subscribe(
       (res) => {
-        console.log('User events:', res);
         if (res) {
           this.events = res.payload.map((event: any) => {
             const currentDate = new Date();
@@ -43,6 +51,10 @@ export class AttendanceComponent {
 
             return event;
           });
+
+          this.events.forEach((event) => {
+            this.getUserAttendanceRemark(event.event_id);
+          });
         } else {
           console.error(
             'Failed to retrieve user events:',
@@ -56,7 +68,22 @@ export class AttendanceComponent {
     );
   }
 
-  
+  getUserAttendanceRemark(eventId: number) {
+    this.service.getAttendanceByUser(this.userId, eventId).subscribe(
+      (res: any) => {
+        if (res && res.payload && res.payload.length > 0) {
+          const attendance = res.payload[0];
+          this.attendanceRemarks[eventId] = attendance.remarks;
+        } else {
+          this.attendanceRemarks[eventId] = -1; // Default message if no remarks
+        }
+      },
+      (error) => {
+        console.error('Error fetching attendance remark:', error);
+        this.attendanceRemarks[eventId] = -1; // Error message
+      }
+    );
+  }
 
   openFile(eventState: string, event: number) {
     if (eventState === 'done') {
