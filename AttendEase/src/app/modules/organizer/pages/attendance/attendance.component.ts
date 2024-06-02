@@ -92,7 +92,7 @@ export class AttendanceComponent implements OnInit {
 
   viewEvent(eventId: any) {
     this.dialog.open(MarkattendanceeComponent, {
-      width: '75%',
+      width: '50%',
       data: {
         selectedEvent: eventId,
       },

@@ -25,16 +25,12 @@ export class MarkattendanceeComponent implements OnInit {
 
   viewAttendances(userId: number) {
     this.dialog2.open(ViewsubmissionsComponent, {
-      width: '75%',
+      width: '50%',
       data: {
         selectedUser: userId,
         selectedEvent: this.data.selectedEvent,
       },
     });
-  }
-
-  approveAttendance() {
-    Swal.fire('Hello world!');
   }
 
   ngOnInit(): void {

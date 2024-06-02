@@ -1,4 +1,4 @@
-<div class="relative overflow-x-auto shadow-md sm:rounded-lg p-5">
+<div class="relative overflow-x-auto">
   <div class="max-h-96 h-96 over">
     <table
       class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
@@ -7,11 +7,10 @@
         class="text-xs text-white uppercase bg-ivy dark:bg-gray-700 dark:text-gray-400"
       >
         <tr>
-          <th scope="col" class="px-6 py-3">ID</th>
-          <th scope="col" class="px-6 py-3">Student Name</th>
-          <th scope="col" class="px-6 py-3">Program</th>
-          <th scope="col" class="px-6 py-3">Block</th>
-          <th scope="col" class="px-6 py-3">Attendance</th>
+          <th scope="col" class="px-6 py-3 text-center">Student Name</th>
+          <th scope="col" class="px-6 py-3 text-center">Program</th>
+          <th scope="col" class="px-6 py-3 text-center">Block</th>
+          <th scope="col" class="px-6 py-3 text-center">Submission</th>
         </tr>
       </thead>
       <tbody>
@@ -19,24 +18,23 @@
           *ngFor="let data of datalist"
           class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
         >
-          <td>
-            {{ data.user_id }}
+          <td class="text-center">
+            {{ data.first_name }} {{ data.last_name }}
           </td>
-          <td>{{ data.first_name }} {{ data.last_name }}</td>
-          <td>
+          <td class="text-center">
             {{ data.program || "Not set" }}
           </td>
-          <td>
+          <td class="text-center">
             {{ data.block || "Not set" }}
           </td>
-          <!-- <td class="px-6 py-4">
+          <td class="px-6 py-4 text-center">
             <button
               (click)="viewAttendances(data.user_id)"
               class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
             >
               View Submissions
             </button>
-          </td> -->
+          </td>
         </tr>
       </tbody>
     </table>

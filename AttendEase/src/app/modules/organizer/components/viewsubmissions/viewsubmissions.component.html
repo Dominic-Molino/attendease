@@ -1,60 +1,39 @@
-<div class="relative overflow-x-auto shadow-md sm:rounded-lg p-5">
-  <div class="max-h-96 h-96 over">
-    <table
-      class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-    >
-      <thead
-        class="text-xs text-white uppercase bg-ivy dark:bg-gray-700 dark:text-gray-400"
-      >
-        <tr>
-          <th scope="col" class="px-6 py-3">Submission ID</th>
-          <th scope="col" class="px-6 py-3">Date Uploaded</th>
-          <th scope="col" class="px-6 py-3">Status</th>
-          <th scope="col" class="px-6 py-3">File</th>
-          <th scope="col" class="px-6 py-3">Remarks</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let data of datalist"
-          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full p-5">
+  <div
+    *ngFor="let data of datalist"
+    class="grid grid-cols-2 bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+  >
+    <div *ngIf="imageUrl" class="col-span-1 w-full border-r border-serpentine">
+      <img
+        class="object-cover w-full rounded-t-lg h-72 md:h-72 md:rounded-none md:rounded-s-lg"
+        [src]="imageUrl"
+      />
+    </div>
+    <div class="flex flex-col justify-center items-start">
+      <div class="flex flex-col justify-between p-4 leading-normal">
+        <h5
+          class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
         >
-          <td>
-            {{ data.attendance_id }}
-          </td>
-          <td>
-            {{ data.created_at }}
-          </td>
-          <td>
-            {{ data.remarks }}
-          </td>
-          <td class="px-6 py-4">
-            <button
-              (click)="viewAttendance(data.attendance_id)"
-              class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-            >
-              View File
-            </button>
-          </td>
-
-          <td class="px-6 py-4">
-            <button
-              (click)="approveAttendance(data.attendance_id, data.remarks)"
-              class="btn-toggle"
-            >
-              <p *ngIf="data.remarks > 0" class="text-green-600 font-secondary">
-                APPROVED
-              </p>
-              <p
-                *ngIf="data.remarks == 0"
-                class="text-orange-500 font-secondary"
-              >
-                UNAPPROVED
-              </p>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          <p *ngIf="data.remarks > 0" class="text-green-600 font-secondary">
+            Remarks: APPROVED
+          </p>
+          <p *ngIf="data.remarks == 0" class="text-orange-500 font-secondary">
+            Remarks: UNAPPROVED
+          </p>
+        </h5>
+        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+          {{ data.created_at }}
+        </p>
+      </div>
+      <div class="flex justify-end self-end pr-10">
+        <button
+          (click)="approveAttendance(data.attendance_id, data.remarks)"
+          class="bg-ivy hover:bg-serpentine text-white text-sm font-semibold font-secondary shadow-sm rounded-md py-2 px-6 relative -bottom-3.5"
+        >
+          <p *ngIf="data.remarks == 0">APPROVE</p>
+          <p *ngIf="data.remarks > 0">DISAPPROVE</p>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
