@@ -63,7 +63,6 @@ export class AuthserviceService {
     if (mytoken) {
       const decodedToken = this.helper.decodeToken(mytoken);
       if (decodedToken && decodedToken.role_id) {
-        console.log(decodedToken.role_id);
         return decodedToken.role_id;
       }
     }

@@ -3,13 +3,15 @@ import { Component, OnInit } from '@angular/core';
 import { CalendarComponent } from '../../../../shared/components/calendar/calendar.component';
 import { Router } from '@angular/router';
 import { EventService } from '../../../../core/service/event.service';
+import { CardModule } from 'primeng/card';
+import { AnalyticComponent } from '../../../../shared/components/analytic/analytic.component';
 
 @Component({
   selector: 'app-org-dashboard',
   standalone: true,
-  imports: [CommonModule, CalendarComponent],
   templateUrl: './org-dashboard.component.html',
   styleUrl: './org-dashboard.component.css',
+  imports: [CommonModule, CardModule, AnalyticComponent],
 })
 export class OrgDashboardComponent implements OnInit {
   eventData: any;

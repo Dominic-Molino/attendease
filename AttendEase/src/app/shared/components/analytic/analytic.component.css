@@ -1,0 +1,15 @@
+.grid-holder {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 2rem;
+  grid-template-areas:
+    "left ."
+    "left ."
+    "left .";
+}
+
+.bar {
+  grid-area: left;
+  position: relative;
+  height: 100vh;
+}
