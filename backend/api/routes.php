@@ -154,6 +154,26 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 }
                 break;
 
+            case 'getcoursecount':
+                echo json_encode($get->get_registered_users_by_course($request[0]));
+                break;
+
+            case 'getyearlevelcount':
+                echo json_encode($get->get_registered_users_by_year_level($request[0]));
+                break;
+
+            case 'getblockcount':
+                echo json_encode($get->get_registered_users_by_block($request[0]));
+                break;
+
+            case 'getpasteventsattendance':
+                echo json_encode($get->getTotalAttendanceInAllPastEvents($request[0]));
+                break;
+
+            case 'getAllRegisteredUser':
+                echo json_encode($get->get_total_registered_users($request[0]));
+                break;
+
             default:
                 echo "This is forbidden";
                 http_response_code(403);
