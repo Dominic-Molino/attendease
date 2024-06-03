@@ -18,7 +18,6 @@ export class BlockComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataService.getBlock().subscribe((res) => {
-      console.log(res.payload);
       this.processChartData(res.payload);
     });
 
@@ -28,8 +27,13 @@ export class BlockComponent implements OnInit {
     this.basicOptions = {
       plugins: {
         legend: {
+          title: {
+            display: true,
+            text: 'Student Blocks',
+          },
           labels: {
             color: textColor,
+            usePointStyle: true,
           },
         },
         tooltip: {
@@ -59,16 +63,10 @@ export class BlockComponent implements OnInit {
         {
           data: data,
           backgroundColor: [
-            documentStyle.getPropertyValue('--blue-500'),
-            documentStyle.getPropertyValue('--yellow-500'),
-            documentStyle.getPropertyValue('--green-500'),
-            documentStyle.getPropertyValue('--orange-500'),
-          ],
-          hoverBackgroundColor: [
-            documentStyle.getPropertyValue('--blue-400'),
-            documentStyle.getPropertyValue('--yellow-400'),
-            documentStyle.getPropertyValue('--green-400'),
-            documentStyle.getPropertyValue('--orange-400'),
+            documentStyle.getPropertyValue('--brown'),
+            documentStyle.getPropertyValue('--beige'),
+            documentStyle.getPropertyValue('--shade'),
+            documentStyle.getPropertyValue('--sage'),
           ],
         },
       ],

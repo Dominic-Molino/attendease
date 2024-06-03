@@ -9,6 +9,13 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --brown: #b99470;
+  --beige: #deac80;
+  --shade: #f7dcb9;
+  --sage: #b5c18e;
+}
+
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--secondary) var(--primary);

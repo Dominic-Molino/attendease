@@ -27,8 +27,13 @@ export class CourseComponent implements OnInit {
     this.basicOptions = {
       plugins: {
         legend: {
+          title: {
+            display: true,
+            text: 'Student Courses',
+          },
           labels: {
             color: textColor,
+            usePointStyle: true,
           },
         },
         tooltip: {
@@ -58,16 +63,10 @@ export class CourseComponent implements OnInit {
         {
           data: data,
           backgroundColor: [
-            documentStyle.getPropertyValue('--blue-500'),
-            documentStyle.getPropertyValue('--yellow-500'),
-            documentStyle.getPropertyValue('--green-500'),
-            documentStyle.getPropertyValue('--orange-500'),
-          ],
-          hoverBackgroundColor: [
-            documentStyle.getPropertyValue('--blue-400'),
-            documentStyle.getPropertyValue('--yellow-400'),
-            documentStyle.getPropertyValue('--green-400'),
-            documentStyle.getPropertyValue('--orange-400'),
+            documentStyle.getPropertyValue('--brown'),
+            documentStyle.getPropertyValue('--beige'),
+            documentStyle.getPropertyValue('--shade'),
+            documentStyle.getPropertyValue('--sage'),
           ],
         },
       ],

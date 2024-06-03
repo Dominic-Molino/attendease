@@ -6,16 +6,32 @@
       >
         Dashboard
       </p>
-      <hr class="h-px mb-3 bg-serpentine border-0 dark:bg-gray-700" />
+      <hr class="h-px mb-5 bg-serpentine border-0 dark:bg-gray-700" />
 
-      <div class="mb-3">
+      <div class="mb-5">
         <app-cards></app-cards>
       </div>
-      <div class="grid-holder">
-        <app-attendance class="bar"></app-attendance>
-        <app-course class="card1"></app-course>
-        <app-year-level class="card1"></app-year-level>
-        <app-block class="card1"></app-block>
+
+      <div class="flex justify-between items-start w-full">
+        <app-attendance class="h-full w-1/2"></app-attendance>
+        <div class="h-full w-1/2">
+          <p-carousel
+            [value]="slides"
+            [numVisible]="1"
+            [numScroll]="1"
+            [circular]="true"
+          >
+            <ng-template pTemplate="item" let-slide>
+              <div class="card1">
+                <ng-container [ngSwitch]="slide">
+                  <app-course *ngSwitchCase="'course'"></app-course>
+                  <app-year-level *ngSwitchCase="'year-level'"></app-year-level>
+                  <app-block *ngSwitchCase="'block'"></app-block>
+                </ng-container>
+              </div>
+            </ng-template>
+          </p-carousel>
+        </div>
       </div>
     </div>
   </div>

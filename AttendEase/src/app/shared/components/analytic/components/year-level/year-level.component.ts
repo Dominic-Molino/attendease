@@ -27,17 +27,23 @@ export class YearLevelComponent implements OnInit {
     this.basicOptions = {
       plugins: {
         legend: {
+          title: {
+            position: 'bottom', // Position the legend at the bottom
+            display: true,
+            text: 'Student Year Level',
+          },
+          position: 'bottom', // Position the legend at the bottom
           labels: {
             color: textColor,
+            usePointStyle: true,
           },
         },
         tooltip: {
           callbacks: {
-            title: () => '', // Remove the default title
+            title: () => '',
             label: (context: TooltipItem<'bar'>) => {
-              // Specify the type for context
               const label = context.label || '';
-              const value = (context.raw as number) || 0; // Ensure context.raw is treated as a number
+              const value = (context.raw as number) || 0;
               return `Block: ${label}`;
             },
           },
@@ -58,16 +64,10 @@ export class YearLevelComponent implements OnInit {
         {
           data: data,
           backgroundColor: [
-            documentStyle.getPropertyValue('--blue-500'),
-            documentStyle.getPropertyValue('--yellow-500'),
-            documentStyle.getPropertyValue('--green-500'),
-            documentStyle.getPropertyValue('--orange-500'),
-          ],
-          hoverBackgroundColor: [
-            documentStyle.getPropertyValue('--blue-400'),
-            documentStyle.getPropertyValue('--yellow-400'),
-            documentStyle.getPropertyValue('--green-400'),
-            documentStyle.getPropertyValue('--orange-400'),
+            documentStyle.getPropertyValue('--brown'),
+            documentStyle.getPropertyValue('--beige'),
+            documentStyle.getPropertyValue('--shade'),
+            documentStyle.getPropertyValue('--sage'),
           ],
         },
       ],

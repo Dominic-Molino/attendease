@@ -59,17 +59,20 @@ export class AttendanceComponent implements OnInit {
         labels: ['Ongoing', 'Done', 'Upcoming'],
         datasets: [
           {
+            barThickness: 20,
             label: 'Events',
-            backgroundColor: '#42A5F5',
-            borderColor: '#1E88E5',
+            backgroundColor: '#b99470',
+            borderColor: '#b99470',
             data: [ongoing, done, upcoming],
           },
         ],
       };
 
       this.options = {
-        responsive: true,
+        indexAxis: 'y',
         maintainAspectRatio: false,
+        aspectRatio: 0.8,
+        responsive: true,
         scales: {
           x: {
             display: true,
