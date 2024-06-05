@@ -5,6 +5,7 @@ import { YearLevelComponent } from './components/year-level/year-level.component
 import { BlockComponent } from './components/block/block.component';
 import { AttendanceComponent } from './components/attendance/attendance.component';
 import { CarouselModule } from 'primeng/carousel';
+import { ComparingEventsComponent } from './components/comparing-events/comparing-events.component';
 
 @Component({
   selector: 'app-analytic',
@@ -18,6 +19,7 @@ import { CarouselModule } from 'primeng/carousel';
     BlockComponent,
     AttendanceComponent,
     CarouselModule,
+    ComparingEventsComponent,
   ],
 })
 export class AnalyticComponent implements OnInit {

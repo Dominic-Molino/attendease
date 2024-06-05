@@ -30,4 +30,8 @@ export class DataAnalyticsService {
   getYearLevel(): Observable<any> {
     return this.http.get(`${this.API_URL}getyearlevelcount`);
   }
+
+  getAllEventAttendees(): Observable<any> {
+    return this.http.get(`${this.API_URL}totalAttendees`);
+  }
 }

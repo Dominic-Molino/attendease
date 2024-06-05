@@ -28,22 +28,32 @@ export class BlockComponent implements OnInit {
       plugins: {
         legend: {
           title: {
+            position: 'bottom',
             display: true,
-            text: 'Student Blocks',
+            text: 'Distribution of Students by Block',
+            padding: {
+              top: 10,
+            },
+            font: {
+              family: 'Poppins',
+              size: 14,
+            },
           },
+          position: 'bottom',
           labels: {
             color: textColor,
             usePointStyle: true,
           },
         },
+
         tooltip: {
           callbacks: {
-            title: () => '', // Remove the default title
+            title: () => '',
             label: (context: TooltipItem<'bar'>) => {
               // Specify the type for context
               const label = context.label || '';
-              const value = (context.raw as number) || 0; // Ensure context.raw is treated as a number
-              return `Block: ${label}`;
+              const value = (context.raw as number) || 0;
+              return `Block: ${label} - ${value} Students`;
             },
           },
         },

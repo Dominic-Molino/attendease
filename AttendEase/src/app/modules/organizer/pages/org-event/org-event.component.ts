@@ -10,7 +10,9 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
 import { initFlowbite } from 'flowbite';
 import { CalendarComponent } from '../../../../shared/components/calendar/calendar.component';
-import { Observable, map } from 'rxjs';
+import { TableModule } from 'primeng/table';
+import { PaginatorModule } from 'primeng/paginator';
+import { Observable, filter, map } from 'rxjs';
 
 interface Event {
   event_id: number;
@@ -40,6 +42,8 @@ interface Event {
     DeleteEventComponent,
     EditEventComponent,
     CalendarComponent,
+    TableModule,
+    PaginatorModule,
   ],
 })
 export class OrgEventComponent implements OnInit {
@@ -48,6 +52,9 @@ export class OrgEventComponent implements OnInit {
   eventList: Event[] = [];
   maxChar = 100;
   eventId: any;
+  filteredEventList: Event[] = [];
+  currentFilter: string = 'all';
+  isDropdownOpen: boolean = false;
 
   constructor(
     private service: EventService,
@@ -95,7 +102,25 @@ export class OrgEventComponent implements OnInit {
 
         return eventObject;
       });
+
+      this.applyFilter(this.currentFilter);
     });
+  }
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  applyFilter(status: string) {
+    this.currentFilter = status;
+    this.isDropdownOpen = false;
+    if (status === 'all') {
+      this.filteredEventList = this.eventList;
+    } else {
+      this.filteredEventList = this.eventList.filter(
+        (event) => event.status === status
+      );
+    }
   }
 
   onFileChange(event: any, eventId: number) {

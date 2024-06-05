@@ -28,9 +28,18 @@ export class CourseComponent implements OnInit {
       plugins: {
         legend: {
           title: {
+            position: 'bottom',
             display: true,
-            text: 'Student Courses',
+            text: 'Distribution of Students by Course',
+            padding: {
+              top: 10,
+            },
+            font: {
+              family: 'Poppins',
+              size: 14,
+            },
           },
+          position: 'bottom',
           labels: {
             color: textColor,
             usePointStyle: true,
@@ -38,12 +47,12 @@ export class CourseComponent implements OnInit {
         },
         tooltip: {
           callbacks: {
-            title: () => '', // Remove the default title
+            title: () => '',
             label: (context: TooltipItem<'bar'>) => {
               // Specify the type for context
               const label = context.label || '';
-              const value = (context.raw as number) || 0; // Ensure context.raw is treated as a number
-              return `Block: ${label}`;
+              const value = (context.raw as number) || 0;
+              return `Course: ${label} - ${value} Students`;
             },
           },
         },

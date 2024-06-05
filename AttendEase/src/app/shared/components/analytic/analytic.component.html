@@ -12,9 +12,17 @@
         <app-cards></app-cards>
       </div>
 
-      <div class="flex justify-between items-start w-full">
-        <app-attendance class="h-full w-1/2"></app-attendance>
-        <div class="h-full w-1/2">
+      <div class="my-2">
+        <app-comparing-events></app-comparing-events>
+      </div>
+
+      <div
+        class="flex flex-col md:flex-row gap-5 justify-between items-start w-full"
+      >
+        <app-attendance
+          class="h-full w-full md:w-1/2 self-center"
+        ></app-attendance>
+        <div class="mx-auto h-full w-full md:w-1/2 self-center">
           <p-carousel
             [value]="slides"
             [numVisible]="1"

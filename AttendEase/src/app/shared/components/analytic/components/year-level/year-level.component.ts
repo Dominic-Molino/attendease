@@ -28,11 +28,18 @@ export class YearLevelComponent implements OnInit {
       plugins: {
         legend: {
           title: {
-            position: 'bottom', // Position the legend at the bottom
+            position: 'bottom',
             display: true,
-            text: 'Student Year Level',
+            text: 'Distribution of Students by Year Level',
+            padding: {
+              top: 10,
+            },
+            font: {
+              family: 'Poppins',
+              size: 13,
+            },
           },
-          position: 'bottom', // Position the legend at the bottom
+          position: 'bottom',
           labels: {
             color: textColor,
             usePointStyle: true,
@@ -44,7 +51,7 @@ export class YearLevelComponent implements OnInit {
             label: (context: TooltipItem<'bar'>) => {
               const label = context.label || '';
               const value = (context.raw as number) || 0;
-              return `Block: ${label}`;
+              return `Year Level: ${label} - ${value} Students`;
             },
           },
         },

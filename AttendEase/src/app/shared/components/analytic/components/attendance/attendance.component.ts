@@ -38,6 +38,7 @@ export class AttendanceComponent implements OnInit {
     this.eventService.getAllEvents().subscribe((res) => {
       const events: Event[] = res.payload;
       const currentDate = new Date();
+
       let ongoing = 0,
         done = 0,
         upcoming = 0;
@@ -62,7 +63,7 @@ export class AttendanceComponent implements OnInit {
             barThickness: 20,
             label: 'Events',
             backgroundColor: '#b99470',
-            borderColor: '#b99470',
+            borderRadius: 15,
             data: [ongoing, done, upcoming],
           },
         ],
@@ -73,19 +74,48 @@ export class AttendanceComponent implements OnInit {
         maintainAspectRatio: false,
         aspectRatio: 0.8,
         responsive: true,
+        plugins: {
+          legend: {
+            labels: {
+              font: {
+                size: 14,
+                family: 'Poppins',
+              },
+            },
+          },
+          title: {
+            display: true,
+            text: 'Event Status Overview',
+            font: {
+              size: 18,
+            },
+            padding: {
+              top: 10,
+              bottom: 30,
+            },
+          },
+        },
         scales: {
           x: {
             display: true,
-            scaleLabel: {
+            title: {
               display: true,
-              labelString: 'Event Status',
+              text: 'Number of Events',
+              font: {
+                family: 'Poppins',
+                size: 14,
+              },
             },
           },
           y: {
             display: true,
-            scaleLabel: {
+            title: {
               display: true,
-              labelString: 'Number of Events',
+              text: 'Event Status',
+              font: {
+                family: 'Poppins',
+                size: 14,
+              },
             },
             ticks: {
               beginAtZero: true,
