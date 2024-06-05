@@ -543,4 +543,28 @@ class Get extends GlobalMethods
             return $this->sendPayload(null, 'error', $e->getMessage(), 500);
         }
     }
+
+
+    public function get_all_attendee_counts()
+    {
+        $sql = "SELECT e.event_id, e.event_name, COUNT(er.registration_id) AS total_attendees
+                FROM events e
+                LEFT JOIN event_registration er ON e.event_id = er.event_id
+                GROUP BY e.event_id, e.event_name
+                ORDER BY e.event_name"; // Optional: Order by event name
+
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute();
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (empty($data)) {
+                return $this->sendPayload(null, 'failed', "No events or attendees found.", 404);
+            }
+
+            return $this->sendPayload($data, 'success', "Successfully retrieved attendee counts for all events.", 200);
+        } catch (PDOException $e) {
+            return $this->sendPayload(null, 'error', $e->getMessage(), 500);
+        }
+    }
 }

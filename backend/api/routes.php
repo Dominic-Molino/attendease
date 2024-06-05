@@ -146,6 +146,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($get->get_attendees_total($request[1]));
                 break;
 
+            case 'totalAttendees':
+                echo json_encode($get->get_all_attendee_counts());
+                break;
+
             case 'getcourse':
                 if (isset($request[1])) {
                     echo json_encode($get->get_course($request[1]));
