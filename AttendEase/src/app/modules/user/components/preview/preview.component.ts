@@ -23,7 +23,6 @@ export class PreviewComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.data);
     this.eventWithStatus = {
       ...this.data.event,
       status: this.getEventStatus(this.data.event),

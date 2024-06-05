@@ -112,156 +112,157 @@
       <!-- <div
         class="overflow-x-auto shadow-md sm:rounded-lg bg-white relative z-0 col-span-2"
       >
-        <table
-          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-        >
-          <thead
-            class="text-xs text-gray-700 uppercase bg-linen dark:bg-gray-700 dark:text-gray-400"
+        <mat-paginator [length]="50" [pageSize]="10" aria-label="Select page">
+          <table
+            class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
           >
-            <tr>
-              <th scope="col" class="px-6 py-3 font-secondary">
-                No. of Attendees
-              </th>
-              <th scope="col" class="px-6 py-3 font-secondary">Event Name</th>
-              <th scope="col" class="px-6 py-3 font-secondary">Start Date</th>
-              <th scope="col" class="px-6 py-3 font-secondary">Status</th>
-              <th scope="col" class="px-6 py-3 font-secondary">Session</th>
-              <th scope="col" class="px-6 py-3 font-secondary text-center">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody *ngFor="let event of eventList; let i = index">
-            <tr
-              class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+            <thead
+              class="text-xs text-gray-700 uppercase bg-linen dark:bg-gray-700 dark:text-gray-400"
             >
-              <td class="px-6 py-4 font-primary">
-                {{ event.total_attendees }}
-              </td>
-
-              <td class="px-6 py-4 font-primary">
-                {{ event.event_name }}
-              </td>
-
-              <td class="px-6 py-4 font-primary">
-                {{ event.event_start_date | date }}
-              </td>
-
-              <div class="flex items-center">
+              <tr>
+                <th scope="col" class="px-6 py-3 font-secondary">
+                  No. of Attendees
+                </th>
+                <th scope="col" class="px-6 py-3 font-secondary">Event Name</th>
+                <th scope="col" class="px-6 py-3 font-secondary">Start Date</th>
+                <th scope="col" class="px-6 py-3 font-secondary">Status</th>
+                <th scope="col" class="px-6 py-3 font-secondary">Session</th>
+                <th scope="col" class="px-6 py-3 font-secondary text-center">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody *ngFor="let event of eventList; let i = index">
+              <tr
+                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+              >
                 <td class="px-6 py-4 font-primary">
-                  <span class="flex items-center text-sm font-normal me-3"
-                    ><span
-                      *ngIf="event.status === 'upcoming'"
-                      class="flex w-2.5 h-2.5 bg-yellow-300 rounded-full me-1.5 flex-shrink-0"
-                    ></span>
-                    <span
-                      *ngIf="event.status === 'done'"
-                      class="flex w-2.5 h-2.5 bg-green-500 rounded-full me-1.5 flex-shrink-0"
-                    ></span>
-                    <span
-                      *ngIf="event.status === 'ongoing'"
-                      class="flex w-2.5 h-2.5 bg-blue-500 rounded-full me-1.5 flex-shrink-0"
-                    ></span>
-                    {{ event.status | titlecase }}
-                  </span>
+                  {{ event.total_attendees }}
                 </td>
-              </div>
 
-              <td class="px-6 py-4 font-primary">
-                {{ event.session | titlecase }}
-              </td>
+                <td class="px-6 py-4 font-primary">
+                  {{ event.event_name }}
+                </td>
 
-              <td class="px-6 py-4 flex items-center gap-2 justify-center">
-                <div class="rounded-md">
-                  <label
-                    class="cursor-pointer flex items-center justify-end"
-                    for="event-input-file"
-                    [for]="'event-input-file-' + i"
-                  >
-                    <div
-                      class="rounded-full w-10 h-10 bg-ivy hover:bg-serpentine flex items-center justify-center cursor-pointer"
+                <td class="px-6 py-4 font-primary">
+                  {{ event.event_start_date | date }}
+                </td>
+
+                <div class="flex items-center">
+                  <td class="px-6 py-4 font-primary">
+                    <span class="flex items-center text-sm font-normal me-3"
+                      ><span
+                        *ngIf="event.status === 'upcoming'"
+                        class="flex w-2.5 h-2.5 bg-yellow-300 rounded-full me-1.5 flex-shrink-0"
+                      ></span>
+                      <span
+                        *ngIf="event.status === 'done'"
+                        class="flex w-2.5 h-2.5 bg-green-500 rounded-full me-1.5 flex-shrink-0"
+                      ></span>
+                      <span
+                        *ngIf="event.status === 'ongoing'"
+                        class="flex w-2.5 h-2.5 bg-blue-500 rounded-full me-1.5 flex-shrink-0"
+                      ></span>
+                      {{ event.status | titlecase }}
+                    </span>
+                  </td>
+                </div>
+
+                <td class="px-6 py-4 font-primary">
+                  {{ event.session | titlecase }}
+                </td>
+
+                <td class="px-6 py-4 flex items-center gap-2 justify-center">
+                  <div class="rounded-md">
+                    <label
+                      class="cursor-pointer flex items-center justify-end"
+                      for="event-input-file"
+                      [for]="'event-input-file-' + i"
                     >
-                      <svg
-                        class="w-5 h-5 text-white dark:text-white"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        fill="none"
-                        viewBox="0 0 24 24"
+                      <div
+                        class="rounded-full w-10 h-10 bg-ivy hover:bg-serpentine flex items-center justify-center cursor-pointer"
                       >
-                        <path
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="m3 16 5-7 6 6.5m6.5 2.5L16 13l-4.286 6M14 10h.01M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
+                        <svg
+                          class="w-5 h-5 text-white dark:text-white"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="m3 16 5-7 6 6.5m6.5 2.5L16 13l-4.286 6M14 10h.01M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
+                          />
+                        </svg>
+
+                        <input
+                          type="file"
+                          class="hidden"
+                          id="event-input-file"
+                          accept="image/*"
+                          [id]="'event-input-file-' + i"
+                          (change)="onFileChange($event, event.event_id)"
                         />
-                      </svg>
-
-                      <input
-                        type="file"
-                        class="hidden"
-                        id="event-input-file"
-                        accept="image/*"
-                        [id]="'event-input-file-' + i"
-                        (change)="onFileChange($event, event.event_id)"
-                      />
-                    </div>
-                  </label>
-                </div>
-                <button
-                  (click)="editEvent(event)"
-                  type="button"
-                  aria-expanded="false"
-                  data-tooltip-target="tooltip-top"
-                  data-tooltip-placement="top"
-                  class="flex items-center justify-center text-serpentine bg-pebble rounded-full w-10 h-10 hover:bg-slate-400 focus:outline-none shadow-md"
-                >
-                  <svg
-                    class="w-5 h-5"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    viewBox="0 0 24 24"
+                      </div>
+                    </label>
+                  </div>
+                  <button
+                    (click)="editEvent(event)"
+                    type="button"
+                    aria-expanded="false"
+                    data-tooltip-target="tooltip-top"
+                    data-tooltip-placement="top"
+                    class="flex items-center justify-center text-serpentine bg-pebble rounded-full w-10 h-10 hover:bg-slate-400 focus:outline-none shadow-md"
                   >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
-                    />
-                  </svg>
-                </button>
-                <div
-                  id="tooltip-top"
-                  role="tooltip"
-                  class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
-                >
-                  Tooltip on top
-                  <div class="tooltip-arrow" data-popper-arrow></div>
-                </div>
+                    <svg
+                      class="w-5 h-5"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
+                      />
+                    </svg>
+                  </button>
+                  <div
+                    id="tooltip-top"
+                    role="tooltip"
+                    class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+                  >
+                    Tooltip on top
+                    <div class="tooltip-arrow" data-popper-arrow></div>
+                  </div>
 
-                <app-delete-event
-                  [event_id]="event"
-                  (eventDeleted)="loadEvent()"
-                ></app-delete-event>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                  <app-delete-event
+                    [event_id]="event"
+                    (eventDeleted)="loadEvent()"
+                  ></app-delete-event>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-paginator>
       </div> -->
 
       <p-table
         [value]="filteredEventList"
         [paginator]="true"
-        [rows]="10"
+        [rows]="5"
         class="overflow-x-auto shadow-md sm:rounded-lg bg-white relative z-0 col-span-2"
       >
-        <!-- Define your columns as p-column components -->
         <ng-template
           pTemplate="header"
           class="text-xs text-gray-700 uppercase bg-linen dark:bg-gray-700 dark:text-gray-400"

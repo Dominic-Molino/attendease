@@ -24,7 +24,6 @@ export class DashboardComponent implements OnInit {
   getUserEvents(): void {
     this.eventService.getUserEvent().subscribe(
       (res) => {
-        console.log('User events:', res);
         if (res) {
           this.events = res.payload
             .map((event: any) => {

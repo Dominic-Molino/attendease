@@ -12,7 +12,7 @@ import { initFlowbite } from 'flowbite';
 import { CalendarComponent } from '../../../../shared/components/calendar/calendar.component';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
-import { Observable, filter, map } from 'rxjs';
+import { Observable } from 'rxjs';
 
 interface Event {
   event_id: number;
@@ -47,12 +47,10 @@ interface Event {
   ],
 })
 export class OrgEventComponent implements OnInit {
-  eventData: any;
-  selectedEventId: any;
   eventList: Event[] = [];
+  filteredEventList: any[] = [];
   maxChar = 100;
-  eventId: any;
-  filteredEventList: Event[] = [];
+  selectedEventId: any;
   currentFilter: string = 'all';
   isDropdownOpen: boolean = false;
 
@@ -71,7 +69,7 @@ export class OrgEventComponent implements OnInit {
   loadEvent() {
     this.service.getAllEvents().subscribe((result) => {
       this.eventList = result.payload.map((data: any): Event => {
-        this.eventId = data.event_id;
+        const eventId = data.event_id;
         const eventObject: Event = {
           event_id: data.event_id,
           event_name: data.event_name,
@@ -88,7 +86,7 @@ export class OrgEventComponent implements OnInit {
           event_image$: undefined,
         };
 
-        this.service.getEventImage(this.eventId).subscribe((imageResult) => {
+        this.service.getEventImage(eventId).subscribe((imageResult) => {
           if (imageResult.size > 0) {
             const url = URL.createObjectURL(imageResult);
             eventObject.event_image =
@@ -96,7 +94,7 @@ export class OrgEventComponent implements OnInit {
           }
         });
 
-        this.service.getTotal(this.eventId).subscribe((res) => {
+        this.service.getTotal(eventId).subscribe((res) => {
           eventObject.total_attendees = res.payload;
         });
 

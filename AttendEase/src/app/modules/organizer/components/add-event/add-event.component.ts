@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { MatDialogContent } from '@angular/material/dialog';
+import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogContent,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -15,6 +20,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { EventService } from '../../../../core/service/event.service';
 import Swal from 'sweetalert2';
+import { Dialog } from '@angular/cdk/dialog';
 
 @Component({
   selector: 'app-add-event',
@@ -32,14 +38,22 @@ import Swal from 'sweetalert2';
   styleUrl: './add-event.component.css',
   encapsulation: ViewEncapsulation.None,
 })
-export class AddEventComponent {
+export class AddEventComponent implements OnInit {
   minDate: Date;
 
   constructor(
     private builder: FormBuilder,
-    private eventService: EventService
+    private eventService: EventService,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef: MatDialogRef<AddEventComponent>
   ) {
     this.minDate = new Date();
+  }
+
+  ngOnInit(): void {
+    if (this.data && this.data.startDate) {
+      this.eventForm.patchValue({ event_start_date: this.data.startDate });
+    }
   }
 
   eventForm = this.builder.group({
@@ -65,6 +79,7 @@ export class AddEventComponent {
       this.eventService.addEvent(this.eventForm.value).subscribe(
         (res) => {
           Swal.fire('Success', 'Event added successfully', 'success');
+          this.dialogRef.close(true);
         },
         (error) => {
           Swal.fire('Error', 'Something went wrong', 'error');

@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
   }
 
   userData: any;
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   loginForm = this.builder.group({
     email: this.builder.control(
@@ -37,7 +37,6 @@ export class LoginComponent implements OnInit {
         if (res.token) {
           sessionStorage.setItem('token', res.token);
           Swal.fire('Success', 'Login Success', 'success');
-          console.log(this.service.getCurrentUserRole());
           this.service.getCurrentUserRole();
           switch (this.service.getCurrentUserRole()) {
             case 1:
@@ -50,7 +49,11 @@ export class LoginComponent implements OnInit {
               this.router.navigate(['student']);
               break;
             default:
-              Swal.fire("User's role is unassigned", 'Please contact admin for support.', 'warning');
+              Swal.fire(
+                "User's role is unassigned",
+                'Please contact admin for support.',
+                'warning'
+              );
               break;
           }
         }

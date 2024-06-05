@@ -18,7 +18,7 @@ import Swal from 'sweetalert2';
 })
 export class SidebarComponent implements OnInit {
   userId = this.service.getCurrentUserId();
-  studentProfile: any[] = [];
+  studentProfile: any;
 
   constructor(private service: AuthserviceService, private router: Router) {
     this.userId = this.service.getCurrentUserId();
@@ -31,7 +31,7 @@ export class SidebarComponent implements OnInit {
   loadInfo() {
     if (this.userId) {
       this.service.getStudentProfile(this.userId).subscribe((res) => {
-        this.studentProfile = res;
+        this.studentProfile = res.payload[0];
       });
     }
   }

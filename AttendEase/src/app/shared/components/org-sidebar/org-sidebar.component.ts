@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   RouterLink,
   RouterOutlet,
@@ -16,12 +16,25 @@ import { AuthserviceService } from '../../../core/service/authservice.service';
   templateUrl: './org-sidebar.component.html',
   styleUrl: './org-sidebar.component.css',
 })
-export class OrgSidebarComponent {
+export class OrgSidebarComponent implements OnInit {
   userId = this.service.getCurrentUserId();
-  studentProfile: any[] = [];
+  studentProfile: any;
 
   constructor(private service: AuthserviceService, private router: Router) {
     this.userId = this.service.getCurrentUserId();
+  }
+
+  ngOnInit(): void {
+    this.loadInfo();
+  }
+
+  loadInfo() {
+    if (this.userId) {
+      this.service.getStudentProfile(this.userId).subscribe((res) => {
+        this.studentProfile = res.payload[0];
+        console.log(this.studentProfile);
+      });
+    }
   }
 
   logout(): void {

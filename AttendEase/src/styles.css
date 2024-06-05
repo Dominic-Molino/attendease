@@ -14,6 +14,12 @@
   --beige: #deac80;
   --shade: #f7dcb9;
   --sage: #b5c18e;
+  --fc-button-bg-color: #b5c18e;
+  --fc-button-border-color: #b5c18e;
+  --fc-button-hover-bg-color: #777e5c;
+  --fc-button-hover-border-color: #777e5c;
+  --fc-button-active-bg-color: #404e0c;
+  --fc-button-active-border-color: #404e0c;
 }
 
 * {

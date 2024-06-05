@@ -6,11 +6,13 @@ import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PopupComponent } from '../popup/popup.component';
 import { EventService } from '../../../core/service/event.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, of, switchMap } from 'rxjs';
+import { AddEventComponent } from '../../../modules/organizer/components/add-event/add-event.component';
+import { AuthserviceService } from '../../../core/service/authservice.service';
 
 @Component({
   selector: 'app-calendar',
@@ -23,30 +25,44 @@ export class CalendarComponent implements OnInit {
   calendarEvents: EventInput[] = [];
   calendarVisible = signal(true);
   event: any[] = [];
+  userRole: number | null = null;
 
   calendarOptions = signal<CalendarOptions>({
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
     headerToolbar: {
-      left: 'prev next today',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+      left: 'prev,next',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,listWeek',
     },
     initialView: 'dayGridMonth',
     weekends: true,
     dayMaxEvents: true,
     selectable: true,
-    height: 500,
+    height: 'auto',
+    eventColor: '#deac80',
     aspectRatio: 1,
+    validRange: {
+      start: new Date().toISOString().split('T')[0],
+    },
+    windowResize: this.handleWindowResize.bind(this),
     eventClick: this.handleEventClick.bind(this),
   });
 
   constructor(
     private service: EventService,
     private dialog: MatDialog,
-    private sanitizer: DomSanitizer
+    private auth: AuthserviceService
   ) {}
 
   ngOnInit(): void {
     this.fetchEvents();
+    this.userRole = this.auth.getCurrentUserRole();
+    if (this.userRole === 2) {
+      this.calendarOptions.update((options) => {
+        options.dateClick = this.handleDateClick.bind(this);
+        return options;
+      });
+    }
   }
 
   fetchEvents() {
@@ -61,6 +77,19 @@ export class CalendarComponent implements OnInit {
     });
   }
 
+  handleDateClick(arg: any) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = { startDate: arg.date };
+
+    const dialogRef = this.dialog.open(AddEventComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.fetchEvents();
+      }
+    });
+  }
+
   handleCalendarToggle() {
     this.calendarVisible.update((bool) => !bool);
   }
@@ -68,15 +97,20 @@ export class CalendarComponent implements OnInit {
   handleEventClick(clickInfo: EventClickArg) {
     this.service.getEventById(clickInfo.event.id).subscribe((event) => {
       const eventData = event.payload[0];
-      console.log(eventData);
       const dialogRef = this.dialog.open(PopupComponent, {
         data: eventData,
         width: '50%',
       });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        console.log('Dialog closed with result:', result);
-      });
+      dialogRef.afterClosed().subscribe((result) => {});
+    });
+  }
+
+  handleWindowResize(view: any) {
+    const aspectRatio = window.innerWidth < 768 ? 1 : 1.35;
+    this.calendarOptions.update((options) => {
+      options.aspectRatio = aspectRatio;
+      return options;
     });
   }
 }

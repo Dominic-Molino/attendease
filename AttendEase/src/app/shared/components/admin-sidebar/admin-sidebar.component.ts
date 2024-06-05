@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   Router,
   RouterLink,
@@ -16,11 +16,25 @@ import { CommonModule } from '@angular/common';
   templateUrl: './admin-sidebar.component.html',
   styleUrl: './admin-sidebar.component.css',
 })
-export class AdminSidebarComponent {
+export class AdminSidebarComponent implements OnInit {
   userId = this.service.getCurrentUserId();
+  studentProfile: any;
 
   constructor(private router: Router, private service: AuthserviceService) {
     this.userId = this.service.getCurrentUserId();
+  }
+
+  ngOnInit(): void {
+    this.loadInfo();
+  }
+
+  loadInfo() {
+    if (this.userId) {
+      this.service.getStudentProfile(this.userId).subscribe((res) => {
+        this.studentProfile = res.payload[0];
+        console.log(this.studentProfile);
+      });
+    }
   }
 
   logout(): void {
