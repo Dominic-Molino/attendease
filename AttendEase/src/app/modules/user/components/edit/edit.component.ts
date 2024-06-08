@@ -71,4 +71,8 @@ export class EditComponent implements OnInit {
       Swal.fire('Incomplete User Data', 'Please fill in all fields', 'warning');
     }
   }
+
+  closeDialog() {
+    this.dialog.close();
+  }
 }

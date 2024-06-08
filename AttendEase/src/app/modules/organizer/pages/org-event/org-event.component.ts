@@ -13,6 +13,7 @@ import { CalendarComponent } from '../../../../shared/components/calendar/calend
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { Observable } from 'rxjs';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 interface Event {
   event_id: number;
@@ -42,8 +43,7 @@ interface Event {
     DeleteEventComponent,
     EditEventComponent,
     CalendarComponent,
-    TableModule,
-    PaginatorModule,
+    NgxPaginationModule,
   ],
 })
 export class OrgEventComponent implements OnInit {
@@ -53,6 +53,11 @@ export class OrgEventComponent implements OnInit {
   selectedEventId: any;
   currentFilter: string = 'all';
   isDropdownOpen: boolean = false;
+
+  //pagination variables
+  p: number = 1;
+  itemsPerPage: number = 10;
+  maxSize = 5;
 
   constructor(
     private service: EventService,
@@ -142,6 +147,7 @@ export class OrgEventComponent implements OnInit {
   openDialog() {
     const modal = this.dialog.open(AddEventComponent, {
       width: '50%',
+      disableClose: true,
     });
 
     modal.afterClosed().subscribe((response) => {

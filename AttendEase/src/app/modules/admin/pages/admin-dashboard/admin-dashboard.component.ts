@@ -4,18 +4,16 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UpdateroleComponent } from '../../components/updaterole/updaterole.component';
 import { MatDialog } from '@angular/material/dialog';
-import Swal from 'sweetalert2';
+import { AnalyticComponent } from '../../../../shared/components/analytic/analytic.component';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css',
+  imports: [CommonModule, AnalyticComponent],
 })
 export class AdminDashboardComponent implements OnInit {
-  title = 'AttendEase';
-
   constructor(
     private routes: Router,
     private service: AuthserviceService,

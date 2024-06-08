@@ -72,7 +72,8 @@
           >
             <div class="px-4 py-3" role="none" *ngIf="studentProfile">
               <p class="text-sm text-gray-900 dark:text-white" role="none">
-                {{ studentProfile.first_name }} {{ studentProfile.last_name }}
+                {{ studentProfile.first_name | titlecase }}
+                {{ studentProfile.last_name | titlecase }}
               </p>
               <p
                 class="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
@@ -139,6 +140,35 @@
           <span
             class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-serpentine"
             >Dashboard</span
+          >
+        </a>
+      </li>
+      <li>
+        <a
+          [routerLinkActive]="'bg-spring'"
+          routerLink="list"
+          class="flex items-center p-2 text-white rounded-lg hover:bg-spring group"
+        >
+          <svg
+            class="flex-shrink-0 w-5 h-5 transition duration-75 text-serpentine"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9.143 4H4.857A.857.857 0 0 0 4 4.857v4.286c0 .473.384.857.857.857h4.286A.857.857 0 0 0 10 9.143V4.857A.857.857 0 0 0 9.143 4Zm10 0h-4.286a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286A.857.857 0 0 0 20 9.143V4.857A.857.857 0 0 0 19.143 4Zm-10 10H4.857a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286a.857.857 0 0 0 .857-.857v-4.286A.857.857 0 0 0 9.143 14Zm10 0h-4.286a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286a.857.857 0 0 0 .857-.857v-4.286a.857.857 0 0 0-.857-.857Z"
+            />
+          </svg>
+          <span
+            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-serpentine"
+            >Attendee List</span
           >
         </a>
       </li>

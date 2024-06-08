@@ -4,6 +4,7 @@ import { OrganizerComponent } from './modules/organizer/organizer.component';
 import { authenGuard } from './core/authen.guard';
 import { AdminDashboardComponent } from './modules/admin/pages/admin-dashboard/admin-dashboard.component';
 import { AdminComponent } from './modules/admin/admin.component';
+import { C } from '@fullcalendar/core/internal-common';
 
 export const routes: Routes = [
   {
@@ -44,6 +45,15 @@ export const routes: Routes = [
           import(
             './modules/admin/pages/admin-dashboard/admin-dashboard.component'
           ).then((c) => c.AdminDashboardComponent),
+        canActivate: [authenGuard],
+      },
+
+      {
+        path: 'list',
+        loadComponent: () =>
+          import(
+            './modules/admin/pages/studentlist/studentlist.component'
+          ).then((c) => c.StudentlistComponent),
         canActivate: [authenGuard],
       },
 

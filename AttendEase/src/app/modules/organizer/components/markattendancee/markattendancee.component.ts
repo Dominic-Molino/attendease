@@ -33,6 +33,10 @@ export class MarkattendanceeComponent implements OnInit {
     });
   }
 
+  closeDialog() {
+    this.dialog.close();
+  }
+
   ngOnInit(): void {
     this.loadData();
   }

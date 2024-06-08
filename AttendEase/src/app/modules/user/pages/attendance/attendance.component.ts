@@ -6,11 +6,17 @@ import { EventService } from '../../../../core/service/event.service';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-attendance',
   standalone: true,
-  imports: [MatButtonModule, MatDialogModule, CommonModule],
+  imports: [
+    MatButtonModule,
+    MatDialogModule,
+    CommonModule,
+    NgxPaginationModule,
+  ],
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.css',
 })
@@ -18,6 +24,11 @@ export class AttendanceComponent {
   events: any[] = [];
   userId?: any;
   attendanceRemarks: { [key: number]: number } = {};
+
+  //pagination variables
+  p: number = 1;
+  itemsPerPage: number = 10;
+  maxSize = 5;
 
   constructor(
     private eventService: EventService,

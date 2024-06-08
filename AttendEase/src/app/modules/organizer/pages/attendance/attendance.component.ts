@@ -5,6 +5,7 @@ import { EventService } from '../../../../core/service/event.service';
 import { DeleteEventComponent } from '../../components/delete-event/delete-event.component';
 import { CommonModule } from '@angular/common';
 import { MarkattendanceeComponent } from '../../components/markattendancee/markattendancee.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 interface Event {
   event_id: number;
@@ -25,13 +26,18 @@ interface Event {
   standalone: true,
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.css',
-  imports: [DeleteEventComponent, CommonModule],
+  imports: [DeleteEventComponent, CommonModule, NgxPaginationModule],
 })
 export class AttendanceComponent implements OnInit {
   eventData: any;
   selectedEventId: any;
   eventList: Event[] = [];
   maxChar = 100;
+
+  //paginate variables
+  p: number = 1;
+  itemsPerPage: number = 10;
+  maxSize: number = 5;
 
   constructor(
     private service: EventService,
@@ -93,6 +99,7 @@ export class AttendanceComponent implements OnInit {
   viewEvent(eventId: any) {
     this.dialog.open(MarkattendanceeComponent, {
       width: '50%',
+      disableClose: true,
       data: {
         selectedEvent: eventId,
       },

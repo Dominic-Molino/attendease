@@ -23,7 +23,6 @@ import { AuthserviceService } from '../../../core/service/authservice.service';
 })
 export class CalendarComponent implements OnInit {
   calendarEvents: EventInput[] = [];
-  calendarVisible = signal(true);
   event: any[] = [];
   userRole: number | null = null;
 
@@ -80,6 +79,8 @@ export class CalendarComponent implements OnInit {
   handleDateClick(arg: any) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = { startDate: arg.date };
+    dialogConfig.width = '50%';
+    dialogConfig.disableClose = true;
 
     const dialogRef = this.dialog.open(AddEventComponent, dialogConfig);
 
@@ -90,16 +91,13 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  handleCalendarToggle() {
-    this.calendarVisible.update((bool) => !bool);
-  }
-
   handleEventClick(clickInfo: EventClickArg) {
     this.service.getEventById(clickInfo.event.id).subscribe((event) => {
       const eventData = event.payload[0];
       const dialogRef = this.dialog.open(PopupComponent, {
         data: eventData,
-        width: '50%',
+        disableClose: true,
+        panelClass: 'dialog-container',
       });
 
       dialogRef.afterClosed().subscribe((result) => {});

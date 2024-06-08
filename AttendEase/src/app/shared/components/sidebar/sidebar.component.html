@@ -72,7 +72,8 @@
           >
             <div class="px-4 py-3" role="none" *ngIf="studentProfile">
               <p class="text-sm text-gray-900 dark:text-white" role="none">
-                {{ studentProfile.first_name }} {{ studentProfile.last_name }}
+                {{ studentProfile.first_name | titlecase }}
+                {{ studentProfile.last_name | titlecase }}
               </p>
               <p
                 class="text-sm font-medium text-gray-900 truncate dark:text-gray-300"

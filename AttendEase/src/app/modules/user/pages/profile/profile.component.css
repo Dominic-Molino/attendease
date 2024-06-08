@@ -30,12 +30,6 @@
   color: white;
 }
 
-/* .center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-} */
-
 .personal {
   text-indent: 50px;
   padding-left: 25px;
@@ -91,5 +85,3 @@ table {
     display: none;
   }
 }
-
-

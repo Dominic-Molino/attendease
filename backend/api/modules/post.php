@@ -116,6 +116,7 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', "Incomplete event data.", 400);
         }
 
+
         $event_name = $data->event_name;
         $event_description = $data->event_description;
         $event_location = $data->event_location;
@@ -124,7 +125,23 @@ class Post extends GlobalMethods
         $event_registration_start = date('Y-m-d H:i:s', strtotime($data->event_registration_start));
         $event_registration_end = date('Y-m-d H:i:s', strtotime($data->event_registration_end));
         $session = $data->session;
-        $max_attendees = $data->max_attendees;
+        $max_attendees = (int)$data->max_attendees;
+
+        if ($max_attendees <= 0) {
+            return $this->sendPayload(null, 'failed', "Maximum attendees must be a positive number.", 400);
+        }
+
+        if ($event_start_date >= $event_end_date) {
+            return $this->sendPayload(null, 'failed', "Event start date must be before event end date.", 400);
+        }
+        if ($event_registration_start >= $event_registration_end) {
+            return $this->sendPayload(null, 'failed', "Registration start date must be before registration end date.", 400);
+        }
+
+        if ($event_registration_start >= $event_start_date) {
+            return $this->sendPayload(null, 'failed', "Registration start date must be before start of the event", 400);
+        }
+
 
         $sql = "INSERT INTO events (event_name, event_description, event_location, event_start_date, event_end_date, 
             event_registration_start, event_registration_end, session, max_attendees

@@ -1,5 +1,13 @@
 <main class="w-full h-full">
   <div class="p-4 mt-16 sm:ml-64">
+    <div>
+      <p
+        class="font-secondary mb-2 text-custom_black text-2xl tracking-wide font-bold"
+      >
+        Attendance Submission
+      </p>
+      <hr class="h-px mb-6 bg-gray-200 border-0 dark:bg-gray-700" />
+    </div>
     <div
       class="relative overflow-x-auto shadow-md sm:rounded-lg max-h-52 overflow-y-auto border border-gray-200"
     >
@@ -21,7 +29,10 @@
         <!-- body -->
         <tbody>
           <tr
-            *ngFor="let event of events; let i = index"
+            *ngFor="
+              let event of events
+                | paginate : { itemsPerPage: itemsPerPage, currentPage: p }
+            "
             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
           >
             <td
@@ -86,6 +97,14 @@
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="flex justify-center items-center mt-2.5 p-5">
+      <pagination-controls
+        (pageChange)="p = $event"
+        [maxSize]="maxSize"
+        [responsive]="true"
+        class="pagination"
+      ></pagination-controls>
     </div>
   </div>
 </main>

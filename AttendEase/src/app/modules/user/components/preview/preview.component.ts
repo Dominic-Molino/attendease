@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DatePipe, TitleCasePipe } from '@angular/common';
 import { EventService } from '../../../../core/service/event.service';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
@@ -19,7 +19,8 @@ export class PreviewComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private service: EventService,
-    private userService: AuthserviceService
+    private userService: AuthserviceService,
+    private dialog: MatDialogRef<PreviewComponent>
   ) {}
 
   ngOnInit(): void {
@@ -87,5 +88,9 @@ export class PreviewComponent implements OnInit {
         );
       }
     });
+  }
+
+  closeDialog() {
+    this.dialog.close(  );
   }
 }

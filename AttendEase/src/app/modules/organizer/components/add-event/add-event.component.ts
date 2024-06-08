@@ -79,10 +79,13 @@ export class AddEventComponent implements OnInit {
       this.eventService.addEvent(this.eventForm.value).subscribe(
         (res) => {
           Swal.fire('Success', 'Event added successfully', 'success');
-          this.dialogRef.close(true);
         },
         (error) => {
-          Swal.fire('Error', 'Something went wrong', 'error');
+          Swal.fire(
+            'Error',
+            error.error.status.message || 'Something went wrong',
+            'error'
+          );
         }
       );
     } else {
@@ -106,5 +109,9 @@ export class AddEventComponent implements OnInit {
       }
       return null;
     };
+  }
+
+  closeDialog() {
+    this.dialogRef.close();
   }
 }

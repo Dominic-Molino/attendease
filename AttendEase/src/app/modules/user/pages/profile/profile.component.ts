@@ -93,7 +93,8 @@ export class ProfileComponent implements OnInit {
   openEditInfo() {
     const modal = this.dialog.open(EditComponent, {
       data: this.studentProfile,
-      width: '500px',
+      width: '35%',
+      disableClose: true,
     });
     modal.afterClosed().subscribe((res) => {
       this.loadInfo();

@@ -1,0 +1,169 @@
+<main class="!scroll-smooth w-full h-screen">
+  <div class="p-4 mt-16 sm:ml-64">
+    <div>
+      <p
+        class="font-secondary mb-2 text-custom_black text-2xl tracking-wide font-bold"
+      >
+        Attendees List
+      </p>
+
+      <hr class="h-px mb-6 bg-linen border-0 dark:bg-gray-700" />
+    </div>
+
+    <!-- list of user -->
+    <div class="flex w-full justify-end mb-3">
+      <form class="max-w-md flex-1" [formGroup]="searchForm">
+        <label
+          for="default-search"
+          class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+          >Search</label
+        >
+        <div class="relative">
+          <div
+            class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
+          >
+            <svg
+              class="w-4 h-4 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+              />
+            </svg>
+          </div>
+          <input
+            type="search"
+            id="default-search"
+            class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
+            placeholder="Search..."
+            required
+            formControlName="searchValue"
+          />
+          <button
+            type="submit"
+            class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            Search
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div
+      class="relative overflow-x-auto shadow-md sm:rounded-lg border border-gray-300"
+    >
+      <table
+        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      >
+        <thead
+          class="text-xs text-gray-700 uppercase bg-linen dark:bg-gray-700 dark:text-gray-400"
+        >
+          <tr>
+            <th
+              scope="col"
+              class="px-6 py-3 font-secondary font-bold text-base"
+            >
+              Name
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 font-secondary font-bold text-base"
+            >
+              Year Level
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 font-secondary font-bold text-base"
+            >
+              Block
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 font-secondary font-bold text-base"
+            >
+              Course
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 font-secondary font-bold text-base"
+            >
+              Email
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 font-secondary font-bold text-base"
+            >
+              Role
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 font-secondary font-bold text-base"
+            >
+              Action
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+            *ngFor="
+              let data of datalist
+                | paginate : { itemsPerPage: itemsPerPage, currentPage: p }
+            "
+          >
+            @if ( searchForm.get('searchValue')?.value === '' || data.first_name
+            ?.toLowerCase() .includes(
+            searchForm.get('searchValue')?.value?.toLowerCase() ) || data.course
+            ?.toLowerCase() .includes(
+            searchForm.get('searchValue')?.value?.toLowerCase() ) ||
+            data.year_level ?.toLowerCase() .includes(
+            searchForm.get('searchValue')?.value?.toLowerCase() ) || data.block
+            ?.toLowerCase()
+            .includes(searchForm.get('searchValue')?.value?.toLowerCase()) ) {
+            @if (data.role_id ===3 ) {
+            <th
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            >
+              {{ data.first_name | titlecase }} {{ data.last_name | titlecase }}
+            </th>
+            <td class="px-6 py-4">{{ data.year_level }}</td>
+            <td class="px-6 py-4">{{ data.block | uppercase }}</td>
+            <td class="px-6 py-4">{{ data.course }}</td>
+            <td class="px-6 py-4">{{ data.email }}</td>
+            @if(data.role_id === 1){
+            <td class="px-6 py-4">Admin</td>
+            }@else if (data.role_id === 2) {
+            <td class="px-6 py-4">Organizer</td>
+            }@else {
+            <td class="px-6 py-4">Student</td>
+            }
+            <td class="px-6 py-4">
+              <button
+                (click)="updateUser(data.user_id)"
+                class="font-medium font-primary text-blue-600 dark:text-blue-500 hover:underline"
+              >
+                Update
+              </button>
+            </td>
+            } }
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="flex justify-center items-center mt-2.5 p-5">
+      <pagination-controls
+        (pageChange)="p = $event"
+        [maxSize]="maxSize"
+        [responsive]="true"
+        class="pagination"
+      ></pagination-controls>
+    </div>
+  </div>
+</main>

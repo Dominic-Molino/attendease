@@ -29,6 +29,7 @@
     "@fullcalendar/timegrid": "^6.1.11",
     "chart.js": "^4.4.3",
     "flowbite": "^2.3.0",
+    "ngx-pagination": "^6.0.3",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.0",
     "rxjs": "~7.8.0",
