@@ -73,10 +73,10 @@ export class BlockComponent implements OnInit {
         {
           data: data,
           backgroundColor: [
-            documentStyle.getPropertyValue('--brown'),
-            documentStyle.getPropertyValue('--beige'),
-            documentStyle.getPropertyValue('--shade'),
-            documentStyle.getPropertyValue('--sage'),
+            documentStyle.getPropertyValue('--stone-900'),
+            documentStyle.getPropertyValue('--stone-800'),
+            documentStyle.getPropertyValue('--stone-700'),
+            documentStyle.getPropertyValue('--stone-600'),
           ],
         },
       ],

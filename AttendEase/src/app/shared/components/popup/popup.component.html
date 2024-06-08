@@ -4,9 +4,7 @@
       <div
         class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
       >
-        <h3
-          class="text-2xl font-semibold font-primary text-gray-900 dark:text-white"
-        >
+        <h3 class="text-2xl font-semibold text-dark-text dark:text-white">
           {{ data.event_name }}
         </h3>
         <button
@@ -42,9 +40,7 @@
 
       <!-- modal body -->
       <div class="p-4 md:p-5 space-y-4">
-        <p
-          class="text-base font-secondary leading-relaxed text-gray-500 dark:text-gray-400"
-        >
+        <p class="text-lg leading-relaxed text-gray-500 dark:text-gray-400">
           {{ data.event_description }}
         </p>
 
@@ -74,9 +70,7 @@
             />
           </svg>
 
-          <p
-            class="text-base font-secondary leading-relaxed text-gray-500 dark:text-gray-400"
-          >
+          <p class="text-sm leading-relaxed text-gray-500">
             Location: {{ data.event_location }}
           </p>
         </div>
@@ -100,23 +94,19 @@
             />
           </svg>
 
-          <p
-            class="text-base font-secondary leading-relaxed text-gray-500 dark:text-gray-400 ms-1"
-          >
+          <p class="text-sm leading-relaxed text-gray-500 ms-1">
             Start Date:
             {{ data.event_start_date | date : "MMM d, y, h:mm a" }}
           </p>
           <span class="ms-1"> - </span>
-          <p
-            class="text-base leading-relaxed text-gray-500 dark:text-gray-400 ms-1"
-          >
+          <p class="text-sm leading-relaxed text-gray-500 ms-1">
             {{ data.event_end_date | date : "MMM d, y, h:mm a" }}
           </p>
         </div>
 
         <div class="flex items-center my-2.5">
           <svg
-            class="w-6 h-6 inline flex-shrink-0 text-gray-800 dark:text-white"
+            class="w-6 h-6 inline flex-shrink-0 text-gray-800"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -132,23 +122,19 @@
               d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
             />
           </svg>
-          <p
-            class="text-base font-secondary leading-relaxed text-gray-500 dark:text-gray-400 ms-1"
-          >
+          <p class="text-sm leading-relaxed text-gray-500 ms-1">
             Registration Date:
             {{ data.event_registration_start | date : "MMM d, y, h:mm a" }}
           </p>
           <span class="ms-1"> - </span>
-          <p
-            class="text-base leading-relaxed text-gray-500 dark:text-gray-400 ms-1"
-          >
+          <p class="text-sm leading-relaxed text-gray-500 ms-1">
             {{ data.event_registration_end | date : "MMM d, y, h:mm a" }}
           </p>
         </div>
 
         <div class="flex items-center my-2.5">
           <svg
-            class="w-6 h-6 inline flex-shrink-0 text-gray-800 dark:text-white"
+            class="w-6 h-6 inline flex-shrink-0 text-gray-800"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -164,16 +150,14 @@
               d="M11 9H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h6m0-6v6m0-6 5.419-3.87A1 1 0 0 1 18 5.942v12.114a1 1 0 0 1-1.581.814L11 15m7 0a3 3 0 0 0 0-6M6 15h3v5H6v-5Z"
             />
           </svg>
-          <p
-            class="text-base font-secondary leading-relaxed text-gray-500 dark:text-gray-400 ms-1"
-          >
+          <p class="text-sm leading-relaxed text-gray-500 ms-1">
             Mode: {{ data.session }}
           </p>
         </div>
 
         <!-- <div class="flex items-center my-2.5">
           <svg
-            class="w-6 h-6 inline flex-shrink-0 text-gray-800 dark:text-white"
+            class="w-6 h-6 inline flex-shrink-0 text-gray-800 "
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -198,7 +182,7 @@
           </svg>
 
           <p
-            class="text-base font-secondaryleading-relaxed text-gray-500 dark:text-gray-400 ms-1"
+            class="text-sm font-secondaryleading-relaxed text-gray-500 dark:text-gray-400 ms-1"
           >
             Status: {{ eventWithStatus.status | titlecase }}
           </p>
@@ -223,7 +207,7 @@
           </svg>
 
           <p
-            class="text-base font-secondary leading-relaxed text-gray-500 dark:text-gray-400 ms-1"
+            class="text-sm leading-relaxed text-gray-500 dark:text-gray-400 ms-1"
           >
             Max Participants: {{ data.max_attendees }}
           </p>

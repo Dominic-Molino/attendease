@@ -1,4 +1,4 @@
-<section class="w-full h-screen bg-beige">
+<section class="w-full h-screen bg-white">
   <div
     class="flex max-md:flex-col-reverse flex-row justify-center items-center h-screen w-full px-52 relative z-20 max-sm:p-1"
   >
@@ -14,44 +14,39 @@
         (submit)="loginStudent()"
         class="max-w-sm mx-auto sm:w-full"
       >
+        <h2 class="font-primary text-dark-text text-wrap text-center my-3.5">
+          Enter your email and password to login to your account
+        </h2>
         <!-- email -->
-        <div class="relative z-0 w-full mb-5 group">
+        <div class="mb-5">
           <input
             formControlName="email"
             type="email"
             name="email"
             id="email"
-            class="block px-0 w-full text-sm text-black-rich_black bg-transparent border-0 border-b-2 border-ivy appearance-non focus:outline-none focus:ring-0 focus:border-serpentine peer rounded-sm"
-            placeholder=""
+            class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-dark-input block w-full p-2.5"
+            placeholder="Domain Email"
+            required
           />
-          <label
-            for="email"
-            class="text-nowrap peer-focus:font-medium font-primary absolute text-sm text-black-rich_black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-black-midnight_blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Domain Email</label
-          >
         </div>
 
         <!-- password -->
-        <div class="relative z-0 w-full mb-5 group">
+        <div class="mb-5">
           <input
             formControlName="password"
             type="password"
             name="password"
             id="password"
-            class="block py-2.5 px-0 w-full text-sm text-black-rich_black bg-transparent border-0 border-b-2 border-ivy appearance-non focus:outline-none focus:ring-0 focus:border-serpentine peer rounded-sm"
-            placeholder=""
+            class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-dark-input block w-full p-2.5"
+            required
+            placeholder="Password"
           />
-          <label
-            for="password"
-            class="peer-focus:font-medium font-primary absolute text-sm text-black-rich_black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-black-midnight_blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Password</label
-          >
         </div>
 
         <div class="flex w-full justify-center">
           <button
             type="submit"
-            class="text-white font-semibold mx-auto block md:w-[50%] bg-ivy hover:bg-serpentine focus:outline-none rounded-xl text-sm sm:w-auto px-5 py-2.5 text-center"
+            class="text-white font-semibold mx-auto block md:w-[50%] bg-dark-background hover:bg-dark-foreground focus:outline-none rounded-md text-sm sm:w-auto px-5 py-2.5 text-center shadow-md"
           >
             Login
           </button>
@@ -61,7 +56,7 @@
           <p class="text-center text-sm py-0 font-primary">
             Don't have an account?
             <a
-              class="text-ivy font-semibold hover:text-serpentine"
+              class="text-dark-background font-semibold hover:text-dark-foreground"
               routerLink="/signup"
               >Signup here</a
             >
@@ -80,7 +75,7 @@
         <h1
           class="text-center text-4xl -mt-20 font-primary font-bold text-black"
         >
-          Attend<span class="text-serpentine">Ease</span>
+          AttendEase
         </h1>
       </div>
     </div>

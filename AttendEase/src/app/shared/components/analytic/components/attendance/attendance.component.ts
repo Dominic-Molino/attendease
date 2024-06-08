@@ -29,10 +29,7 @@ export class AttendanceComponent implements OnInit {
   data: any;
   options: any;
 
-  constructor(
-    private dataService: DataAnalyticsService,
-    private eventService: EventService
-  ) {}
+  constructor(private eventService: EventService) {}
 
   ngOnInit(): void {
     this.eventService.getAllEvents().subscribe((res) => {
@@ -62,7 +59,7 @@ export class AttendanceComponent implements OnInit {
           {
             barThickness: 20,
             label: 'Events',
-            backgroundColor: '#b99470',
+            backgroundColor: '#09090b',
             borderRadius: 15,
             data: [ongoing, done, upcoming],
           },

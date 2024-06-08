@@ -42,14 +42,17 @@ table {
 }
 
 .pagination ::ng-deep .ngx-pagination .current {
-  background-color: #333;
+  background-color: #09090b;
   border-radius: 100%;
   padding: 2.5px 10px;
   display: inline-flex;
   justify-self: center;
+  color: #fff;
 }
 
 .pagination ::ng-deep .ngx-pagination li :hover {
-  background-color: #555;
+  background-color: #27272a;
   border-radius: 100%;
+  color: #fff;
 }
+  

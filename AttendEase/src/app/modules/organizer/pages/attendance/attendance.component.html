@@ -2,7 +2,7 @@
   <div class="p-4 mt-16 sm:ml-64">
     <div>
       <p
-        class="font-secondary mb-2 text-custom_black text-2xl tracking-wide font-bold"
+        class="font-secondary mb-2 text-black text-2xl tracking-wide font-bold"
       >
         Mark Attendance
       </p>
@@ -10,13 +10,11 @@
     </div>
 
     @if(eventList && eventList.length > 0 ){
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <table
-        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-      >
-        <thead
-          class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-        >
+    <div
+      class="relative overflow-x-auto shadow-md rounded-md border-dark-border border"
+    >
+      <table class="w-full text-sm text-left rtl:text-right text-gray-50">
+        <thead class="text-xs text-gray-700 uppercase bg-dark-primary">
           <tr>
             <th scope="col" class="px-6 py-3">
               <span class="sr-only">Image</span>
@@ -32,19 +30,14 @@
               let event of eventList
                 | paginate : { itemsPerPage: itemsPerPage, currentPage: p }
             "
-            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+            class="bg-white border-b border-dark-border"
           >
             <td class="w-16 md:w-32 h-12 max-w-full max-h-full">
               <img
-                *ngIf="event.event_image; else placeholder"
+                *ngIf="event.event_image"
                 [src]="event.event_image"
                 class="w-16 md:w-32 h-16 max-w-full max-h-full object-contain"
               />
-              <ng-template #placeholder>
-                <div
-                  class="w-16 md:w-32 h-12 max-w-full max-h-full bg-gray-50 rounded-sm"
-                ></div>
-              </ng-template>
             </td>
             <td class="font-semibold text-gray-900 dark:text-white text-left">
               {{ event.event_name }}
@@ -66,12 +59,12 @@
                 {{ event.status | titlecase }}
               </span>
             </td>
-            <td>
+            <td class="p-2">
               <button
                 type="button"
                 (click)="viewEvent(event.event_id)"
                 [disabled]="event.status !== 'done'"
-                class="py-2.5 px-5 text-sm block mx-auto text-white font-bold font-secondary rounded-md bg-ivy hover:bg-serpentine"
+                class="py-2.5 px-5 text-sm block mx-auto cursor-pointer text-white font-bold font-secondary rounded-md bg-dark-background hover:bg-dark-foreground"
               >
                 View Submissions
               </button>

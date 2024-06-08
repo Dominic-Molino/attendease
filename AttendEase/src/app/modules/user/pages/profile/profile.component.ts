@@ -74,16 +74,12 @@ export class ProfileComponent implements OnInit {
             const url = URL.createObjectURL(blob);
             this.avatarUrl = this.sanitizer.bypassSecurityTrustUrl(url);
           } else {
-            console.log('User has not uploaded an avatar yet.');
             this.avatarUrl = undefined;
           }
         },
         (error) => {
           if (error.status === 404) {
-            console.log('No avatar found for the user.');
             this.avatarUrl = undefined;
-          } else {
-            console.error('Failed to load avatar:', error);
           }
         }
       );

@@ -23,9 +23,7 @@ export class ComparingEventsComponent implements OnInit {
 
   ngOnInit(): void {
     this.service.getAllEventAttendees().subscribe((res) => {
-      console.log(res.payload);
       const events: Event[] = res.payload;
-      console.log(`Events HERE:  ${events}`);
 
       const eventLabels: string[] = [];
       const attendeeCounts: number[] = [];
@@ -45,7 +43,7 @@ export class ComparingEventsComponent implements OnInit {
         datasets: [
           {
             label: 'Number of Attendees',
-            backgroundColor: '#b99470',
+            backgroundColor: '#09090b',
             barThickness: 20,
             borderRadius: 15,
             data: attendeeCounts,

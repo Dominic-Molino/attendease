@@ -82,4 +82,8 @@ export class EditEventComponent implements OnInit {
       Swal.fire('Failed', 'Failed to update event!', 'error');
     }
   }
+
+  closeDialog() {
+    this.dialog.close();
+  }
 }

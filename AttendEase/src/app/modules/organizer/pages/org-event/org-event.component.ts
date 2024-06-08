@@ -4,14 +4,11 @@ import { AddEventComponent } from '../../components/add-event/add-event.componen
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DeleteEventComponent } from '../../components/delete-event/delete-event.component';
 import { EditEventComponent } from '../../components/edit-event/edit-event.component';
-import { ReadEventComponent } from '../../components/read-event/read-event.component';
 import { EventService } from '../../../../core/service/event.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
 import { initFlowbite } from 'flowbite';
 import { CalendarComponent } from '../../../../shared/components/calendar/calendar.component';
-import { TableModule } from 'primeng/table';
-import { PaginatorModule } from 'primeng/paginator';
 import { Observable } from 'rxjs';
 import { NgxPaginationModule } from 'ngx-pagination';
 
@@ -159,17 +156,11 @@ export class OrgEventComponent implements OnInit {
     this.selectedEventId = eventId;
     const modal = this.dialog.open(EditEventComponent, {
       data: { event_id: this.selectedEventId },
+      disableClose: true,
       width: '50%',
     });
     modal.afterClosed().subscribe((response) => {
       this.loadEvent();
-    });
-  }
-
-  viewEvent(event: any) {
-    this.dialog.open(ReadEventComponent, {
-      data: { event },
-      width: '50%',
     });
   }
 

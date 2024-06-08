@@ -1,9 +1,9 @@
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full p-5">
   <div
     *ngFor="let data of datalist"
-    class="grid grid-cols-2 bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+    class="grid grid-cols-2 bg-white border border-dark-border rounded-md shadow md:flex-row"
   >
-    <div *ngIf="imageUrl" class="col-span-1 w-full border-r border-serpentine">
+    <div *ngIf="imageUrl" class="col-span-1 w-full border-r border-dark-border">
       <img
         class="object-cover w-full rounded-t-lg h-72 md:h-72 md:rounded-none md:rounded-s-lg"
         [src]="imageUrl"
@@ -11,9 +11,7 @@
     </div>
     <div class="flex flex-col justify-center items-start">
       <div class="flex flex-col justify-between p-4 leading-normal">
-        <h5
-          class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
-        >
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
           <p *ngIf="data.remarks > 0" class="text-green-600 font-secondary">
             Remarks: APPROVED
           </p>
@@ -28,7 +26,7 @@
       <div class="flex justify-end self-end pr-10">
         <button
           (click)="approveAttendance(data.attendance_id, data.remarks)"
-          class="bg-ivy hover:bg-serpentine text-white text-sm font-semibold font-secondary shadow-sm rounded-md py-2 px-6 relative -bottom-3.5"
+          class="bg-dark-background hover:bg-dark-foreground text-white text-sm font-semibold font-secondary shadow-sm rounded-md py-2 px-6 relative -bottom-3.5"
         >
           <p *ngIf="data.remarks == 0">APPROVE</p>
           <p *ngIf="data.remarks > 0">DISAPPROVE</p>

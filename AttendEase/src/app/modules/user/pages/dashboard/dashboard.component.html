@@ -1,16 +1,12 @@
-<main class="w-full bg-beige">
+<main class="w-full">
   <div class="p-4 mt-16 sm:ml-64">
     <div>
-      <p
-        class="font-secondary mb-2 text-custom_black text-2xl tracking-wide font-bold"
-      >
-        Dashboard
-      </p>
-      <hr class="h-px mb-6 bg-serpentine border-0 dark:bg-gray-700" />
+      <p class="mb-2 text-black text-2xl tracking-wide font-bold">Dashboard</p>
+      <hr class="h-px mb-6 bg-dark-border border-0" />
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
       <div
-        class="lg:w-full md:col-span-1 border border-gray-200 shadow-lg rounded-md p-10 bg-gray-50"
+        class="lg:w-full md:col-span-1 border border-gray-200 shadow-md rounded-md p-10 bg-gray-50"
       >
         <!-- calendar here -->
         <app-calendar class="sm:max-w-[400px]"></app-calendar>
@@ -18,32 +14,38 @@
 
       <div class="grid-col-2 grid-flow-row">
         <div
-          class="max-w-full max-h-80 bg-linen rounded-lg shadow-md p-4 dark:bg-gray-800 dark:border-gray-700"
+          class="max-w-full max-h-96 bg-white border border-dark-border rounded-md shadow-md p-4"
         >
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center">
-              <span class="text-xl me-1 font-bold leading-none text-black">
+              <span class="text-xl me-1 font-bold leading-none text-dark-text">
                 Registered Events
               </span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                fill="none"
+                width="24"
+                height="24"
                 viewBox="0 0 24 24"
-                stroke-width="1.5"
+                fill="none"
                 stroke="currentColor"
-                class="w-6 h-6 text-black"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-calendar-check-2"
               >
+                <path d="M8 2v4" />
+                <path d="M16 2v4" />
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
+                  d="M21 14V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8"
                 />
+                <path d="M3 10h18" />
+                <path d="m16 20 2 2 4-4" />
               </svg>
             </div>
 
             <button
               (click)="onClickButton()"
-              class="text-sm font-medium text-serpentine hover:underline"
+              class="text-sm font-medium text-dark-text hover:underline"
             >
               View all
             </button>
@@ -51,14 +53,14 @@
 
           <div
             *ngIf="events && events.length > 0; else noEventsMessage"
-            class="relative overflow-x-auto shadow-md sm:rounded-lg max-h-52 overflow-y-auto border border-gray-200"
+            class="relative overflow-x-auto rounded-md overflow-y-auto border max-h-72 border-gray-200"
           >
             <table
-              class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+              class="w-full text-sm text-left rtl:text-right text-gray-500"
             >
               <!-- header -->
               <thead
-                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0 z-10"
+                class="text-xs text-gray-700 uppercase bg-dark-primary border-b border-dark-border sticky top-0 z-10"
               >
                 <tr>
                   <th scope="col" class="px-6 py-3">Event Name</th>
@@ -70,11 +72,11 @@
               <tbody>
                 <tr
                   *ngFor="let event of events; let i = index"
-                  class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                  class="bg-white border-b border-dark-border"
                 >
                   <td
                     scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                   >
                     {{ event.event_name }}
                   </td>
@@ -82,7 +84,7 @@
                   <div class="flex items-center">
                     <td class="py-4">
                       <span
-                        class="flex items-center text-sm font-normal text-gray-900 dark:text-white me-3"
+                        class="flex items-center text-sm font-normal text-gray-900 me-3"
                       >
                         <span
                           *ngIf="event.eventState === 'upcoming'"
@@ -106,16 +108,18 @@
           </div>
         </div>
 
-        <div class="relative overflow-x-auto mt-2 shadow-md sm:rounded-lg">
-          <div class="w-full bg-white shadow-lg rounded-sm">
+        <div
+          class="relative overflow-x-auto mt-2 shadow-md border border-dark-border rounded-md"
+        >
+          <div class="w-full bg-white shadow-md rounded-sm">
             <div
-              class="w-full text-sm rounded-lg text-left rtl:text-right text-gray-500 dark:text-gray-400"
+              class="w-full text-sm rounded-lg text-left rtl:text-right text-gray-500"
             >
               <table
-                class="w-full text-sm text-left rtl:text-right rounded-b-lg text-gray-500 dark:text-gray-400"
+                class="w-full text-sm text-left rtl:text-right rounded-b-lg text-gray-500"
               >
                 <thead
-                  class="text-xs text-black uppercase bg-linen dark:bg-gray-700 dark:text-gray-400"
+                  class="text-xs text-black uppercase bg-dark-primary border-b border-dark-border"
                 >
                   <tr>
                     <th scope="col" class="px-6 py-3">Status</th>
@@ -123,12 +127,10 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr
-                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                  >
+                  <tr class="bg-white border-b">
                     <td class="p-2">
                       <span
-                        class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"
+                        class="flex items-center text-sm font-medium text-gray-900 me-3"
                         ><span
                           class="flex items-center w-2.5 h-2.5 bg-blue-600 rounded-full me-1.5 flex-shrink-0"
                         >
@@ -141,12 +143,10 @@
                       currently being held and will end soon
                     </td>
                   </tr>
-                  <tr
-                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                  >
+                  <tr class="bg-white border-b">
                     <td class="p-2">
                       <span
-                        class="flex items-center font-medium text-sm text-gray-900 dark:text-white me-3"
+                        class="flex items-center font-medium text-sm text-gray-900 me-3"
                         ><span
                           class="flex items-center w-2.5 h-2.5 bg-green-500 rounded-full me-1.5 flex-shrink-0"
                         >
@@ -162,7 +162,7 @@
                   <tr>
                     <td class="p-2">
                       <span
-                        class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"
+                        class="flex items-center text-sm font-medium text-gray-900 me-3"
                         ><span
                           class="flex items-center w-2.5 h-2.5 bg-yellow-300 rounded-full me-1.5 flex-shrink-0"
                         >

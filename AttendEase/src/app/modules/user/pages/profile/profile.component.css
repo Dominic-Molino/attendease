@@ -64,7 +64,7 @@ table {
   height: 40px;
   width: 40px;
   padding: 0.35rem;
-  background-color: #283106;
+  background-color: #09090b;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -84,4 +84,8 @@ table {
   input[type="file"] {
     display: none;
   }
+}
+
+.icon-wrapper label:hover {
+  background-color: #27272a;
 }

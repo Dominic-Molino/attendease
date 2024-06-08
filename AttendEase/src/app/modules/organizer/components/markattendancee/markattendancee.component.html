@@ -1,15 +1,13 @@
 <div class="relative overflow-x-auto">
   <div class="max-h-96 h-96 over">
     <div
-      class="flex items-center justify-between p-2.5 md:p-3.5 border-b rounded-t dark:border-gray-600"
+      class="flex items-center justify-between p-2.5 md:p-3.5 border-b rounded-t"
     >
-      <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-        Attendees Submissions
-      </h3>
+      <h3 class="text-xl font-semibold text-gray-900">Attendees Submissions</h3>
       <button
         (click)="closeDialog()"
         type="button"
-        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
         data-modal-hide="default-modal"
       >
         <svg
@@ -30,12 +28,8 @@
         <span class="sr-only">Close modal</span>
       </button>
     </div>
-    <table
-      class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-    >
-      <thead
-        class="text-xs text-white uppercase bg-ivy dark:bg-gray-700 dark:text-gray-400"
-      >
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+      <thead class="text-xs text-dark-text uppercase bg-dark-primary">
         <tr>
           <th scope="col" class="px-6 py-3 text-center">Student Name</th>
           <th scope="col" class="px-6 py-3 text-center">Program</th>
@@ -44,10 +38,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let data of datalist"
-          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-        >
+        <tr *ngFor="let data of datalist" class="bg-white border-b">
           <td class="text-center">
             {{ data.first_name }} {{ data.last_name }}
           </td>
@@ -60,7 +51,7 @@
           <td class="px-6 py-4 text-center">
             <button
               (click)="viewAttendances(data.user_id)"
-              class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+              class="font-medium text-dark-text hover:underline"
             >
               View Submissions
             </button>
