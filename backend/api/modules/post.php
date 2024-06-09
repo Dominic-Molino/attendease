@@ -300,68 +300,9 @@ class Post extends GlobalMethods
 
     private function incrementAttendanceCount($event_id)
     {
-        $sql = "UPDATE Events SET attendance_count = attendance_count + 1 WHERE Event_Id = ?";
+        $sql = "UPDATE events SET attendance_count = attendance_count + 1 WHERE event_id = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id]);
-    }
-
-    public function add_event_feedback($data)
-    {
-        if (!isset($data->event_id, $data->user_id, $data->Feedback_Given)) {
-            error_log("Incomplete feedback data. Please provide event_id, user_id, and Feedback_Given.");
-            return $this->sendPayload(null, 'failed', "Incomplete feedback data. Please provide event_id, user_id, and Feedback_Given.", 400);
-        }
-
-        $event_id = $data->event_id;
-        $user_id = $data->user_id;
-        $feedback_given = $data->feedback_given;
-
-        $sql = "SELECT COUNT(*) AS count 
-            FROM event_registration 
-            WHERE event_id = ? AND user_id = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$event_id, $user_id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($row['count'] == 0) {
-            error_log("User is not registered for the event. Event ID: $event_id, User ID: $user_id");
-            return $this->sendPayload(null, 'failed', "You are not registered for this event.", 400);
-        }
-
-        $sql = "SELECT COUNT(*) AS count 
-            FROM attendance 
-            WHERE event_id = ? AND user_id = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$event_id, $user_id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($row['count'] == 0) {
-            error_log("User has not attended the event. Event ID: $event_id, User ID: $user_id");
-            return $this->sendPayload(null, 'failed', "You have not attended this event.", 400);
-        }
-
-        $sql = "INSERT INTO feedback (event_id, user_id, feedback_given) VALUES (?, ?, ?)";
-        try {
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$event_id, $user_id, $feedback_given]);
-
-            if ($stmt->rowCount() > 0) {
-                $this->markFeedbackGiven($event_id, $user_id);
-                return $this->sendPayload(null, 'success', "Feedback added successfully.", 200);
-            } else {
-                return $this->sendPayload(null, 'failed', "Failed to add feedback.", 500);
-            }
-        } catch (PDOException $e) {
-            error_log("Database error: " . $e->getMessage());
-            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
-        }
-    }
-
-    private function markFeedbackGiven($event_id, $user_id)
-    {
-        $sql = "UPDATE event_registration SET feedback_given = 1 WHERE event_id = ? AND user_id = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$event_id, $user_id]);
     }
 
     public function edit_event($data, $event_id)
@@ -482,11 +423,8 @@ class Post extends GlobalMethods
         return $this->sendPayload(null, "failed", $errmsg, $code);
     }
 
-
     public function toggleAttendanceRemark($submissionId, $newRemark)
     {
-
-
         $sql = "UPDATE attendance SET remarks = ? WHERE attendance_id = ?";
         try {
             $stmt = $this->pdo->prepare($sql);
@@ -495,6 +433,53 @@ class Post extends GlobalMethods
         } catch (PDOException $e) {
             $errmsg = $e->getMessage();
             return $this->sendPayload(null, "failed", $errmsg, 400);
+        }
+    }
+
+    public function add_event_feedback($data)
+    {
+        if (!isset($data->event_id, $data->user_id, $data->feedback_text)) {
+            return $this->sendPayload(null, 'failed', "Incomplete feedback data. Please provide event_id, user_id, and feedback_given.", 400);
+        }
+
+        $event_id = $data->event_id;
+        $user_id = $data->user_id;
+        $feedback_text = $data->feedback_text;
+
+        // Check if the event has ended
+        $sql = "SELECT event_end_date FROM events WHERE event_id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$event_id]);
+        $event = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (strtotime($event['event_end_date']) > time()) {
+            return $this->sendPayload(null, 'failed', "Feedback submission is only allowed after the event has ended.", 400);
+        }
+
+        // Check if the user is registered for the event
+        $sql = "SELECT COUNT(*) AS count FROM event_registration WHERE event_id = ? AND user_id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$event_id, $user_id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row['count'] == 0) {
+            return $this->sendPayload(null, 'failed', "You are not registered for this event.", 400);
+        }
+
+        // Insert the feedback into the database
+        $sql = "INSERT INTO feedback (event_id, user_id, feedback_text) VALUES (?, ?, ?)";
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$event_id, $user_id, $feedback_text]);
+
+            if ($stmt->rowCount() > 0) {
+                return $this->sendPayload(null, 'success', "Feedback added successfully.", 200);
+            } else {
+                return $this->sendPayload(null, 'failed', "Failed to add feedback.", 500);
+            }
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
 }

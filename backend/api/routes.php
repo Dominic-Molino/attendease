@@ -262,12 +262,12 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($post->toggleAttendanceRemark($data->attendance_id, $data->newRemark));
                 break;
 
-            case 'addfeedback':
-                echo json_encode($post->add_event_feedback($data));
-                break;
-
             case 'uploadattendanceimage':
                 echo json_encode($post->uploadAttendanceImage($request[1], $request[2]));
+                break;
+
+            case 'addfeedback':
+                echo json_encode($post->add_event_feedback($data->event_id, $data->user_id));
                 break;
 
             default:
