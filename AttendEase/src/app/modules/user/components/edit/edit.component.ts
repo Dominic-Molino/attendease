@@ -20,12 +20,13 @@ export class EditComponent implements OnInit {
   constructor(
     private service: AuthserviceService,
     private builder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialog: MatDialogRef<EditComponent>
+    private dialog: MatDialogRef<EditComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
   user_id = this.service.getCurrentUserId();
   studentInfo: any = '';
+
   editForm = this.builder.group({
     first_name: this.builder.control(''),
     last_name: this.builder.control(''),

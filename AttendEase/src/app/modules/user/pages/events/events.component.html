@@ -11,14 +11,9 @@
         class="flex items-center flex-col"
         *ngIf="eventList && eventList.length"
       >
-        <!-- latest -->
-        <div class="flex justify-start w-full items-center mb-2">
-          <!-- <h3 class="text-lg  font-medium">Upcoming Event</h3> -->
-        </div>
-
         <div
           *ngIf="eventList.length > 0"
-          class="rounded-md shadow-md border border-dark-border container bg-white"
+          class="rounded-md shadow-md border border-dark-border container bg-white hover:bg-dark-muted"
         >
           <div
             class="p-3.5 md:h-80 flex flex-col md:flex-row w-full items-center"
@@ -35,7 +30,7 @@
                 class="rounded-sm object-cover object-center max-h-72 w-full border border-dark-border"
               />
 
-              <ng-template #placeholder class="border border-dark-border">
+              <ng-template #placeholder class="border-2 border-dark-border">
                 <svg
                   width="100%"
                   height="288px"
@@ -212,15 +207,11 @@
           </div>
         </div>
 
-        <!-- other -->
-        <div class="flex justify-start w-full items-center mt-5 mb-2">
-          <!-- <h3 class="text-lg  font-medium">Other Events</h3> -->
-        </div>
         <!-- grid cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-5">
           <div
             *ngFor="let event of eventList.slice(0, -1)"
-            class="rounded-md border border-dark-border shadow-md container p-3.5 mb-5 bg-white flex flex-col h-full"
+            class="rounded-md border border-dark-border shadow-md container p-3.5 mb-5 bg-white flex flex-col h-full hover:bg-dark-muted"
           >
             <div class="flex flex-col flex-grow">
               <div class="rounded-md overflow-hidden max-h-44">

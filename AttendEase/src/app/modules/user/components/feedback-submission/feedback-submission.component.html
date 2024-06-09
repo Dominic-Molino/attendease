@@ -1,0 +1,121 @@
+<form [formGroup]="feedbackForm">
+  <!-- Section 1: Overall Satisfaction -->
+  <div class="form-group">
+    <label
+      >1. How would you rate your overall satisfaction with the event?</label
+    >
+    <div class="radio-group">
+      <label>
+        <input type="radio" formControlName="overallSatisfaction" value="5" />
+        Very satisfied
+      </label>
+      <label>
+        <input type="radio" formControlName="overallSatisfaction" value="4" />
+        Satisfied
+      </label>
+      <label>
+        <input type="radio" formControlName="overallSatisfaction" value="3" />
+        Neutral
+      </label>
+      <label>
+        <input type="radio" formControlName="overallSatisfaction" value="2" />
+        Dissatisfied
+      </label>
+      <label>
+        <input type="radio" formControlName="overallSatisfaction" value="1" />
+        Very dissatisfied
+      </label>
+    </div>
+  </div>
+
+  <!-- Section 2: Content and Presentations -->
+  <div class="form-group">
+    <label
+      >2. How would you rate the quality and relevance of the content
+      presented?</label
+    >
+    <div class="radio-group">
+      <label>
+        <input type="radio" formControlName="contentQuality" value="5" />
+        Excellent
+      </label>
+      <label>
+        <input type="radio" formControlName="contentQuality" value="4" /> Good
+      </label>
+      <label>
+        <input type="radio" formControlName="contentQuality" value="3" />
+        Average
+      </label>
+      <label>
+        <input type="radio" formControlName="contentQuality" value="2" /> Fair
+      </label>
+      <label>
+        <input type="radio" formControlName="contentQuality" value="1" /> Poor
+      </label>
+    </div>
+  </div>
+
+  <!-- Section 3: Speakers and Presenters -->
+  <div class="form-group">
+    <label for="speakerEffectiveness"
+      >3. How would you rate the effectiveness of the
+      speakers/presenters?</label
+    >
+    <select id="speakerEffectiveness" formControlName="speakerEffectiveness">
+      <option value="5">Excellent</option>
+      <option value="4">Good</option>
+      <option value="3">Average</option>
+      <option value="2">Fair</option>
+      <option value="1">Poor</option>
+    </select>
+  </div>
+
+  <!-- Section 4: Venue and Facilities -->
+  <div class="form-group">
+    <label for="venueRating"
+      >4. How would you rate the venue in terms of accessibility and suitability
+      for the event?</label
+    >
+    <select id="venueRating" formControlName="venueRating">
+      <option value="5">Excellent</option>
+      <option value="4">Good</option>
+      <option value="3">Average</option>
+      <option value="2">Fair</option>
+      <option value="1">Poor</option>
+    </select>
+  </div>
+
+  <!-- Section 5: Organization and Logistics -->
+  <div class="form-group">
+    <label for="logisticsRating"
+      >5. How would you rate the organization and logistics of the event?</label
+    >
+    <select id="logisticsRating" formControlName="logisticsRating">
+      <option value="5">Excellent</option>
+      <option value="4">Good</option>
+      <option value="3">Average</option>
+      <option value="2">Fair</option>
+      <option value="1">Poor</option>
+    </select>
+  </div>
+
+  <!-- Section 7: Suggestions for Improvement -->
+  <div class="form-group">
+    <label for="improvementSuggestions">7. Suggestions for Improvement:</label>
+    <textarea
+      id="improvementSuggestions"
+      formControlName="improvementSuggestions"
+    ></textarea>
+  </div>
+
+  <!-- Section 9: Additional Comments -->
+  <div class="form-group">
+    <label for="additionalComments">9. Additional Comments:</label>
+    <textarea
+      id="additionalComments"
+      formControlName="additionalComments"
+    ></textarea>
+  </div>
+
+  <button type="submit">Submit Feedback</button>
+</form>

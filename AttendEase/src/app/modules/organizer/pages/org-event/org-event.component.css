@@ -24,23 +24,6 @@ table {
   background-image: url("../../../../../assets/images/event_placeholder.png");
 }
 
-.emoji-404 {
-  position: relative;
-  animation: mymove 2.5s infinite;
-}
-
-@keyframes mymove {
-  33% {
-    top: 0px;
-  }
-  66% {
-    top: 20px;
-  }
-  100% {
-    top: 0px;
-  }
-}
-
 .pagination ::ng-deep .ngx-pagination .current {
   background-color: #09090b;
   border-radius: 100%;
@@ -50,9 +33,11 @@ table {
   color: #fff;
 }
 
-.pagination ::ng-deep .ngx-pagination li :hover {
-  background-color: #27272a;
-  border-radius: 100%;
-  color: #fff;
+.pagination ::ng-deep .ngx-pagination li {
+  border-radius: 25px;
+  margin: 0 2px;
 }
-  
+
+.pagination ::ng-deep .ngx-pagination li :hover {
+  border-radius: 25px;
+}

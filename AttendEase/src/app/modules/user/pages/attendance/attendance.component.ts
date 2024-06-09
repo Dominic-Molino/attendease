@@ -59,18 +59,16 @@ export class AttendanceComponent {
             } else {
               event.eventState = 'upcoming';
             }
-
             return event;
           });
+
+          this.events = this.events.filter(
+            (event) => event.eventState === 'done'
+          );
 
           this.events.forEach((event) => {
             this.getUserAttendanceRemark(event.event_id);
           });
-        } else {
-          console.error(
-            'Failed to retrieve user events:',
-            res ? res.message : 'Unknown error'
-          );
         }
       },
       (error) => {
@@ -86,12 +84,12 @@ export class AttendanceComponent {
           const attendance = res.payload[0];
           this.attendanceRemarks[eventId] = attendance.remarks;
         } else {
-          this.attendanceRemarks[eventId] = -1; // Default message if no remarks
+          this.attendanceRemarks[eventId] = -1;
         }
       },
       (error) => {
         console.error('Error fetching attendance remark:', error);
-        this.attendanceRemarks[eventId] = -1; // Error message
+        this.attendanceRemarks[eventId] = -1;
       }
     );
   }

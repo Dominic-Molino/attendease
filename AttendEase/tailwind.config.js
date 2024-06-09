@@ -13,6 +13,8 @@ module.exports = {
           border: "#e4e4e7",
           input: "#27272a",
           text: "#71717a",
+          // for bg
+          muted: "#fafafa",
         },
       },
       backgroundColor: (theme) => theme("colors"),

@@ -6,6 +6,7 @@ import { PreviewComponent } from '../../components/preview/preview.component';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { EventService } from '../../../../core/service/event.service';
 import { Observable, of, switchMap } from 'rxjs';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 interface Event {
   event_id: number;
@@ -24,21 +25,22 @@ interface Event {
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [CommonModule, MatDialogModule],
+  imports: [CommonModule, MatDialogModule, NgxPaginationModule],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css',
 })
 export class EventsComponent implements OnInit {
+  eventData: any;
+  maxChar: number = 100;
+  eventList: Event[] = [];
+
+
   constructor(
     private dialog: MatDialog,
     private service: AuthserviceService,
     private sanitizer: DomSanitizer,
     private eventService: EventService
   ) {}
-
-  eventData: any;
-  maxChar: number = 100;
-  eventList: Event[] = [];
 
   ngOnInit(): void {
     this.service.getAllEvents().subscribe((result) => {
