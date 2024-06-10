@@ -403,7 +403,6 @@ class Post extends GlobalMethods
     {
         $fileData = file_get_contents($_FILES["file"]["tmp_name"]);
 
-        // $sql = "INSERT INTO attendance SET image = ? WHERE event_id = $event_id AND user_id = $user_id";
         $sql = "INSERT INTO attendance (user_id, event_id, image) VALUES (?, ?, ?)";
         try {
             $stmt = $this->pdo->prepare($sql);
@@ -436,15 +435,20 @@ class Post extends GlobalMethods
         }
     }
 
-    public function add_event_feedback($data)
+    public function add_event_feedback($event_id, $user_id, $data)
     {
-        if (!isset($data->event_id, $data->user_id, $data->feedback_text)) {
-            return $this->sendPayload(null, 'failed', "Incomplete feedback data. Please provide event_id, user_id, and feedback_given.", 400);
+        if (!isset($data->overall_satisfaction) || !isset($data->content_quality) || !isset($data->speaker_effectiveness) || !isset($data->venue_rating) || !isset($data->logistics_rating)) {
+            return $this->sendPayload(null, 'failed', "Incomplete feedback data. Please provide overall_satisfaction, content_quality, speaker_effectiveness, venue_rating, and logistics_rating.", 400);
         }
 
-        $event_id = $data->event_id;
-        $user_id = $data->user_id;
-        $feedback_text = $data->feedback_text;
+        $overall_satisfaction = $data->overall_satisfaction;
+        $content_quality = $data->content_quality;
+        $speaker_effectiveness = $data->speaker_effectiveness;
+        $venue_rating = $data->venue_rating;
+        $logistics_rating = $data->logistics_rating;
+        $improvement_suggestions = $data->improvement_suggestions ?? '';
+        $additional_comments = $data->additional_comments ?? '';
+        $remarks = 'Feedback submitted';
 
         // Check if the event has ended
         $sql = "SELECT event_end_date FROM events WHERE event_id = ?";
@@ -452,7 +456,7 @@ class Post extends GlobalMethods
         $stmt->execute([$event_id]);
         $event = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (strtotime($event['event_end_date']) > time()) {
+        if (!$event || strtotime($event['event_end_date']) > time()) {
             return $this->sendPayload(null, 'failed', "Feedback submission is only allowed after the event has ended.", 400);
         }
 
@@ -466,11 +470,19 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', "You are not registered for this event.", 400);
         }
 
-        // Insert the feedback into the database
-        $sql = "INSERT INTO feedback (event_id, user_id, feedback_text) VALUES (?, ?, ?)";
+        $sql = "SELECT COUNT(*) AS count FROM feedback WHERE event_id = ? AND user_id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$event_id, $user_id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row['count'] > 0) {
+            return $this->sendPayload(null, 'failed', "You have already submitted feedback for this event.", 400);
+        }
+
+        $sql = "INSERT INTO feedback (event_id, user_id, overall_satisfaction, content_quality, speaker_effectiveness, venue_rating, logistics_rating, improvement_suggestions, additional_comments, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$event_id, $user_id, $feedback_text]);
+            $stmt->execute([$event_id, $user_id, $overall_satisfaction, $content_quality, $speaker_effectiveness, $venue_rating, $logistics_rating, $improvement_suggestions, $additional_comments, $remarks]);
 
             if ($stmt->rowCount() > 0) {
                 return $this->sendPayload(null, 'success', "Feedback added successfully.", 200);

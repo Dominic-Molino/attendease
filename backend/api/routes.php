@@ -150,14 +150,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($get->get_all_attendee_counts());
                 break;
 
-            case 'getcourse':
-                if (isset($request[1])) {
-                    echo json_encode($get->get_course($request[1]));
-                } else {
-                    echo json_encode($get->get_course());
-                }
-                break;
-
             case 'getcoursecount':
                 echo json_encode($get->get_registered_users_by_course($request[0]));
                 break;
@@ -177,6 +169,15 @@ switch ($_SERVER['REQUEST_METHOD']) {
             case 'getAllRegisteredUser':
                 echo json_encode($get->get_total_registered_users($request[0]));
                 break;
+
+            case 'getfeedback':
+                if (isset($request[1])) {
+                    echo json_encode($get->get_event_feedback($request[1]));
+                } else {
+                    echo json_encode($get->get_event_feedback());
+                }
+                break;
+
 
             default:
                 echo "This is forbidden";
@@ -267,7 +268,15 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 break;
 
             case 'addfeedback':
-                echo json_encode($post->add_event_feedback($data->event_id, $data->user_id));
+                if (isset($request[1]) && isset($request[2])) {
+                    $event_id = $request[1];
+                    $user_id = $request[2];
+                    $data = json_decode(file_get_contents('php://input'));
+                    echo json_encode($post->add_event_feedback($event_id, $user_id, $data));
+                } else {
+                    echo json_encode(['status' => 'failed', 'message' => 'Event ID or User ID not provided.']);
+                    http_response_code(400);
+                }
                 break;
 
             default:

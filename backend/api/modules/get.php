@@ -111,13 +111,6 @@ class Get extends GlobalMethods
         return $this->get_records('user', $condition, $columns);
     }
 
-    public function get_course($user_id = null)
-    {
-        $columns = "course";
-        $condition = ($user_id !== null) ? "user_id = $user_id" : null;
-        return $this->get_records('user', $condition, $columns);
-    }
-
     public function get_roles($id = null)
     {
         $condition = $id ? "role_id=$id" : null;
@@ -135,17 +128,6 @@ class Get extends GlobalMethods
     {
         $columns = "event_id, event_name, event_description, event_location, event_start_date, event_end_date, event_registration_start, event_registration_end, session, max_attendees";
         return $this->get_records('events', null, $columns);
-    }
-
-    public function get_event_feedback($event_id)
-    {
-        $condition = $event_id ? "event_Id=$event_id" : null;
-        return $this->get_records('eventfeedback', $condition);
-    }
-
-    public function get_all_event_feedback()
-    {
-        return $this->get_records('eventfeedback');
     }
 
     public function get_student($user_id = null)
@@ -566,5 +548,13 @@ class Get extends GlobalMethods
         } catch (PDOException $e) {
             return $this->sendPayload(null, 'error', $e->getMessage(), 500);
         }
+    }
+
+    public function get_event_feedback($event_id = null)
+    {
+        $columns = "feedback_id, event_id, user_id, overall_satisfaction, content_quality, speaker_effectiveness,
+            venue_rating, logistics_rating, improvement_suggestions, additional_comments, feedback_date, remarks";
+        $condition = ($event_id !== null) ? "event_id = $event_id" : null;
+        return $this->get_records('feedback', $condition, $columns);
     }
 }
