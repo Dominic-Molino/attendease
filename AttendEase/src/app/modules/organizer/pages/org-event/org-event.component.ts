@@ -128,7 +128,21 @@ export class OrgEventComponent implements OnInit {
     if (files.length > 0) {
       const file = files[0];
       this.service.uploadEvent(eventId, file).subscribe((data) => {
-        Swal.fire('Success', 'Image uploaded successfully', 'success');
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: 'success',
+          title: 'Image uploaded successfully.',
+        });
         this.loadEvent();
         this.resetInput(event.target);
       });

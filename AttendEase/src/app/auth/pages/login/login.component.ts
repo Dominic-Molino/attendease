@@ -36,7 +36,21 @@ export class LoginComponent implements OnInit {
       (res: any) => {
         if (res.token) {
           sessionStorage.setItem('token', res.token);
-          Swal.fire('Success', 'Login Success', 'success');
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: 'success',
+            title: 'Signed in successfully',
+          });
           this.service.getCurrentUserRole();
           switch (this.service.getCurrentUserRole()) {
             case 1:

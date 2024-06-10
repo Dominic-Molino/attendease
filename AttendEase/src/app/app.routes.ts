@@ -5,6 +5,8 @@ import { authenGuard } from './core/authen.guard';
 import { AdminDashboardComponent } from './modules/admin/pages/admin-dashboard/admin-dashboard.component';
 import { AdminComponent } from './modules/admin/admin.component';
 import { C } from '@fullcalendar/core/internal-common';
+import { FeedbackSubmissionComponent } from './modules/user/components/feedback-submission/feedback-submission.component';
+import { FeedbackListComponent } from './shared/components/feedback-list/feedback-list.component';
 
 export const routes: Routes = [
   {
@@ -65,6 +67,22 @@ export const routes: Routes = [
           ).then((c) => c.AttendanceComponent),
         canActivate: [authenGuard],
       },
+
+      {
+        path: 'feedback-list',
+        loadComponent: () =>
+          import('./shared/components/event-list/event-list.component').then(
+            (c) => c.EventListComponent
+          ),
+      },
+
+      {
+        path: 'per-feedback/:eventId',
+        loadComponent: () =>
+          import(
+            './shared/components/feedback-list/feedback-list.component'
+          ).then((c) => c.FeedbackListComponent),
+      },
     ],
   },
 
@@ -123,6 +141,12 @@ export const routes: Routes = [
           import('./modules/user/pages/feedback/feedback.component').then(
             (c) => c.FeedbackComponent
           ),
+        children: [
+          {
+            path: 'questionnaire',
+            component: FeedbackSubmissionComponent,
+          },
+        ],
         canActivate: [authenGuard],
       },
     ],

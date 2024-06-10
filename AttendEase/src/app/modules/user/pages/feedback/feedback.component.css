@@ -1,0 +1,17 @@
+.pagination ::ng-deep .ngx-pagination .current {
+  background-color: #09090b;
+  border-radius: 100%;
+  padding: 2.5px 10px;
+  display: inline-flex;
+  justify-self: center;
+  color: #fff;
+}
+
+.pagination ::ng-deep .ngx-pagination li {
+  border-radius: 25px;
+  margin: 0 2px;
+}
+
+.pagination ::ng-deep .ngx-pagination li :hover {
+  border-radius: 25px;
+}

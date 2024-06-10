@@ -32,7 +32,6 @@ export class AdminSidebarComponent implements OnInit {
     if (this.userId) {
       this.service.getStudentProfile(this.userId).subscribe((res) => {
         this.studentProfile = res.payload[0];
-        console.log(this.studentProfile);
       });
     }
   }

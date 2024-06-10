@@ -25,7 +25,13 @@
         </thead>
         <!-- body -->
         <tbody>
-          <tr *ngFor="let event of events" class="bg-white border-b">
+          <tr
+            *ngFor="
+              let event of events
+                | paginate : { itemsPerPage: itemsPerPage, currentPage: p }
+            "
+            class="bg-white border-b"
+          >
             <td
               scope="row"
               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
@@ -57,7 +63,7 @@
               </td>
             </div>
             <td class="px-6 py-4 text-center">
-              <h1>No Submission</h1>
+              <h1>{{ event.remarks }}</h1>
             </td>
             <td>
               <button
@@ -70,6 +76,17 @@
           </tr>
         </tbody>
       </table>
+    </div>
+    <div
+      *ngIf="events.length > 0"
+      class="flex justify-center items-center mt-auto p-5"
+    >
+      <pagination-controls
+        (pageChange)="p = $event"
+        [maxSize]="maxSize"
+        [responsive]="true"
+        class="pagination"
+      ></pagination-controls>
     </div>
 
     <ng-template #fallback>

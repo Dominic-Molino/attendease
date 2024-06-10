@@ -56,8 +56,21 @@ export class PreviewComponent implements OnInit {
       if (result.isConfirmed) {
         this.service.registerForEvent(eventId, this.userId).subscribe(
           (response) => {
-            Swal.fire('Success', 'Successfully registered', 'success');
-            console.log('Registered for event:', response);
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 1500,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: 'success',
+              title: 'Successfully registered',
+            });
           },
           (error) => {
             Swal.fire('Warning', `${error.error.status.message}`, 'warning');
@@ -79,8 +92,21 @@ export class PreviewComponent implements OnInit {
       if (result.isConfirmed) {
         this.service.unregisterForEvent(eventId, this.userId).subscribe(
           (response) => {
-            Swal.fire('Success', 'Successfully unregistered', 'success');
-            console.log('unregistered for event:', response);
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 1500,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: 'success',
+              title: 'Successfully unregistered',
+            });
           },
           (error) => {
             Swal.fire('Warning', `${error.error.status.message}`, 'warning');
@@ -91,6 +117,6 @@ export class PreviewComponent implements OnInit {
   }
 
   closeDialog() {
-    this.dialog.close(  );
+    this.dialog.close();
   }
 }

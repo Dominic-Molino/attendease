@@ -144,8 +144,22 @@ export class AuthserviceService {
     return this.http.post<any>(`${this.API_URL}markattendance`, data);
   }
 
-  postFeedback(eventId: number, userId: number): Observable<any> {
-    const data = { event_id: eventId, user_id: userId };
-    return this.http.post(`${this.API_URL}addfeedback`, data);
+  postFeedback(
+    eventId: number,
+    userId: number,
+    feedbackData: any
+  ): Observable<any> {
+    return this.http.post(
+      `${this.API_URL}addfeedback/${eventId}/${userId}`,
+      feedbackData
+    );
+  }
+
+  getFeedback(event_id: any = null): Observable<any> {
+    if (event_id) {
+      return this.http.get(`${this.API_URL}getfeedback/${event_id}`);
+    } else {
+      return this.http.get(`${this.API_URL}getfeedback`);
+    }
   }
 }

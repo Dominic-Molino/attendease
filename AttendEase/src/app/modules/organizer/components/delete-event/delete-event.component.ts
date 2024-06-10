@@ -31,10 +31,20 @@ export class DeleteEventComponent {
         if (result.isConfirmed && this.event_id.event_id) {
           this.service.deleteEvent(this.event_id.event_id).subscribe(
             (res) => {
-              Swal.fire({
-                title: 'Deleted!',
-                text: 'Your file has been deleted.',
+              const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                },
+              });
+              Toast.fire({
                 icon: 'success',
+                title: 'Your file has been deleted.',
               });
               this.eventDeleted.emit();
             },

@@ -76,7 +76,22 @@ export class EditEventComponent implements OnInit {
       this.service
         .editEvent(this.eventId, this.eventForm.value)
         .subscribe((res) => {
-          Swal.fire('Success', 'Successfully updated event!', 'success');
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: 'success',
+            title: 'Event updated.',
+          });
+          this.dialog.close();
         });
     } else {
       Swal.fire('Failed', 'Failed to update event!', 'error');

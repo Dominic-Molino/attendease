@@ -34,7 +34,6 @@ export class EventsComponent implements OnInit {
   maxChar: number = 100;
   eventList: Event[] = [];
 
-
   constructor(
     private dialog: MatDialog,
     private service: AuthserviceService,

@@ -78,7 +78,21 @@ export class AddEventComponent implements OnInit {
     if (this.eventForm.valid) {
       this.eventService.addEvent(this.eventForm.value).subscribe(
         (res) => {
-          Swal.fire('Success', 'Event added successfully', 'success');
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: 'success',
+            title: 'Event Added',
+          });
         },
         (error) => {
           Swal.fire(
