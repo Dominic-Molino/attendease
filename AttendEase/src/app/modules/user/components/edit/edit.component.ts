@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
   imports: [MatDialogModule, ReactiveFormsModule, CommonModule],
   templateUrl: './edit.component.html',
   styleUrl: './edit.component.css',
+  encapsulation: ViewEncapsulation.None,
 })
 export class EditComponent implements OnInit {
   constructor(

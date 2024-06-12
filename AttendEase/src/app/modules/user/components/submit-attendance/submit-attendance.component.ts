@@ -48,10 +48,6 @@ export class SubmitAttendanceComponent {
   }
 
   submitAttendance() {
-    // Add your submission logic here
-    // You can submit the attendance with the selected image
-    // You can also display a confirmation dialog before submission
-    // For simplicity, I'm just resetting the input after submission
     Swal.fire({
       text: 'Submit this photo?',
       icon: 'info',

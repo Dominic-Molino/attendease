@@ -1,0 +1,3 @@
+.my-class ::ng-deep .mat-dialog-content {
+  padding: 0 !important;
+}

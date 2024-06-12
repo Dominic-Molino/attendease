@@ -1,7 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { FullCalendarModule } from '@fullcalendar/angular';
-import { CalendarOptions, EventClickArg, EventInput } from '@fullcalendar/core';
+import {
+  CalendarOptions,
+  EventClickArg,
+  EventInput,
+  EventContentArg,
+} from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -9,21 +14,20 @@ import listPlugin from '@fullcalendar/list';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PopupComponent } from '../popup/popup.component';
 import { EventService } from '../../../core/service/event.service';
-import { DomSanitizer } from '@angular/platform-browser';
-import { Observable, of, switchMap } from 'rxjs';
-import { AddEventComponent } from '../../../modules/organizer/components/add-event/add-event.component';
 import { AuthserviceService } from '../../../core/service/authservice.service';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { AddEventComponent } from '../../../modules/organizer/components/add-event/add-event.component';
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
   imports: [CommonModule, FullCalendarModule],
   templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.css',
+  styleUrls: ['./calendar.component.css'],
 })
 export class CalendarComponent implements OnInit {
   calendarEvents: EventInput[] = [];
-  event: any[] = [];
   userRole: number | null = null;
 
   calendarOptions = signal<CalendarOptions>({
@@ -45,6 +49,7 @@ export class CalendarComponent implements OnInit {
     },
     windowResize: this.handleWindowResize.bind(this),
     eventClick: this.handleEventClick.bind(this),
+    eventContent: this.renderEventContent.bind(this),
   });
 
   constructor(
@@ -64,19 +69,27 @@ export class CalendarComponent implements OnInit {
     }
   }
 
-  fetchEvents() {
-    this.service.getAllEvents().subscribe((data) => {
-      const events = data.payload;
-      this.calendarEvents = events.map((event: any) => ({
-        id: event.event_id,
-        title: event.event_name,
-        start: event.event_start_date,
-        end: event.event_end_date,
-      }));
-    });
+  fetchEvents(): void {
+    this.service
+      .getAllEvents()
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching events:', error);
+          return of([]);
+        })
+      )
+      .subscribe((data) => {
+        const events = data.payload || [];
+        this.calendarEvents = events.map((event: any) => ({
+          id: event.event_id,
+          title: event.event_name,
+          start: event.event_start_date,
+          end: event.event_end_date,
+        }));
+      });
   }
 
-  handleDateClick(arg: any) {
+  handleDateClick(arg: any): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = { startDate: arg.date };
     dialogConfig.width = '50%';
@@ -91,24 +104,44 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  handleEventClick(clickInfo: EventClickArg) {
-    this.service.getEventById(clickInfo.event.id).subscribe((event) => {
-      const eventData = event.payload[0];
-      const dialogRef = this.dialog.open(PopupComponent, {
-        data: eventData,
-        disableClose: true,
-        panelClass: 'dialog-container',
-      });
+  handleEventClick(clickInfo: EventClickArg): void {
+    this.service
+      .getEventById(clickInfo.event.id)
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching event details:', error);
+          return of(null);
+        })
+      )
+      .subscribe((event) => {
+        const eventData = event?.payload[0];
+        if (eventData) {
+          const dialogRef = this.dialog.open(PopupComponent, {
+            data: eventData,
+            disableClose: true,
+            panelClass: 'dialog-container',
+          });
 
-      dialogRef.afterClosed().subscribe((result) => {});
-    });
+          dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+              this.fetchEvents();
+            }
+          });
+        }
+      });
   }
 
-  handleWindowResize(view: any) {
+  handleWindowResize(view: any): void {
     const aspectRatio = window.innerWidth < 768 ? 1 : 1.35;
     this.calendarOptions.update((options) => {
       options.aspectRatio = aspectRatio;
       return options;
     });
+  }
+
+  renderEventContent(eventContent: EventContentArg) {
+    return {
+      html: `<div class="text-light-text border border-light-border bg-white hover:bg-light-background hover:text-white cursor-pointer px-2.5 py-2  rounded-md truncate text-ellipsis" >${eventContent.event.title}</div>`,
+    };
   }
 }

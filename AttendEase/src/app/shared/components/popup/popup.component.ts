@@ -20,10 +20,10 @@ export class PopupComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadInage();
+    this.loadImage();
   }
 
-  loadInage() {
+  loadImage() {
     this.service.getEventImage(this.data.event_id).subscribe((res: Blob) => {
       this.imageUrl = URL.createObjectURL(res);
     });

@@ -1,14 +1,16 @@
-<mat-dialog-content>
+<div class="my-class">
   <div>
     <div
       class="flex items-center justify-between p-4 md:p-5 border-b rounded-t"
     >
-      <h3 class="text-xl font-semibold text-gray-900">Edit your profile</h3>
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+        Edit your profile
+      </h3>
       <button
-        type="button"
         (click)="closeDialog()"
-        class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-        data-modal-hide="authentication-modal"
+        type="button"
+        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+        data-modal-toggle="crud-modal"
       >
         <svg
           class="w-3 h-3"
@@ -29,7 +31,7 @@
       </button>
     </div>
     <form
-      class="max-w-sm mx-auto my-3.5 sm:w-full"
+      class="max-w-sm mx-auto my-3.5 w-full sm:w-full"
       autocomplete="off"
       [formGroup]="editForm"
       (ngSubmit)="updateInfo()"
@@ -89,12 +91,12 @@
 
       <div class="w-full mb-5">
         <label
-          for="category2"
+          for="block"
           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >Block</label
         >
         <select
-          id="category2"
+          id="block"
           name="block"
           formControlName="block"
           class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2"
@@ -108,12 +110,12 @@
 
       <div class="w-full mb-5">
         <label
-          for="category3"
+          for="course"
           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >Course</label
         >
         <select
-          id="category3"
+          id="course"
           name="course"
           formControlName="course"
           class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2"
@@ -151,4 +153,4 @@
       </div>
     </form>
   </div>
-</mat-dialog-content>
+</div>
