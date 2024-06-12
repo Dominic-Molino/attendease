@@ -38,7 +38,7 @@ export class CalendarComponent implements OnInit {
     dayMaxEvents: true,
     selectable: true,
     height: 'auto',
-    eventColor: '#27272a',
+    eventColor: '#04bc64',
     aspectRatio: 1,
     validRange: {
       start: new Date().toISOString().split('T')[0],

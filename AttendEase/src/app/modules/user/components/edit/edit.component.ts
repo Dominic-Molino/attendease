@@ -58,33 +58,50 @@ export class EditComponent implements OnInit {
   }
 
   updateInfo() {
-    if (this.editForm.valid) {
-      this.service.updateStudent(this.editForm.value, this.user_id).subscribe(
-        (res) => {
-          const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            },
-          });
-          Toast.fire({
-            icon: 'success',
-            title: 'Profile updated',
-          });
-          this.dialog.close();
-        },
-        (error) => {
-          console.log(error);
+    Swal.fire({
+      text: 'Save profile?',
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (this.editForm.valid) {
+          this.service
+            .updateStudent(this.editForm.value, this.user_id)
+            .subscribe(
+              (res) => {
+                const Toast = Swal.mixin({
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 1500,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                  },
+                });
+                Toast.fire({
+                  icon: 'success',
+                  title: 'Profile updated',
+                });
+                this.dialog.close();
+              },
+              (error) => {
+                console.log(error);
+              }
+            );
+        } else {
+          Swal.fire(
+            'Incomplete User Data',
+            'Please fill in all fields',
+            'warning'
+          );
         }
-      );
-    } else {
-      Swal.fire('Incomplete User Data', 'Please fill in all fields', 'warning');
-    }
+      }
+    });
   }
 
   closeDialog() {

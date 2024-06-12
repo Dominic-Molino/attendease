@@ -35,7 +35,7 @@ export class BlockComponent implements OnInit {
               top: 10,
             },
             font: {
-              family: 'Poppins',
+              family: 'Inter',
               size: 14,
             },
           },

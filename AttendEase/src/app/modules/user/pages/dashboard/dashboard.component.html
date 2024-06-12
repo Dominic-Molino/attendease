@@ -1,12 +1,13 @@
 <main class="w-full">
   <div class="p-4 mt-16 sm:ml-64">
     <div>
-      <p class="mb-2 text-black text-2xl tracking-wide font-bold">Dashboard</p>
+      <p class="mt-5 mb-2 text-black text-2xl tracking-wide">Dashboard</p>
+
       <hr class="h-px mb-6 bg-dark-border border-0" />
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
       <div
-        class="lg:w-full md:col-span-1 border border-gray-200 shadow-md rounded-md p-10 bg-gray-50"
+        class="lg:w-full md:col-span-1 border border-dark-border shadow-md rounded-md p-10 bg-white"
       >
         <!-- calendar here -->
         <app-calendar class="sm:max-w-[400px]"></app-calendar>
@@ -45,7 +46,7 @@
 
             <button
               (click)="onClickButton()"
-              class="text-sm font-medium text-dark-text hover:underline"
+              class="text-sm font-medium text-dark-text hover:text-light-background hover:underline"
             >
               View all
             </button>
@@ -148,7 +149,7 @@
                       <span
                         class="flex items-center font-medium text-sm text-gray-900 me-3"
                         ><span
-                          class="flex items-center w-2.5 h-2.5 bg-green-500 rounded-full me-1.5 flex-shrink-0"
+                          class="flex items-center w-2.5 h-2.5 bg-light-foregroud rounded-full me-1.5 flex-shrink-0"
                         >
                         </span
                         >Done

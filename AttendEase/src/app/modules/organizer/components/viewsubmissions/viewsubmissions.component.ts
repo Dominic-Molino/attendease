@@ -39,8 +39,6 @@ export class ViewsubmissionsComponent {
             res.payload.length > 0
           ) {
             this.datalist = res.payload;
-            console.log(this.datalist);
-
             const attendance = this.datalist[0];
             if (attendance && attendance.attendance_id) {
               this.service
@@ -92,11 +90,27 @@ export class ViewsubmissionsComponent {
             if (submissionIndex !== -1) {
               this.datalist[submissionIndex].remarks = newValue;
             }
-            Swal.fire(
-              `${action.charAt(0).toUpperCase() + action.slice(1)}d!`,
-              `The attendance has been ${action}d.`,
-              'success'
-            );
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 1500,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: 'success',
+              title: `${action.charAt(0).toUpperCase() + action.slice(1)}d!`,
+              html: `The attendance has been ${action}d.`,
+            });
+            // Swal.fire(
+            //   `${action.charAt(0).toUpperCase() + action.slice(1)}d!`,
+            //   `The attendance has been ${action}d.`,
+            //   'success'
+            // );
           },
           (error) => {
             console.error('Error toggling Submission remark:', error);

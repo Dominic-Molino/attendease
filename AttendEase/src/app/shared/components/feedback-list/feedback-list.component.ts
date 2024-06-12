@@ -1,32 +1,76 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthserviceService } from '../../../core/service/authservice.service';
+import { CommonModule } from '@angular/common';
+import { NgxPaginationModule } from 'ngx-pagination';
+
+interface Feedback {
+  user_id: number;
+  improvement_suggestions: string;
+  additional_comments: string;
+  date: Date;
+}
 
 @Component({
   selector: 'app-feedback-list',
   standalone: true,
-  imports: [],
   templateUrl: './feedback-list.component.html',
-  styleUrl: './feedback-list.component.css',
+  styleUrls: ['./feedback-list.component.css'],
+  imports: [CommonModule, NgxPaginationModule, RouterLink],
 })
 export class FeedbackListComponent implements OnInit {
   @Input() eventId?: number;
+  feedback: Feedback[] = [];
+
+  p: number = 1;
+  itemsPerPage: number = 10;
+  maxSize = 5;
 
   constructor(
     private route: ActivatedRoute,
-    private service: AuthserviceService
+    private service: AuthserviceService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.eventId = +params['eventId'];
+      this.getFeedback();
     });
-    this.getFeedback();
   }
 
   getFeedback() {
-    this.service.getFeedback().subscribe((res: any) => {
-      console.log(res.payload);
-    });
+    this.service.getEventFeedback(this.eventId).subscribe(
+      (res: any) => {
+        if (res && res.payload) {
+          this.feedback = res.payload.map((feed: any): Feedback => {
+            return {
+              user_id: feed.user_id,
+              improvement_suggestions: feed.improvement_suggestions,
+              additional_comments: feed.additional_comments,
+              date: new Date(feed.feedback_date),
+            };
+          });
+        }
+      },
+      (error) => {
+        console.error('Error fetching feedback:', error);
+      }
+    );
+  }
+
+  viewFeedback() {
+    const currentUserRole = this.service.getCurrentUserRole();
+    let routePrefix = '';
+
+    if (currentUserRole === 1) {
+      routePrefix = '/admin/admin-feedback-list';
+    } else if (currentUserRole === 2) {
+      routePrefix = '/organizer/org-feedback-list';
+    }
+
+    if (routePrefix) {
+      this.router.navigate([`${routePrefix}`]);
+    }
   }
 }

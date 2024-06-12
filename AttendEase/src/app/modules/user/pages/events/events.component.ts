@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
 import { PreviewComponent } from '../../components/preview/preview.component';
@@ -25,6 +30,7 @@ interface Event {
 @Component({
   selector: 'app-events',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MatDialogModule, NgxPaginationModule],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css',
@@ -38,7 +44,8 @@ export class EventsComponent implements OnInit {
     private dialog: MatDialog,
     private service: AuthserviceService,
     private sanitizer: DomSanitizer,
-    private eventService: EventService
+    private eventService: EventService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -68,6 +75,7 @@ export class EventsComponent implements OnInit {
         };
         return eventObject;
       });
+      this.cdr.markForCheck();
     });
   }
 

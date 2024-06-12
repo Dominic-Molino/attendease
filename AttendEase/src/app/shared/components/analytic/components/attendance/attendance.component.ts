@@ -59,7 +59,7 @@ export class AttendanceComponent implements OnInit {
           {
             barThickness: 20,
             label: 'Events',
-            backgroundColor: '#09090b',
+            backgroundColor: '#04c464',
             borderRadius: 15,
             data: [ongoing, done, upcoming],
           },
@@ -76,7 +76,7 @@ export class AttendanceComponent implements OnInit {
             labels: {
               font: {
                 size: 14,
-                family: 'Poppins',
+                family: 'Inter',
               },
             },
           },

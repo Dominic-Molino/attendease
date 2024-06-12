@@ -1,11 +1,8 @@
-<main class="!scroll-smooth w-full h-screen">
+<main class="!scroll-smooth w-full h-screen dark:bg-black">
   <div class="p-4 mt-16 sm:ml-64">
     <div>
-      <p class="mb-2 text-black text-2xl tracking-wide font-bold">
-        Attendees List
-      </p>
-
-      <hr class="h-px mb-6 bg-dark-border border-0" />
+      <p class="mt-5 mb-2 text-black text-2xl tracking-wide">Attendees List</p>
+      <hr class="h-px mb-5 bg-dark-border border-0" />
     </div>
 
     <!-- list of user -->
@@ -39,14 +36,14 @@
           <input
             type="search"
             id="default-search"
-            class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-md bg-white"
+            class="block w-full p-4 ps-10 text-sm text-gray-900 border border-dark-border rounded-md bg-white focus:border-light-border focus:ring-0"
             placeholder="Search..."
             required
             formControlName="searchValue"
           />
           <button
             type="submit"
-            class="text-white absolute end-2.5 bottom-2.5 bg-dark-background hover:bg-dark-foreground focus:ring-0 font-medium rounded-md text-sm px-4 py-2"
+            class="text-white absolute end-2.5 bottom-2.5 bg-light-background hover:bg-light-foregroud focus:ring-0 font-medium rounded-md text-sm px-4 py-2"
           >
             Search
           </button>
@@ -55,39 +52,28 @@
     </div>
 
     <div
-      class="relative overflow-x-auto shadow-md sm:rounded-lg border border-gray-300"
+      class="relative overflow-x-auto shadow-md sm:rounded-lg border border-dark-border"
     >
       <table class="w-full text-sm text-left rtl:text-right text-gray-500">
         <thead class="text-xs text-gray-700 uppercase bg-dark-primary">
           <tr>
-            <th scope="col" class="px-6 py-3 font-bold text-base">Name</th>
-            <th scope="col" class="px-6 py-3 font-bold text-base">
-              Year Level
-            </th>
-            <th scope="col" class="px-6 py-3 font-bold text-base">Block</th>
-            <th scope="col" class="px-6 py-3 font-bold text-base">Course</th>
-            <th scope="col" class="px-6 py-3 font-bold text-base">Email</th>
-            <th scope="col" class="px-6 py-3 font-bold text-base">Role</th>
-            <th scope="col" class="px-6 py-3 font-bold text-base">Action</th>
+            <th scope="col" class="px-6 py-3">Name</th>
+            <th scope="col" class="px-6 py-3">Year Level</th>
+            <th scope="col" class="px-6 py-3">Block</th>
+            <th scope="col" class="px-6 py-3">Course</th>
+            <th scope="col" class="px-6 py-3">Email</th>
+            <th scope="col" class="px-6 py-3">Role</th>
+            <th scope="col" class="px-6 py-3 text-center">Event Registered</th>
           </tr>
         </thead>
         <tbody>
           <tr
             class="bg-white border-b"
             *ngFor="
-              let data of datalist
+              let data of filteredList
                 | paginate : { itemsPerPage: itemsPerPage, currentPage: p }
             "
           >
-            @if ( searchForm.get('searchValue')?.value === '' || data.first_name
-            ?.toLowerCase() .includes(
-            searchForm.get('searchValue')?.value?.toLowerCase() ) || data.course
-            ?.toLowerCase() .includes(
-            searchForm.get('searchValue')?.value?.toLowerCase() ) ||
-            data.year_level ?.toLowerCase() .includes(
-            searchForm.get('searchValue')?.value?.toLowerCase() ) || data.block
-            ?.toLowerCase()
-            .includes(searchForm.get('searchValue')?.value?.toLowerCase()) ) {
             @if (data.role_id ===3 ) {
             <th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
               {{ data.first_name | titlecase }} {{ data.last_name | titlecase }}
@@ -103,15 +89,8 @@
             }@else {
             <td class="px-6 py-4">Student</td>
             }
-            <td class="px-6 py-4">
-              <button
-                (click)="updateUser(data.user_id)"
-                class="block mx-auto px-4 py-2 text-sm text-white font-semibold bg-dark-background hover:bg-dark-foreground border border-gray-200 rounded-md focus:outline-none"
-              >
-                Update
-              </button>
-            </td>
-            } }
+            <td class="px-6 py-4"></td>
+            }
           </tr>
         </tbody>
       </table>

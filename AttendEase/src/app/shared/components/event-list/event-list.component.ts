@@ -3,6 +3,7 @@ import { EventService } from '../../../core/service/event.service';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { FeedbackListComponent } from '../feedback-list/feedback-list.component';
+import { AuthserviceService } from '../../../core/service/authservice.service';
 
 interface Event {
   event_id: number;
@@ -20,11 +21,20 @@ interface Event {
 })
 export class EventListComponent implements OnInit {
   eventList: Event[] = [];
+  maxChar: number = 100;
+  currUser: any;
 
-  constructor(private eventService: EventService, private router: Router) {}
+  constructor(
+    private eventService: EventService,
+    private router: Router,
+    private service: AuthserviceService
+  ) {
+    this.currUser = this.service.getCurrentUserId();
+  }
 
   ngOnInit(): void {
     this.loadEvents();
+    console.log(this.currUser);
   }
 
   loadEvents() {
@@ -40,7 +50,26 @@ export class EventListComponent implements OnInit {
     });
   }
 
+  truncateDescription(text: string, maxLength: number): string {
+    if (text && text.length > maxLength) {
+      return text.substring(0, maxLength) + ' ...';
+    } else {
+      return text;
+    }
+  }
+
   viewFeedback(eventId: number) {
-    this.router.navigate(['/admin/per-feedback/', eventId]);
+    const currentUserRole = this.service.getCurrentUserRole();
+    let routePrefix = '';
+
+    if (currentUserRole === 1) {
+      routePrefix = '/admin/admin-per-feedback';
+    } else if (currentUserRole === 2) {
+      routePrefix = '/organizer/org-per-feedback';
+    }
+
+    if (routePrefix) {
+      this.router.navigate([`${routePrefix}/${eventId}`]);
+    }
   }
 }

@@ -1,5 +1,240 @@
 <main class="!scroll-smooth w-full h-screen absolute z-30 bg-white">
   <div class="p-4 mt-16 sm:ml-64 bg-white">
-    <p>Event ID: {{ eventId }}</p>
+    <button
+      (click)="viewFeedback()"
+      type="button"
+      class="mt-1.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-1.5 inline-flex justify-center items-center"
+      data-modal-hide="default-modal"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-move-left"
+      >
+        <path d="M6 8L2 12L6 16" />
+        <path d="M2 12H22" />
+      </svg>
+      <span class="sr-only">Close modal</span>
+    </button>
+    @if(feedback && feedback.length > 0){
+    <div class="p-5">
+      <ol class="relative border-s border-dark-border">
+        <li
+          class="mb-10 ms-6"
+          *ngFor="
+            let feeds of feedback
+              | paginate : { itemsPerPage: itemsPerPage, currentPage: p }
+          "
+        >
+          <span
+            class="absolute flex items-center justify-center w-6 h-6 bg-light-border rounded-full -start-3 ring-2 ring-light-border"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.25"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-user-round"
+            >
+              <circle cx="12" cy="8" r="5" />
+              <path d="M20 21a8 8 0 0 0-16 0" />
+            </svg>
+          </span>
+          <div
+            class="p-4 bg-white border border-dark-border rounded-md shadow-sm"
+          >
+            <div class="items-center justify-end mb-3 sm:flex">
+              <time
+                class="mb-1 text-xs font-normal text-gray-400 sm:order-last sm:mb-0"
+                >{{ feeds.date | date : "M/d/yy, h:mm a" }}</time
+              >
+            </div>
+            <div>
+              <h1
+                class="ms-1 text-pretty text-base tracking-wide flex items-center"
+              >
+                Suggestion
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="wobble-ver-left lucide lucide-message-circle ms-0.5 relative -top-1"
+                  >
+                    <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+                  </svg>
+                </span>
+              </h1>
+              <div
+                class="p-3 text-sm italic font-normal text-dark-input border border-dark-border rounded-md bg-gray-50 mb-2.5"
+              >
+                {{ feeds.improvement_suggestions }}
+              </div>
+            </div>
+            <div>
+              <h1
+                class="ms-1 text-pretty text-base tracking-wide flex items-center"
+              >
+                Comment
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="wobble-ver-left lucide lucide-message-square-text ms-0.5 relative -top-1"
+                  >
+                    <path
+                      d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                    />
+                    <path d="M13 8H7" />
+                    <path d="M17 12H7" />
+                  </svg>
+                </span>
+              </h1>
+              <div
+                class="p-3 text-sm italic font-normal text-dark-input border border-dark-border rounded-md bg-gray-50"
+              >
+                {{ feeds.additional_comments }}
+              </div>
+            </div>
+          </div>
+        </li>
+      </ol>
+      <div class="flex justify-center items-center mt-auto p-5">
+        <pagination-controls
+          (pageChange)="p = $event"
+          [maxSize]="maxSize"
+          [responsive]="true"
+          class="pagination"
+        ></pagination-controls>
+      </div>
+    </div>
+    }@else {
+    <section #noEvents>
+      <div class="py-4 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+        <div class="max-w-screen-sm text-center mx-auto">
+          <svg
+            class="emoji-404 mx-auto"
+            enable-background="new 0 0 226 249.135"
+            height="249.135"
+            id="Layer_1"
+            overflow="visible"
+            version="1.1"
+            viewBox="0 0 226 249.135"
+            width="226"
+            xml:space="preserve"
+          >
+            <circle cx="113" cy="113" fill="#FFE585" r="109" />
+            <line
+              enable-background="new    "
+              fill="none"
+              opacity="0.29"
+              stroke="#6E6E96"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="8"
+              x1="88.866"
+              x2="136.866"
+              y1="245.135"
+              y2="245.135"
+            />
+            <line
+              enable-background="new    "
+              fill="none"
+              opacity="0.17"
+              stroke="#6E6E96"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="8"
+              x1="154.732"
+              x2="168.732"
+              y1="245.135"
+              y2="245.135"
+            />
+            <line
+              enable-background="new    "
+              fill="none"
+              opacity="0.17"
+              stroke="#6E6E96"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="8"
+              x1="69.732"
+              x2="58.732"
+              y1="245.135"
+              y2="245.135"
+            />
+            <circle cx="68.732" cy="93" fill="#6E6E96" r="9" />
+            <path
+              d="M115.568,5.947c-1.026,0-2.049,0.017-3.069,0.045  c54.425,1.551,98.069,46.155,98.069,100.955c0,55.781-45.219,101-101,101c-55.781,0-101-45.219-101-101  c0-8.786,1.124-17.309,3.232-25.436c-3.393,10.536-5.232,21.771-5.232,33.436c0,60.199,48.801,109,109,109s109-48.801,109-109  S175.768,5.947,115.568,5.947z"
+              enable-background="new    "
+              fill="#FF9900"
+              opacity="0.24"
+            />
+            <circle cx="156.398" cy="93" fill="#6E6E96" r="9" />
+            <ellipse
+              cx="67.732"
+              cy="140.894"
+              enable-background="new    "
+              fill="#FF0000"
+              opacity="0.18"
+              rx="17.372"
+              ry="8.106"
+            />
+            <ellipse
+              cx="154.88"
+              cy="140.894"
+              enable-background="new    "
+              fill="#FF0000"
+              opacity="0.18"
+              rx="17.371"
+              ry="8.106"
+            />
+            <path
+              d="M13,118.5C13,61.338,59.338,15,116.5,15c55.922,0,101.477,44.353,103.427,99.797  c0.044-1.261,0.073-2.525,0.073-3.797C220,50.802,171.199,2,111,2S2,50.802,2,111c0,50.111,33.818,92.318,79.876,105.06  C41.743,201.814,13,163.518,13,118.5z"
+              fill="#FFEFB5"
+            />
+            <circle
+              cx="113"
+              cy="113"
+              fill="none"
+              r="109"
+              stroke="#6E6E96"
+              stroke-width="8"
+            />
+          </svg>
+
+          <h1 class="text-gray-500 text-6xl block">No Feedback Found</h1>
+          <p class="text-gray-500 text-xl">
+            It looks like there are no feedbacks submitted yet.
+          </p>
+        </div>
+      </div>
+    </section>
+    }
   </div>
 </main>

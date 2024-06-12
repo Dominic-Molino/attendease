@@ -14,11 +14,12 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [MatDialogModule, CommonModule],
   templateUrl: './submit-attendance.component.html',
-  styleUrl: './submit-attendance.component.css',
+  styleUrls: ['./submit-attendance.component.css'],
 })
 export class SubmitAttendanceComponent {
   file: any;
   userId: any;
+  imagePreview?: string | ArrayBuffer | null = null; // Variable to store image preview URL
 
   constructor(
     private service: AuthserviceService,
@@ -26,7 +27,6 @@ export class SubmitAttendanceComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialogRef<SubmitAttendanceComponent>
   ) {
-    console.log(data.eventId.event_id);
     this.userId = this.service.getCurrentUserId();
   }
 
@@ -34,32 +34,59 @@ export class SubmitAttendanceComponent {
     const files = event.target.files as FileList;
     if (files.length > 0) {
       this.file = files[0];
-      console.log(this.file);
-      this.service
-        .uploadAttendanceImage(
-          this.data.eventId.event_id,
-          this.userId,
-          this.file
-        )
-        .subscribe((data: any) => {
-          const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            },
-          });
-          Toast.fire({
-            icon: 'success',
-            title: 'Successfully uploaded photo',
-          });
-          this.resetInput();
-        });
+      this.previewImage(); // Call method to preview image
     }
+  }
+
+  // Method to preview selected image
+  previewImage() {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.imagePreview = e.target?.result;
+    };
+    reader.readAsDataURL(this.file);
+  }
+
+  submitAttendance() {
+    // Add your submission logic here
+    // You can submit the attendance with the selected image
+    // You can also display a confirmation dialog before submission
+    // For simplicity, I'm just resetting the input after submission
+    Swal.fire({
+      text: 'Submit this photo?',
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.service
+          .uploadAttendanceImage(
+            this.data.eventId.event_id,
+            this.userId,
+            this.file
+          )
+          .subscribe((data: any) => {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 1500,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: 'success',
+              title: 'Successfully uploaded photo',
+            });
+            this.resetInput();
+          });
+      }
+    });
   }
 
   resetInput() {
@@ -68,6 +95,12 @@ export class SubmitAttendanceComponent {
     ) as HTMLInputElement;
     if (input) {
       input.value = '';
+      this.imagePreview = null; // Reset image preview
     }
+  }
+
+  closeDialog() {
+    this.dialog.close();
+    document.body.classList.remove('cdk-global-scrollblock');
   }
 }

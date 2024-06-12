@@ -6,16 +6,16 @@
 
 /* for charts and calendar */
 :root {
-  --stone-900: #1c1917;
-  --stone-800: #44403c;
-  --stone-700: #78716c;
-  --stone-600: #d6d3d1;
+  --stone-900: #049151;
+  --stone-800: #04a05a;
+  --stone-700: #04bc6c;
+  --stone-600: #04c464;
   --fc-button-bg-color: #09090b;
-  --fc-button-border-color: #e4e4e7;
+  --fc-button-border-color: #09090b;
   --fc-button-hover-bg-color: #27272a;
-  --fc-button-hover-border-color: #e4e4e7;
+  --fc-button-hover-border-color: #27272a;
   --fc-button-active-bg-color: #27272a;
-  --fc-button-active-border-color: #e4e4e7;
+  --fc-button-active-border-color: #27272a;
 }
 
 /* Scrollbar styles empre galing google yan hhaha*/

@@ -17,7 +17,6 @@ export class DeleteEventComponent {
   constructor(private service: EventService) {}
 
   deleteEvent() {
-    console.log(this.event_id);
     if (this.event_id.event_id) {
       Swal.fire({
         title: 'Are you sure?',

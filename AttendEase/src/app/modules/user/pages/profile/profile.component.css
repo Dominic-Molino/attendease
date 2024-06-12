@@ -1,35 +1,3 @@
-.colored-toast.swal2-icon-success {
-  background-color: #a5dc86 !important;
-}
-
-.colored-toast.swal2-icon-error {
-  background-color: #f27474 !important;
-}
-
-.colored-toast.swal2-icon-warning {
-  background-color: #f8bb86 !important;
-}
-
-.colored-toast.swal2-icon-info {
-  background-color: #3fc3ee !important;
-}
-
-.colored-toast.swal2-icon-question {
-  background-color: #87adbd !important;
-}
-
-.colored-toast .swal2-title {
-  color: white;
-}
-
-.colored-toast .swal2-close {
-  color: white;
-}
-
-.colored-toast .swal2-html-container {
-  color: white;
-}
-
 .personal {
   text-indent: 50px;
   padding-left: 25px;
@@ -64,7 +32,7 @@ table {
   height: 40px;
   width: 40px;
   padding: 0.35rem;
-  background-color: #09090b;
+  background-color: #04bc64;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -73,19 +41,19 @@ table {
   top: 75%;
   z-index: 2;
   cursor: pointer;
-
-  label {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  input[type="file"] {
-    display: none;
-  }
 }
 
-.icon-wrapper label:hover {
-  background-color: #27272a;
+.icon-wrapper:hover {
+  background-color: #049151;
+}
+
+.icon-wrapper label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-wrapper input[type="file"] {
+  display: none;
 }

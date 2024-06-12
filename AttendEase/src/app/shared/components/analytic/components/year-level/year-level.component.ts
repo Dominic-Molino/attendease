@@ -35,8 +35,8 @@ export class YearLevelComponent implements OnInit {
               top: 10,
             },
             font: {
-              family: 'Poppins',
-              size: 13,
+              family: 'Inter',
+              size: 13, 
             },
           },
           position: 'bottom',

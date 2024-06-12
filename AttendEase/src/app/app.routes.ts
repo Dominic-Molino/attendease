@@ -7,6 +7,7 @@ import { AdminComponent } from './modules/admin/admin.component';
 import { C } from '@fullcalendar/core/internal-common';
 import { FeedbackSubmissionComponent } from './modules/user/components/feedback-submission/feedback-submission.component';
 import { FeedbackListComponent } from './shared/components/feedback-list/feedback-list.component';
+import { RoleGuard } from './core/role.guard';
 
 export const routes: Routes = [
   {
@@ -69,19 +70,21 @@ export const routes: Routes = [
       },
 
       {
-        path: 'feedback-list',
+        path: 'admin-feedback-list',
         loadComponent: () =>
           import('./shared/components/event-list/event-list.component').then(
             (c) => c.EventListComponent
           ),
+        canActivate: [RoleGuard],
       },
 
       {
-        path: 'per-feedback/:eventId',
+        path: 'admin-per-feedback/:eventId',
         loadComponent: () =>
           import(
             './shared/components/feedback-list/feedback-list.component'
           ).then((c) => c.FeedbackListComponent),
+        canActivate: [RoleGuard],
       },
     ],
   },
@@ -178,6 +181,24 @@ export const routes: Routes = [
             './modules/organizer/pages/org-event/org-event.component'
           ).then((c) => c.OrgEventComponent),
         canActivate: [authenGuard],
+      },
+
+      {
+        path: 'org-feedback-list',
+        loadComponent: () =>
+          import('./shared/components/event-list/event-list.component').then(
+            (c) => c.EventListComponent
+          ),
+        canActivate: [RoleGuard],
+      },
+
+      {
+        path: 'org-per-feedback/:eventId',
+        loadComponent: () =>
+          import(
+            './shared/components/feedback-list/feedback-list.component'
+          ).then((c) => c.FeedbackListComponent),
+        canActivate: [RoleGuard],
       },
     ],
   },

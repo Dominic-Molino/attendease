@@ -44,8 +44,8 @@
               name="name"
               id="name"
               formControlName="event_name"
-              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-dark-input block w-full p-2.5"
-              placeholder="Type event name"
+              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
+              placeholder="Event name"
               required=""
             />
           </div>
@@ -61,8 +61,8 @@
               name="event_location"
               id="event_location"
               formControlName="event_location"
-              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-dark-input block w-full p-2.5"
-              placeholder="Event Location"
+              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
+              placeholder="Event location"
             />
           </div>
 
@@ -75,7 +75,7 @@
             <select
               id="category"
               formControlName="session"
-              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-dark-input block w-full p-2.5"
+              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
             >
               <option value="" disabled selected>Select Event Mode</option>
               <option>Physical</option>
@@ -91,8 +91,9 @@
             >
             <input
               type="number"
+              placeholder="1"
               formControlName="max_attendees"
-              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-dark-input block w-full p-2.5"
+              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
             />
           </div>
 
@@ -103,7 +104,7 @@
               id="event_start_date"
               formControlName="event_start_date"
               required
-              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-dark-input block w-full p-2.5"
+              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
             />
           </div>
 
@@ -114,7 +115,7 @@
               id="event_end_date"
               formControlName="event_end_date"
               required
-              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-dark-input block w-full p-2.5"
+              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
             />
           </div>
 
@@ -127,7 +128,7 @@
               id="event_registration_start"
               formControlName="event_registration_start"
               required
-              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-dark-input block w-full p-2.5"
+              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
             />
           </div>
 
@@ -140,7 +141,7 @@
               id="event_registration_end"
               formControlName="event_registration_end"
               required
-              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-dark-input block w-full p-2.5"
+              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
             />
           </div>
 
@@ -154,14 +155,14 @@
               id="description"
               formControlName="event_description"
               rows="8"
-              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-dark-input block w-full p-2.5"
+              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
               placeholder="Your description here"
             ></textarea>
           </div>
         </div>
         <button
           type="submit"
-          class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-semibold text-center text-white bg-dark-background rounded-md hover:bg-dark-foreground"
+          class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-semibold text-center text-light-text bg-white rounded-md hover:bg-light-background border border-light-background hover:text-white"
         >
           Add Event
         </button>

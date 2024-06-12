@@ -106,14 +106,6 @@ export class AttendanceComponent implements OnInit {
     });
   }
 
-  truncateDescription(text: string, maxLength: number): string {
-    if (text && text.length > maxLength) {
-      return text.substring(0, maxLength) + ' ...';
-    } else {
-      return text;
-    }
-  }
-
   getEventStatus(event: any): string {
     const currentDate = new Date();
     const startDate = new Date(event.event_start_date);

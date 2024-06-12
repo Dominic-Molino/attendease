@@ -28,13 +28,11 @@ export class FeedbackComponent implements OnInit {
     private eventService: EventService,
     private service: AuthserviceService,
     private dialog: MatDialog
-  ) {
-    this.userId = this.service.getCurrentUserId();
-  }
+  ) {}
 
   ngOnInit(): void {
+    this.userId = this.service.getCurrentUserId();
     this.getUserEvents();
-    this.getFeedback();
   }
 
   getUserEvents(): void {
@@ -52,39 +50,47 @@ export class FeedbackComponent implements OnInit {
             return event;
           });
 
-          this.getFeedback();
-
+          //filters the event
           this.events = this.events.filter(
             (event) => event.eventState === 'done'
           );
+
+          //fetch the feedback after loading the events
+          this.getFeedback();
         }
       },
       (error) => {
-        console.error('Error:', error);
+        console.error('Error fetching user events:', error);
       }
     );
   }
 
   getFeedback(): void {
-    this.service.getFeedback(this.userId).subscribe((res) => {
-      if (res && res.payload) {
-        this.feedback = res.payload;
-        this.mapFeedbackToEvents();
-      }
-    });
+    if (this.userId) {
+      this.service.getUserFeedback(this.userId).subscribe(
+        (res) => {
+          if (res && res.payload) {
+            this.feedback = res.payload;
+            this.mapFeedbackToEvents();
+          }
+        },
+        (error) => {
+          console.error('Error fetching user feedback:', error);
+        }
+      );
+    }
   }
 
   mapFeedbackToEvents(): void {
-    this.events = this.events.map((event) => {
+    this.events.forEach((event) => {
       const eventFeedback = this.feedback.find(
         (feedback) => feedback.event_id === event.event_id
       );
       event.remarks = eventFeedback ? eventFeedback.remarks : 'No Submission';
-      return event;
     });
   }
 
-  openDialog(eventId: number) {
+  openDialog(eventId: number): void {
     this.dialog.open(FeedbackSubmissionComponent, {
       data: {
         curr_event_id: eventId,

@@ -29,7 +29,7 @@
       </button>
     </div>
     <form
-      class="max-w-sm mx-auto p-10 sm:w-full"
+      class="max-w-sm mx-auto my-3.5 sm:w-full"
       autocomplete="off"
       [formGroup]="editForm"
       (ngSubmit)="updateInfo()"
@@ -45,7 +45,7 @@
           id="first_name"
           formControlName="first_name"
           name="first_name"
-          class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-dark-input block w-full p-2"
+          class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2"
           placeholder=""
           required
         />
@@ -62,7 +62,7 @@
           id="last_name"
           formControlName="last_name"
           name="last_name"
-          class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-dark-input block w-full p-2"
+          class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2"
           placeholder=""
           required
         />
@@ -78,7 +78,7 @@
           id="year_level"
           name="year_level"
           formControlName="year_level"
-          class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-dark-input block w-full p-2"
+          class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2"
         >
           <option>1</option>
           <option>2</option>
@@ -97,7 +97,7 @@
           id="category2"
           name="block"
           formControlName="block"
-          class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-dark-input block w-full p-2"
+          class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2"
         >
           <option>A</option>
           <option>B</option>
@@ -116,7 +116,7 @@
           id="category3"
           name="course"
           formControlName="course"
-          class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-dark-input block w-full p-2"
+          class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2"
         >
           <option>BSCS</option>
           <option>BSIT</option>
@@ -135,7 +135,7 @@
           type="email"
           formControlName="email"
           name="email"
-          class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-dark-input block w-full p-2"
+          class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2"
           placeholder=""
           required
         />
@@ -144,7 +144,7 @@
       <div class="flex w-full justify-center">
         <button
           type="submit"
-          class="text-white mx-auto block md:w-[50%] bg-dark-background hover:bg-dark-foreground focus:outline-none font-bold font-secondary rounded-md text-sm sm:w-auto px-5 py-2.5 text-center"
+          class="text-light-text border border-light-background mx-auto block md:w-[50%] bg-white hover:text-white hover:bg-light-background focus:outline-none font-bold rounded-md text-sm sm:w-auto px-5 py-2.5 text-center"
         >
           Save
         </button>

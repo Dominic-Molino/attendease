@@ -11,11 +11,11 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [CommonModule, TitleCasePipe],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css',
+  styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
   studentProfile: any[] = [];
-  userId = this.service.getCurrentUserId();
+  userId: any;
   avatarUrl?: SafeUrl;
   file: any;
 
@@ -23,16 +23,15 @@ export class ProfileComponent implements OnInit {
     private service: AuthserviceService,
     private dialog: MatDialog,
     private sanitizer: DomSanitizer
-  ) {
-    this.userId = this.service.getCurrentUserId();
-  }
+  ) {}
 
   ngOnInit(): void {
+    this.userId = this.service.getCurrentUserId();
     this.loadInfo();
     this.loadAvatar();
   }
 
-  loadInfo() {
+  loadInfo(): void {
     if (this.userId) {
       this.service.getStudentProfile(this.userId).subscribe((res) => {
         this.studentProfile = res.payload;
@@ -40,33 +39,31 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  onFileChange(event: any) {
+  onFileChange(event: any): void {
     if (this.userId) {
       const files = event.target.files as FileList;
       if (files.length > 0) {
         this.file = files[0];
-        console.log(this.file);
-        this.service
-          .uploadAvatar(this.userId, this.file)
-          .subscribe((data: any) => {
+
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.avatarUrl = e.target.result;
+        };
+
+        this.service.uploadAvatar(this.userId, this.file).subscribe(
+          (data: any) => {
             Swal.fire('Success', 'Successfully uploaded photo', 'success');
             this.loadAvatar();
-            this.resetInput();
-          });
+          },
+          (error) => {
+            console.error('Error uploading avatar:', error);
+          }
+        );
       }
     }
   }
 
-  resetInput() {
-    const input = document.getElementById(
-      'avatar-input-file'
-    ) as HTMLInputElement;
-    if (input) {
-      input.value = '';
-    }
-  }
-
-  loadAvatar() {
+  loadAvatar(): void {
     if (this.userId) {
       this.service.getAvatar(this.userId).subscribe(
         (blob) => {
@@ -86,13 +83,13 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  openEditInfo() {
+  openEditInfo(): void {
     const modal = this.dialog.open(EditComponent, {
       data: this.studentProfile,
       width: '35%',
       disableClose: true,
     });
-    modal.afterClosed().subscribe((res) => {
+    modal.afterClosed().subscribe(() => {
       this.loadInfo();
     });
   }
@@ -102,6 +99,6 @@ export class ProfileComponent implements OnInit {
       const indexOf = email.indexOf('@');
       return email.substring(0, indexOf);
     }
-    return email;
+    return email || '';
   }
 }

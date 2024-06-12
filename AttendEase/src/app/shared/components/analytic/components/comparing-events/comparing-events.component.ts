@@ -40,10 +40,11 @@ export class ComparingEventsComponent implements OnInit {
 
       this.data = {
         labels: eventLabels,
+
         datasets: [
           {
-            label: 'Number of Attendees',
-            backgroundColor: '#09090b',
+            label: 'Number of Attendees per Events',
+            backgroundColor: '#04c464',
             barThickness: 20,
             borderRadius: 15,
             data: attendeeCounts,
@@ -60,13 +61,13 @@ export class ComparingEventsComponent implements OnInit {
             labels: {
               font: {
                 size: 14,
-                family: 'Poppins',
+                family: 'Inter',
               },
             },
           },
           title: {
             display: true,
-            text: 'Attendees on each events Overview',
+            text: 'Overall attendees on each events Overview',
             font: {
               size: 18,
             },

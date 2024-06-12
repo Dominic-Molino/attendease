@@ -6,6 +6,7 @@ import { BlockComponent } from './components/block/block.component';
 import { AttendanceComponent } from './components/attendance/attendance.component';
 import { CarouselModule } from 'primeng/carousel';
 import { ComparingEventsComponent } from './components/comparing-events/comparing-events.component';
+import { FeedbackChartComponent } from './components/feedback-chart/feedback-chart.component';
 
 @Component({
   selector: 'app-analytic',
@@ -20,11 +21,14 @@ import { ComparingEventsComponent } from './components/comparing-events/comparin
     AttendanceComponent,
     CarouselModule,
     ComparingEventsComponent,
+    FeedbackChartComponent,
   ],
 })
 export class AnalyticComponent implements OnInit {
   slides: string[] = [];
+  slides2: string[] = [];
   ngOnInit(): void {
     this.slides = ['course', 'year-level', 'block'];
+    this.slides2 = ['feedback', 'attendees'];
   }
 }

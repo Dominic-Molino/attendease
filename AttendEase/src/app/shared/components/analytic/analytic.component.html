@@ -1,19 +1,37 @@
 <main class="!scroll-smooth w-full h-screen">
   <div class="p-4 mt-16 sm:ml-64">
     <div class="flex flex-col">
-      <p
-        class="font-secondary mb-2 text-custom_black text-2xl tracking-wide font-bold"
-      >
-        Dashboard
-      </p>
-      <hr class="h-px mb-5 bg-dark-border border-0 dark:bg-gray-700" />
+      <div>
+        <p class="mt-5 mb-2 text-black text-2xl tracking-wide">Dashboard</p>
+
+        <hr class="h-px mb-6 bg-dark-border border-0" />
+      </div>
 
       <div class="mb-2">
         <app-cards></app-cards>
       </div>
 
-      <div class="mb-2">
-        <app-comparing-events></app-comparing-events>
+      <div class="mx-auto h-full w-full self-center mb-3.5">
+        <p-carousel
+          [value]="slides2"
+          [numVisible]="1"
+          [numScroll]="1"
+          [circular]="true"
+        >
+          <ng-template pTemplate="item" let-slides2>
+            <div>
+              <ng-container [ngSwitch]="slides2">
+                <app-feedback-chart
+                  *ngSwitchCase="'feedback'"
+                ></app-feedback-chart>
+                <app-comparing-events
+                  class="mb-2"
+                  *ngSwitchCase="'attendees'"
+                ></app-comparing-events>
+              </ng-container>
+            </div>
+          </ng-template>
+        </p-carousel>
       </div>
 
       <div
@@ -30,7 +48,7 @@
             [circular]="true"
           >
             <ng-template pTemplate="item" let-slide>
-              <div class="card1">
+              <div>
                 <ng-container [ngSwitch]="slide">
                   <app-course *ngSwitchCase="'course'"></app-course>
                   <app-year-level *ngSwitchCase="'year-level'"></app-year-level>

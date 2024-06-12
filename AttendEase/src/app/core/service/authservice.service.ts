@@ -155,11 +155,19 @@ export class AuthserviceService {
     );
   }
 
-  getFeedback(event_id: any = null): Observable<any> {
+  getEventFeedback(event_id: any = null): Observable<any> {
     if (event_id) {
-      return this.http.get(`${this.API_URL}getfeedback/${event_id}`);
+      return this.http.get(`${this.API_URL}getEventfeedback/${event_id}`);
     } else {
-      return this.http.get(`${this.API_URL}getfeedback`);
+      return this.http.get(`${this.API_URL}getEventfeedback`);
+    }
+  }
+
+  getUserFeedback(user_id: any = null): Observable<any> {
+    if (user_id) {
+      return this.http.get(`${this.API_URL}getUserFeedback/${user_id}`);
+    } else {
+      return this.http.get(`${this.API_URL}getUserFeedback`);
     }
   }
 }

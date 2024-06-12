@@ -1,10 +1,11 @@
 <main class="w-full h-full">
   <div class="p-4 mt-16 sm:ml-64">
     <div>
-      <p class="mb-2 text-custom_black text-2xl tracking-wide font-bold">
+      <p class="mt-5 mb-2 text-black text-2xl tracking-wide">
         Attendance Submission
       </p>
-      <hr class="h-px mb-6 bg-gray-200 border-0" />
+
+      <hr class="h-px mb-6 bg-dark-border border-0" />
     </div>
     <div
       *ngIf="events.length > 0; else fallback"
@@ -47,17 +48,10 @@
                   class="flex justify-center items-center text-center text-sm font-normal text-gray-900 me-3"
                 >
                   <span
-                    *ngIf="event.eventState === 'upcoming'"
-                    class="flex w-2.5 h-2.5 bg-yellow-300 text-center rounded-full me-1.5 flex-shrink-0"
-                  ></span>
-                  <span
                     *ngIf="event.eventState === 'done'"
-                    class="flex w-2.5 h-2.5 bg-green-500 rounded-full text-center me-1.5 flex-shrink-0"
+                    class="flex w-2.5 h-2.5 bg-light-foregroud rounded-full text-center me-1.5 flex-shrink-0"
                   ></span>
-                  <span
-                    *ngIf="event.eventState === 'ongoing'"
-                    class="flex w-2.5 h-2.5 bg-blue-500 rounded-full me-1.5 flex-shrink-0 text-center"
-                  ></span>
+
                   {{ event.eventState | uppercase }}
                 </span>
               </td>
@@ -86,7 +80,7 @@
             <td>
               <button
                 (click)="openFile(event.eventState, event)"
-                class="block mx-auto px-4 py-2 text-sm text-white font-semibold bg-dark-background hover:bg-dark-foreground border border-gray-200 rounded-md focus:outline-none"
+                class="block mx-auto px-4 py-2 text-sm text-white font-semibold bg-light-background hover:bg-light-foregroud rounded-md focus:outline-none"
               >
                 Submit
               </button>
