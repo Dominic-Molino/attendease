@@ -170,11 +170,19 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($get->get_total_registered_users($request[0]));
                 break;
 
-            case 'getfeedback':
+            case 'getEventfeedback':
                 if (isset($request[1])) {
                     echo json_encode($get->get_event_feedback($request[1]));
                 } else {
                     echo json_encode($get->get_event_feedback());
+                }
+                break;
+
+            case 'getUserFeedback':
+                if (isset($request[1])) {
+                    echo json_encode($get->get_user_feedback($request[1]));
+                } else {
+                    echo json_encode($get->get_user_feedback());
                 }
                 break;
 

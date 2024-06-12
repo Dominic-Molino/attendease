@@ -106,7 +106,7 @@ class Get extends GlobalMethods
 
     public function get_users($user_id = null)
     {
-        $columns = "user_id, first_name, last_name, year_level, block, course, email, password, role_id";
+        $columns = "user_id, first_name, last_name, year_level, block, course, email, role_id";
         $condition = ($user_id !== null) ? "user_id = $user_id" : null;
         return $this->get_records('user', $condition, $columns);
     }
@@ -555,6 +555,14 @@ class Get extends GlobalMethods
         $columns = "feedback_id, event_id, user_id, overall_satisfaction, content_quality, speaker_effectiveness,
             venue_rating, logistics_rating, improvement_suggestions, additional_comments, feedback_date, remarks";
         $condition = ($event_id !== null) ? "event_id = $event_id" : null;
+        return $this->get_records('feedback', $condition, $columns);
+    }
+
+    public function get_user_feedback($user_id = null)
+    {
+        $columns = "feedback_id, event_id, user_id, overall_satisfaction, content_quality, speaker_effectiveness,
+            venue_rating, logistics_rating, improvement_suggestions, additional_comments, feedback_date, remarks";
+        $condition = ($user_id !== null) ? "user_id = $user_id" : null;
         return $this->get_records('feedback', $condition, $columns);
     }
 }
