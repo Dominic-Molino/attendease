@@ -1,13 +1,13 @@
-<section class="w-full h-screen bg-white">
+<section class="w-full h-screen bg-[#FEFEFE]">
   <div
     class="flex max-md:flex-col-reverse flex-row justify-center items-center h-screen w-full px-52 relative z-20 max-sm:p-1"
   >
     <!-- form -->
     <div class="w-1/2">
       <h1
-        class="max-sm:flex max-sm:justify-center text-black md:text-center font-primary font-bold mb-5 text-2xl text-nowrap"
+        class="max-sm:flex max-sm:justify-center text-text md:text-center font-primary font-bold mb-5 text-2xl text-nowrap"
       >
-        Welcome <span class="text-serpentine">GCians!</span>
+        Welcome <span class="text-text">GCians!</span>
       </h1>
       <form
         [formGroup]="loginForm"
@@ -24,29 +24,52 @@
             type="email"
             name="email"
             id="email"
-            class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
+            class="bg-[#FFFFF0] border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
             placeholder="Domain Email"
             required
           />
         </div>
 
         <!-- password -->
-        <div class="mb-5">
+        <div class="mb-5 relative">
           <input
             formControlName="password"
             type="password"
             name="password"
+            [type]="passwordFieldType"
             id="password"
-            class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
+            class="bg-[#FEFEFE] border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
             required
             placeholder="Password"
           />
+          <button
+            type="button"
+            class="text-sm text-text hover:text-light-background focus:outline-none absolute top-0.5 bottom-0.5 right-3.5"
+            (click)="togglePasswordVisibility()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-eye"
+            >
+              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+              <circle cx="12" cy="12" r="3" />
+              {{ passwordFieldType === "password" ? "Show" : "Hide" }}
+            </svg>
+          </button>
         </div>
 
         <div class="flex w-full justify-center">
           <button
             type="submit"
-            class="text-light-text font-semibold mx-auto block md:w-[50%] bg-white border border-light-border hover:bg-light-background hover:text-white focus:outline-none rounded-md text-sm sm:w-auto px-5 py-2.5 text-center"
+            class="text-light-text font-semibold mx-auto block md:w-[50%] bg-[#FEFEFE] border border-light-border hover:bg-light-background hover:text-white focus:outline-none rounded-md text-sm sm:w-auto px-5 py-2.5 text-center"
           >
             Login
           </button>
@@ -72,9 +95,7 @@
           class="w-72 h-72"
           alt=""
         />
-        <h1
-          class="text-center text-4xl -mt-20 font-primary font-bold text-black"
-        >
+        <h1 class="text-center text-4xl -mt-20 font-bold text-text">
           AttendEase
         </h1>
       </div>

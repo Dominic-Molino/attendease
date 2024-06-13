@@ -1,7 +1,9 @@
 <main class="w-full h-screen">
   <div class="p-4 mt-16 sm:ml-64">
     <div>
-      <p class="mt-5 mb-2 text-black text-2xl tracking-wide">Profile</p>
+      <p class="mt-5 mb-2 text-text text-2xl tracking-wide font-semibold">
+        Profile
+      </p>
 
       <hr class="h-px mb-6 bg-dark-border border-0" />
     </div>
@@ -25,7 +27,7 @@
             </ng-template>
 
             <label for="avatar-input-file">
-              <div class="icon-wrapper hover:bg-ivy">
+              <div class="icon-wrapper">
                 <svg
                   class="w-6 h-6 text-white relative left-[2px]"
                   aria-hidden="true"
@@ -55,11 +57,11 @@
           }
         </div>
 
-        <h5 class="mb-1 text-2xl mt-2 lg:text-2xl font-medium text-black">
+        <h5 class="mb-1 text-2xl mt-2 lg:text-2xl font-medium text-text">
           {{ studentProfile[0]?.first_name | titlecase }}
           {{ studentProfile[0]?.last_name | titlecase }}
         </h5>
-        <span class="text-xs text-black lg:text-xl">{{
+        <span class="text-xs text-text lg:text-xl">{{
           extractStudentId(studentProfile[0]?.email)
         }}</span>
 
@@ -75,12 +77,12 @@
                 <div class="flex items-center">
                   <div class="flex-1 min-w-0 ms-4">
                     <p
-                      class="inline me-1 text-base font-medium text-black truncate"
+                      class="inline me-1 text-base font-medium text-text truncate"
                     >
                       Full Name:
                     </p>
                     <span
-                      class="text-sm font-normal lg:text-base font-secondary text-black"
+                      class="text-sm font-normal lg:text-base font-secondary text-text"
                       >{{ studentProfile[0]?.first_name | titlecase }}
                       {{ studentProfile[0]?.last_name | titlecase }}</span
                     >
@@ -91,12 +93,12 @@
                 <div class="flex items-center">
                   <div class="flex-1 min-w-0 ms-4">
                     <p
-                      class="inline me-1 text-base font-medium text-black truncate"
+                      class="inline me-1 text-base font-medium text-text truncate"
                     >
                       Email:
                     </p>
                     <span
-                      class="text-sm font-normal lg:text-base font-secondary text-black"
+                      class="text-sm font-normal lg:text-base font-secondary text-text"
                       >{{ studentProfile[0]?.email }}</span
                     >
                   </div>
@@ -106,12 +108,12 @@
                 <div class="flex items-center">
                   <div class="flex-1 min-w-0 ms-4">
                     <p
-                      class="inline me-1 text-base font-medium text-black truncate"
+                      class="inline me-1 text-base font-medium text-text truncate"
                     >
                       Program:
                     </p>
                     <span
-                      class="text-sm font-normal lg:text-base font-secondary text-black"
+                      class="text-sm font-normal lg:text-base font-secondary text-text"
                       >{{ studentProfile[0]?.course | uppercase }}</span
                     >
                   </div>
@@ -121,12 +123,12 @@
                 <div class="flex items-center">
                   <div class="flex-1 min-w-0 ms-4">
                     <p
-                      class="inline me-1 text-base font-medium text-black truncate"
+                      class="inline me-1 text-base font-medium text-text truncate"
                     >
                       Block:
                     </p>
                     <span
-                      class="text-sm font-normal lg:text-base font-secondary text-black"
+                      class="text-sm font-normal lg:text-base font-secondary text-text"
                       >{{ studentProfile[0]?.block | uppercase }}</span
                     >
                   </div>
@@ -136,12 +138,12 @@
                 <div class="flex items-center">
                   <div class="flex-1 min-w-0 ms-4">
                     <p
-                      class="inline me-1 text-base font-medium text-black truncate"
+                      class="inline me-1 text-base font-medium text-text truncate"
                     >
                       Year:
                     </p>
                     <span
-                      class="text-sm font-normal lg:text-base font-secondary text-black"
+                      class="text-sm font-normal lg:text-base font-secondary text-text"
                       >{{ studentProfile[0]?.year_level }}</span
                     >
                   </div>

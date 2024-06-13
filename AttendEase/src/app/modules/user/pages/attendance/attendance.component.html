@@ -1,7 +1,7 @@
 <main class="w-full h-full">
   <div class="p-4 mt-16 sm:ml-64">
     <div>
-      <p class="mt-5 mb-2 text-black text-2xl tracking-wide">
+      <p class="mt-5 mb-2 text-text font-semibold text-2xl tracking-wide">
         Attendance Submission
       </p>
 
@@ -9,19 +9,44 @@
     </div>
     <div
       *ngIf="events.length > 0; else fallback"
-      class="relative overflow-x-auto shadow-md rounded-md overflow-y-auto border border-gray-200"
+      class="relative overflow-x-auto shadow-md rounded-md overflow-y-auto border border-dark-border"
     >
       <table class="w-full text-sm text-left rtl:text-right text-gray-500">
         <!-- header -->
         <thead
-          class="text-xs text-gray-700 uppercase bg-dark-primary sticky top-0 z-10"
+          class="text-dark-muted border-b border-dark-primary capitalize bg-dark-foreground sticky top-0 z-10"
         >
           <tr>
-            <th scope="col" class="px-6 py-3 text-center">Event Name</th>
-            <th scope="col" class="px-6 py-3 text-center">Date</th>
-            <th scope="col" class="px-6 py-3 text-center">Event Status</th>
-            <th scope="col" class="px-6 py-3 text-center">Remarks</th>
-            <th scope="col" class="px-6 py-3 text-center">Action</th>
+            <th
+              scope="col"
+              class="px-6 py-3 text-center tracking-widest font-medium"
+            >
+              Event Name
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 text-center tracking-widest font-medium"
+            >
+              Date
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 text-center tracking-widest font-medium"
+            >
+              Event Status
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 text-center tracking-widest font-medium"
+            >
+              Remarks
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 text-center tracking-widest font-medium"
+            >
+              Action
+            </th>
           </tr>
         </thead>
         <!-- body -->
@@ -45,14 +70,22 @@
             <div class="flex justify-center text-center">
               <td class="py-4 text-center">
                 <span
-                  class="flex justify-center items-center text-center text-sm font-normal text-gray-900 me-3"
+                  class="flex justify-center items-center capitalize text-center text-sm font-normal text-gray-900 me-3"
                 >
                   <span
                     *ngIf="event.eventState === 'done'"
                     class="flex w-2.5 h-2.5 bg-light-foregroud rounded-full text-center me-1.5 flex-shrink-0"
                   ></span>
+                  <span
+                    *ngIf="event.eventState === 'ongoing'"
+                    class="flex w-2.5 h-2.5 bg-blue-500 rounded-full text-center me-1.5 flex-shrink-0"
+                  ></span>
+                  <span
+                    *ngIf="event.eventState === 'upcoming'"
+                    class="flex w-2.5 h-2.5 bg-yellow-500 rounded-full text-center me-1.5 flex-shrink-0"
+                  ></span>
 
-                  {{ event.eventState | uppercase }}
+                  {{ event.eventState }}
                 </span>
               </td>
             </div>
@@ -82,7 +115,7 @@
                 (click)="openFile(event.eventState, event)"
                 class="block mx-auto px-4 py-2 text-sm text-white font-semibold bg-light-background hover:bg-light-foregroud rounded-md focus:outline-none"
               >
-                Submit
+                Upload photo
               </button>
             </td>
           </tr>

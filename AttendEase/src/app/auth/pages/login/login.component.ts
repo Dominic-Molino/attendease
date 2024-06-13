@@ -21,6 +21,8 @@ export class LoginComponent implements OnInit {
   }
 
   userData: any;
+  passwordFieldType: string = 'password';
+
   ngOnInit(): void {}
 
   loginForm = this.builder.group({
@@ -76,5 +78,10 @@ export class LoginComponent implements OnInit {
         Swal.fire('Incorrect Credentials', 'Please try again', 'warning');
       }
     );
+  }
+
+  togglePasswordVisibility() {
+    this.passwordFieldType =
+      this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 }

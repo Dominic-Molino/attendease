@@ -1,7 +1,9 @@
 <main class="!scroll-smooth w-full h-screen dark:bg-black">
   <div class="p-4 mt-16 sm:ml-64">
     <div>
-      <p class="mt-5 mb-2 text-black text-2xl tracking-wide">Attendees List</p>
+      <p class="mt-5 mb-2 text-text text-2xl tracking-wide font-semibold">
+        Attendees List
+      </p>
       <hr class="h-px mb-5 bg-dark-border border-0" />
     </div>
 
@@ -55,15 +57,34 @@
       class="relative overflow-x-auto shadow-md sm:rounded-lg border border-dark-border"
     >
       <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-        <thead class="text-xs text-gray-700 uppercase bg-dark-primary">
+        <thead
+          class="text-dark-muted border-b border-dark-primary capitalize bg-dark-foreground sticky top-0 z-10"
+        >
           <tr>
-            <th scope="col" class="px-6 py-3">Name</th>
-            <th scope="col" class="px-6 py-3">Year Level</th>
-            <th scope="col" class="px-6 py-3">Block</th>
-            <th scope="col" class="px-6 py-3">Course</th>
-            <th scope="col" class="px-6 py-3">Email</th>
-            <th scope="col" class="px-6 py-3">Role</th>
-            <th scope="col" class="px-6 py-3 text-center">Event Registered</th>
+            <th scope="col" class="px-6 py-3 tracking-widest font-medium">
+              Name
+            </th>
+            <th scope="col" class="px-6 py-3 tracking-widest font-medium">
+              Year Level
+            </th>
+            <th scope="col" class="px-6 py-3 tracking-widest font-medium">
+              Block
+            </th>
+            <th scope="col" class="px-6 py-3 tracking-widest font-medium">
+              Course
+            </th>
+            <th scope="col" class="px-6 py-3 tracking-widest font-medium">
+              Email
+            </th>
+            <th scope="col" class="px-6 py-3 tracking-widest font-medium">
+              Role
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 text-center tracking-widest font-medium"
+            >
+              Event Registered
+            </th>
           </tr>
         </thead>
         <tbody>

@@ -24,6 +24,8 @@ interface Event {
   event_registration_end: Date;
   session: string;
   max_attendees: number;
+  event_categories: string;
+  organizer_name: string;
   event_image$: Observable<SafeResourceUrl | undefined>;
 }
 
@@ -50,6 +52,7 @@ export class EventsComponent implements OnInit {
 
   ngOnInit(): void {
     this.service.getAllEvents().subscribe((result) => {
+      console.log(result.payload);
       this.eventList = result.payload.map((data: any): Event => {
         const eventObject: Event = {
           event_id: data.event_id,
@@ -62,6 +65,8 @@ export class EventsComponent implements OnInit {
           event_registration_end: data.event_registration_end,
           session: data.session,
           max_attendees: data.max_attendees,
+          event_categories: data.event_categories,
+          organizer_name: data.organizer_name,
           event_image$: this.eventService.getEventImage(data.event_id).pipe(
             switchMap((imageResult) => {
               if (imageResult.size > 0) {

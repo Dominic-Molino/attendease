@@ -23,6 +23,8 @@ interface Event {
   event_registration_end: Date;
   session: string;
   max_attendees: number;
+  categories: string[];
+  organizer_name: string;
   event_image: SafeResourceUrl | undefined;
   event_image$?: Observable<SafeResourceUrl>;
   status?: string;
@@ -70,6 +72,7 @@ export class OrgEventComponent implements OnInit {
 
   loadEvent() {
     this.service.getAllEvents().subscribe((result) => {
+      console.log(result.payload);
       this.eventList = result.payload.map((data: any): Event => {
         const eventId = data.event_id;
         const eventObject: Event = {
@@ -83,6 +86,8 @@ export class OrgEventComponent implements OnInit {
           event_registration_end: data.event_registration_end,
           session: data.session,
           max_attendees: data.max_attendees,
+          categories: data.categories,
+          organizer_name: data.organizer_name,
           event_image: undefined,
           status: this.getEventStatus(data),
           event_image$: undefined,
@@ -157,7 +162,7 @@ export class OrgEventComponent implements OnInit {
 
   openDialog() {
     const modal = this.dialog.open(AddEventComponent, {
-      width: '50%',
+      width: '60%',
       disableClose: true,
     });
 

@@ -1,7 +1,9 @@
 <main class="w-full">
   <div class="p-4 mt-16 sm:ml-64">
     <div>
-      <p class="mt-5 mb-2 text-black text-2xl tracking-wide">Dashboard</p>
+      <p class="mt-5 mb-2 text-text text-2xl font-semibold tracking-wide">
+        Dashboard
+      </p>
 
       <hr class="h-px mb-6 bg-dark-border border-0" />
     </div>
@@ -19,7 +21,9 @@
         >
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center">
-              <span class="text-xl me-1 font-bold leading-none text-dark-text">
+              <span
+                class="text-lg me-1 font-medium leading-none text-dark-text"
+              >
                 Registered Events
               </span>
               <svg
@@ -54,19 +58,34 @@
 
           <div
             *ngIf="events && events.length > 0; else noEventsMessage"
-            class="relative overflow-x-auto rounded-md overflow-y-auto border max-h-72 border-gray-200"
+            class="relative overflow-x-auto rounded-md overflow-y-auto border max-h-72 border-dark-border"
           >
             <table
               class="w-full text-sm text-left rtl:text-right text-gray-500"
             >
               <!-- header -->
               <thead
-                class="text-xs text-gray-700 uppercase bg-dark-primary border-b border-dark-border sticky top-0 z-10"
+                class="text-sm capitalize bg-dark-foreground border-b border-dark-border sticky top-0 z-10"
               >
                 <tr>
-                  <th scope="col" class="px-6 py-3">Event Name</th>
-                  <th scope="col" class="px-6 py-3">Date</th>
-                  <th scope="col" class="px-6 py-3">Status</th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 tracking-widest font-medium text-dark-muted"
+                  >
+                    Event Name
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 tracking-widest font-medium text-dark-muted"
+                  >
+                    Date
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 tracking-widest font-medium text-dark-muted"
+                  >
+                    Status
+                  </th>
                 </tr>
               </thead>
               <!-- body -->
@@ -77,29 +96,31 @@
                 >
                   <td
                     scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                    class="px-6 py-4 font-medium text-[13.5px] text-gray-900 whitespace-nowrap"
                   >
                     {{ event.event_name }}
                   </td>
-                  <td class="px-6 py-4">{{ event.event_start_date | date }}</td>
+                  <td class="px-6 py-4 text-[13.5px]">
+                    {{ event.event_start_date | date }}
+                  </td>
                   <div class="flex items-center">
                     <td class="py-4">
                       <span
-                        class="flex items-center text-sm font-normal text-gray-900 me-3"
+                        class="flex items-center text-[13.5px] capitalize font-normal text-gray-900 me-3"
                       >
                         <span
                           *ngIf="event.eventState === 'upcoming'"
-                          class="flex w-2.5 h-2.5 bg-yellow-300 rounded-full me-1.5 flex-shrink-0"
+                          class="flex w-2.5 h-2.5 bg-yellow-300 text-[13.5px] capitalize rounded-full me-1.5 flex-shrink-0"
                         ></span>
                         <span
                           *ngIf="event.eventState === 'done'"
-                          class="flex w-2.5 h-2.5 bg-qgreen-500 rounded-full me-1.5 flex-shrink-0"
+                          class="flex w-2.5 h-2.5 bg-light-foregroud text-[13.5px] capitalize rounded-full me-1.5 flex-shrink-0"
                         ></span>
                         <span
                           *ngIf="event.eventState === 'ongoing'"
-                          class="flex w-2.5 h-2.5 bg-blue-500 rounded-full me-1.5 flex-shrink-0"
+                          class="flex w-2.5 h-2.5 bg-blue-500 text-[13.5px] capitalize rounded-full me-1.5 flex-shrink-0"
                         ></span>
-                        {{ event.eventState | uppercase }}
+                        {{ event.eventState }}
                       </span>
                     </td>
                   </div>
@@ -120,11 +141,21 @@
                 class="w-full text-sm text-left rtl:text-right rounded-b-lg text-gray-500"
               >
                 <thead
-                  class="text-xs text-black uppercase bg-dark-primary border-b border-dark-border"
+                  class="text-sm capitalize bg-dark-foreground border-b border-dark-border"
                 >
                   <tr>
-                    <th scope="col" class="px-6 py-3">Status</th>
-                    <th scope="col" class="px-6 py-3">Event Description</th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 tracking-widest font-medium text-dark-muted"
+                    >
+                      Status
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 tracking-widest font-medium text-dark-muted"
+                    >
+                      Event Description
+                    </th>
                   </tr>
                 </thead>
                 <tbody>

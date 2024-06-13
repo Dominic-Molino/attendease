@@ -1,7 +1,7 @@
 <main class="!scroll-smooth w-full h-screen">
   <div class="p-4 mt-16 sm:ml-64">
     <div>
-      <p class="mt-5 mb-2 text-black text-2xl tracking-wide">Attendance</p>
+      <p class="mt-5 mb-2 text-text text-2xl tracking-wide font-semibold">Attendance</p>
       <hr class="h-px mb-5 bg-dark-border border-0" />
     </div>
 
@@ -10,14 +10,25 @@
       class="relative overflow-x-auto shadow-md rounded-md border-dark-border border"
     >
       <table class="w-full text-sm text-left rtl:text-right text-gray-50">
-        <thead class="text-xs text-gray-700 uppercase bg-dark-primary">
+        <thead
+          class="text-dark-muted border-b border-dark-primary capitalize bg-dark-foreground sticky top-0 z-10"
+        >
           <tr>
             <th scope="col" class="px-6 py-3">
               <span class="sr-only">Image</span>
             </th>
-            <th scope="col" class="px-6 py-3">Event Name</th>
-            <th scope="col" class="px-6 py-3">Status</th>
-            <th scope="col" class="px-6 py-3 text-center">Action</th>
+            <th scope="col" class="px-6 py-3 tracking-widest font-medium">
+              Event Name
+            </th>
+            <th scope="col" class="px-6 py-3 tracking-widest font-medium">
+              Status
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 tracking-widest font-medium text-center"
+            >
+              Action
+            </th>
           </tr>
         </thead>
         <tbody>

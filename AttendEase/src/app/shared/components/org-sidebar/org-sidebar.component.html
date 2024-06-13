@@ -31,7 +31,7 @@
             alt="AttendEase"
           />
           <span
-            class="self-center text-xl text-black font-bold font-primary whitespace-nowrap"
+            class="self-center text-xl text-text font-bold  whitespace-nowrap"
             >AttendEase</span
           >
         </a>
@@ -115,8 +115,9 @@
       <li>
         <a
           routerLink="dashboard"
-          [routerLinkActive]="'bg-dark-primary'"
-          class="flex items-center p-2 text-black rounded-lg hover:bg-dark-primary group"
+          [routerLinkActive]="'bg-dark-background text-white'"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center p-2 rounded-lg hover:text-white font-semibold hover:bg-dark-foreground group"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -135,7 +136,7 @@
             <path d="M6 16h12" />
           </svg>
           <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-serpentine"
+            class="flex-1 ms-3 text-base whitespace-nowrap  "
             >Dashboard</span
           >
         </a>
@@ -144,8 +145,9 @@
       <li>
         <a
           routerLink="events"
-          [routerLinkActive]="'bg-dark-primary'"
-          class="flex items-center p-2 text-black rounded-lg hover:bg-dark-primary group"
+          [routerLinkActive]="'bg-dark-background text-white'"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center p-2 rounded-lg hover:text-white font-semibold hover:bg-dark-foreground group"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -172,7 +174,7 @@
           </svg>
 
           <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-serpentine"
+            class="flex-1 ms-3 text-base whitespace-nowrap  "
             >Events</span
           >
         </a>
@@ -181,8 +183,9 @@
       <li>
         <a
           routerLink="org-feedback-list"
-          [routerLinkActive]="'bg-dark-primary'"
-          class="flex items-center p-2 text-black rounded-lg hover:bg-dark-primary group"
+          [routerLinkActive]="'bg-dark-background text-white'"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center p-2 rounded-lg hover:text-white font-semibold hover:bg-dark-foreground group"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -200,7 +203,7 @@
           </svg>
 
           <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-serpentine"
+            class="flex-1 ms-3 text-base whitespace-nowrap  "
             >Feedback List</span
           >
         </a>

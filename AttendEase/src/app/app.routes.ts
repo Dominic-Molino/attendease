@@ -52,7 +52,7 @@ export const routes: Routes = [
       },
 
       {
-        path: 'list',
+        path: 'admin-attendees-list',
         loadComponent: () =>
           import(
             './modules/admin/pages/studentlist/studentlist.component'
@@ -61,7 +61,7 @@ export const routes: Routes = [
       },
 
       {
-        path: 'attendance',
+        path: 'admin-attendance',
         loadComponent: () =>
           import(
             './modules/organizer/pages/attendance/attendance.component'

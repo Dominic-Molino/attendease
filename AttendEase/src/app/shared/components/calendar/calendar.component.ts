@@ -92,7 +92,7 @@ export class CalendarComponent implements OnInit {
   handleDateClick(arg: any): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = { startDate: arg.date };
-    dialogConfig.width = '50%';
+    dialogConfig.width = '60%';
     dialogConfig.disableClose = true;
 
     const dialogRef = this.dialog.open(AddEventComponent, dialogConfig);
@@ -119,6 +119,7 @@ export class CalendarComponent implements OnInit {
           const dialogRef = this.dialog.open(PopupComponent, {
             data: eventData,
             disableClose: true,
+            width: '50%',
             panelClass: 'dialog-container',
           });
 

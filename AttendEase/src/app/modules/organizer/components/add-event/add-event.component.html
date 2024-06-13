@@ -27,9 +27,9 @@
       <span class="sr-only">Close modal</span>
     </button>
   </div>
-  <section class="bg-white dark:bg-gray-900 p-3">
-    <div class="px-4 mx-auto max-w-2xl">
-      <form (ngSubmit)="addEvent()" [formGroup]="eventForm">
+  <section class="bg-white dark:bg-gray-900 w-full p-5">
+    <div class="px-4 mx-auto max-w-full">
+      <form (ngSubmit)="addEvent()" [formGroup]="eventForm" class="w-full">
         <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
           <div class="sm:col-span-2">
             <label
@@ -80,6 +80,22 @@
               <option>Online</option>
               <option>Hybrid(Physical or Online)</option>
             </select>
+          </div>
+
+          <div class="w-full">
+            <label
+              for="organizer_name"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Organizer Name</label
+            >
+            <input
+              type="text"
+              name="organizer_name"
+              id="organizer_name"
+              formControlName="organizer_name"
+              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
+              placeholder="Organizer Name"
+            />
           </div>
 
           <div class="w-full">
@@ -143,12 +159,8 @@
             />
           </div>
 
-          <div class="sm:col-span-2 -mt-5">
-            <label
-              for="description"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >Description</label
-            >
+          <div class="sm:col-span-2">
+            <label for="description">Description</label>
             <textarea
               id="description"
               formControlName="event_description"
@@ -157,13 +169,46 @@
               placeholder="Your description here"
             ></textarea>
           </div>
+
+          <div class="col-span-2">
+            <legend>Related Topics</legend>
+            <div formArrayName="categories">
+              <label
+                *ngFor="let category of visibleCategories; let i = index"
+                class="ms-2 text-sm font-medium text-text text-center"
+              >
+                <input
+                  type="checkbox"
+                  [formControlName]="i"
+                  class="w-4 h-4 text-light-text bg-white border-light-border rounded focus:ring-1 focus:ring-light-border"
+                />
+                {{ category }}
+              </label>
+            </div>
+            <div class="inline-flex items-center justify-center w-full mt-2">
+              <hr class="w-full h-1 my-8 bg-light-border border rounded" />
+              <div
+                class="absolute px-4 -translate-x-1/2 bg-white left-1/2 dark:bg-gray-900"
+              >
+                <button
+                  type="button"
+                  class="text-white bg-light-background hover:bg-light-foregroud focus:outline-none focus:ring-0 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2"
+                  (click)="toggleShowAllCategories()"
+                >
+                  {{ showAllCategories ? "Less" : "More" }}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        <button
-          type="submit"
-          class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-semibold text-center text-light-text bg-white rounded-md hover:bg-light-background border border-light-background hover:text-white mb-5"
-        >
-          Add Event
-        </button>
+        <div class="flex w-full justify-center py-7">
+          <button
+            type="submit"
+            class="text-light-text border border-light-background mx-auto block md:w-[25%] bg-white hover:text-white hover:bg-light-background focus:outline-none font-bold rounded-md text-sm sm:w-auto px-5 py-2.5 text-center"
+          >
+            Add Event
+          </button>
+        </div>
       </form>
     </div>
   </section>

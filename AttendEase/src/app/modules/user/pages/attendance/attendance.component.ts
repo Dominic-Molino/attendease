@@ -61,9 +61,9 @@ export class AttendanceComponent {
             return event;
           });
 
-          this.events = this.events.filter(
-            (event) => event.eventState === 'done'
-          );
+          // this.events = this.events.filter(
+          //   (event) => event.eventState === 'done'
+          // );
 
           // Retrieve attendance remarks after fetching events
           this.events.forEach((event) => {

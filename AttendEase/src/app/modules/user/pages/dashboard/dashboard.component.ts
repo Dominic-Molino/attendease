@@ -25,24 +25,23 @@ export class DashboardComponent implements OnInit {
     this.eventService.getUserEvent().subscribe(
       (res) => {
         if (res) {
-          this.events = res.payload
-            .map((event: any) => {
-              const currentDate = new Date();
-              const endDate = new Date(event.event_end_date);
-              const eventStartDate = new Date(event.event_start_date);
-              event.eventState = '';
+          this.events = res.payload.map((event: any) => {
+            const currentDate = new Date();
+            const endDate = new Date(event.event_end_date);
+            const eventStartDate = new Date(event.event_start_date);
+            event.eventState = '';
 
-              if (endDate < currentDate) {
-                event.eventState = 'done';
-              } else if (eventStartDate <= currentDate) {
-                event.eventState = 'ongoing';
-              } else {
-                event.eventState = 'upcoming';
-              }
+            if (endDate < currentDate) {
+              event.eventState = 'done';
+            } else if (eventStartDate <= currentDate) {
+              event.eventState = 'ongoing';
+            } else {
+              event.eventState = 'upcoming';
+            }
 
-              return event;
-            })
-            .filter((event: any) => event.eventState !== 'done');
+            return event;
+          });
+          // .filter((event: any) => event.eventState !== 'done');
         } else {
           console.error(
             'Failed to retrieve user events:',

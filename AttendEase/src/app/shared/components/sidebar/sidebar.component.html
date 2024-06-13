@@ -31,7 +31,7 @@
             alt="AttendEase"
           />
           <span
-            class="self-center text-xl text-black font-bold font-primary whitespace-nowrap"
+            class="self-center text-xl text-text font-bold whitespace-nowrap"
             >AttendEase</span
           >
         </a>
@@ -115,8 +115,9 @@
       <li>
         <a
           routerLink="dashboard"
-          [routerLinkActive]="'bg-dark-primary'"
-          class="flex items-center p-2 text-black rounded-lg hover:bg-dark-primary group"
+          [routerLinkActive]="'bg-dark-background text-white'"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center p-2 rounded-lg hover:text-white font-semibold hover:bg-dark-foreground group"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -134,18 +135,16 @@
             <rect width="20" height="16" x="2" y="4" rx="2" />
             <path d="M6 16h12" />
           </svg>
-          <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-black"
-            >Dashboard</span
-          >
+          <span class="flex-1 ms-3 text-base whitespace-nowrap">Dashboard</span>
         </a>
       </li>
       <!-- user -->
       <li>
         <a
           routerLink="profile"
-          [routerLinkActive]="'bg-dark-primary'"
-          class="flex items-center p-2 text-black rounded-lg hover:bg-dark-primary group"
+          [routerLinkActive]="'bg-dark-background text-white'"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center p-2 rounded-lg hover:text-white font-semibold hover:bg-dark-foreground group"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -164,18 +163,16 @@
             <circle cx="12" cy="12" r="10" />
           </svg>
 
-          <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-serpentine"
-            >Profile</span
-          >
+          <span class="flex-1 ms-3 text-base whitespace-nowrap">Profile</span>
         </a>
       </li>
       <!-- event -->
       <li>
         <a
           routerLink="events"
-          [routerLinkActive]="'bg-dark-primary'"
-          class="flex items-center p-2 text-black rounded-lg hover:bg-dark-primary group"
+          [routerLinkActive]="'bg-dark-background text-white'"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center p-2 rounded-lg hover:text-white font-semibold hover:bg-dark-foreground group"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -201,10 +198,7 @@
             <path d="M16 18h.01" />
           </svg>
 
-          <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-serpentine"
-            >Events</span
-          >
+          <span class="flex-1 ms-3 text-base whitespace-nowrap">Events</span>
         </a>
       </li>
 
@@ -212,8 +206,9 @@
       <li>
         <a
           routerLink="attendance"
-          [routerLinkActive]="'bg-dark-primary'"
-          class="flex items-center p-2 text-black rounded-lg hover:bg-dark-primary group"
+          [routerLinkActive]="'bg-dark-background text-white'"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center p-2 rounded-lg hover:text-white font-semibold hover:bg-dark-foreground group"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -235,8 +230,7 @@
             <circle cx="9" cy="9" r="2" />
           </svg>
 
-          <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-serpentine"
+          <span class="flex-1 ms-3 text-base whitespace-nowrap"
             >Attendance</span
           >
         </a>
@@ -246,8 +240,9 @@
       <li>
         <a
           routerLink="feedback"
-          [routerLinkActive]="'bg-dark-primary'"
-          class="flex items-center p-2 text-black rounded-lg hover:bg-dark-primary group"
+          [routerLinkActive]="'bg-dark-background text-white'"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center p-2 rounded-lg hover:text-white font-semibold hover:bg-dark-foreground group"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -269,10 +264,7 @@
             <path d="M16 19h6" />
           </svg>
 
-          <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-serpentine"
-            >Feedback</span
-          >
+          <span class="flex-1 ms-3 text-base whitespace-nowrap">Feedback</span>
         </a>
       </li>
     </ul>

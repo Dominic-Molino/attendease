@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
 export class PreviewComponent implements OnInit {
   userId = this.userService.getCurrentUserId();
   eventWithStatus: any;
+  isRegistered = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -28,6 +29,7 @@ export class PreviewComponent implements OnInit {
       ...this.data.event,
       status: this.getEventStatus(this.data.event),
     };
+    this.checkUserRegistration();
   }
 
   getEventStatus(event: any): string {
@@ -42,6 +44,15 @@ export class PreviewComponent implements OnInit {
     } else {
       return 'upcoming';
     }
+  }
+
+  checkUserRegistration(): void {
+    this.service.getUserEvent().subscribe((res) => {
+      const userEvent = res.payload;
+      this.isRegistered = userEvent.some(
+        (event: any) => event.event_id === this.data.event.event_id
+      );
+    });
   }
 
   registerForEvent(eventId: number) {

@@ -31,7 +31,7 @@
             alt="AttendEase"
           />
           <span
-            class="self-center text-xl text-black font-bold font-primary whitespace-nowrap"
+            class="self-center text-xl text-text font-bold whitespace-nowrap"
             >AttendEase</span
           >
         </a>
@@ -81,7 +81,7 @@
             <ul class="py-1" role="none">
               <li>
                 <a
-                  routerLink="dashboard"
+                  routerLink="admin-dashboard"
                   class="block px-4 py-2 text-sm text-custom_black hover:bg-dark-primary"
                   role="menuitem"
                   >Dashboard</a
@@ -115,8 +115,9 @@
       <li>
         <a
           routerLink="admin-dashboard"
-          [routerLinkActive]="'bg-dark-primary'"
-          class="flex items-center p-2 text-black rounded-lg hover:bg-dark-primary group"
+          [routerLinkActive]="'bg-dark-background text-white'"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center p-2 rounded-lg hover:text-white font-semibold hover:bg-dark-foreground group"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -134,17 +135,15 @@
             <rect width="20" height="16" x="2" y="4" rx="2" />
             <path d="M6 16h12" />
           </svg>
-          <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-serpentine"
-            >Dashboard</span
-          >
+          <span class="flex-1 ms-3 text-base whitespace-nowrap">Dashboard</span>
         </a>
       </li>
       <li>
         <a
-          routerLink="list"
-          [routerLinkActive]="'bg-dark-primary'"
-          class="flex items-center p-2 text-black rounded-lg hover:bg-dark-primary group"
+          routerLink="admin-attendees-list"
+          [routerLinkActive]="'bg-dark-background text-white'"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center p-2 rounded-lg hover:text-white font-semibold hover:bg-dark-foreground group"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -160,17 +159,17 @@
             <path d="M21 9H3" />
             <path d="M21 15H3" />
           </svg>
-          <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-serpentine"
+          <span class="flex-1 ms-3 text-base whitespace-nowrap"
             >Attendees List</span
           >
         </a>
       </li>
       <li>
         <a
-          routerLink="attendance"
-          [routerLinkActive]="'bg-dark-primary'"
-          class="flex items-center p-2 text-black rounded-lg hover:bg-dark-primary group"
+          routerLink="admin-attendance"
+          [routerLinkActive]="'bg-dark-background text-white'"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center p-2 rounded-lg hover:text-white font-semibold hover:bg-dark-foreground group"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -189,8 +188,7 @@
             <path d="m16 19 2 2 4-4" />
           </svg>
 
-          <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-serpentine"
+          <span class="flex-1 ms-3 text-base whitespace-nowrap"
             >Attendance</span
           >
         </a>
@@ -198,8 +196,9 @@
       <li>
         <a
           routerLink="admin-feedback-list"
-          [routerLinkActive]="'bg-dark-primary'"
-          class="flex items-center p-2 text-black rounded-lg hover:bg-dark-primary group"
+          [routerLinkActive]="'bg-dark-background text-white'"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center p-2 rounded-lg hover:text-white font-semibold hover:bg-dark-foreground group"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -216,8 +215,7 @@
             <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
           </svg>
 
-          <span
-            class="flex-1 ms-3 text-base whitespace-nowrap font-primary text-serpentine"
+          <span class="flex-1 ms-3 text-base whitespace-nowrap"
             >Feedback List</span
           >
         </a>

@@ -8,10 +8,10 @@ module.exports = {
         dark: {
           // for buttons
           background: "#09090b",
-          foreground: "#27272a",
+          foreground: "#2d2d2b",
           // blockss
           primary: "#fafafa",
-          border: "#d2d2d4",
+          border: "#b7b5ae",
           input: "#27272a",
           text: "#71717a",
           // for bg
@@ -25,6 +25,7 @@ module.exports = {
           text: "#04bc64",
           border: "#04bc64",
         },
+        text: "#444444",
       },
       backgroundColor: (theme) => theme("colors"),
       fontFamily: {

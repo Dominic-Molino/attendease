@@ -41,19 +41,24 @@ export class FeedbackComponent implements OnInit {
         if (res) {
           this.events = res.payload.map((event: any) => {
             const currentDate = new Date();
+            const eventStartDate = new Date(event.event_start_date);
             const endDate = new Date(event.event_end_date);
             event.eventState = '';
 
             if (endDate < currentDate) {
               event.eventState = 'done';
+            } else if (eventStartDate <= currentDate) {
+              event.eventState = 'ongoing';
+            } else {
+              event.eventState = 'upcoming';
             }
             return event;
           });
 
-          //filters the event
-          this.events = this.events.filter(
-            (event) => event.eventState === 'done'
-          );
+          // //filters the event
+          // this.events = this.events.filter(
+          //   (event) => event.eventState === 'done'
+          // );
 
           //fetch the feedback after loading the events
           this.getFeedback();
