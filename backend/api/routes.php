@@ -60,7 +60,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 if (isset($request[1])) {
                     echo json_encode($get->get_events($request[1]));
                 } else {
-                    echo json_encode($get->get_all_events());
+                    echo json_encode($get->get_events());
                 }
                 break;
 
@@ -77,7 +77,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 if (isset($request[1])) {
                     echo json_encode($get->get_registered_users_for_event($request[1]));
                 } else {
-                    echo "User ID not provided";
+                    echo "Event ID not provided";
                     http_response_code(400);
                 }
                 break;

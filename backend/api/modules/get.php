@@ -60,8 +60,8 @@ class Get extends GlobalMethods
     public function get_user_events($user_id)
     {
         $columns = "
-         events.event_id, event_name, event_description, event_location,
-            event_start_date, event_end_date, event_registration_start, event_registration_end, session,
+            events.event_id, event_name, event_description, event_location,
+            event_start_date, event_end_date, event_registration_start, event_registration_end, session, max_attendees, categories, organizer_name,
             CASE
                 WHEN events.event_end_date < CURDATE() THEN 'done'
                 WHEN events.event_start_date <= CURDATE() THEN 'ongoing'
@@ -77,19 +77,25 @@ class Get extends GlobalMethods
             WHERE event_registration.user_id = :user_id
         ";
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-        $stmt->execute();
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt->execute();
 
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $rowCount = $stmt->rowCount();
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $rowCount = $stmt->rowCount();
 
-        if ($rowCount > 0) {
-            return $this->sendPayload($data, 'success', "Successfully retrieved user's events.", 200);
-        } else {
-            return $this->sendPayload(null, 'failed', "User has not registered for any events.", 404);
+            if ($rowCount > 0) {
+                return $this->sendPayload($data, 'success', "Successfully retrieved user's events.", 200);
+            } else {
+                return $this->sendPayload(null, 'failed', "User has not registered for any events.", 404);
+            }
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', "Database error.", 500);
         }
     }
+
 
 
     public function getByEmail(string $email = null): array|false
@@ -119,43 +125,16 @@ class Get extends GlobalMethods
 
     public function get_events($event_id = null)
     {
-        $columns = "event_id, event_name, event_description, event_location, event_start_date, event_end_date, event_registration_start, event_registration_end, session, max_attendees";
+        $columns = "event_id, event_name, event_description, event_location, event_start_date, event_end_date, event_registration_start, event_registration_end, session, max_attendees, categories, organizer_name";
         $condition = ($event_id !== null) ? "event_id = $event_id" : null;
         return $this->get_records('events', $condition, $columns);
     }
 
-    public function get_all_events()
-    {
-        $columns = "event_id, event_name, event_description, event_location, event_start_date, event_end_date, event_registration_start, event_registration_end, session, max_attendees";
-        return $this->get_records('events', null, $columns);
-    }
-
     public function get_student($user_id = null)
     {
-        $columns = "user_id, first_name, last_name, year_level, block, course, email, password";
+        $columns = "user_id, first_name, last_name, year_level, block, course, email";
         $condition = ($user_id !== null) ? "user_id = $user_id" : null;
         $result = $this->get_records('user', $condition, $columns);
-
-        if ($result['status']['remarks'] === 'success') {
-
-            $payloadData = $result['payload'];
-
-
-            if (is_array($payloadData)) {
-                return $payloadData;
-            } else {
-                return array();
-            }
-        } else {
-            return array();
-        }
-    }
-
-    public function get_event($event_id = null)
-    {
-        $condition = ($event_id !== null) ? "event_id = $event_id" : null;
-        $result = $this->get_records('events', $condition);
-
 
         if ($result['status']['remarks'] === 'success') {
 
@@ -297,7 +276,7 @@ class Get extends GlobalMethods
     {
         $fileInfo = $this->geteventImg($event_id);
 
-        if ($fileInfo) {
+        if ($fileInfo['event_image'] !== null) {
             $fileData = $fileInfo['event_image'];
 
             header('Content-Type: image/png');
@@ -305,7 +284,7 @@ class Get extends GlobalMethods
             echo $fileData;
             exit();
         } else {
-            echo "User has not uploaded an avatar yet.";
+            echo "Event image not found or not uploaded.";
             http_response_code(404);
         }
     }

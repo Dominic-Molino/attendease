@@ -103,65 +103,85 @@ class Post extends GlobalMethods
         if (
             !isset(
                 $data->event_name,
-                $data->event_description,
-                $data->event_location,
+                $data->organizer_name,
                 $data->event_start_date,
-                $data->event_end_date,
-                $data->event_registration_start,
-                $data->event_registration_end,
-                $data->session,
-                $data->max_attendees
+                $data->event_end_date
             )
         ) {
             return $this->sendPayload(null, 'failed', "Incomplete event data.", 400);
         }
 
-
         $event_name = $data->event_name;
-        $event_description = $data->event_description;
-        $event_location = $data->event_location;
+        $organizer_name = $data->organizer_name;
         $event_start_date = date('Y-m-d H:i:s', strtotime($data->event_start_date));
         $event_end_date = date('Y-m-d H:i:s', strtotime($data->event_end_date));
-        $event_registration_start = date('Y-m-d H:i:s', strtotime($data->event_registration_start));
-        $event_registration_end = date('Y-m-d H:i:s', strtotime($data->event_registration_end));
-        $session = $data->session;
-        $max_attendees = (int)$data->max_attendees;
 
-        if ($max_attendees <= 0) {
+        // Validate maximum attendees
+        $max_attendees = isset($data->max_attendees) ? (int)$data->max_attendees : null;
+        if ($max_attendees !== null && $max_attendees <= 0) {
             return $this->sendPayload(null, 'failed', "Maximum attendees must be a positive number.", 400);
         }
 
+        // Validate event date order
         if ($event_start_date >= $event_end_date) {
             return $this->sendPayload(null, 'failed', "Event start date must be before event end date.", 400);
         }
-        if ($event_registration_start >= $event_registration_end) {
-            return $this->sendPayload(null, 'failed', "Registration start date must be before registration end date.", 400);
+
+        // Validate registration date order if provided
+        if (isset($data->event_registration_start) && isset($data->event_registration_end)) {
+            $event_registration_start = date('Y-m-d H:i:s', strtotime($data->event_registration_start));
+            $event_registration_end = date('Y-m-d H:i:s', strtotime($data->event_registration_end));
+
+            if ($event_registration_start >= $event_registration_end) {
+                return $this->sendPayload(null, 'failed', "Registration start date must be before registration end date.", 400);
+            }
+
+            if ($event_registration_start >= $event_start_date) {
+                return $this->sendPayload(null, 'failed', "Registration start date must be before start of the event", 400);
+            }
         }
 
-        if ($event_registration_start >= $event_start_date) {
-            return $this->sendPayload(null, 'failed', "Registration start date must be before start of the event", 400);
-        }
+        // Check if an event with the same name and organizer overlaps in time
+        $sql_check = "SELECT COUNT(*) AS count FROM events 
+                  WHERE event_name = ? 
+                  AND organizer_name = ?
+                  AND NOT (event_end_date <= ? OR event_start_date >= ?)";
 
-
-        $sql = "INSERT INTO events (event_name, event_description, event_location, event_start_date, event_end_date, 
-            event_registration_start, event_registration_end, session, max_attendees
-            ) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([
+            $stmt_check = $this->pdo->prepare($sql_check);
+            $stmt_check->execute([
                 $event_name,
-                $event_description,
-                $event_location,
+                $organizer_name,
                 $event_start_date,
-                $event_end_date,
-                $event_registration_start,
-                $event_registration_end,
-                $session,
-                $max_attendees
+                $event_end_date
             ]);
 
-            if ($stmt->rowCount() > 0) {
+            $result = $stmt_check->fetch(PDO::FETCH_ASSOC);
+            if ($result['count'] > 0) {
+                return $this->sendPayload(null, 'failed', "Event with same name and organizer overlaps in time.", 400);
+            }
+
+            // Proceed with inserting the new event
+            $sql_insert = "INSERT INTO events (event_name, event_description, event_location, event_start_date, event_end_date, 
+                        event_registration_start, event_registration_end, session, max_attendees, categories, organizer_name)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            $stmt_insert = $this->pdo->prepare($sql_insert);
+            $stmt_insert->execute([
+                $event_name,
+                $data->event_description ?? null,
+                $data->event_location ?? null,
+                $event_start_date,
+                $event_end_date,
+                isset($data->event_registration_start) ? date('Y-m-d H:i:s', strtotime($data->event_registration_start)) : null,
+                isset($data->event_registration_end) ? date('Y-m-d H:i:s', strtotime($data->event_registration_end)) : null,
+                $data->session ?? null,
+                (int)($data->max_attendees ?? null),
+                json_encode($data->categories) ?? null,
+                $organizer_name,
+            ]);
+
+            if ($stmt_insert->rowCount() > 0) {
                 return $this->sendPayload(null, 'success', "Event added successfully.", 200);
             } else {
                 return $this->sendPayload(null, 'failed', "Failed to add event.", 500);
@@ -171,6 +191,7 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
+
 
 
     public function register_for_event($event_id, $user_id)
@@ -197,6 +218,7 @@ class Post extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "User is already registered for this event.", 400);
             }
 
+
             // Check if the event registration is still open
             $sql = "SELECT event_registration_end FROM events WHERE event_id = ?";
             $stmt = $this->pdo->prepare($sql);
@@ -204,6 +226,14 @@ class Post extends GlobalMethods
             $event = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (strtotime($event['event_registration_end']) < time()) {
+                return $this->sendPayload(null, 'failed', "Event registration has ended.", 400);
+            }
+
+            // Get the current timestamp
+            $currentTime = time();
+
+            // Check if event registration has ended
+            if (strtotime($event['event_registration_end']) < $currentTime) {
                 return $this->sendPayload(null, 'failed', "Event registration has ended.", 400);
             }
 
@@ -307,24 +337,50 @@ class Post extends GlobalMethods
 
     public function edit_event($data, $event_id)
     {
+        $event_name = $data->event_name ?? null;
+        $event_description = $data->event_description ?? null;
+        $event_location = $data->event_location ?? null;
+        $event_start_date = date('Y-m-d H:i:s', strtotime($data->event_start_date));
+        $event_end_date = date('Y-m-d H:i:s', strtotime($data->event_end_date));
+        $event_registration_start = isset($data->event_registration_start) ? date('Y-m-d H:i:s', strtotime($data->event_registration_start)) : null;
+        $event_registration_end = isset($data->event_registration_end) ? date('Y-m-d H:i:s', strtotime($data->event_registration_end)) : null;
+        $session = $data->session ?? null;
+        $max_attendees = (int)($data->max_attendees ?? null);
+        $categories = isset($data->categories) ? json_encode($data->categories) : null;
+        $organizer_name = $data->organizer_name ?? null;
+
+        // Date validations
+        if ($event_start_date >= $event_end_date) {
+            return $this->sendPayload(null, 'failed', "Event start date must be before event end date.", 400);
+        }
+        if ($event_registration_start && $event_registration_end && $event_registration_start >= $event_registration_end) {
+            return $this->sendPayload(null, 'failed', "Registration start date must be before registration end date.", 400);
+        }
+        if ($event_registration_start && $event_start_date && $event_registration_start >= $event_start_date) {
+            return $this->sendPayload(null, 'failed', "Registration start date must be before start of the event.", 400);
+        }
+
+        // Update the event
         $sql = "UPDATE events 
                 SET event_name = ?, event_description = ?, event_location = ?, 
                     event_start_date = ?, event_end_date = ?, 
-                    event_registration_start = ?, event_registration_end = ? , session = ?, max_attendees = ?
+                    event_registration_start = ?, event_registration_end = ?, session = ?, max_attendees = ?, categories = ?, organizer_name = ?
                 WHERE event_id = ?";
 
         try {
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
-                $data->event_name,
-                $data->event_description,
-                $data->event_location,
-                $data->event_start_date,
-                $data->event_end_date,
-                $data->event_registration_start,
-                $data->event_registration_end,
-                $data->session,
-                $data->max_attendees,
+                $event_name,
+                $event_description,
+                $event_location,
+                $event_start_date,
+                $event_end_date,
+                $event_registration_start,
+                $event_registration_end,
+                $session,
+                $max_attendees,
+                $categories,
+                $organizer_name,
                 $event_id
             ]);
 
@@ -338,6 +394,7 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
+
 
     public function delete_event($event_id)
     {
