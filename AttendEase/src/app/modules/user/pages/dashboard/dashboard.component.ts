@@ -4,6 +4,7 @@ import { CalendarComponent } from '../../../../shared/components/calendar/calend
 import { Router, RouterLink } from '@angular/router';
 import { EventService } from '../../../../core/service/event.service';
 import { filter } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-dashboard',
@@ -50,7 +51,9 @@ export class DashboardComponent implements OnInit {
         }
       },
       (error) => {
-        console.error('Error:', error);
+        const errorMessage =
+          error.error?.status?.message || 'An error occurred';
+        Swal.fire('', errorMessage, 'warning');
       }
     );
   }

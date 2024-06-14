@@ -56,7 +56,9 @@ export class ProfileComponent implements OnInit {
             this.loadAvatar();
           },
           (error) => {
-            console.error('Error uploading avatar:', error);
+            const errorMessage =
+              error.error?.status?.message || 'An error occurred';
+            Swal.fire('', errorMessage, 'warning');
           }
         );
       }

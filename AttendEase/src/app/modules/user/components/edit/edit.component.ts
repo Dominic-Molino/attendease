@@ -90,9 +90,7 @@ export class EditComponent implements OnInit {
                 });
                 this.dialog.close();
               },
-              (error) => {
-                console.log(error);
-              }
+              (error) => {}
             );
         } else {
           Swal.fire(

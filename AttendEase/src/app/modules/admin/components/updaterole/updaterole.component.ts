@@ -31,14 +31,10 @@ export class UpdateroleComponent implements OnInit {
   ngOnInit(): void {
     this.service.getRoles().subscribe((res: any) => {
       this.rolelist = res.payload;
-      console.log(this.rolelist);
     });
-    console.log(this.data.user_id);
     if (this.data.usercode != null && this.data.usercode != '') {
       this.service.getUsers(this.data.user_id).subscribe((res: any) => {
-        console.log(this.data.user_id);
         this.existingdata = res.payload[0];
-        console.log(this.existingdata);
         this.updateform.setValue({
           role_id: this.existingdata.role_id,
         });
@@ -51,8 +47,6 @@ export class UpdateroleComponent implements OnInit {
   });
 
   proceedUpdate() {
-    console.log(this.updateform.value);
-    console.log(this.data.user_id);
     if (this.updateform.valid) {
       this.service
         .editUserRole(this.data.user_id, this.updateform.value)

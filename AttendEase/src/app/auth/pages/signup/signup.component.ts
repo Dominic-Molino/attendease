@@ -53,7 +53,10 @@ export class SignupComponent {
           this.router.navigate(['login']);
         },
         (error) => {
-          Swal.fire('', 'Email is already registered', 'warning');
+          const errorMessage =
+            error.error?.status?.message ||
+            'An error occurred during registration';
+          Swal.fire('', errorMessage, 'warning');
         }
       );
     } else {

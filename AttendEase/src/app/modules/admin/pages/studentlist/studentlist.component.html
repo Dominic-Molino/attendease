@@ -103,15 +103,12 @@
             <td class="px-6 py-4">{{ data.block | uppercase }}</td>
             <td class="px-6 py-4">{{ data.course }}</td>
             <td class="px-6 py-4">{{ data.email }}</td>
-            @if(data.role_id === 1){
-            <td class="px-6 py-4">Admin</td>
-            }@else if (data.role_id === 2) {
-            <td class="px-6 py-4">Organizer</td>
+            <td class="px-6 py-4" *ngIf="data.role_id === 3">Student</td>
+            @if(data.eventCount){
+            <td class="px-6 py-4 text-center">{{ data.eventCount }}</td>
             }@else {
-            <td class="px-6 py-4">Student</td>
-            }
-            <td class="px-6 py-4"></td>
-            }
+            <td class="px-6 py-4 text-center">0</td>
+            } }
           </tr>
         </tbody>
       </table>

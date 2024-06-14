@@ -72,7 +72,6 @@ export class OrgEventComponent implements OnInit {
 
   loadEvent() {
     this.service.getAllEvents().subscribe((result) => {
-      console.log(result.payload);
       this.eventList = result.payload.map((data: any): Event => {
         const eventId = data.event_id;
         const eventObject: Event = {

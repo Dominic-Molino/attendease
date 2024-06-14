@@ -195,6 +195,7 @@ export class AddEventComponent implements OnInit {
             icon: 'success',
             title: 'Event Added',
           });
+          this.dialogRef.close(res);
         },
         (error) => {
           Swal.fire(

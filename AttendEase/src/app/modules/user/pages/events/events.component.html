@@ -101,7 +101,10 @@
         <!-- grid cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-5">
           <div
-            *ngFor="let event of eventList.slice(0, -1)"
+            *ngFor="
+              let event of eventList.slice(0, -1)
+                | paginate : { itemsPerPage: itemsPerPage, currentPage: p }
+            "
             class="rounded-md border border-dark-border shadow-md container p-3.5 mb-5 bg-white flex flex-col h-full hover:bg-dark-muted"
           >
             <div class="flex flex-col flex-grow">
@@ -168,6 +171,17 @@
         </div>
       </section>
       }
+      <div
+        *ngIf="eventList.length > 0"
+        class="flex justify-center items-center mt-auto p-5"
+      >
+        <pagination-controls
+          (pageChange)="p = $event"
+          [maxSize]="maxSize"
+          [responsive]="true"
+          class="pagination"
+        ></pagination-controls>
+      </div>
     </div>
 
     <section *ngIf="eventList.length === 0">

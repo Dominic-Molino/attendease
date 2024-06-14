@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, throwError } from 'rxjs';
-import { AuthserviceService } from './authservice.service';
 import { TotalAttendeesResponse } from '../total_attendees';
 
 @Injectable({
@@ -47,6 +46,14 @@ export class EventService {
 
   getUserEvent(): Observable<any> {
     const userId = this.getCurrentUserId();
+    if (userId) {
+      return this.http.get(`${this.API_URL}userevents/${userId}`);
+    } else {
+      return throwError('User ID not found');
+    }
+  }
+
+  getUsersEvent(userId: number): Observable<any> {
     if (userId) {
       return this.http.get(`${this.API_URL}userevents/${userId}`);
     } else {

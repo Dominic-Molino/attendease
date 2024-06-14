@@ -72,7 +72,9 @@ export class AttendanceComponent {
         }
       },
       (error) => {
-        console.error('Error fetching user events:', error);
+        const errorMessage =
+          error.error?.status?.message || 'An error occurred';
+        Swal.fire('', errorMessage, 'warning');
       }
     );
   }

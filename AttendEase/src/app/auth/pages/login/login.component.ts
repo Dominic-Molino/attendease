@@ -75,7 +75,9 @@ export class LoginComponent implements OnInit {
         }
       },
       (error) => {
-        Swal.fire('Incorrect Credentials', 'Please try again', 'warning');
+        const errorMessage =
+          error.error?.status?.message || 'An error occurred';
+        Swal.fire('', errorMessage, 'warning');
       }
     );
   }

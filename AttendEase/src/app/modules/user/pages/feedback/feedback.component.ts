@@ -6,6 +6,7 @@ import { EventService } from '../../../../core/service/event.service';
 import { MatDialog } from '@angular/material/dialog';
 import { FeedbackSubmissionComponent } from '../../components/feedback-submission/feedback-submission.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-feedback',
@@ -65,7 +66,9 @@ export class FeedbackComponent implements OnInit {
         }
       },
       (error) => {
-        console.error('Error fetching user events:', error);
+        const errorMessage =
+          error.error?.status?.message || 'An error occurred';
+        Swal.fire('', errorMessage, 'warning');
       }
     );
   }
@@ -80,7 +83,9 @@ export class FeedbackComponent implements OnInit {
           }
         },
         (error) => {
-          console.error('Error fetching user feedback:', error);
+          const errorMessage =
+            error.error?.status?.message || 'An error occurred';
+          Swal.fire('', errorMessage, 'warning');
         }
       );
     }

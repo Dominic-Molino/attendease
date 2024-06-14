@@ -106,11 +106,6 @@ export class ViewsubmissionsComponent {
               title: `${action.charAt(0).toUpperCase() + action.slice(1)}d!`,
               html: `The attendance has been ${action}d.`,
             });
-            // Swal.fire(
-            //   `${action.charAt(0).toUpperCase() + action.slice(1)}d!`,
-            //   `The attendance has been ${action}d.`,
-            //   'success'
-            // );
           },
           (error) => {
             console.error('Error toggling Submission remark:', error);

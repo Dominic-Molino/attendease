@@ -42,6 +42,10 @@ export class EventsComponent implements OnInit {
   maxChar: number = 100;
   eventList: Event[] = [];
 
+  p: number = 1;
+  itemsPerPage: number = 6;
+  maxSize = 5;
+
   constructor(
     private dialog: MatDialog,
     private service: AuthserviceService,
@@ -52,7 +56,6 @@ export class EventsComponent implements OnInit {
 
   ngOnInit(): void {
     this.service.getAllEvents().subscribe((result) => {
-      console.log(result.payload);
       this.eventList = result.payload.map((data: any): Event => {
         const eventObject: Event = {
           event_id: data.event_id,

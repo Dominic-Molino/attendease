@@ -63,24 +63,32 @@ export class SubmitAttendanceComponent {
             this.userId,
             this.file
           )
-          .subscribe((data: any) => {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 1500,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
-            Toast.fire({
-              icon: 'success',
-              title: 'Successfully uploaded photo',
-            });
-            this.resetInput();
-          });
+          .subscribe(
+            (data: any) => {
+              const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                },
+              });
+              Toast.fire({
+                icon: 'success',
+                title: 'Successfully uploaded photo',
+              });
+              this.resetInput();
+            },
+            (error) => {
+              const errorMessage =
+                error.error?.status?.message ||
+                'An error occurred during registration';
+              Swal.fire('', errorMessage, 'warning');
+            }
+          );
       }
     });
   }

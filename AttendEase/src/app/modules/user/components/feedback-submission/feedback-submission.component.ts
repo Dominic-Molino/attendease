@@ -37,8 +37,6 @@ export class FeedbackSubmissionComponent implements OnInit {
   ngOnInit(): void {}
 
   postFeedback() {
-    console.log(this.data.curr_event_id);
-    console.log(this.data.curr_user_id);
     if (this.feedbackForm.valid) {
       this.service
         .postFeedback(

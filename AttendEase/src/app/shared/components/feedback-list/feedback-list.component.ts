@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthserviceService } from '../../../core/service/authservice.service';
 import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
+import Swal from 'sweetalert2';
 
 interface Feedback {
   user_id: number;
@@ -54,7 +55,9 @@ export class FeedbackListComponent implements OnInit {
         }
       },
       (error) => {
-        console.error('Error fetching feedback:', error);
+        const errorMessage =
+          error.error?.status?.message || 'An error occurred';
+        Swal.fire('', errorMessage, 'warning');
       }
     );
   }
