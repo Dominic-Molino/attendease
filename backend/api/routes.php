@@ -186,7 +186,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 }
                 break;
 
-
             default:
                 echo "This is forbidden";
                 http_response_code(403);
@@ -230,7 +229,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     echo json_encode(["message" => "User not found or invalid credentials"]);
                     exit;
                 }
-                // break;
+                break;
 
             case 'adduser':
                 echo json_encode($post->add_user($data));

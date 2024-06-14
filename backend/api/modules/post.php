@@ -9,8 +9,16 @@ class Post extends GlobalMethods
         $this->pdo = $pdo;
     }
 
+    /**
+     * Adds a new user to the database.
+     *
+     * @param object $data The user data.
+     * @return array The payload response.
+     */
+
     public function add_user($data)
     {
+
         if (
             !isset(
                 $data->first_name,
@@ -20,6 +28,14 @@ class Post extends GlobalMethods
             )
         ) {
             return $this->sendPayload(null, 'failed', "Incomplete user data.", 400);
+        }
+
+        if (!filter_var($data->email, FILTER_VALIDATE_EMAIL)) {
+            return $this->sendPayload(null, 'failed', "Invalid email format.", 400);
+        }
+
+        if (strlen($data->password) < 8) {
+            return $this->sendPayload(null, 'failed', "Password must be at least 8 characters long.", 400);
         }
 
         $first_name = $data->first_name;
@@ -111,8 +127,8 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', "Incomplete event data.", 400);
         }
 
-        $event_name = $data->event_name;
-        $organizer_name = $data->organizer_name;
+        $event_name =  htmlspecialchars($data->event_name, ENT_QUOTES, 'UTF-8');
+        $organizer_name = htmlspecialchars($data->organizer_name, ENT_QUOTES, 'UTF-8');
         $event_start_date = date('Y-m-d H:i:s', strtotime($data->event_start_date));
         $event_end_date = date('Y-m-d H:i:s', strtotime($data->event_end_date));
 
@@ -458,25 +474,33 @@ class Post extends GlobalMethods
 
     public function uploadAttendanceImage($event_id, $user_id)
     {
-        $fileData = file_get_contents($_FILES["file"]["tmp_name"]);
-
-        $sql = "INSERT INTO attendance (user_id, event_id, image) VALUES (?, ?, ?)";
+        // Check if user has already submitted an image for this event
+        $sql_check = "SELECT COUNT(*) AS count FROM attendance WHERE event_id = ? AND user_id = ?";
         try {
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute(
-                [
-                    $user_id,
-                    $event_id,
-                    $fileData
-                ]
-            );
-            return $this->sendPayload(null, "success", "Successfully uploaded file", 200);
-        } catch (PDOException $e) {
+            $stmt_check = $this->pdo->prepare($sql_check);
+            $stmt_check->execute([$event_id, $user_id]);
+            $result = $stmt_check->fetch(PDO::FETCH_ASSOC);
 
-            $errmsg = $e->getMessage();
-            $code = 400;
+            if ($result['count'] > 0) {
+                return $this->sendPayload(null, 'failed', "You have already submitted an image for this event.", 400);
+            }
+
+            // Proceed with uploading the attendance image
+            $fileData = file_get_contents($_FILES["file"]["tmp_name"]);
+
+            $sql_insert = "INSERT INTO attendance (event_id, user_id, image) VALUES (?, ?, ?)";
+            $stmt_insert = $this->pdo->prepare($sql_insert);
+            $stmt_insert->execute([$event_id, $user_id, $fileData]);
+
+            if ($stmt_insert->rowCount() > 0) {
+                return $this->sendPayload(null, "success", "Successfully uploaded file", 200);
+            } else {
+                return $this->sendPayload(null, "failed", "Failed to upload attendance image.", 500);
+            }
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, "failed", $e->getMessage(), 500);
         }
-        return $this->sendPayload(null, "failed", $errmsg, $code);
     }
 
     public function toggleAttendanceRemark($submissionId, $newRemark)
