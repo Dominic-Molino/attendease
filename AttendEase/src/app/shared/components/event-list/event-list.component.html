@@ -12,14 +12,38 @@
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 gap-x-0 mt-5"
     >
       <div
-        *ngFor="let event of eventList"
-        class="max-w-sm p-6 bg-white container border border-dark-border rounded-md shadow flex flex-col justify-between"
+        *ngFor="
+          let event of eventList
+            | paginate : { itemsPerPage: itemsPerPage, currentPage: p }
+        "
+        class="relative max-w-sm p-6 bg-white container border border-dark-border rounded-md shadow flex flex-col justify-between"
       >
         <div>
           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
             {{ event.event_name }}
           </h5>
         </div>
+
+        <div class="absolute right-3 bottom-7">
+          <span
+            *ngIf="event.status === 'ongoing'"
+            class="bg-blue-200 text-text capitalize text-sm font-medium me-2 px-2.5 py-0.5 rounded-full"
+            >{{ event.status }}</span
+          >
+
+          <span
+            *ngIf="event.status === 'done'"
+            class="bg-light-background text-text capitalize text-sm font-medium me-2 px-2.5 py-0.5 rounded-full"
+            >{{ event.status }}</span
+          >
+
+          <span
+            *ngIf="event.status === 'upcoming'"
+            class="bg-yellow-200 text-text text-sm capitalize font-medium me-2 px-2.5 py-0.5 rounded-full"
+            >{{ event.status }}</span
+          >
+        </div>
+
         <p class="mb-3 font-normal text-gray-700 text-justify">
           {{ truncateDescription(event.event_description, maxChar) }}
         </p>
@@ -50,6 +74,14 @@
           </button>
         </div>
       </div>
+    </div>
+    <div class="flex justify-center items-center mt-auto p-5">
+      <pagination-controls
+        (pageChange)="p = $event"
+        [maxSize]="maxSize"
+        [responsive]="true"
+        class="pagination"
+      ></pagination-controls>
     </div>
     }@else {
     <section #noEvents>

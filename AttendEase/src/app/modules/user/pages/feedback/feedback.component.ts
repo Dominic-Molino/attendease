@@ -100,15 +100,17 @@ export class FeedbackComponent implements OnInit {
     });
   }
 
-  openDialog(eventId: number): void {
-    this.dialog.open(FeedbackSubmissionComponent, {
-      data: {
-        curr_event_id: eventId,
-        curr_user_id: this.userId,
-      },
-      width: '75%',
-      disableClose: true,
-    });
-    document.body.classList.add('cdk-global-scrollblock');
+  openDialog(eventState: any, eventId: number): void {
+    if (eventState === 'done') {
+      this.dialog.open(FeedbackSubmissionComponent, {
+        data: {
+          curr_event_id: eventId,
+          curr_user_id: this.userId,
+        },
+        width: '75%',
+        disableClose: true,
+      });
+      document.body.classList.add('cdk-global-scrollblock');
+    }
   }
 }

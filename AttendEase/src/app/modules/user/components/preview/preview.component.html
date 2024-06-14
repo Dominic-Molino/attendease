@@ -1,11 +1,44 @@
 <section class="bg-white w-full">
-  <div class="max-w-full bg-white max-h-[500px] overflow-hidden">
+  <div class="max-w-full bg-white max-h-[650px] h-auto overflow">
     <div
-      class="flex items-center justify-between p-4 md:p-5 border-b rounded-t"
+      class="flex items-center justify-between gap-5 p-4 md:p-5 border-b rounded-t"
     >
-      <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
-        {{ data.event.event_name }}
-      </h3>
+      <div class="w-full flex justify-between">
+        <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+          {{ data.event.event_name }}
+        </h3>
+        <h3
+          class="text-lg font-semibold text-gray-900 dark:text-white inline-flex items-center border-b border-light-border"
+        >
+          <span class="me-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-building"
+            >
+              <rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
+              <path d="M9 22v-4h6v4" />
+              <path d="M8 6h.01" />
+              <path d="M16 6h.01" />
+              <path d="M12 6h.01" />
+              <path d="M12 10h.01" />
+              <path d="M12 14h.01" />
+              <path d="M16 10h.01" />
+              <path d="M16 14h.01" />
+              <path d="M8 10h.01" />
+              <path d="M8 14h.01" />
+            </svg>
+          </span>
+          {{ data.event.organizer_name }}
+        </h3>
+      </div>
       <button
         (click)="closeDialog()"
         type="button"
@@ -33,9 +66,42 @@
 
     <!-- modal body -->
     <div class="p-4 md:p-5 space-y-4">
-      <p class="text-base leading-relaxed text-dark-text">
-        {{ data.event.event_description }}
-      </p>
+      @defer{
+      <div class="rounded-md h-80 w-full -mb-5">
+        <img
+          *ngIf="eventImage$ | async; else placeholder"
+          [src]="(eventImage$ | async) || 'path_to_placeholder_image'"
+          class="rounded-md object-fill object-center max-h-72 w-full border border-dark-border"
+        />
+        <ng-template #placeholder>
+          <div
+            class="image-container avatar-placeholder h-72 max-h-72 rounded-md"
+          ></div>
+        </ng-template>
+      </div>
+      }
+
+      <div class="flex items-center my-2.5">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-info inline-flex flex-shrink-0 me-1"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 16v-4" />
+          <path d="M12 8h.01" />
+        </svg>
+        <p class="text-base leading-relaxed text-text">
+          {{ data.event.event_description }}
+        </p>
+      </div>
 
       <div class="flex items-center my-2.5">
         <svg
@@ -54,7 +120,7 @@
           <circle cx="12" cy="10" r="3" />
         </svg>
 
-        <p class="text-sm leading-relaxed text-dark-text">
+        <p class="text-sm leading-relaxed text-text">
           Location: {{ data.event.event_location }}
         </p>
       </div>
@@ -82,13 +148,46 @@
           <circle cx="16" cy="16" r="6" />
         </svg>
 
-        <p class="text-sm leading-relaxed text-dark-text ms-1">
+        <p class="text-sm leading-relaxed text-text ms-1">
           Start Date:
           {{ data.event.event_start_date | date : "MMM d, y, h:mm a" }}
         </p>
         <span class="ms-1"> - </span>
-        <p class="text-sm leading-relaxed text-dark-text ms-1">
+        <p class="text-sm leading-relaxed text-text ms-1">
           {{ data.event.event_end_date | date : "MMM d, y, h:mm a" }}
+        </p>
+      </div>
+
+      <div class="flex items-center my-2.5">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-calendar-clock inline-flex flex-shrink-0 me-1"
+        >
+          <path
+            d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"
+          />
+          <path d="M16 2v4" />
+          <path d="M8 2v4" />
+          <path d="M3 10h5" />
+          <path d="M17.5 17.5 16 16.3V14" />
+          <circle cx="16" cy="16" r="6" />
+        </svg>
+
+        <p class="text-sm leading-relaxed text-text ms-1">
+          Registration Date:
+          {{ data.event.event_registration_start | date : "MMM d, y, h:mm a" }}
+        </p>
+        <span class="ms-1"> - </span>
+        <p class="text-sm leading-relaxed text-text ms-1">
+          {{ data.event.event_registration_end | date : "MMM d, y, h:mm a" }}
         </p>
       </div>
 
@@ -121,7 +220,7 @@
           <path d="M8 2v4" />
           <circle cx="18" cy="18" r="3" />
         </svg>
-        <p class="text-sm leading-relaxed text-dark-text ms-1">
+        <p class="text-sm leading-relaxed text-text ms-1">
           Mode: {{ data.event.session }}
         </p>
       </div>
@@ -148,7 +247,7 @@
           <path d="M2 12h4" />
           <path d="m4.9 4.9 2.9 2.9" />
         </svg>
-        <p class="text-sm font-secondaryleading-relaxed text-dark-text ms-1">
+        <p class="text-sm font-secondaryleading-relaxed text-text ms-1">
           Status: {{ eventWithStatus.status | titlecase }}
         </p>
       </div>
@@ -171,10 +270,25 @@
           <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3" />
         </svg>
 
-        <p class="text-sm leading-relaxed text-dark-text ms-1">
+        <p class="text-sm leading-relaxed text-text ms-1">
           Max Participants: {{ data.event.max_attendees }}
         </p>
       </div>
+
+      @defer{
+      <div class="flex items-center my-2.5">
+        <p
+          *ngFor="let tag of data.event.categories"
+          class="text-sm leading-relaxed text-text ms-1"
+        >
+          <span
+            class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full"
+          >
+            {{ tag }}</span
+          >
+        </p>
+      </div>
+      }
     </div>
 
     <div

@@ -12,6 +12,8 @@ import { EventService } from '../../../core/service/event.service';
 })
 export class PopupComponent implements OnInit {
   imageUrl: string | null = null;
+  status?: string;
+  categories?: string[];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -21,6 +23,26 @@ export class PopupComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadImage();
+    this.status = this.getEventStatus(this.data);
+    this.getLabels();
+  }
+
+  getLabels() {
+    this.categories = JSON.parse(this.data.categories);
+  }
+
+  getEventStatus(event: any): string {
+    const currentDate = new Date();
+    const startDate = new Date(event.event_start_date);
+    const endDate = new Date(event.event_end_date);
+
+    if (endDate < currentDate) {
+      return 'done';
+    } else if (startDate <= currentDate && endDate >= currentDate) {
+      return 'ongoing';
+    } else {
+      return 'upcoming';
+    }
   }
 
   loadImage() {

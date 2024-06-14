@@ -107,6 +107,24 @@ export class OrgEventComponent implements OnInit {
         return eventObject;
       });
 
+      this.eventList.sort((a, b) => {
+        if (
+          a.status === 'done' &&
+          (b.status === 'ongoing' || b.status === 'upcoming')
+        ) {
+          return -1;
+        } else if (a.status === 'ongoing' && b.status === 'upcoming') {
+          return -1;
+        } else if (
+          a.status === 'upcoming' &&
+          (b.status === 'done' || b.status === 'ongoing')
+        ) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+
       this.applyFilter(this.currentFilter);
     });
   }

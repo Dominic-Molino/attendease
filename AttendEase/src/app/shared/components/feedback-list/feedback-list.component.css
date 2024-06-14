@@ -15,6 +15,7 @@
 .pagination ::ng-deep .ngx-pagination li :hover {
   border-radius: 25px;
 }
+
 .wobble-ver-left {
   animation: wobble-ver-left 1.5s 1s infinite;
 }

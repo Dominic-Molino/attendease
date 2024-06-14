@@ -9,13 +9,6 @@ class Post extends GlobalMethods
         $this->pdo = $pdo;
     }
 
-    /**
-     * Adds a new user to the database.
-     *
-     * @param object $data The user data.
-     * @return array The payload response.
-     */
-
     public function add_user($data)
     {
 
@@ -342,13 +335,6 @@ class Post extends GlobalMethods
             error_log("Database error: " . $e->getMessage());
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
-    }
-
-    private function incrementAttendanceCount($event_id)
-    {
-        $sql = "UPDATE events SET attendance_count = attendance_count + 1 WHERE event_id = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$event_id]);
     }
 
     public function edit_event($data, $event_id)

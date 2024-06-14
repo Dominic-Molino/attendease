@@ -119,7 +119,7 @@ export class CalendarComponent implements OnInit {
           const dialogRef = this.dialog.open(PopupComponent, {
             data: eventData,
             disableClose: true,
-            width: '50%',
+            width: '70%',
             panelClass: 'dialog-container',
           });
 

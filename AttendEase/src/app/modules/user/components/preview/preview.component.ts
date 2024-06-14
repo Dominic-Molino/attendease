@@ -1,14 +1,16 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DatePipe, TitleCasePipe } from '@angular/common';
+import { CommonModule, DatePipe, TitleCasePipe } from '@angular/common';
 import { EventService } from '../../../../core/service/event.service';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
 import Swal from 'sweetalert2';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-preview',
   standalone: true,
-  imports: [DatePipe, TitleCasePipe],
+  imports: [DatePipe, TitleCasePipe, CommonModule],
   templateUrl: './preview.component.html',
   styleUrl: './preview.component.css',
 })
@@ -16,11 +18,13 @@ export class PreviewComponent implements OnInit {
   userId = this.userService.getCurrentUserId();
   eventWithStatus: any;
   isRegistered = false;
+  eventImage$: Observable<SafeResourceUrl | undefined> | undefined;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private service: EventService,
     private userService: AuthserviceService,
+    private sanitizer: DomSanitizer,
     private dialog: MatDialogRef<PreviewComponent>
   ) {}
 
@@ -29,6 +33,7 @@ export class PreviewComponent implements OnInit {
       ...this.data.event,
       status: this.getEventStatus(this.data.event),
     };
+    this.eventImage$ = this.data.event.event_image$;
     this.checkUserRegistration();
   }
 
@@ -82,6 +87,7 @@ export class PreviewComponent implements OnInit {
               icon: 'success',
               title: 'Successfully registered',
             });
+            this.dialog.close();
           },
           (error) => {
             Swal.fire('Warning', `${error.error.status.message}`, 'warning');
