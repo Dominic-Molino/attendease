@@ -190,8 +190,9 @@ class Post extends GlobalMethods
                 $organizer_name,
             ]);
 
-            if ($stmt_insert->rowCount() > 0) {
-                return $this->sendPayload(null, 'success', "Event added successfully.", 200);
+            $event_id = $this->pdo->lastInsertId();
+            if ($event_id) {
+                return $this->sendPayload(['event_id' => $event_id], 'success', "Event added successfully.", 200);
             } else {
                 return $this->sendPayload(null, 'failed', "Failed to add event.", 500);
             }
@@ -200,7 +201,6 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
-
 
 
     public function register_for_event($event_id, $user_id)
@@ -441,22 +441,22 @@ class Post extends GlobalMethods
     {
         $fileData = file_get_contents($_FILES["file"]["tmp_name"]);
 
-        $sql = "UPDATE events SET event_image = ? WHERE event_id = $event_id";
+        $sql = "UPDATE events SET event_image = ? WHERE event_id = ?";
+
         try {
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute(
-                [
-                    $fileData
-                ]
-            );
+            $stmt->execute([
+                $fileData,
+                $event_id
+            ]);
             return $this->sendPayload(null, "success", "Successfully uploaded file", 200);
         } catch (PDOException $e) {
-
             $errmsg = $e->getMessage();
             $code = 400;
         }
         return $this->sendPayload(null, "failed", $errmsg, $code);
     }
+
 
     public function uploadAttendanceImage($event_id, $user_id)
     {
