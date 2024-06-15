@@ -27,6 +27,7 @@ export class EventService {
   addEvent(data: any): Observable<any> {
     return this.http.post(`${this.API_URL}addevent`, data);
   }
+  
 
   getAllEvents(): Observable<any> {
     return this.http.get<any>(`${this.API_URL}events`);

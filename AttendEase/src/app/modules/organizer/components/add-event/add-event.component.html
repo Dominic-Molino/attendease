@@ -201,6 +201,31 @@
             </div>
           </div>
         </div>
+
+        <div
+          class="grid min-h-[140px] w-full my-5 bg-dark-primary border border-dark-background place-items-center rounded-md"
+        >
+          <span *ngIf="!imagePreview" class="text-dark-text">Preview Here</span>
+          <img
+            *ngIf="imagePreview"
+            [src]="imagePreview"
+            alt=""
+            class="object-cover object-center w-full h-96 rounded-md"
+          />
+        </div>
+
+        <label for="avatar-input-file">
+          <div class="icon-wrapper">
+            <input
+              type="file"
+              id="avatar-input-file"
+              accept="image/*"
+              class="block w-full text-sm text-gray-900 border border-dark-border rounded-md cursor-pointer bg-gray-50 focus:outline-none"
+              (change)="onFileChange($event)"
+            />
+          </div>
+        </label>
+
         <div class="flex w-full justify-center py-7">
           <button
             type="submit"

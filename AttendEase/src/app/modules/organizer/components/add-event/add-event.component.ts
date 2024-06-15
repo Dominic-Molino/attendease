@@ -110,6 +110,8 @@ export class AddEventComponent implements OnInit {
     'Edge Computing',
   ];
   showAllCategories: boolean = false;
+  file: any;
+  imagePreview?: string | ArrayBuffer | null = null;
 
   constructor(
     private builder: FormBuilder,
@@ -173,41 +175,81 @@ export class AddEventComponent implements OnInit {
     return selectedCategories;
   }
 
+  onFileChange(event: any) {
+    const files = event.target.files as FileList;
+    if (files.length > 0) {
+      this.file = files[0];
+      this.previewImage(); // Call method to preview image
+    }
+  }
+
+  // Method to preview selected image
+  previewImage() {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.imagePreview = e.target?.result;
+    };
+    reader.readAsDataURL(this.file);
+  }
+
   addEvent() {
     if (this.eventForm.valid) {
       const formData = this.eventForm.value;
-      formData.categories = this.getSelectedCategories();
+      formData.categories = this.getSelectedCategories(); // Ensure categories are set
 
-      this.eventService.addEvent(this.eventForm.value).subscribe(
+      if (this.file) {
+        formData.file = this.file; // Attach the file to formData
+      }
+
+      this.eventService.addEvent(formData).subscribe(
         (res) => {
-          const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            },
-          });
-          Toast.fire({
-            icon: 'success',
-            title: 'Event Added',
-          });
-          this.dialogRef.close(res);
+          const eventId = res.payload.event_id; // Assuming the backend returns the event ID
+
+          if (this.file) {
+            this.eventService.uploadEvent(eventId, this.file).subscribe(
+              (uploadRes) => {
+                this.handleSuccessResponse();
+              },
+              (uploadError) => {
+                this.handleError(
+                  uploadError.error?.message || 'Image upload failed'
+                );
+              }
+            );
+          } else {
+            this.handleSuccessResponse();
+          }
         },
         (error) => {
-          Swal.fire(
-            'Error',
-            error.error.status.message || 'Something went wrong',
-            'error'
-          );
+          this.handleError(error.error?.message || 'Something went wrong');
         }
       );
     } else {
       Swal.fire('Incomplete Form', 'Please fill in all fields', 'warning');
     }
+  }
+
+  private handleSuccessResponse() {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      },
+    });
+    Toast.fire({
+      icon: 'success',
+      title: 'Event and image uploaded successfully',
+    });
+    this.dialogRef.close();
+  }
+
+  private handleError(errorMessage: string) {
+    Swal.fire('Error', errorMessage, 'error');
   }
 
   futureDateValidator(): ValidatorFn {

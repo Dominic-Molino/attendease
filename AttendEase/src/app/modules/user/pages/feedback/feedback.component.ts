@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -7,6 +7,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { FeedbackSubmissionComponent } from '../../components/feedback-submission/feedback-submission.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
+import { Observable, interval, Subscription, of } from 'rxjs';
+import { switchMap, catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-feedback',
@@ -15,15 +17,17 @@ import Swal from 'sweetalert2';
   templateUrl: './feedback.component.html',
   styleUrl: './feedback.component.css',
 })
-export class FeedbackComponent implements OnInit {
+export class FeedbackComponent implements OnInit, OnDestroy {
   events: any[] = [];
   userId?: any;
   feedback: any[] = [];
 
-  //pagination variables
+  // Pagination variables
   p: number = 1;
   itemsPerPage: number = 10;
   maxSize = 5;
+
+  private updateSubscription?: Subscription;
 
   constructor(
     private eventService: EventService,
@@ -33,13 +37,20 @@ export class FeedbackComponent implements OnInit {
 
   ngOnInit(): void {
     this.userId = this.service.getCurrentUserId();
-    this.getUserEvents();
+    this.getUserEvents().subscribe();
+    this.startPolling();
   }
 
-  getUserEvents(): void {
-    this.eventService.getUserEvent().subscribe(
-      (res) => {
-        if (res) {
+  ngOnDestroy(): void {
+    if (this.updateSubscription) {
+      this.updateSubscription.unsubscribe();
+    }
+  }
+
+  getUserEvents(): Observable<any> {
+    return this.eventService.getUserEvent().pipe(
+      map((res) => {
+        if (res && res.payload) {
           this.events = res.payload.map((event: any) => {
             const currentDate = new Date();
             const eventStartDate = new Date(event.event_start_date);
@@ -56,38 +67,39 @@ export class FeedbackComponent implements OnInit {
             return event;
           });
 
-          // //filters the event
-          // this.events = this.events.filter(
-          //   (event) => event.eventState === 'done'
-          // );
-
-          //fetch the feedback after loading the events
-          this.getFeedback();
+          // Fetch feedback after retrieving events
+          this.getFeedback().subscribe();
         }
-      },
-      (error) => {
+        return res;
+      }),
+      catchError((error) => {
         const errorMessage =
           error.error?.status?.message || 'An error occurred';
         Swal.fire('', errorMessage, 'warning');
-      }
+        return of(null); // Return a null observable in case of error
+      })
     );
   }
 
-  getFeedback(): void {
+  getFeedback(): Observable<any> {
     if (this.userId) {
-      this.service.getUserFeedback(this.userId).subscribe(
-        (res) => {
+      return this.service.getUserFeedback(this.userId).pipe(
+        map((res) => {
           if (res && res.payload) {
             this.feedback = res.payload;
             this.mapFeedbackToEvents();
           }
-        },
-        (error) => {
+          return res;
+        }),
+        catchError((error) => {
           const errorMessage =
             error.error?.status?.message || 'An error occurred';
           Swal.fire('', errorMessage, 'warning');
-        }
+          return of(null); // Return a null observable in case of error
+        })
       );
+    } else {
+      return of(null); // Return a null observable if no userId
     }
   }
 
@@ -98,6 +110,14 @@ export class FeedbackComponent implements OnInit {
       );
       event.remarks = eventFeedback ? eventFeedback.remarks : 'No Submission';
     });
+  }
+
+  startPolling(): void {
+    this.updateSubscription = interval(5000) // Poll every 5 seconds
+      .pipe(
+        switchMap(() => this.getUserEvents()) // Use the refactored getUserEvents method
+      )
+      .subscribe();
   }
 
   openDialog(eventState: any, eventId: number): void {

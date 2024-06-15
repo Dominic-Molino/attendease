@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, signal } from '@angular/core';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import {
   CalendarOptions,
@@ -39,7 +39,7 @@ export class CalendarComponent implements OnInit {
     },
     initialView: 'dayGridMonth',
     weekends: true,
-    dayMaxEvents: true,
+    dayMaxEvents: 1,
     selectable: true,
     height: 'auto',
     eventColor: '#04bc64',
@@ -134,8 +134,11 @@ export class CalendarComponent implements OnInit {
 
   handleWindowResize(view: any): void {
     const aspectRatio = window.innerWidth < 768 ? 1 : 1.35;
+    const eventCount = view.el.querySelectorAll('.fc-event').length;
+    const height = Math.min(600, eventCount * 30); // Adjust 600 and 30 as needed
     this.calendarOptions.update((options) => {
       options.aspectRatio = aspectRatio;
+      options.height = height;
       return options;
     });
   }

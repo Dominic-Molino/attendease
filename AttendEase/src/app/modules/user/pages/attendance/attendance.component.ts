@@ -7,6 +7,16 @@ import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
 import { NgxPaginationModule } from 'ngx-pagination';
+import {
+  Observable,
+  Subscription,
+  catchError,
+  finalize,
+  interval,
+  map,
+  of,
+  switchMap,
+} from 'rxjs';
 
 @Component({
   selector: 'app-attendance',
@@ -24,11 +34,14 @@ export class AttendanceComponent {
   events: any[] = [];
   userId?: any;
   attendanceRemarks: { [key: number]: number } = {};
+  loading: boolean = false;
 
   //pagination variables
   p: number = 1;
   itemsPerPage: number = 10;
   maxSize = 5;
+
+  private updateSubscription?: Subscription;
 
   constructor(
     private eventService: EventService,
@@ -39,11 +52,19 @@ export class AttendanceComponent {
   ngOnInit(): void {
     this.userId = this.service.getCurrentUserId();
     this.getUserEvents();
+    this.startPolling();
   }
 
-  getUserEvents(): void {
-    this.eventService.getUserEvent().subscribe(
-      (res) => {
+  ngOnDestroy(): void {
+    if (this.updateSubscription) {
+      this.updateSubscription.unsubscribe();
+    }
+  }
+
+  getUserEvents(): Observable<any> {
+    this.loading = true;
+    return this.eventService.getUserEvent().pipe(
+      map((res) => {
         if (res && res.payload) {
           this.events = res.payload.map((event: any) => {
             const currentDate = new Date();
@@ -61,21 +82,22 @@ export class AttendanceComponent {
             return event;
           });
 
-          // this.events = this.events.filter(
-          //   (event) => event.eventState === 'done'
-          // );
-
           // Retrieve attendance remarks after fetching events
           this.events.forEach((event) => {
             this.getUserAttendanceRemark(event.event_id);
           });
         }
-      },
-      (error) => {
+        return res;
+      }),
+      catchError((error) => {
         const errorMessage =
           error.error?.status?.message || 'An error occurred';
         Swal.fire('', errorMessage, 'warning');
-      }
+        return of(null);
+      }),
+      finalize(() => {
+        this.loading = false;
+      })
     );
   }
 
@@ -96,6 +118,14 @@ export class AttendanceComponent {
         }
       );
     }
+  }
+
+  startPolling(): void {
+    this.updateSubscription = interval(5000) // Poll every 5 seconds
+      .pipe(
+        switchMap(() => this.getUserEvents()) // Use the refactored getUserEvents method
+      )
+      .subscribe();
   }
 
   openFile(eventState: string, event: number): void {

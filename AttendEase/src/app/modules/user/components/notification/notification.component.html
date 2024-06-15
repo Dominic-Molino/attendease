@@ -1,0 +1,20 @@
+<div class="divide-y-2 divide-gray-100">
+  @if(notification.length > 0){
+  <div class="w-full ps-3 py-3.5" *ngFor="let notify of notification">
+    <div class="text-gray-500 text-sm mb-1.5 dark:text-gray-400">
+      <span class="font-semibold text-gray-900">{{ notify.event_name }}</span>
+      is happening tomorrow.
+    </div>
+    <div class="text-xs text-light-text">
+      {{ notify.event_start_date | date : "MMM d, y, h:mm a" }}
+    </div>
+  </div>
+
+  }@else {
+  <div class="w-full ps-3 py-3.5">
+    <div class="text-gray-500 text-center text-sm mb-1.5 dark:text-gray-400">
+      No notification
+    </div>
+  </div>
+  }
+</div>

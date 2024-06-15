@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Observable } from 'rxjs';
+import { Observable, interval, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -169,5 +169,17 @@ export class AuthserviceService {
     } else {
       return this.http.get(`${this.API_URL}getUserFeedback`);
     }
+  }
+
+  getRegisteredEvents(userId: number) {
+    return this.http.get<any[]>(
+      `${this.API_URL}user_registered_events_notification/${userId}`
+    );
+  }
+
+  fetchRegisteredEventsPeriodically(userId: number): Observable<any[]> {
+    return interval(3600000).pipe(
+      switchMap(() => this.getRegisteredEvents(userId))
+    );
   }
 }

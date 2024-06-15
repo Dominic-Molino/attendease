@@ -8,24 +8,36 @@ import {
 } from '@angular/router';
 import { AuthserviceService } from '../../../core/service/authservice.service';
 import Swal from 'sweetalert2';
+import { NotificationComponent } from '../../../modules/user/components/notification/notification.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, CommonModule, RouterOutlet, RouterLinkActive],
+  imports: [
+    RouterLink,
+    CommonModule,
+    RouterOutlet,
+    RouterLinkActive,
+    NotificationComponent,
+  ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent implements OnInit {
-  userId = this.service.getCurrentUserId();
+  userId: any;
   studentProfile: any;
+  notification: any[] = [];
+  animationStopped = false;
+  private subscription?: Subscription;
 
-  constructor(private service: AuthserviceService, private router: Router) {
-    this.userId = this.service.getCurrentUserId();
-  }
+  constructor(private service: AuthserviceService, private router: Router) {}
 
   ngOnInit(): void {
+    this.userId = this.service.getCurrentUserId();
     this.loadInfo();
+    this.loadNotification();
+    this.setupPeriodicRefresh();
   }
 
   loadInfo() {
@@ -34,6 +46,26 @@ export class SidebarComponent implements OnInit {
         this.studentProfile = res.payload[0];
       });
     }
+  }
+
+  loadNotification() {
+    this.service.getRegisteredEvents(this.userId).subscribe((res: any) => {
+      this.notification = res.payload;
+      this.animationStopped = this.notification.length === 0;
+    });
+  }
+
+  setupPeriodicRefresh() {
+    this.subscription = this.service
+      .fetchRegisteredEventsPeriodically(this.userId)
+      .subscribe((res: any) => {
+        this.notification = res.payload;
+        this.animationStopped = this.notification.length === 0;
+      });
+  }
+
+  toggleNotification() {
+    this.animationStopped = true;
   }
 
   logout(): void {

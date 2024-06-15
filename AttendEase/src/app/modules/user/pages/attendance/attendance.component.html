@@ -7,8 +7,19 @@
 
       <hr class="h-px mb-6 bg-dark-border border-0" />
     </div>
+    @if(loading){
+    <div class="h-screen bg-white">
+      <div class="flex justify-center items-center">
+        <img
+          class="h-16 w-16"
+          src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
+          alt=""
+        />
+        <span class="text-text text-2xl font-medium">Loading...</span>
+      </div>
+    </div>
+    }@else if (!loading && events.length > 0) {
     <div
-      *ngIf="events.length > 0; else fallback"
       class="relative overflow-x-auto shadow-md rounded-md overflow-y-auto border border-dark-border"
     >
       <table class="w-full text-sm text-left rtl:text-right text-gray-500">
@@ -106,7 +117,7 @@
                     ? "Approved"
                     : attendanceRemarks[event.event_id] === 0
                     ? "Not Approved"
-                    : "Loading..."
+                    : "Please wait for the event to end"
                 }}
               </span>
             </td>
@@ -133,8 +144,8 @@
         class="pagination"
       ></pagination-controls>
     </div>
-
-    <ng-template #fallback>
+    }@else {
+    <div>
       <div class="py-4 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
         <div class="max-w-screen-sm text-center mx-auto">
           <svg
@@ -234,6 +245,7 @@
           </p>
         </div>
       </div>
-    </ng-template>
+    </div>
+    }
   </div>
 </main>
