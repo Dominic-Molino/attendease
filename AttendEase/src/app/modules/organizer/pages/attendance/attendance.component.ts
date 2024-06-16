@@ -45,6 +45,10 @@ export class AttendanceComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {}
 
+  ngOnInit(): void {
+    this.loadEvent();
+  }
+
   loadEvent() {
     this.service.getAllEvents().subscribe((result) => {
       this.eventList = result.payload.map((data: any): Event => {
@@ -92,13 +96,10 @@ export class AttendanceComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.loadEvent();
-  }
-
   viewEvent(eventId: any) {
     this.dialog.open(MarkattendanceeComponent, {
-      width: '50%',
+      width: '70%',
+      height: '90%',
       disableClose: true,
       data: {
         selectedEvent: eventId,

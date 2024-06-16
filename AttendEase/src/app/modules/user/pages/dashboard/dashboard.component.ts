@@ -3,8 +3,24 @@ import { Component, OnInit } from '@angular/core';
 import { CalendarComponent } from '../../../../shared/components/calendar/calendar.component';
 import { Router, RouterLink } from '@angular/router';
 import { EventService } from '../../../../core/service/event.service';
-import { filter } from 'rxjs';
+import { Observable, catchError, map } from 'rxjs';
 import Swal from 'sweetalert2';
+
+interface UserEvent {
+  event_id: number;
+  event_name: string;
+  event_description: string;
+  event_location: string;
+  event_start_date: Date;
+  event_end_date: Date;
+  event_registration_start: Date;
+  event_registration_end: Date;
+  session: string;
+  max_attendees: number;
+  categories: string[];
+  organizer_name: string;
+  eventState: string;
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -14,51 +30,75 @@ import Swal from 'sweetalert2';
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit {
-  events: any[] = [];
+  events$?: Observable<UserEvent[]>;
 
   constructor(private router: Router, private eventService: EventService) {}
 
   ngOnInit(): void {
-    this.getUserEvents();
+    this.events$ = this.getUserEvents();
   }
 
-  getUserEvents(): void {
-    this.eventService.getUserEvent().subscribe(
-      (res) => {
-        if (res) {
-          this.events = res.payload.map((event: any) => {
+  getUserEvents(): Observable<UserEvent[]> {
+    return this.eventService.getUserEvent().pipe(
+      map((res) => {
+        if (res && res.payload) {
+          const events = res.payload.map((event: any) => {
             const currentDate = new Date();
             const endDate = new Date(event.event_end_date);
             const eventStartDate = new Date(event.event_start_date);
-            event.eventState = '';
 
+            let eventState = '';
             if (endDate < currentDate) {
-              event.eventState = 'done';
+              eventState = 'done';
             } else if (eventStartDate <= currentDate) {
-              event.eventState = 'ongoing';
+              eventState = 'ongoing';
             } else {
-              event.eventState = 'upcoming';
+              eventState = 'upcoming';
             }
 
-            return event;
+            return {
+              ...event,
+              eventState,
+            } as UserEvent;
           });
-          // .filter((event: any) => event.eventState !== 'done');
+
+          // Sorting logic
+          events.sort((a: any, b: any) => {
+            if (
+              a.eventState === 'done' &&
+              (b.eventState === 'ongoing' || b.eventState === 'upcoming')
+            ) {
+              return -1;
+            } else if (
+              a.eventState === 'ongoing' &&
+              b.eventState === 'upcoming'
+            ) {
+              return -1;
+            } else if (
+              a.eventState === 'upcoming' &&
+              (b.eventState === 'done' || b.eventState === 'ongoing')
+            ) {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
+
+          return events;
         } else {
-          console.error(
-            'Failed to retrieve user events:',
-            res ? res.message : 'Unknown error'
-          );
+          throw new Error(res ? res.message : 'Unknown error');
         }
-      },
-      (error) => {
+      }),
+      catchError((error) => {
         const errorMessage =
           error.error?.status?.message || 'An error occurred';
         Swal.fire('', errorMessage, 'warning');
-      }
+        return [];
+      })
     );
   }
 
-  onClickButton() {
+  onClickButton(): void {
     this.router.navigate(['student/events']);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   MatDialogRef,
@@ -17,6 +17,8 @@ import Swal from 'sweetalert2';
   styleUrl: './feedback-submission.component.css',
 })
 export class FeedbackSubmissionComponent implements OnInit {
+  @Output() feedbackSubmitted = new EventEmitter<void>();
+
   constructor(
     private service: AuthserviceService,
     private builder: FormBuilder,
@@ -61,6 +63,8 @@ export class FeedbackSubmissionComponent implements OnInit {
               icon: 'success',
               title: 'Feedback successfully uploaded',
             });
+            this.feedbackSubmitted.emit();
+            this.dialog.close(true);
           },
           (error) => {
             Swal.fire('', 'You already submitted a feedback', 'warning');
@@ -72,7 +76,7 @@ export class FeedbackSubmissionComponent implements OnInit {
   }
 
   closeDialog() {
-    this.dialog.close();
+    this.dialog.close(false);
     document.body.classList.remove('cdk-global-scrollblock');
   }
 }

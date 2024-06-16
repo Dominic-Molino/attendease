@@ -47,7 +47,6 @@ export class CalendarComponent implements OnInit {
     validRange: {
       start: new Date().toISOString().split('T')[0],
     },
-    windowResize: this.handleWindowResize.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventContent: this.renderEventContent.bind(this),
   });
@@ -92,7 +91,8 @@ export class CalendarComponent implements OnInit {
   handleDateClick(arg: any): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = { startDate: arg.date };
-    dialogConfig.width = '60%';
+    dialogConfig.width = '70%';
+    dialogConfig.height = '90%';
     dialogConfig.disableClose = true;
 
     const dialogRef = this.dialog.open(AddEventComponent, dialogConfig);
@@ -120,6 +120,7 @@ export class CalendarComponent implements OnInit {
             data: eventData,
             disableClose: true,
             width: '70%',
+            height: '90%',
             panelClass: 'dialog-container',
           });
 
@@ -130,17 +131,6 @@ export class CalendarComponent implements OnInit {
           });
         }
       });
-  }
-
-  handleWindowResize(view: any): void {
-    const aspectRatio = window.innerWidth < 768 ? 1 : 1.35;
-    const eventCount = view.el.querySelectorAll('.fc-event').length;
-    const height = Math.min(600, eventCount * 30); // Adjust 600 and 30 as needed
-    this.calendarOptions.update((options) => {
-      options.aspectRatio = aspectRatio;
-      options.height = height;
-      return options;
-    });
   }
 
   renderEventContent(eventContent: EventContentArg) {

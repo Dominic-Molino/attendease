@@ -159,22 +159,33 @@
 
               <div class="flex items-center justify-center">
                 <td class="px-6 py-4 text-sm font-primary">
-                  <span
-                    class="flex items-center text-sm font-normal me-3 text-center capitalize"
-                    ><span
-                      *ngIf="event.status === 'upcoming'"
-                      class="flex w-2.5 h-2.5 bg-yellow-300 rounded-full me-1.5 text-center flex-shrink-0"
-                    ></span>
+                  <div
+                    class="text-sm font-medium bg-green-100 inline-flex items-center text-green-800 py-1 px-2 rounded-full"
+                    *ngIf="event.status === 'done'"
+                  >
                     <span
-                      *ngIf="event.status === 'done'"
                       class="flex w-2.5 h-2.5 bg-light-foregroud rounded-full text-center me-1.5 flex-shrink-0"
                     ></span>
+                    Done
+                  </div>
+                  <div
+                    class="text-sm font-medium bg-blue-100 inline-flex items-center text-blue-800 py-1 px-2 rounded-full"
+                    *ngIf="event.status === 'ongoing'"
+                  >
                     <span
-                      *ngIf="event.status === 'ongoing'"
-                      class="flex w-2.5 h-2.5 bg-blue-500 rounded-full me-1.5 text-center flex-shrink-0"
+                      class="flex w-2.5 h-2.5 bg-blue-500 rounded-full text-center me-1.5 flex-shrink-0"
                     ></span>
-                    {{ event.status }}
-                  </span>
+                    Ongoing
+                  </div>
+                  <div
+                    class="text-sm font-medium bg-yellow-100 inline-flex items-center text-yellow-800 py-1 px-2 rounded-full"
+                    *ngIf="event.status === 'upcoming'"
+                  >
+                    <span
+                      class="flex w-2.5 h-2.5 bg-yellow-500 rounded-full text-center me-1.5 flex-shrink-0"
+                    ></span>
+                    Upcoming
+                  </div>
                 </td>
               </div>
 

@@ -182,4 +182,8 @@ export class AuthserviceService {
       switchMap(() => this.getRegisteredEvents(userId))
     );
   }
+
+  getAllRemarks(eventId: number): Observable<any> {
+    return this.http.get(`${this.API_URL}getAllRemarks/${eventId}`);
+  }
 }

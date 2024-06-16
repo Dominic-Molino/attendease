@@ -179,7 +179,8 @@ export class OrgEventComponent implements OnInit {
 
   openDialog() {
     const modal = this.dialog.open(AddEventComponent, {
-      width: '60%',
+      width: '70%',
+      height: '90%',
       disableClose: true,
     });
 
@@ -193,7 +194,8 @@ export class OrgEventComponent implements OnInit {
     const modal = this.dialog.open(EditEventComponent, {
       data: { event_id: this.selectedEventId },
       disableClose: true,
-      width: '50%',
+      width: '70%',
+      height: '90%',
     });
     modal.afterClosed().subscribe((response) => {
       this.loadEvent();

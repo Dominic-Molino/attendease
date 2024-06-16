@@ -15,24 +15,3 @@
 .pagination ::ng-deep .ngx-pagination li :hover {
   border-radius: 25px;
 }
-
-@keyframes blinkCursor {
-  50% {
-    border-right-color: transparent;
-  }
-}
-
-@keyframes typeAndDelete {
-  0%,
-  10% {
-    width: 0;
-  }
-  45%,
-  55% {
-    width: 6.2em;
-  } /* adjust width based on content */
-  90%,
-  100% {
-    width: 0;
-  }
-}

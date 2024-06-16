@@ -16,6 +16,7 @@ import {
   map,
   of,
   switchMap,
+  timer,
 } from 'rxjs';
 
 @Component({
@@ -87,6 +88,28 @@ export class AttendanceComponent {
             this.getUserAttendanceRemark(event.event_id);
           });
         }
+
+        this.events.sort((a, b) => {
+          if (
+            a.eventState === 'done' &&
+            (b.eventState === 'ongoing' || b.eventState === 'upcoming')
+          ) {
+            return -1;
+          } else if (
+            a.eventState === 'ongoing' &&
+            b.eventState === 'upcoming'
+          ) {
+            return -1;
+          } else if (
+            a.eventState === 'upcoming' &&
+            (b.eventState === 'done' || b.eventState === 'ongoing')
+          ) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+
         return res;
       }),
       catchError((error) => {
@@ -121,10 +144,8 @@ export class AttendanceComponent {
   }
 
   startPolling(): void {
-    this.updateSubscription = interval(5000) // Poll every 5 seconds
-      .pipe(
-        switchMap(() => this.getUserEvents()) // Use the refactored getUserEvents method
-      )
+    this.updateSubscription = timer(3000, 30000) // Initial delay of 3 seconds, then every 1 minute
+      .pipe(switchMap(() => this.getUserEvents()))
       .subscribe();
   }
 
@@ -133,9 +154,16 @@ export class AttendanceComponent {
       const dialogRef = this.dialog.open(SubmitAttendanceComponent, {
         data: { eventId: event },
         disableClose: true,
-        width: '50%',
+        width: '70%',
       });
-      document.body.classList.add('cdk-global-scrollblock');
+
+      dialogRef.componentInstance.attendanceSubmitted.subscribe(() => {
+        this.getUserEvents().subscribe();
+      });
+
+      dialogRef.afterClosed().subscribe(() => {
+        document.body.classList.remove('cdk-global-scrollblock');
+      });
     }
   }
 }

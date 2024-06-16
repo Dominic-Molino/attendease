@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
@@ -17,6 +17,8 @@ import Swal from 'sweetalert2';
   styleUrls: ['./submit-attendance.component.css'],
 })
 export class SubmitAttendanceComponent {
+  @Output() attendanceSubmitted = new EventEmitter<void>(); // Add an EventEmitter
+
   file: any;
   userId: any;
   imagePreview?: string | ArrayBuffer | null = null; // Variable to store image preview URL
@@ -81,6 +83,7 @@ export class SubmitAttendanceComponent {
                 title: 'Successfully uploaded photo',
               });
               this.resetInput();
+              this.dialog.close();
             },
             (error) => {
               const errorMessage =

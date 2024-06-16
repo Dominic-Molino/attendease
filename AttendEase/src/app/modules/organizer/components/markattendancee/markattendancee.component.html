@@ -29,12 +29,46 @@
       </button>
     </div>
     <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-      <thead class="text-xs text-dark-text uppercase bg-dark-primary">
+      <thead
+        class="text-dark-muted border-b border-dark-primary capitalize bg-dark-foreground"
+      >
         <tr>
-          <th scope="col" class="px-6 py-3 text-center">Student Name</th>
-          <th scope="col" class="px-6 py-3 text-center">Program</th>
-          <th scope="col" class="px-6 py-3 text-center">Block</th>
-          <th scope="col" class="px-6 py-3 text-center">Submission</th>
+          <th
+            scope="col"
+            class="px-6 py-3 tracking-widest font-medium text-center"
+          >
+            Student Name
+          </th>
+          <th
+            scope="col"
+            class="px-6 py-3 tracking-widest font-medium text-center"
+          >
+            Program
+          </th>
+          <th
+            scope="col"
+            class="px-6 py-3 tracking-widest font-medium text-center"
+          >
+            Block
+          </th>
+          <th
+            scope="col"
+            class="px-6 py-3 tracking-widest font-medium text-center"
+          >
+            Year Level
+          </th>
+          <th
+            scope="col"
+            class="px-6 py-3 tracking-widest font-medium text-center"
+          >
+            Remarks
+          </th>
+          <th
+            scope="col"
+            class="px-6 py-3 tracking-widest font-medium text-center"
+          >
+            Submission
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -43,11 +77,23 @@
             {{ data.first_name }} {{ data.last_name }}
           </td>
           <td class="text-center">
-            {{ data.program || "Not set" }}
+            {{ data.course || "Not set" }}
           </td>
           <td class="text-center">
             {{ data.block || "Not set" }}
           </td>
+          <td class="text-center">
+            {{ data.year_level || "Not set" }}
+          </td>
+          <td class="px-6 py-4 text-center">
+            <span *ngIf="data.remarks === 0" class="text-red-500">
+              Not Approve
+            </span>
+            <span *ngIf="data.remarks === 1" class="text-light-text">
+              Approve
+            </span>
+          </td>
+
           <td class="px-6 py-4 text-center">
             <button
               (click)="viewAttendances(data.user_id)"

@@ -4,6 +4,7 @@ import { AuthserviceService } from '../../../core/service/authservice.service';
 import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
+import { map, catchError } from 'rxjs';
 
 interface Feedback {
   user_id: number;
@@ -24,7 +25,7 @@ export class FeedbackListComponent implements OnInit {
   feedback: Feedback[] = [];
 
   p: number = 1;
-  itemsPerPage: number = 10;
+  itemsPerPage: number = 9;
   maxSize = 5;
 
   constructor(
@@ -36,33 +37,39 @@ export class FeedbackListComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.eventId = +params['eventId'];
-      this.getFeedback();
+      if (this.eventId) {
+        this.getFeedback();
+      }
     });
   }
 
-  getFeedback() {
-    this.service.getEventFeedback(this.eventId).subscribe(
-      (res: any) => {
-        if (res && res.payload) {
-          this.feedback = res.payload.map((feed: any): Feedback => {
-            return {
+  getFeedback(): void {
+    this.service
+      .getEventFeedback(this.eventId!)
+      .pipe(
+        map((res: any) =>
+          res.payload.map(
+            (feed: any): Feedback => ({
               user_id: feed.user_id,
               improvement_suggestions: feed.improvement_suggestions,
               additional_comments: feed.additional_comments,
               date: new Date(feed.feedback_date),
-            };
-          });
-        }
-      },
-      (error) => {
-        const errorMessage =
-          error.error?.status?.message || 'An error occurred';
-        Swal.fire('', errorMessage, 'warning');
-      }
-    );
+            })
+          )
+        ),
+        catchError((error) => {
+          const errorMessage =
+            error.error?.status?.message || 'An error occurred';
+          Swal.fire('', errorMessage, 'warning');
+          return [];
+        })
+      )
+      .subscribe((feedback) => {
+        this.feedback = feedback;
+      });
   }
 
-  viewFeedback() {
+  viewFeedback(): void {
     const currentUserRole = this.service.getCurrentUserRole();
     let routePrefix = '';
 

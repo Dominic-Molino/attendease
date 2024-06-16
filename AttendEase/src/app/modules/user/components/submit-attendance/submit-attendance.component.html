@@ -29,7 +29,7 @@
   </div>
   <div class="relative w-full p-5 max-w-full max-h-full">
     <div
-      class="grid min-h-[140px] w-full my-5 bg-dark-primary border border-dark-background place-items-center rounded-md"
+      class="grid min-h-[140px] h-fit w-full my-5 bg-dark-primary border border-dark-background place-items-center rounded-md"
     >
       <span *ngIf="!imagePreview" class="text-dark-text">Preview Here</span>
       <img
@@ -46,7 +46,7 @@
           type="file"
           id="avatar-input-file"
           accept="image/*"
-          class="block w-full text-sm text-gray-900 border border-dark-border rounded-md cursor-pointer bg-gray-50 focus:outline-none"
+          class="block w-full text-sm text-text border border-dark-border rounded-md cursor-pointer bg-dark-muted focus:outline-none"
           (change)="onFileChange($event)"
         />
       </div>

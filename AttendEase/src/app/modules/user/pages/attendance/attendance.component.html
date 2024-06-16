@@ -8,14 +8,17 @@
       <hr class="h-px mb-6 bg-dark-border border-0" />
     </div>
     @if(loading){
-    <div class="h-screen bg-white">
-      <div class="flex justify-center items-center">
-        <img
-          class="h-16 w-16"
-          src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
-          alt=""
-        />
-        <span class="text-text text-2xl font-medium">Loading...</span>
+    <div class="h-screen w-full flex justify-center bg-white">
+      <div class="flex flex-row gap-2">
+        <div
+          class="w-4 h-4 rounded-full bg-light-background animate-bounce"
+        ></div>
+        <div
+          class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.3s]"
+        ></div>
+        <div
+          class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.5s]"
+        ></div>
       </div>
     </div>
     }@else if (!loading && events.length > 0) {
@@ -80,50 +83,67 @@
             </td>
             <div class="flex justify-center text-center">
               <td class="py-4 text-center">
-                <span
-                  class="flex justify-center items-center capitalize text-center text-sm font-normal text-gray-900 me-3"
+                <div
+                  class="text-sm font-medium bg-green-100 inline-flex items-center text-green-800 py-1 px-2 rounded-full"
+                  *ngIf="event.eventState === 'done'"
                 >
                   <span
-                    *ngIf="event.eventState === 'done'"
                     class="flex w-2.5 h-2.5 bg-light-foregroud rounded-full text-center me-1.5 flex-shrink-0"
                   ></span>
+                  Done
+                </div>
+                <div
+                  class="text-sm font-medium bg-blue-100 inline-flex items-center text-blue-800 py-1 px-2 rounded-full"
+                  *ngIf="event.eventState === 'ongoing'"
+                >
                   <span
-                    *ngIf="event.eventState === 'ongoing'"
                     class="flex w-2.5 h-2.5 bg-blue-500 rounded-full text-center me-1.5 flex-shrink-0"
                   ></span>
+                  Ongoing
+                </div>
+                <div
+                  class="text-sm font-medium bg-yellow-100 inline-flex items-center text-yellow-800 py-1 px-2 rounded-full"
+                  *ngIf="event.eventState === 'upcoming'"
+                >
                   <span
-                    *ngIf="event.eventState === 'upcoming'"
                     class="flex w-2.5 h-2.5 bg-yellow-500 rounded-full text-center me-1.5 flex-shrink-0"
                   ></span>
-
-                  {{ event.eventState }}
-                </span>
+                  Upcoming
+                </div>
               </td>
             </div>
             <td class="px-6 py-4 text-center">
-              <span
-                [ngClass]="{
-                  'text-green-500 font-medium ':
-                    attendanceRemarks[event.event_id] === 1,
-                  'text-red-500 font-medium ':
-                    attendanceRemarks[event.event_id] === 0,
-                  'text-gray-500 font-medium ':
-                    attendanceRemarks[event.event_id] !== 0 &&
-                    attendanceRemarks[event.event_id] !== 1
-                }"
+              <div
+                class="text-sm font-medium bg-green-100 text-green-800 py-1 px-2 rounded-full"
+                *ngIf="attendanceRemarks[event.event_id] === 1"
               >
-                {{
-                  attendanceRemarks[event.event_id] === 1
-                    ? "Approved"
-                    : attendanceRemarks[event.event_id] === 0
-                    ? "Not Approved"
-                    : "Please wait for the event to end"
-                }}
-              </span>
+                Approve
+              </div>
+              <div
+                class="text-sm font-medium bg-red-100 text-red-800 py-1 px-2 rounded-full"
+                *ngIf="attendanceRemarks[event.event_id] === 0"
+              >
+                Waiting for approval
+              </div>
+              <div
+                class="text-sm font-medium bg-gray-100 text-gray-800 py-1 px-2 rounded-full"
+                *ngIf="attendanceRemarks[event.event_id] === -1"
+              >
+                No Record
+              </div>
             </td>
             <td>
               <button
                 (click)="openFile(event.eventState, event)"
+                [disabled]="
+                  attendanceRemarks[event.event_id] !== 0 &&
+                  attendanceRemarks[event.event_id] !== -1
+                "
+                [ngClass]="{
+                  'opacity-50 cursor-not-allowed':
+                    attendanceRemarks[event.event_id] !== 0 &&
+                    attendanceRemarks[event.event_id] !== -1
+                }"
                 class="block mx-auto px-4 py-2 text-sm text-white font-semibold bg-light-background hover:bg-light-foregroud rounded-md focus:outline-none"
               >
                 Upload photo

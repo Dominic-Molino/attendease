@@ -7,8 +7,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { FeedbackSubmissionComponent } from '../../components/feedback-submission/feedback-submission.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
-import { Observable, interval, Subscription, of } from 'rxjs';
-import { switchMap, catchError, map } from 'rxjs/operators';
+import { Observable, interval, Subscription, of, timer } from 'rxjs';
+import { switchMap, catchError, map, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-feedback',
@@ -21,6 +21,8 @@ export class FeedbackComponent implements OnInit, OnDestroy {
   events: any[] = [];
   userId?: any;
   feedback: any[] = [];
+  loading: boolean = false;
+  feedbackSubmitted: { [key: number]: boolean } = {};
 
   // Pagination variables
   p: number = 1;
@@ -48,6 +50,7 @@ export class FeedbackComponent implements OnInit, OnDestroy {
   }
 
   getUserEvents(): Observable<any> {
+    this.loading = true;
     return this.eventService.getUserEvent().pipe(
       map((res) => {
         if (res && res.payload) {
@@ -67,6 +70,27 @@ export class FeedbackComponent implements OnInit, OnDestroy {
             return event;
           });
 
+          this.events.sort((a, b) => {
+            if (
+              a.eventState === 'done' &&
+              (b.eventState === 'ongoing' || b.eventState === 'upcoming')
+            ) {
+              return -1;
+            } else if (
+              a.eventState === 'ongoing' &&
+              b.eventState === 'upcoming'
+            ) {
+              return -1;
+            } else if (
+              a.eventState === 'upcoming' &&
+              (b.eventState === 'done' || b.eventState === 'ongoing')
+            ) {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
+
           // Fetch feedback after retrieving events
           this.getFeedback().subscribe();
         }
@@ -76,7 +100,10 @@ export class FeedbackComponent implements OnInit, OnDestroy {
         const errorMessage =
           error.error?.status?.message || 'An error occurred';
         Swal.fire('', errorMessage, 'warning');
-        return of(null); // Return a null observable in case of error
+        return of(null);
+      }),
+      finalize(() => {
+        this.loading = false;
       })
     );
   }
@@ -109,19 +136,24 @@ export class FeedbackComponent implements OnInit, OnDestroy {
         (feedback) => feedback.event_id === event.event_id
       );
       event.remarks = eventFeedback ? eventFeedback.remarks : 'No Submission';
+      event.feedbackSubmitted = !!eventFeedback;
     });
   }
 
   startPolling(): void {
-    this.updateSubscription = interval(5000) // Poll every 5 seconds
-      .pipe(
-        switchMap(() => this.getUserEvents()) // Use the refactored getUserEvents method
-      )
+    this.updateSubscription = timer(3000, 60000) // Initial delay of 3 seconds, then every 1 minute
+      .pipe(switchMap(() => this.getUserEvents()))
       .subscribe();
   }
 
   openDialog(eventState: any, eventId: number): void {
     if (eventState === 'done') {
+      const event = this.events.find((event) => event.event_id === eventId);
+      if (!event || event.feedbackSubmitted) {
+        Swal.fire('', 'Feedback already submitted for this event', 'warning');
+        return;
+      }
+
       this.dialog.open(FeedbackSubmissionComponent, {
         data: {
           curr_event_id: eventId,

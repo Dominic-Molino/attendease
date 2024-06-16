@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { EventService } from '../../../core/service/event.service';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
-import { FeedbackListComponent } from '../feedback-list/feedback-list.component';
 import { AuthserviceService } from '../../../core/service/authservice.service';
+import { catchError, finalize, map, switchMap } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { Theme } from '@fullcalendar/core/internal';
+import { FeedbackListComponent } from '../feedback-list/feedback-list.component';
 
 interface Event {
   event_id: number;
@@ -13,14 +14,12 @@ interface Event {
   event_description: string;
   event_start_date: Date;
   event_end_date: Date;
-  status: string;
+  status: 'upcoming' | 'ongoing' | 'done';
 }
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  templateUrl: './event-list.component.html',
-  styleUrl: './event-list.component.css',
   imports: [
     CommonModule,
     RouterLink,
@@ -28,11 +27,14 @@ interface Event {
     FeedbackListComponent,
     NgxPaginationModule,
   ],
+  templateUrl: './event-list.component.html',
+  styleUrls: ['./event-list.component.css'],
 })
 export class EventListComponent implements OnInit {
   eventList: Event[] = [];
-  maxChar: number = 100;
-  currUser: any;
+  maxDescriptionLength: number = 100;
+  currentUser: any;
+  loading = false;
 
   p: number = 1;
   itemsPerPage: number = 9;
@@ -41,63 +43,84 @@ export class EventListComponent implements OnInit {
   constructor(
     private eventService: EventService,
     private router: Router,
-    private service: AuthserviceService
-  ) {
-    this.currUser = this.service.getCurrentUserId();
-  }
+    private authService: AuthserviceService
+  ) {}
 
   ngOnInit(): void {
+    this.currentUser = this.authService.getCurrentUserId();
     this.loadEvents();
   }
 
-  loadEvents() {
-    this.eventService.getAllEvents().subscribe((res) => {
-      this.eventList = res.payload.map((data: any): Event => {
-        const eventStartDate = new Date(data.event_start_date);
-        const eventEndDate = new Date(data.event_end_date);
-        const currentDate = new Date();
+  loadEvents(): void {
+    this.loading = true;
+    this.eventService
+      .getAllEvents()
+      .pipe(
+        map((res) =>
+          res.payload.map(
+            (data: any): Event => ({
+              event_id: data.event_id,
+              event_name: data.event_name,
+              event_description: data.event_description,
+              event_start_date: new Date(data.event_start_date),
+              event_end_date: new Date(data.event_end_date),
+              status: this.getEventStatus(
+                new Date(data.event_start_date),
+                new Date(data.event_end_date)
+              ),
+            })
+          )
+        ),
+        switchMap((events) => {
+          this.eventList = events;
 
-        let status: 'upcoming' | 'ongoing' | 'done';
+          // Sorting events
+          this.eventList.sort((a, b) => {
+            if (
+              a.status === 'done' &&
+              (b.status === 'ongoing' || b.status === 'upcoming')
+            ) {
+              return -1;
+            } else if (a.status === 'ongoing' && b.status === 'upcoming') {
+              return -1;
+            } else if (
+              a.status === 'upcoming' &&
+              (b.status === 'done' || b.status === 'ongoing')
+            ) {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
 
-        if (currentDate < eventStartDate) {
-          status = 'upcoming';
-        } else if (
-          currentDate >= eventStartDate &&
-          currentDate <= eventEndDate
-        ) {
-          status = 'ongoing';
-        } else {
-          status = 'done';
-        }
+          return events;
+        }),
+        catchError((error) => {
+          const errorMessage =
+            error.error?.status?.message || 'An error occurred';
+          Swal.fire('', errorMessage, 'warning');
+          return [];
+        }),
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe();
+  }
 
-        return {
-          event_id: data.event_id,
-          event_name: data.event_name,
-          event_description: data.event_description,
-          event_start_date: data.event_start_date,
-          event_end_date: data.event_end_date,
-          status: status,
-        };
-      });
+  getEventStatus(
+    startDate: Date,
+    endDate: Date
+  ): 'upcoming' | 'ongoing' | 'done' {
+    const currentDate = new Date();
 
-      this.eventList.sort((a, b) => {
-        if (
-          a.status === 'done' &&
-          (b.status === 'ongoing' || b.status === 'upcoming')
-        ) {
-          return -1;
-        } else if (a.status === 'ongoing' && b.status === 'upcoming') {
-          return -1;
-        } else if (
-          a.status === 'upcoming' &&
-          (b.status === 'done' || b.status === 'ongoing')
-        ) {
-          return 1;
-        } else {
-          return 0;
-        }
-      });
-    });
+    if (currentDate < startDate) {
+      return 'upcoming';
+    } else if (currentDate >= startDate && currentDate <= endDate) {
+      return 'ongoing';
+    } else {
+      return 'done';
+    }
   }
 
   truncateDescription(text: string, maxLength: number): string {
@@ -108,8 +131,8 @@ export class EventListComponent implements OnInit {
     }
   }
 
-  viewFeedback(eventId: number) {
-    const currentUserRole = this.service.getCurrentUserRole();
+  viewFeedback(eventId: number): void {
+    const currentUserRole = this.authService.getCurrentUserRole();
     let routePrefix = '';
 
     if (currentUserRole === 1) {

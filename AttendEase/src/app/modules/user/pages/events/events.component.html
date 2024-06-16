@@ -7,48 +7,148 @@
 
       <hr class="h-px mb-6 bg-dark-border border-0" />
     </div>
-
+    @if(loading){
+    <div class="h-screen w-full flex justify-center bg-white">
+      <div class="flex flex-row gap-2">
+        <div
+          class="w-4 h-4 rounded-full bg-light-background animate-bounce"
+        ></div>
+        <div
+          class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.3s]"
+        ></div>
+        <div
+          class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.5s]"
+        ></div>
+      </div>
+    </div>
+    }@else if(!loading && eventList.length > 0){
     <div class="container">
       @defer{
-      <section
-        class="flex items-center flex-col"
-        *ngIf="eventList && eventList.length"
-      >
-        <div
-          *ngIf="eventList.length > 0"
-          class="rounded-md shadow-md border border-dark-border container bg-white hover:bg-dark-muted"
-        >
-          <div
-            class="p-3.5 md:h-80 rounded-md flex flex-col md:flex-row w-full items-center"
+      <section class="flex items-center flex-col">
+        <ng-container *ngIf="latestEvent">
+          <h5
+            class="flex self-start mb-2 text-lg font-bold tracking-tight text-text"
           >
-            <div class="rounded-md h-80 py-3.5 md:w-1/2 w-full">
-              <img
-                *ngIf="
-                  eventList[eventList.length - 1].event_image$
-                    | async as eventImage;
-                  else placeholder
-                "
-                [src]="eventImage"
-                alt="fetch images"
-                class="rounded-md object-cover object-center max-h-72 w-full border border-dark-border"
-              />
+            Latest Event
+          </h5>
 
-              <ng-template #placeholder>
-                <div
-                  class="image-container avatar-placeholder h-80 rounded-md"
-                ></div
-              ></ng-template>
-            </div>
-            <div class="p-5 w-full lg:w-1/2 pr-3">
-              <div class="mb-3">
-                <h1
-                  class="overflow-hidden text-ellipsis text-text text-2xl md:text-2xl font-medium mt-3"
+          <div
+            class="rounded-md shadow-md border border-dark-border container bg-white hover:bg-dark-muted"
+          >
+            <div
+              class="p-3.5 md:h-80 rounded-md flex flex-col md:flex-row w-full items-center"
+            >
+              <div class="rounded-md h-80 py-3.5 md:w-1/2 w-full">
+                <img
+                  *ngIf="
+                    latestEvent.event_image$ | async as eventImage;
+                    else placeholder
+                  "
+                  [src]="eventImage"
+                  alt="fetch images"
+                  loading="lazy"
+                  class="rounded-md object-cover object-center max-h-72 w-full border border-dark-border"
+                />
+
+                <ng-template #placeholder>
+                  <div
+                    class="image-container avatar-placeholder h-80 rounded-md"
+                  ></div
+                ></ng-template>
+              </div>
+              <div class="p-5 w-full lg:w-1/2 pr-3">
+                <div class="mb-3">
+                  <h1
+                    class="overflow-hidden text-ellipsis text-text text-2xl md:text-2xl font-medium mt-3"
+                  >
+                    {{ latestEvent.event_name }}
+                  </h1>
+                  <div class="flex items-center">
+                    <svg
+                      class="w-5 h-5 inline flex-shrink-0 text-text"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
+                      />
+                    </svg>
+                    <span class="ms-1 text-[13px] text-text"
+                      >Registration Date:
+                      {{ latestEvent.event_registration_start | date }}
+                    </span>
+                    <span class="ms-1 text-text"> - </span>
+                    <span class="ms-2 text-[13px] text-text">
+                      {{ latestEvent.event_registration_end | date }}</span
+                    >
+                  </div>
+                </div>
+                <p
+                  class="leading-tight text-base overflow-hidden whitespace-pre-line text-ellipsis text-dark-text"
                 >
-                  {{ eventList[eventList.length - 1].event_name }}
-                </h1>
+                  {{
+                    truncateDescription(latestEvent.event_description, maxChar)
+                  }}
+                </p>
+                <button
+                  class="bg-light-background hover:bg-light-foregroud text-white text-sm font-semibold shadow-sm rounded-md py-2 px-6 relative -bottom-3.5"
+                  (click)="viewEvent(latestEvent)"
+                >
+                  Read More
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- grid cards -->
+        <h5
+          class="flex self-start mt-4 mb-2 text-lg font-bold tracking-tight text-text"
+        >
+          Other Events
+        </h5>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <ng-container
+            *ngFor="
+              let event of filteredEventList
+                | paginate : { itemsPerPage: itemsPerPage, currentPage: p }
+            "
+          >
+            <div
+              class="rounded-md border border-dark-border shadow-md container p-3.5 mb-5 bg-white flex flex-col h-full hover:bg-dark-muted"
+              *ngIf="event !== latestEvent"
+            >
+              <div class="flex flex-col flex-grow">
+                <div class="rounded-md overflow-hidden h-44 max-h-44">
+                  <img
+                    *ngIf="
+                      event.event_image$ | async as eventImage;
+                      else placeholder
+                    "
+                    [src]="eventImage"
+                    alt="Event Image"
+                    class="rounded-md object-cover object-center max-h-44 h-44 w-full border border-dark-border"
+                  />
+                  <ng-template #placeholder>
+                    <div
+                      class="image-container avatar-placeholder h-44 rounded-md"
+                    ></div
+                  ></ng-template>
+                </div>
+                <h5 class="text-xl md:text-xl font-medium mt-3">
+                  {{ event.event_name }}
+                </h5>
                 <div class="flex items-center">
                   <svg
-                    class="w-5 h-5 inline flex-shrink-0 text-text"
+                    class="w-5 h-5 inline flex-shrink-0 text-gray-800"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -64,110 +164,30 @@
                       d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
                     />
                   </svg>
-                  <span class="ms-1 text-[13px] text-text"
-                    >Registration Date:
-                    {{
-                      eventList[eventList.length - 1].event_registration_start
-                        | date
-                    }}
-                  </span>
-                  <span class="ms-1 text-text"> - </span>
-                  <span class="ms-2 text-[13px] text-text">{{
-                    eventList[eventList.length - 1].event_registration_end
-                      | date
+                  <span class="ms-2 text-[13px]"
+                    >Registration Date:{{
+                      event.event_registration_start | date
+                    }}</span
+                  >
+                  <span class="ms-1"> - </span>
+                  <span class="ms-2 text-[13px]">{{
+                    event.event_registration_end | date
                   }}</span>
                 </div>
-              </div>
-              <p
-                class="leading-tight text-base overflow-hidden whitespace-pre-line text-ellipsis text-dark-text"
-              >
-                {{
-                  truncateDescription(
-                    eventList[eventList.length - 1].event_description,
-                    maxChar
-                  )
-                }}
-              </p>
-              <button
-                class="bg-light-background hover:bg-light-foregroud text-white text-sm font-semibold shadow-sm rounded-md py-2 px-6 relative -bottom-3.5"
-                (click)="viewEvent(eventList[eventList.length - 1])"
-              >
-                Read More
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- grid cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-5">
-          <div
-            *ngFor="
-              let event of eventList.slice(0, -1)
-                | paginate : { itemsPerPage: itemsPerPage, currentPage: p }
-            "
-            class="rounded-md border border-dark-border shadow-md container p-3.5 mb-5 bg-white flex flex-col h-full hover:bg-dark-muted"
-          >
-            <div class="flex flex-col flex-grow">
-              <div class="rounded-md overflow-hidden h-44 max-h-44">
-                <img
-                  *ngIf="
-                    event.event_image$ | async as eventImage;
-                    else placeholder
-                  "
-                  [src]="eventImage"
-                  alt="Event Image"
-                  class="rounded-md object-cover object-center max-h-44 h-44 w-full border border-dark-border"
-                />
-                <ng-template #placeholder>
-                  <div
-                    class="image-container avatar-placeholder h-44 rounded-md"
-                  ></div
-                ></ng-template>
-              </div>
-              <h5 class="text-xl md:text-xl font-medium mt-3">
-                {{ event.event_name }}
-              </h5>
-              <div class="flex items-center">
-                <svg
-                  class="w-5 h-5 inline flex-shrink-0 text-gray-800"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
-                  />
-                </svg>
-                <span class="ms-2 text-[13px]"
-                  >Registration Date:{{
-                    event.event_registration_start | date
-                  }}</span
-                >
-                <span class="ms-1"> - </span>
-                <span class="ms-2 text-[13px]">{{
-                  event.event_registration_end | date
-                }}</span>
-              </div>
-              <p class="text-dark-text text-sm mt-3">
-                {{ truncateDescription(event.event_description, maxChar) }}
-              </p>
-              <div class="flex mt-auto justify-start mb-4 items-center">
-                <button
-                  (click)="viewEvent(event)"
-                  class="bg-light-background hover:bg-light-foregroud text-white text-sm font-semibold shadow-sm rounded-md py-2 px-6 relative -bottom-3.5 mb-4"
-                >
-                  Read More
-                </button>
+                <p class="text-dark-text text-sm mt-3">
+                  {{ truncateDescription(event.event_description, maxChar) }}
+                </p>
+                <div class="flex mt-auto justify-start mb-4 items-center">
+                  <button
+                    (click)="viewEvent(event)"
+                    class="bg-light-background hover:bg-light-foregroud text-white text-sm font-semibold shadow-sm rounded-md py-2 px-6 relative -bottom-3.5 mb-4"
+                  >
+                    Read More
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          </ng-container>
         </div>
       </section>
       }
@@ -177,14 +197,13 @@
       >
         <pagination-controls
           (pageChange)="p = $event"
-          [maxSize]="maxSize"
           [responsive]="true"
           class="pagination"
         ></pagination-controls>
       </div>
     </div>
-
-    <section *ngIf="eventList.length === 0">
+    }@else {
+    <section>
       <div class="py-4 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
         <div class="max-w-screen-sm text-center mx-auto">
           <svg
@@ -285,5 +304,6 @@
         </div>
       </div>
     </section>
+    }
   </div>
 </main>

@@ -6,8 +6,21 @@
       </p>
       <hr class="h-px mb-5 bg-dark-border border-0" />
     </div>
-
-    @if (eventList && eventList.length > 0) {
+    @if(loading){
+    <div class="h-screen w-full flex justify-center bg-white">
+      <div class="flex flex-row gap-2">
+        <div
+          class="w-4 h-4 rounded-full bg-light-background animate-bounce"
+        ></div>
+        <div
+          class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.3s]"
+        ></div>
+        <div
+          class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.5s]"
+        ></div>
+      </div>
+    </div>
+    } @else if (!loading && eventList && eventList.length > 0) {
     <div
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 gap-x-0 mt-5"
     >
@@ -25,27 +38,39 @@
         </div>
 
         <div class="absolute right-3 bottom-7">
-          <span
-            *ngIf="event.status === 'ongoing'"
-            class="bg-blue-200 text-text capitalize text-sm font-medium me-2 px-2.5 py-0.5 rounded-full"
-            >{{ event.status }}</span
-          >
-
-          <span
+          <div
+            class="text-sm font-medium bg-green-100 inline-flex items-center text-green-800 py-1 px-2 rounded-full"
             *ngIf="event.status === 'done'"
-            class="bg-light-background text-text capitalize text-sm font-medium me-2 px-2.5 py-0.5 rounded-full"
-            >{{ event.status }}</span
           >
-
-          <span
+            <span
+              class="flex w-2.5 h-2.5 bg-light-foregroud rounded-full text-center me-1.5 flex-shrink-0"
+            ></span>
+            Done
+          </div>
+          <div
+            class="text-sm font-medium bg-blue-100 inline-flex items-center text-blue-800 py-1 px-2 rounded-full"
+            *ngIf="event.status === 'ongoing'"
+          >
+            <span
+              class="flex w-2.5 h-2.5 bg-blue-500 rounded-full text-center me-1.5 flex-shrink-0"
+            ></span>
+            Ongoing
+          </div>
+          <div
+            class="text-sm font-medium bg-yellow-100 inline-flex items-center text-yellow-800 py-1 px-2 rounded-full"
             *ngIf="event.status === 'upcoming'"
-            class="bg-yellow-200 text-text text-sm capitalize font-medium me-2 px-2.5 py-0.5 rounded-full"
-            >{{ event.status }}</span
           >
+            <span
+              class="flex w-2.5 h-2.5 bg-yellow-500 rounded-full text-center me-1.5 flex-shrink-0"
+            ></span>
+            Upcoming
+          </div>
         </div>
 
         <p class="mb-3 font-normal text-gray-700 text-justify">
-          {{ truncateDescription(event.event_description, maxChar) }}
+          {{
+            truncateDescription(event.event_description, maxDescriptionLength)
+          }}
         </p>
         <p class="mb-3 font-normal text-sm text-gray-700">
           Date: {{ event.event_start_date | date : "longDate" }}
@@ -84,7 +109,7 @@
       ></pagination-controls>
     </div>
     }@else {
-    <section #noEvents>
+    <section>
       <div class="py-4 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
         <div class="max-w-screen-sm text-center mx-auto">
           <svg

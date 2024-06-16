@@ -120,24 +120,19 @@ export class EditEventComponent implements OnInit {
       event_name: this.builder.control(''),
       event_description: this.builder.control(''),
       event_location: this.builder.control(''),
-      event_start_date: [
-        null,
-        [Validators.required, this.futureDateValidator()],
-      ],
-      event_end_date: [null, [Validators.required, this.futureDateValidator()]],
-      event_registration_start: [
-        null,
-        [Validators.required, this.futureDateValidator()],
-      ],
-      event_registration_end: [
-        null,
-        [Validators.required, this.futureDateValidator()],
-      ],
+      event_start_date: [null, this.futureDateValidator()],
+      event_end_date: [null, this.futureDateValidator()],
+      event_registration_start: null,
+      event_registration_end: null,
       session: this.builder.control(''),
       max_attendees: this.builder.control(''),
       categories: this.buildCategoryCheckboxes(),
-      organizer_name: ['', Validators.required],
+      organizer_name: this.builder.control(''),
     });
+
+    if (this.eventVal.categories) {
+      this.setCategories(JSON.parse(this.eventVal.categories));
+    }
   }
 
   ngOnInit(): void {
@@ -152,7 +147,9 @@ export class EditEventComponent implements OnInit {
         event_registration_end: this.eventVal.event_registration_end,
         session: this.eventVal.session,
         max_attendees: this.eventVal.max_attendees,
-        categories: this.eventVal.categories,
+        categories: this.eventVal.categories
+          ? JSON.parse(this.eventVal.categories)
+          : null,
         organizer_name: this.eventVal.organizer_name,
       });
     }
@@ -197,11 +194,13 @@ export class EditEventComponent implements OnInit {
 
   setCategories(selectedCategories: string[]): void {
     const categoryControls = this.eventForm.get('categories') as FormArray;
-    this.categories.forEach((category, index) => {
-      if (selectedCategories.includes(category)) {
-        categoryControls.at(index).setValue(true);
-      }
-    });
+    if (selectedCategories) {
+      this.categories.forEach((category, index) => {
+        if (selectedCategories.includes(category)) {
+          categoryControls.at(index).setValue(true);
+        }
+      });
+    }
   }
 
   getSelectedCategories() {
