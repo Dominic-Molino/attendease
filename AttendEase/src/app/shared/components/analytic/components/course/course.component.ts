@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DataAnalyticsService } from '../../../../../core/service/data-analytics.service';
 import { ChartModule } from 'primeng/chart';
 import { TooltipItem } from 'chart.js';
+import { Subscription, switchMap, timer } from 'rxjs';
 
 @Component({
   selector: 'app-course',
@@ -10,16 +11,25 @@ import { TooltipItem } from 'chart.js';
   templateUrl: './course.component.html',
   styleUrl: './course.component.css',
 })
-export class CourseComponent implements OnInit {
+export class CourseComponent implements OnInit, OnDestroy {
   data: any;
   basicOptions: any;
+
+  private refreshSubscription: Subscription | undefined;
 
   constructor(private dataService: DataAnalyticsService) {}
 
   ngOnInit() {
-    this.dataService.getCourse().subscribe((res) => {
-      this.processChartData(res.payload);
-    });
+    this.refreshSubscription = timer(0, 30000)
+      .pipe(switchMap(() => this.dataService.getCourse()))
+      .subscribe(
+        (res) => {
+          this.processChartData(res.payload);
+        },
+        (error) => {
+          console.error('Error fetching block data:', error);
+        }
+      );
 
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
@@ -58,6 +68,12 @@ export class CourseComponent implements OnInit {
         },
       },
     };
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
   }
 
   processChartData(payload: any[]) {

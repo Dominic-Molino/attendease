@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DataAnalyticsService } from '../../../../../core/service/data-analytics.service';
 import { ChartModule } from 'primeng/chart';
 import { TooltipItem } from 'chart.js';
+import { Subscription, timer, switchMap, interval } from 'rxjs';
 
 @Component({
   selector: 'app-year-level',
@@ -10,16 +11,25 @@ import { TooltipItem } from 'chart.js';
   templateUrl: './year-level.component.html',
   styleUrl: './year-level.component.css',
 })
-export class YearLevelComponent implements OnInit {
+export class YearLevelComponent implements OnInit, OnDestroy {
   data: any;
   basicOptions: any;
+
+  private refreshSubscription: Subscription | undefined;
 
   constructor(private dataService: DataAnalyticsService) {}
 
   ngOnInit(): void {
-    this.dataService.getYearLevel().subscribe((res) => {
-      this.processChartData(res.payload);
-    });
+    this.refreshSubscription = timer(0, 30000)
+      .pipe(switchMap(() => this.dataService.getYearLevel()))
+      .subscribe(
+        (res) => {
+          this.processChartData(res.payload);
+        },
+        (error) => {
+          console.error('Error fetching block data:', error);
+        }
+      );
 
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
@@ -36,7 +46,7 @@ export class YearLevelComponent implements OnInit {
             },
             font: {
               family: 'Inter',
-              size: 13, 
+              size: 13,
             },
           },
           position: 'bottom',
@@ -57,6 +67,12 @@ export class YearLevelComponent implements OnInit {
         },
       },
     };
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
   }
 
   processChartData(payload: any[]) {

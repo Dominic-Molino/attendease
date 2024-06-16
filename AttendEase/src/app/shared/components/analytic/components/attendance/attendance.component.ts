@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { DataAnalyticsService } from '../../../../../core/service/data-analytics.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { EventService } from '../../../../../core/service/event.service';
 import { ChartModule } from 'primeng/chart';
 import { CommonModule } from '@angular/common';
-import { TooltipItem } from 'chart.js';
+import { Subscription, timer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 interface Event {
   event_id: number;
@@ -25,101 +25,119 @@ interface Event {
   templateUrl: './attendance.component.html',
   styleUrls: ['./attendance.component.css'],
 })
-export class AttendanceComponent implements OnInit {
+export class AttendanceComponent implements OnInit, OnDestroy {
   data: any;
   options: any;
+  private refreshSubscription: Subscription | undefined;
 
   constructor(private eventService: EventService) {}
 
   ngOnInit(): void {
-    this.eventService.getAllEvents().subscribe((res) => {
-      const events: Event[] = res.payload;
-      const currentDate = new Date();
+    this.setupPolling();
 
-      let ongoing = 0,
-        done = 0,
-        upcoming = 0;
-
-      events.forEach((event: Event) => {
-        const startDate = new Date(event.event_start_date);
-        const endDate = new Date(event.event_end_date);
-
-        if (endDate < currentDate) {
-          done++;
-        } else if (startDate > currentDate) {
-          upcoming++;
-        } else {
-          ongoing++;
-        }
-      });
-
-      this.data = {
-        labels: ['Ongoing', 'Done', 'Upcoming'],
-        datasets: [
-          {
-            barThickness: 20,
-            label: 'Events',
-            backgroundColor: '#04c464',
-            borderRadius: 15,
-            data: [ongoing, done, upcoming],
-          },
-        ],
-      };
-
-      this.options = {
-        indexAxis: 'y',
-        maintainAspectRatio: false,
-        aspectRatio: 0.8,
-        responsive: true,
-        plugins: {
-          legend: {
-            labels: {
-              font: {
-                size: 14,
-                family: 'Inter',
-              },
+    this.options = {
+      indexAxis: 'y',
+      maintainAspectRatio: false,
+      aspectRatio: 0.8,
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: {
+            font: {
+              size: 14,
+              family: 'Inter',
             },
           },
+        },
+        title: {
+          display: true,
+          text: 'Event Status Overview',
+          font: {
+            size: 18,
+          },
+          padding: {
+            top: 10,
+            bottom: 30,
+          },
+        },
+      },
+      scales: {
+        x: {
+          display: true,
           title: {
             display: true,
-            text: 'Event Status Overview',
+            text: 'Number of Events',
             font: {
-              size: 18,
-            },
-            padding: {
-              top: 10,
-              bottom: 30,
+              family: 'Poppins',
+              size: 14,
             },
           },
         },
-        scales: {
-          x: {
+        y: {
+          display: true,
+          title: {
             display: true,
-            title: {
-              display: true,
-              text: 'Number of Events',
-              font: {
-                family: 'Poppins',
-                size: 14,
-              },
+            text: 'Event Status',
+            font: {
+              family: 'Poppins',
+              size: 14,
             },
           },
-          y: {
-            display: true,
-            title: {
-              display: true,
-              text: 'Event Status',
-              font: {
-                family: 'Poppins',
-                size: 14,
-              },
-            },
-            ticks: {
-              beginAtZero: true,
-            },
+          ticks: {
+            beginAtZero: true,
           },
         },
-      };
-    });
+      },
+    };
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
+  }
+
+  private setupPolling() {
+    this.refreshSubscription = timer(0, 30000)
+      .pipe(switchMap(() => this.eventService.getAllEvents()))
+      .subscribe(
+        (res: any) => {
+          const events: Event[] = res.payload;
+          const currentDate = new Date();
+
+          let ongoing = 0,
+            done = 0,
+            upcoming = 0;
+
+          events.forEach((event: Event) => {
+            const startDate = new Date(event.event_start_date);
+            const endDate = new Date(event.event_end_date);
+
+            if (endDate < currentDate) {
+              done++;
+            } else if (startDate > currentDate) {
+              upcoming++;
+            } else {
+              ongoing++;
+            }
+          });
+
+          this.data = {
+            labels: ['Ongoing', 'Done', 'Upcoming'],
+            datasets: [
+              {
+                barThickness: 20,
+                label: 'Events',
+                backgroundColor: '#04c464',
+                borderRadius: 15,
+                data: [ongoing, done, upcoming],
+              },
+            ],
+          };
+        },
+        (error) => {
+          console.error('Error fetching events data:', error);
+        }
+      );
   }
 }

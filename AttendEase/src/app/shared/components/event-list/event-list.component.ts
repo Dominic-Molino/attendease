@@ -35,6 +35,9 @@ export class EventListComponent implements OnInit {
   maxDescriptionLength: number = 100;
   currentUser: any;
   loading = false;
+  currentFilter: string = 'all';
+  filteredEventList: any[] = [];
+  isDropdownOpen: boolean = false;
 
   p: number = 1;
   itemsPerPage: number = 9;
@@ -92,6 +95,7 @@ export class EventListComponent implements OnInit {
               return 0;
             }
           });
+          this.applyFilter(this.currentFilter);
 
           return events;
         }),
@@ -128,6 +132,22 @@ export class EventListComponent implements OnInit {
       return text.substring(0, maxLength) + ' ...';
     } else {
       return text;
+    }
+  }
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  applyFilter(status: string) {
+    this.currentFilter = status;
+    this.isDropdownOpen = false;
+    if (status === 'all') {
+      this.filteredEventList = this.eventList;
+    } else {
+      this.filteredEventList = this.eventList.filter(
+        (event) => event.status === status
+      );
     }
   }
 

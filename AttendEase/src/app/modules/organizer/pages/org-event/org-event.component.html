@@ -97,41 +97,43 @@
         <table
           class="overflow-x-auto shadow-md bg-white rounded-md relative z-0"
         >
-          <thead class="text-xs text-gray-700 uppercase bg-dark-primary">
+          <thead
+            class="text-dark-muted border-b border-dark-primary capitalize bg-dark-foreground"
+          >
             <tr>
               <th
                 scope="col"
-                class="px-6 py-3 text-base font-medium text-dark-text"
+                class="px-6 py-3 text-center tracking-widest font-medium"
               >
                 Attendees
               </th>
               <th
                 scope="col"
-                class="px-6 py-3 text-base font-medium text-dark-text"
+                class="px-6 py-3 text-center tracking-widest font-medium"
               >
                 Event Name
               </th>
               <th
                 scope="col"
-                class="px-6 py-3 text-base font-medium text-dark-text"
+                class="px-6 py-3 text-center tracking-widest font-medium"
               >
                 Start Date
               </th>
               <th
                 scope="col"
-                class="px-6 py-3 text-base font-medium text-dark-text"
+                class="px-6 py-3 text-center tracking-widest font-medium"
               >
                 Status
               </th>
               <th
                 scope="col"
-                class="px-6 py-3 text-base font-medium text-dark-text"
+                class="px-6 py-3 text-center tracking-widest font-medium"
               >
                 Session
               </th>
               <th
                 scope="col"
-                class="px-6 py-3 text-base text-dark-text font-medium text-center"
+                class="px-6 py-3 text-center tracking-widest font-medium"
               >
                 Action
               </th>
@@ -194,49 +196,32 @@
               </td>
 
               <td class="px-6 py-4 flex items-center gap-2 justify-center">
-                <div class="rounded-md">
-                  <label
-                    class="cursor-pointer flex items-center justify-end"
-                    for="event-input-file"
-                    [for]="'event-input-file-' + i"
+                <button
+                  (click)="openFile(event)"
+                  class="flex items-center justify-center text-light-text bg-white border border-light-border hover:bg-light-foregroud rounded-md w-10 h-10 focus:outline-none shadow-md hover:text-white"
+                >
+                  <svg
+                    class="w-6 h-6 text-light-text hover:text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    viewBox="0 0 24 24"
                   >
-                    <div
-                      class="rounded-md w-10 h-10 bg-white border border-light-border hover:bg-light-background flex items-center justify-center cursor-pointer"
-                    >
-                      <svg
-                        class="w-6 h-6 text-light-text hover:text-white"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="1"
-                          d="m3 16 5-7 6 6.5m6.5 2.5L16 13l-4.286 6M14 10h.01M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
-                        />
-                      </svg>
-                      <input
-                        type="file"
-                        class="hidden"
-                        id="event-input-file"
-                        accept="image/*"
-                        [id]="'event-input-file-' + i"
-                        (change)="onFileChange($event, event.event_id)"
-                      />
-                    </div>
-                  </label>
-                </div>
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1"
+                      d="m3 16 5-7 6 6.5m6.5 2.5L16 13l-4.286 6M14 10h.01M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
+                    />
+                  </svg>
+                </button>
                 <button
                   (click)="editEvent(event)"
                   type="button"
                   aria-expanded="false"
-                  data-tooltip-target="tooltip-top"
-                  data-tooltip-placement="top"
                   class="flex items-center justify-center text-white bg-light-background border border-light-border hover:bg-light-foregroud rounded-md w-10 h-10 focus:outline-none shadow-md"
                 >
                   <svg

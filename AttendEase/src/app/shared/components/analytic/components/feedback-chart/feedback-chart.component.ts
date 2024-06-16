@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
 import { AuthserviceService } from '../../../../../core/service/authservice.service';
+import { Subscription, timer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 interface Feedback {
   overall_satisfaction: number;
@@ -17,72 +19,93 @@ interface Feedback {
   templateUrl: './feedback-chart.component.html',
   styleUrls: ['./feedback-chart.component.css'],
 })
-export class FeedbackChartComponent implements OnInit {
+export class FeedbackChartComponent implements OnInit, OnDestroy {
   data: any;
   options: any;
+  private refreshSubscription: Subscription | undefined;
 
   constructor(private service: AuthserviceService) {}
 
   ngOnInit(): void {
-    this.service.getEventFeedback().subscribe((res: any) => {
-      if (res) {
-        const feedback: Feedback[] = res.payload;
+    this.setupPolling();
 
-        // Aggregate feedback data
-        const aggregatedFeedback = this.aggregateFeedback(feedback);
+    // Chart options
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
 
-        // Prepare data for the chart
-        this.data = {
-          labels: [
-            'Overall Satisfaction',
-            'Content Quality',
-            'Speaker Effectiveness',
-            'Venue Rating',
-            'Logistics Rating',
-          ],
-          datasets: [
-            {
-              label: 'Average Rating',
-              backgroundColor: '#04c464',
-              barThickness: 20,
-              borderRadius: 15,
-              data: [
-                aggregatedFeedback.overall_satisfaction,
-                aggregatedFeedback.content_quality,
-                aggregatedFeedback.speaker_effectiveness,
-                aggregatedFeedback.venue_rating,
-                aggregatedFeedback.logistics_rating,
-              ],
-            },
-          ],
-        };
-
-        // Chart options
-        this.options = {
-          maintainAspectRatio: false,
-          indexAxis: 'y',
-          aspectRatio: 0.8,
-          responsive: true,
-          plugins: {
-            legend: {
-              labels: {
-                font: {
-                  size: 14,
-                  family: 'Inter',
-                },
-              },
-            },
-            title: {
-              display: true,
-              text: 'Overall Feedback on Each Event Overview',
-              font: {
-                size: 18,
-              },
+    this.options = {
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      aspectRatio: 0.8,
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: {
+            font: {
+              size: 14,
+              family: 'Inter',
             },
           },
-        };
-      }
-    });
+        },
+        title: {
+          display: true,
+          text: 'Overall Feedback on Each Event Overview',
+          font: {
+            size: 18,
+          },
+        },
+      },
+    };
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
+  }
+
+  private setupPolling() {
+    this.refreshSubscription = timer(0, 300000)
+      .pipe(switchMap(() => this.service.getEventFeedback()))
+      .subscribe(
+        (res: any) => {
+          if (res) {
+            const feedback: Feedback[] = res.payload;
+
+            // Aggregate feedback data
+            const aggregatedFeedback = this.aggregateFeedback(feedback);
+
+            // Prepare data for the chart
+            this.data = {
+              labels: [
+                'Overall Satisfaction',
+                'Content Quality',
+                'Speaker Effectiveness',
+                'Venue Rating',
+                'Logistics Rating',
+              ],
+              datasets: [
+                {
+                  label: 'Average Rating',
+                  backgroundColor: '#04c464',
+                  barThickness: 20,
+                  borderRadius: 15,
+                  data: [
+                    aggregatedFeedback.overall_satisfaction,
+                    aggregatedFeedback.content_quality,
+                    aggregatedFeedback.speaker_effectiveness,
+                    aggregatedFeedback.venue_rating,
+                    aggregatedFeedback.logistics_rating,
+                  ],
+                },
+              ],
+            };
+          }
+        },
+        (error) => {
+          console.error('Error fetching feedback data:', error);
+        }
+      );
   }
 
   private aggregateFeedback(feedback: Feedback[]): any {

@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
 import { DataAnalyticsService } from '../../../../../core/service/data-analytics.service';
+import { Subscription, timer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 interface Event {
   event_id: number;
@@ -13,67 +15,79 @@ interface Event {
   standalone: true,
   imports: [ChartModule],
   templateUrl: './comparing-events.component.html',
-  styleUrl: './comparing-events.component.css',
+  styleUrls: ['./comparing-events.component.css'],
 })
-export class ComparingEventsComponent implements OnInit {
+export class ComparingEventsComponent implements OnInit, OnDestroy {
   data: any;
   options: any;
+  private refreshSubscription: Subscription | undefined;
 
   constructor(private service: DataAnalyticsService) {}
 
   ngOnInit(): void {
-    this.service.getAllEventAttendees().subscribe((res) => {
-      const events: Event[] = res.payload;
+    this.setupPolling();
+  }
 
-      const eventLabels: string[] = [];
-      const attendeeCounts: number[] = [];
-      const maxLabelLength = 10;
+  ngOnDestroy(): void {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
+  }
 
-      for (const event of events) {
-        const slicedEventName = event.event_name.slice(0, maxLabelLength);
-        eventLabels.push(
-          slicedEventName +
-            (event.event_name.length > maxLabelLength ? '...' : '')
-        );
-        attendeeCounts.push(event.total_attendees);
-      }
+  private setupPolling() {
+    this.refreshSubscription = timer(0, 300000)
+      .pipe(switchMap(() => this.service.getAllEventAttendees()))
+      .subscribe((res) => {
+        const events: Event[] = res.payload;
 
-      this.data = {
-        labels: eventLabels,
+        const eventLabels: string[] = [];
+        const attendeeCounts: number[] = [];
+        const maxLabelLength = 10;
 
-        datasets: [
-          {
-            label: 'Number of Attendees per Events',
-            backgroundColor: '#04c464',
-            barThickness: 20,
-            borderRadius: 15,
-            data: attendeeCounts,
-          },
-        ],
-      };
+        for (const event of events) {
+          const slicedEventName = event.event_name.slice(0, maxLabelLength);
+          eventLabels.push(
+            slicedEventName +
+              (event.event_name.length > maxLabelLength ? '...' : '')
+          );
+          attendeeCounts.push(event.total_attendees);
+        }
 
-      this.options = {
-        maintainAspectRatio: false,
-        aspectRatio: 0.8,
-        responsive: true,
-        plugins: {
-          legend: {
-            labels: {
+        this.data = {
+          labels: eventLabels,
+          datasets: [
+            {
+              label: 'Number of Attendees per Events',
+              backgroundColor: '#04c464',
+              barThickness: 20,
+              borderRadius: 15,
+              data: attendeeCounts,
+            },
+          ],
+        };
+
+        this.options = {
+          maintainAspectRatio: false,
+          aspectRatio: 0.8,
+          responsive: true,
+          plugins: {
+            legend: {
+              labels: {
+                font: {
+                  size: 14,
+                  family: 'Inter',
+                },
+              },
+            },
+            title: {
+              display: true,
+              text: 'Overall attendees on each events Overview',
               font: {
-                size: 14,
-                family: 'Inter',
+                size: 18,
               },
             },
           },
-          title: {
-            display: true,
-            text: 'Overall attendees on each events Overview',
-            font: {
-              size: 18,
-            },
-          },
-        },
-      };
-    });
+        };
+      });
   }
 }

@@ -11,6 +11,7 @@ import { initFlowbite } from 'flowbite';
 import { CalendarComponent } from '../../../../shared/components/calendar/calendar.component';
 import { Observable } from 'rxjs';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { UpdateimageComponent } from '../../components/updateimage/updateimage.component';
 
 interface Event {
   event_id: number;
@@ -186,6 +187,14 @@ export class OrgEventComponent implements OnInit {
 
     modal.afterClosed().subscribe((response) => {
       this.loadEvent();
+    });
+  }
+
+  openFile(eventId: number) {
+    const dialogRef = this.dialog.open(UpdateimageComponent, {
+      data: { eventId: eventId },
+      disableClose: true,
+      width: '70%',
     });
   }
 
