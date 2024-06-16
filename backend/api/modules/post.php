@@ -382,7 +382,7 @@ class Post extends GlobalMethods
                 $session,
                 $max_attendees,
                 $categories,
-                $organizer_name,
+                json_encode($organizer_name),
                 $event_id
             ]);
 

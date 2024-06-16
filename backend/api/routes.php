@@ -195,6 +195,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 }
                 break;
 
+            case 'getAllRemarks':
+                echo json_encode($get->getAllAttendanceRemarks($request[1]));
+                break;
+
             default:
                 echo "This is forbidden";
                 http_response_code(403);

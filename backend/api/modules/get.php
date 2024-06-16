@@ -571,4 +571,30 @@ class Get extends GlobalMethods
             return $this->sendPayload(null, 'error', $e->getMessage(), 500);
         }
     }
+
+    public function getAllAttendanceRemarks($event_id)
+    {
+        $sql = "
+        SELECT 
+            a.user_id, u.first_name, u.last_name, u.year_level, u.block, u.course, a.attendance_id, a.remarks
+        FROM 
+            attendance a
+        INNER JOIN 
+            user u ON a.user_id = u.user_id
+            WHERE a.event_id = :event_id
+    ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $rowCount = $stmt->rowCount();
+
+        if ($rowCount > 0) {
+            return $this->sendPayload($data, 'success', "Successfully retrieved users registered for the event.", 200);
+        } else {
+            return $this->sendPayload(null, 'failed', "No users registered for the event.", 404);
+        }
+    }
 }
