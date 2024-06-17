@@ -545,7 +545,7 @@ class Get extends GlobalMethods
         return $this->get_records('feedback', $condition, $columns);
     }
 
-    public function getRegisteredEvents($user_id)
+    public function notification($user_id)
     {
         $tomorrow = date('Y-m-d', strtotime('+1 day'));
 

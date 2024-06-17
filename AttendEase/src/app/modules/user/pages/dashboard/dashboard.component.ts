@@ -86,13 +86,12 @@ export class DashboardComponent implements OnInit {
 
           return events;
         } else {
-          throw new Error(res ? res.message : 'Unknown error');
+          return [];
         }
       }),
       catchError((error) => {
         const errorMessage =
           error.error?.status?.message || 'An error occurred';
-        Swal.fire('', errorMessage, 'warning');
         return [];
       })
     );

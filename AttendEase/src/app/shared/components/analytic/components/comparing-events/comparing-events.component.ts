@@ -35,7 +35,7 @@ export class ComparingEventsComponent implements OnInit, OnDestroy {
   }
 
   private setupPolling() {
-    this.refreshSubscription = timer(0, 300000)
+    this.refreshSubscription = timer(0, 10000)
       .pipe(switchMap(() => this.service.getAllEventAttendees()))
       .subscribe((res) => {
         const events: Event[] = res.payload;
@@ -57,7 +57,7 @@ export class ComparingEventsComponent implements OnInit, OnDestroy {
           labels: eventLabels,
           datasets: [
             {
-              label: 'Number of Attendees per Events',
+              label: 'Number of Students per Events',
               backgroundColor: '#04c464',
               barThickness: 20,
               borderRadius: 15,

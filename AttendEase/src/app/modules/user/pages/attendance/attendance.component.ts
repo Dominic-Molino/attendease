@@ -113,9 +113,6 @@ export class AttendanceComponent {
         return res;
       }),
       catchError((error) => {
-        const errorMessage =
-          error.error?.status?.message || 'An error occurred';
-        Swal.fire('', errorMessage, 'warning');
         return of(null);
       }),
       finalize(() => {
@@ -144,7 +141,7 @@ export class AttendanceComponent {
   }
 
   startPolling(): void {
-    this.updateSubscription = timer(3000, 30000) // Initial delay of 3 seconds, then every 1 minute
+    this.updateSubscription = timer(1500, 15000)
       .pipe(switchMap(() => this.getUserEvents()))
       .subscribe();
   }

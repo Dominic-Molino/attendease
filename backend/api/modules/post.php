@@ -152,9 +152,9 @@ class Post extends GlobalMethods
 
         // Check if an event with the same name and organizer overlaps in time
         $sql_check = "SELECT COUNT(*) AS count FROM events 
-                  WHERE event_name = ? 
-                  AND organizer_name = ?
-                  AND NOT (event_end_date <= ? OR event_start_date >= ?)";
+                    WHERE event_name = ? 
+                    AND organizer_name = ?
+                    AND NOT (event_end_date <= ? OR event_start_date >= ?)";
 
         try {
             $stmt_check = $this->pdo->prepare($sql_check);
@@ -172,8 +172,8 @@ class Post extends GlobalMethods
 
             // Proceed with inserting the new event
             $sql_insert = "INSERT INTO events (event_name, event_description, event_location, event_start_date, event_end_date, 
-                        event_registration_start, event_registration_end, session, max_attendees, categories, organizer_name)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                            event_registration_start, event_registration_end, session, max_attendees, categories, organizer_name)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             $stmt_insert = $this->pdo->prepare($sql_insert);
             $stmt_insert->execute([

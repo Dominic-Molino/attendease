@@ -112,7 +112,7 @@ export class EventsComponent implements OnInit, OnDestroy {
               session: data.session,
               max_attendees: data.max_attendees,
               categories: categories,
-              organizer_name: data.organizer_name,
+              organizer_name: data.organizer_name.replace(/^"|"$/g, ''),
               event_image$: this.eventService.getEventImage(data.event_id).pipe(
                 switchMap((imageResult) => {
                   if (imageResult.size > 0) {

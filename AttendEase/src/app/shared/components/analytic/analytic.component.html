@@ -13,6 +13,8 @@
         <app-cards></app-cards>
       </div>
 
+      @defer{
+
       <div class="mx-auto h-full w-full self-center mb-3.5">
         <p-carousel
           [value]="slides2"
@@ -35,7 +37,21 @@
           </ng-template>
         </p-carousel>
       </div>
-
+      }@loading {
+      <div class="h-screen w-full flex justify-center bg-white">
+        <div class="flex flex-row gap-2">
+          <div
+            class="w-4 h-4 rounded-full bg-light-background animate-bounce"
+          ></div>
+          <div
+            class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.3s]"
+          ></div>
+          <div
+            class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.5s]"
+          ></div>
+        </div>
+      </div>
+      } @defer{
       <div
         class="flex flex-col md:flex-row gap-5 justify-between items-start w-full"
       >
@@ -61,6 +77,21 @@
           </p-carousel>
         </div>
       </div>
+      }@loading {
+      <div class="h-screen w-full flex justify-center bg-white">
+        <div class="flex flex-row gap-2">
+          <div
+            class="w-4 h-4 rounded-full bg-light-background animate-bounce"
+          ></div>
+          <div
+            class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.3s]"
+          ></div>
+          <div
+            class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.5s]"
+          ></div>
+        </div>
+      </div>
+      }
     </div>
   </div>
 </main>

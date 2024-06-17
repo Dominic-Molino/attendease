@@ -188,7 +188,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
             case 'user_registered_events_notification':
                 if (isset($request[1])) {
-                    echo json_encode($get->getRegisteredEvents($request[1]));
+                    echo json_encode($get->notification($request[1]));
                 } else {
                     echo "User ID not provided";
                     http_response_code(400);

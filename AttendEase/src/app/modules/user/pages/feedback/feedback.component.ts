@@ -97,9 +97,6 @@ export class FeedbackComponent implements OnInit, OnDestroy {
         return res;
       }),
       catchError((error) => {
-        const errorMessage =
-          error.error?.status?.message || 'An error occurred';
-        Swal.fire('', errorMessage, 'warning');
         return of(null);
       }),
       finalize(() => {
@@ -121,7 +118,6 @@ export class FeedbackComponent implements OnInit, OnDestroy {
         catchError((error) => {
           const errorMessage =
             error.error?.status?.message || 'An error occurred';
-          Swal.fire('', errorMessage, 'warning');
           return of(null); // Return a null observable in case of error
         })
       );
@@ -141,7 +137,7 @@ export class FeedbackComponent implements OnInit, OnDestroy {
   }
 
   startPolling(): void {
-    this.updateSubscription = timer(3000, 60000) // Initial delay of 3 seconds, then every 1 minute
+    this.updateSubscription = timer(2000, 30000)
       .pipe(switchMap(() => this.getUserEvents()))
       .subscribe();
   }

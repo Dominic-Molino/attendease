@@ -171,4 +171,8 @@ export class ViewsubmissionsComponent {
       }
     });
   }
+
+  closeDialog() {
+    this.dialogRef.close();
+  }
 }

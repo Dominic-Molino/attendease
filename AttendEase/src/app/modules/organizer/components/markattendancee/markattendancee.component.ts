@@ -5,7 +5,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ViewsubmissionsComponent } from '../viewsubmissions/viewsubmissions.component';
-import { zip } from 'rxjs';
+import { finalize, zip } from 'rxjs';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 interface User {
   user_id: number;
@@ -21,7 +22,7 @@ interface User {
 @Component({
   selector: 'app-markattendancee',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgxPaginationModule],
   templateUrl: './markattendancee.component.html',
   styleUrl: './markattendancee.component.css',
 })
@@ -29,6 +30,10 @@ export class MarkattendanceeComponent implements OnInit {
   datalist: User[] = [];
   attendanceRemarks: { [key: number]: number } = {};
   eventId: number;
+
+  p: number = 1;
+  itemsPerPage: number = 10;
+  maxSize = 5;
 
   constructor(
     private service: AuthserviceService,
@@ -47,6 +52,7 @@ export class MarkattendanceeComponent implements OnInit {
         selectedUser: userId,
         selectedEvent: this.data.selectedEvent,
       },
+      disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe(() => {

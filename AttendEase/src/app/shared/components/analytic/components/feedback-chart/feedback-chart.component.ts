@@ -55,6 +55,33 @@ export class FeedbackChartComponent implements OnInit, OnDestroy {
           },
         },
       },
+      scales: {
+        x: {
+          display: true,
+          title: {
+            display: true,
+            text: 'Number of Events',
+            font: {
+              family: 'Poppins',
+              size: 14,
+            },
+          },
+        },
+        y: {
+          display: true,
+          title: {
+            display: true,
+            text: 'Event Status',
+            font: {
+              family: 'Poppins',
+              size: 14,
+            },
+          },
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      },
     };
   }
 

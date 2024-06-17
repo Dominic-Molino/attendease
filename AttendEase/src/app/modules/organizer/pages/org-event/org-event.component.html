@@ -105,7 +105,7 @@
                 scope="col"
                 class="px-6 py-3 text-center tracking-widest font-medium"
               >
-                Attendees
+                Students
               </th>
               <th
                 scope="col"
@@ -220,6 +220,10 @@
                 </button>
                 <button
                   (click)="editEvent(event)"
+                  [disabled]="event.status !== 'upcoming'"
+                  [ngClass]="{
+                    'opacity-50 cursor-not-allowed': event.status !== 'upcoming'
+                  }"
                   type="button"
                   aria-expanded="false"
                   class="flex items-center justify-center text-white bg-light-background border border-light-border hover:bg-light-foregroud rounded-md w-10 h-10 focus:outline-none shadow-md"

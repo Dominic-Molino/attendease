@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, signal } from '@angular/core';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import {
   CalendarOptions,
@@ -16,7 +16,8 @@ import { PopupComponent } from '../popup/popup.component';
 import { EventService } from '../../../core/service/event.service';
 import { AuthserviceService } from '../../../core/service/authservice.service';
 import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Subscription, timer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { AddEventComponent } from '../../../modules/organizer/components/add-event/add-event.component';
 
 @Component({
@@ -26,9 +27,10 @@ import { AddEventComponent } from '../../../modules/organizer/components/add-eve
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css'],
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnDestroy {
   calendarEvents: EventInput[] = [];
   userRole: number | null = null;
+  private subscription?: Subscription;
 
   calendarOptions = signal<CalendarOptions>({
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
@@ -66,6 +68,35 @@ export class CalendarComponent implements OnInit {
         return options;
       });
     }
+    this.setupPolling();
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  setupPolling(): void {
+    const pollingInterval = 30000; // 30 seconds
+
+    this.subscription = timer(0, pollingInterval)
+      .pipe(
+        switchMap(() => this.service.getAllEvents()),
+        catchError((error) => {
+          console.error('Error fetching events:', error);
+          return of([]);
+        })
+      )
+      .subscribe((data) => {
+        const events = data.payload || [];
+        this.calendarEvents = events.map((event: any) => ({
+          id: event.event_id,
+          title: event.event_name,
+          start: event.event_start_date,
+          end: event.event_end_date,
+        }));
+      });
   }
 
   fetchEvents(): void {
@@ -135,7 +166,7 @@ export class CalendarComponent implements OnInit {
 
   renderEventContent(eventContent: EventContentArg) {
     return {
-      html: `<div class="text-light-text border border-light-border bg-white hover:bg-light-background hover:text-white cursor-pointer px-2.5 py-2  rounded-md truncate text-ellipsis" >${eventContent.event.title}</div>`,
+      html: `<div class="text-light-text border border-light-border bg-white hover:bg-light-background hover:text-white cursor-pointer px-2.5 py-2 rounded-md truncate text-ellipsis">${eventContent.event.title}</div>`,
     };
   }
 }

@@ -87,7 +87,7 @@ export class OrgEventComponent implements OnInit {
           session: data.session,
           max_attendees: data.max_attendees,
           categories: data.categories,
-          organizer_name: data.organizer_name,
+          organizer_name: data.organizer_name.replace(/^"|"$/g, ''),
           event_image: undefined,
           status: this.getEventStatus(data),
           event_image$: undefined,
@@ -179,15 +179,17 @@ export class OrgEventComponent implements OnInit {
   }
 
   openDialog() {
-    const modal = this.dialog.open(AddEventComponent, {
-      width: '70%',
-      height: '90%',
-      disableClose: true,
-    });
+    if (this.eventList) {
+      const modal = this.dialog.open(AddEventComponent, {
+        width: '70%',
+        height: '90%',
+        disableClose: true,
+      });
 
-    modal.afterClosed().subscribe((response) => {
-      this.loadEvent();
-    });
+      modal.afterClosed().subscribe((response) => {
+        this.loadEvent();
+      });
+    }
   }
 
   openFile(eventId: number) {

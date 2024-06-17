@@ -77,7 +77,6 @@ export class LoginComponent implements OnInit {
       (error) => {
         const errorMessage =
           error.error?.status?.message || 'An error occurred';
-        Swal.fire('', errorMessage, 'warning');
       }
     );
   }

@@ -8,8 +8,8 @@ import { Observable, interval, switchMap } from 'rxjs';
 })
 export class AuthserviceService {
   constructor(private http: HttpClient, private helper: JwtHelperService) {}
-  // private API_URL = 'https://gc-attendease.online/backend/api/';
-  private API_URL = 'http://localhost/attendease/backend/api/';
+  private API_URL = 'https://gc-attendease.online/backend/api/';
+  // private API_URL = 'http://localhost/attendease/backend/api/';
 
   isLoggedIn: boolean = false;
 
@@ -178,7 +178,7 @@ export class AuthserviceService {
   }
 
   fetchRegisteredEventsPeriodically(userId: number): Observable<any[]> {
-    return interval(3600000).pipe(
+    return interval(30000).pipe(
       switchMap(() => this.getRegisteredEvents(userId))
     );
   }

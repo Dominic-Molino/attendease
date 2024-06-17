@@ -10,8 +10,8 @@ import { TotalAttendeesResponse } from '../total_attendees';
 export class EventService {
   constructor(private http: HttpClient, private helper: JwtHelperService) {}
 
-  // private API_URL = 'https://gc-attendease.online/backend/api/';
-  private API_URL = 'http://localhost/attendease/backend/api/';
+  private API_URL = 'https://gc-attendease.online/backend/api/';
+  // private API_URL = 'http://localhost/attendease/backend/api/';
 
   getCurrentUserId(): number | null {
     const mytoken = sessionStorage.getItem('token');
@@ -27,7 +27,6 @@ export class EventService {
   addEvent(data: any): Observable<any> {
     return this.http.post(`${this.API_URL}addevent`, data);
   }
-  
 
   getAllEvents(): Observable<any> {
     return this.http.get<any>(`${this.API_URL}events`);

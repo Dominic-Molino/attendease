@@ -39,8 +39,8 @@ import Swal from 'sweetalert2';
   encapsulation: ViewEncapsulation.None,
 })
 export class EditEventComponent implements OnInit {
-  eventId = this.data.event_id.event_id;
-  eventVal = this.data.event_id;
+  eventId: number;
+  eventVal: any;
   eventForm: FormGroup;
   categoryControls: FormArray | undefined;
   visibleCategories: string[] = [];
@@ -116,18 +116,36 @@ export class EditEventComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialogRef<EditEventComponent>
   ) {
+    this.eventId = this.data.event_id.event_id;
+    this.eventVal = this.data.event_id;
+
     this.eventForm = this.builder.group({
-      event_name: this.builder.control(''),
-      event_description: this.builder.control(''),
-      event_location: this.builder.control(''),
-      event_start_date: [null, this.futureDateValidator()],
-      event_end_date: [null, this.futureDateValidator()],
-      event_registration_start: null,
-      event_registration_end: null,
-      session: this.builder.control(''),
-      max_attendees: this.builder.control(''),
+      event_name: [this.eventVal.event_name, Validators.required],
+      event_description: [this.eventVal.event_description, Validators.required],
+      event_location: [this.eventVal.event_location, Validators.required],
+      event_start_date: [
+        this.eventVal.event_start_date,
+        [Validators.required, this.futureDateValidator()],
+      ],
+      event_end_date: [
+        this.eventVal.event_end_date,
+        [Validators.required, this.futureDateValidator()],
+      ],
+      event_registration_start: [
+        this.eventVal.event_registration_start,
+        Validators.required,
+      ],
+      event_registration_end: [
+        this.eventVal.event_registration_end,
+        Validators.required,
+      ],
+      session: [this.eventVal.session, Validators.required],
+      max_attendees: [this.eventVal.max_attendees, Validators.required],
       categories: this.buildCategoryCheckboxes(),
-      organizer_name: this.builder.control(''),
+      organizer_name: [
+        this.eventVal.organizer_name.replace(/^"|"$/g, ''),
+        Validators.required,
+      ],
     });
 
     if (this.eventVal.categories) {
@@ -242,8 +260,6 @@ export class EditEventComponent implements OnInit {
           icon: 'warning',
           title: 'Invalid Date',
           text: "You've enter a past date!",
-        }).then(() => {
-          control.reset();
         });
         return { pastDate: true };
       }
