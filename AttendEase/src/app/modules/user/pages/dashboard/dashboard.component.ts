@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { EventService } from '../../../../core/service/event.service';
 import { Observable, catchError, map } from 'rxjs';
 import Swal from 'sweetalert2';
+import { PrimecalendarComponent } from '../../../../shared/components/primecalendar/primecalendar.component';
 
 interface UserEvent {
   event_id: number;
@@ -25,9 +26,14 @@ interface UserEvent {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, CalendarComponent, RouterLink],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
+  imports: [
+    CommonModule,
+    CalendarComponent,
+    RouterLink,
+    PrimecalendarComponent,
+  ],
 })
 export class DashboardComponent implements OnInit {
   events$?: Observable<UserEvent[]>;

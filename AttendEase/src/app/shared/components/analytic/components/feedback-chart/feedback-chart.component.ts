@@ -60,9 +60,9 @@ export class FeedbackChartComponent implements OnInit, OnDestroy {
           display: true,
           title: {
             display: true,
-            text: 'Number of Events',
+            text: 'Rating',
             font: {
-              family: 'Poppins',
+              family: 'Inter',
               size: 14,
             },
           },
@@ -71,9 +71,9 @@ export class FeedbackChartComponent implements OnInit, OnDestroy {
           display: true,
           title: {
             display: true,
-            text: 'Event Status',
+            text: 'Feedback',
             font: {
-              family: 'Poppins',
+              family: 'Inter',
               size: 14,
             },
           },
@@ -92,7 +92,7 @@ export class FeedbackChartComponent implements OnInit, OnDestroy {
   }
 
   private setupPolling() {
-    this.refreshSubscription = timer(0, 300000)
+    this.refreshSubscription = timer(0, 30000)
       .pipe(switchMap(() => this.service.getEventFeedback()))
       .subscribe(
         (res: any) => {

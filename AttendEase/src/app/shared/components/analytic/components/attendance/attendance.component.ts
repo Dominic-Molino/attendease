@@ -26,18 +26,7 @@ interface Event {
   styleUrls: ['./attendance.component.css'],
 })
 export class AttendanceComponent implements OnInit, OnDestroy {
-  data: any = {
-    labels: ['Ongoing', 'Done', 'Upcoming'],
-    datasets: [
-      {
-        label: 'Events',
-        backgroundColor: '#04c464',
-        barThickness: 20,
-        borderRadius: 15,
-        data: [0, 0, 0], // Default values if no events are fetched
-      },
-    ],
-  };
+  data: any = {}; // Initially empty
   options: any;
   private refreshSubscription: Subscription | undefined;
 
@@ -114,6 +103,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
       .subscribe(
         (res: any) => {
           const events: Event[] = res.payload;
+
           const currentDate = new Date();
 
           let ongoing = 0,
@@ -134,7 +124,18 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           });
 
           // Update the chart data
-          this.data.datasets[0].data = [ongoing, done, upcoming];
+          this.data = {
+            labels: ['Ongoing', 'Done', 'Upcoming'],
+            datasets: [
+              {
+                label: 'Events',
+                backgroundColor: '#04c464',
+                barThickness: 20,
+                borderRadius: 15,
+                data: [ongoing, done, upcoming],
+              },
+            ],
+          };
         },
         (error) => {
           console.error('Error fetching events data:', error);

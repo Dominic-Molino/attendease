@@ -24,10 +24,7 @@ export class SignupComponent {
   registerForm = this.builder.group({
     first_name: this.builder.control('', Validators.required),
     last_name: this.builder.control('', Validators.required),
-    email: this.builder.control(
-      '',
-      Validators.compose([Validators.required, Validators.email])
-    ),
+    email: this.builder.control('', Validators.compose([Validators.required])),
     password: this.builder.control('', Validators.required),
   });
 
@@ -60,11 +57,7 @@ export class SignupComponent {
         }
       );
     } else {
-      if (this.registerForm.get('email')?.invalid) {
-        Swal.fire('Email is invalid', 'Please enter a valid email', 'warning');
-      } else {
-        Swal.fire('Incomplete Form', 'Please fill in all fields', 'warning');
-      }
+      Swal.fire('Incomplete Data', 'Please fill in all fields', 'warning');
     }
   }
 }

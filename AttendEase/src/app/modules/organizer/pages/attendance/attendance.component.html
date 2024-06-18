@@ -85,6 +85,10 @@
                 type="button"
                 (click)="viewEvent(event.event_id)"
                 [disabled]="event.status !== 'done'"
+                [ngClass]="{
+                  'opacity-50 cursor-not-allowed':
+                    event.status === 'upcoming' || event.status === 'ongoing'
+                }"
                 class="py-2.5 px-5 text-sm block mx-auto cursor-pointer text-white font-bold font-secondary rounded-md bg-light-background hover:bg-light-foregroud"
               >
                 View Submissions

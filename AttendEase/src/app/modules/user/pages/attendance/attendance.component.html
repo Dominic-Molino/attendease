@@ -141,8 +141,10 @@
                 "
                 [ngClass]="{
                   'opacity-50 cursor-not-allowed':
-                    attendanceRemarks[event.event_id] !== 0 &&
-                    attendanceRemarks[event.event_id] !== -1
+                    (attendanceRemarks[event.event_id] !== 0 &&
+                      attendanceRemarks[event.event_id] !== -1) ||
+                    event.eventState === 'upcoming' ||
+                    event.eventState === 'ongoing'
                 }"
                 class="block mx-auto px-4 py-2 text-sm text-white font-semibold bg-light-background hover:bg-light-foregroud rounded-md focus:outline-none"
               >

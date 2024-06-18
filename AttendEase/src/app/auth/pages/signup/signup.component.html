@@ -1,11 +1,11 @@
-<section class="w-full h-screen bg-white">
+<section class="w-full h-screen">
   <div
-    class="flex max-md:flex-col-reverse flex-row justify-center items-center h-screen w-full gap-5 px-52 relative z-20 max-sm:p-1"
+    class="flex max-sm:flex-col-reverse flex-row justify-center items-center h-screen w-full px-52 relative z-20 max-sm:p-10 max-md:flex-col-reverse md:px-28 xl:justify-evenly"
   >
     <!-- form -->
-    <div class="w-1/2">
+    <div class="w-1/2 max-md:w-full max-md:-mt-10 max-sm:-mt-20 md:-mb-10">
       <h1
-        class="max-sm:flex max-sm:justify-center md:text-center font-primary font-bold mb-5 text-2xl text-nowrap text-text"
+        class="text-center md:text-center font-primary font-bold mb-5 text-2x max-sm:text-base text-nowrap text-text"
       >
         Welcome <span class="text-serpentine">GCians!</span>
       </h1>
@@ -16,7 +16,9 @@
           class="max-w-sm mx-auto sm:w-full"
           autocomplete="off"
         >
-          <h2 class="font-primary text-dark-text text-wrap text-center my-3.5">
+          <h2
+            class="font-primary text-dark-text text-wrap text-center max-sm:text-xs my-3.5"
+          >
             Enter your information to create an account
           </h2>
           <!-- first name -->
@@ -27,7 +29,7 @@
                 type="text"
                 name="firstName"
                 id="firstName"
-                class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2"
+                class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2 max-sm:text-xs"
                 placeholder="First Name"
                 required
               />
@@ -41,7 +43,7 @@
                 type="text"
                 name="lastName"
                 id="lastName"
-                class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2"
+                class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block max-sm:text-xs w-full p-2"
                 placeholder="Last Name"
                 required
               />
@@ -56,7 +58,7 @@
               type="email"
               name="email"
               id="email"
-              class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
+              class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border max-sm:text-xs block w-full p-2.5"
               placeholder="Domain Email"
               required
             />
@@ -70,7 +72,7 @@
               type="password"
               name="password"
               id="password"
-              class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
+              class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border max-sm:text-xs block w-full p-2.5"
               required
               placeholder="Password"
             />
@@ -79,17 +81,19 @@
           <div class="flex w-full justify-center">
             <button
               type="submit"
-              class="text-light-text font-semibold mx-auto block md:w-[50%] bg-white border border-light-border hover:bg-light-background hover:text-white focus:outline-none rounded-md text-sm sm:w-auto px-5 py-2.5 text-center"
+              class="text-light-text font-semibold mx-auto max-sm:text-xs block md:w-[50%] bg-white border border-light-border hover:bg-light-background hover:text-white focus:outline-none rounded-md text-sm sm:w-auto px-5 py-2.5 text-center"
             >
               Signup
             </button>
           </div>
 
           <div class="mb-0">
-            <p class="text-center text-sm mt-4 py-0 font-primary">
+            <p
+              class="text-center text-sm max-sm:text-xs mt-4 py-0 font-primary"
+            >
               Already have an account?
               <a
-                class="text-dark-text font-semibold hover:text-light-text hover:underline"
+                class="text-dark-text max-sm:text-xs font-semibold hover:text-light-text hover:underline"
                 routerLink="/login"
                 >Login Here</a
               >
@@ -100,17 +104,17 @@
     </div>
     <!-- logo -->
 
-    <div class="sm:mx-auto">
-      <div class="relative bottom-14 max-sm:bottom-2">
+    <div class="sm:mx-auto max-sm:-mt-20">
+      <div class="relative bottom-14 max-sm:bottom-2 max-sm:mb-20">
         <img
           src="../../../../assets/images/attendease_logo.png"
-          class="w-72 h-72"
+          class="w-72 h-72 max-sm:w-60 max-sm:h-60"
           alt=""
         />
         <h1
-          class="text-center text-4xl -mt-20 font-primary font-bold text-text"
+          class="text-center text-4xl -mt-20 max-sm:text-xl font-bold text-text"
         >
-          Attend<span class="text-serpentine">Ease</span>
+          AttendEase
         </h1>
       </div>
     </div>

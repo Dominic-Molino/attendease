@@ -1,20 +1,20 @@
 <section class="w-full h-screen">
   <div
-    class="flex max-md:flex-col-reverse flex-row justify-center items-center h-screen w-full px-52 relative z-20 max-sm:p-1"
+    class="flex max-sm:flex-col-reverse flex-row justify-center items-center h-screen w-full px-52 relative z-20 max-sm:p-10 max-md:flex-col-reverse md:px-28 xl:justify-evenly"
   >
     <!-- form -->
-    <div class="w-1/2">
+    <div class="w-1/2 max-md:w-full max-md:-mt-10 max-sm:-mt-20 md:-mb-10">
       <h1
-        class="max-sm:flex max-sm:justify-center text-text md:text-center font-primary font-bold mb-5 text-2xl text-nowrap"
+        class="text-center max-sm:text-base text-text md:text-center font-bold text-2xl text-nowrap"
       >
-        Welcome <span class="text-text">GCians!</span>
+        Welcome GCians!
       </h1>
       <form
         [formGroup]="loginForm"
         (submit)="loginStudent()"
         class="max-w-sm mx-auto sm:w-full"
       >
-        <h2 class="font-primary text-dark-text text-wrap text-center my-3.5">
+        <h2 class="text-dark-text text-wrap text-center my-3.5 max-sm:text-xs">
           Enter your email and password to login to your account
         </h2>
         <!-- email -->
@@ -24,7 +24,7 @@
             type="email"
             name="email"
             id="email"
-            class="border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
+            class="border-dark-border max-sm:text-xs text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
             placeholder="Domain Email"
             required
           />
@@ -38,7 +38,7 @@
             name="password"
             [type]="passwordFieldType"
             id="password"
-            class="border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
+            class="border-dark-border text-gray-900 shadow-sm max-sm:text-xs text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
             required
             placeholder="Password"
           />
@@ -69,14 +69,14 @@
         <div class="flex w-full justify-center">
           <button
             type="submit"
-            class="text-light-text font-semibold mx-auto block md:w-[50%] bg-[#FEFEFE] border border-light-border hover:bg-light-background hover:text-white focus:outline-none rounded-md text-sm sm:w-auto px-5 py-2.5 text-center"
+            class="text-light-text font-semibold mx-auto block md:w-[50%] bg-[#FEFEFE] border border-light-border hover:bg-light-background hover:text-white focus:outline-none rounded-md text-sm sm:w-auto px-5 py-2.5 text-center max-sm:text-xs"
           >
             Login
           </button>
         </div>
 
         <div class="my-5">
-          <p class="text-center text-sm py-0 font-primary">
+          <p class="text-center text-sm py-0 max-sm:text-xs">
             Don't have an account?
             <a
               class="text-dark-text font-semibold hover:text-light-text hover:underline"
@@ -88,14 +88,16 @@
       </form>
     </div>
 
-    <div class="sm:mx-auto">
-      <div class="relative bottom-14 max-sm:bottom-2">
+    <div class="sm:mx-auto max-sm:-mt-20">
+      <div class="relative bottom-14 max-sm:bottom-2 max-sm:mb-20">
         <img
           src="../../../../assets/images/attendease_logo.png"
-          class="w-72 h-72"
+          class="w-72 h-72 max-sm:w-60 max-sm:h-60"
           alt=""
         />
-        <h1 class="text-center text-4xl -mt-20 font-bold text-text">
+        <h1
+          class="text-center text-4xl -mt-20 font-bold text-text max-sm:text-xl"
+        >
           AttendEase
         </h1>
       </div>

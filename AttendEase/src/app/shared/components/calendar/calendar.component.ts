@@ -1,6 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewChild, signal } from '@angular/core';
-import { FullCalendarModule } from '@fullcalendar/angular';
+import {
+  Component,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  signal,
+} from '@angular/core';
+import {
+  FullCalendarComponent,
+  FullCalendarModule,
+} from '@fullcalendar/angular';
 import {
   CalendarOptions,
   EventClickArg,
@@ -28,6 +38,8 @@ import { AddEventComponent } from '../../../modules/organizer/components/add-eve
   styleUrls: ['./calendar.component.css'],
 })
 export class CalendarComponent implements OnInit, OnDestroy {
+  @ViewChild('fullcalendar') fullcalendar!: FullCalendarComponent;
+
   calendarEvents: EventInput[] = [];
   userRole: number | null = null;
   private subscription?: Subscription;
@@ -164,9 +176,16 @@ export class CalendarComponent implements OnInit, OnDestroy {
       });
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    if (this.fullcalendar) {
+      this.fullcalendar.getApi().updateSize();
+    }
+  }
+
   renderEventContent(eventContent: EventContentArg) {
     return {
-      html: `<div class="text-light-text border border-light-border bg-white hover:bg-light-background hover:text-white cursor-pointer px-2.5 py-2 rounded-md truncate text-ellipsis">${eventContent.event.title}</div>`,
+      html: `<div class="text-light-text border border-light-border text-xs bg-white hover:bg-light-background hover:text-white cursor-pointer px-1 py-0.5 rounded-md truncate text-ellipsis">${eventContent.event.title}</div>`,
     };
   }
 }

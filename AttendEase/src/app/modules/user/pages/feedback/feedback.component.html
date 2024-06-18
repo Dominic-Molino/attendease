@@ -138,7 +138,10 @@
                 (click)="openDialog(event.eventState, event.event_id)"
                 [disabled]="event.feedbackSubmitted"
                 [ngClass]="{
-                  'opacity-50 cursor-not-allowed': event.feedbackSubmitted
+                  'opacity-50 cursor-not-allowed':
+                    event.feedbackSubmitted ||
+                    event.eventState === 'upcoming' ||
+                    event.eventState === 'ongoing'
                 }"
                 class="block mx-auto px-4 py-2 text-sm text-white font-semibold bg-light-background hover:bg-light-foregroud border border-gray-200 rounded-md focus:outline-none"
               >

@@ -20,65 +20,75 @@ export class LoginComponent implements OnInit {
     sessionStorage.clear();
   }
 
-  userData: any;
+  loginForm = this.builder.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required],
+  });
+
   passwordFieldType: string = 'password';
 
   ngOnInit(): void {}
 
-  loginForm = this.builder.group({
-    email: this.builder.control(
-      '',
-      Validators.compose([Validators.required, Validators.email])
-    ),
-    password: this.builder.control('', Validators.required),
-  });
-
   loginStudent() {
-    this.service.loginStudent(this.loginForm.value).subscribe(
-      (res: any) => {
-        if (res.token) {
-          sessionStorage.setItem('token', res.token);
-          const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            },
-          });
-          Toast.fire({
-            icon: 'success',
-            title: 'Signed in successfully',
-          });
-          this.service.getCurrentUserRole();
-          switch (this.service.getCurrentUserRole()) {
-            case 1:
-              this.router.navigate(['admin']);
-              break;
-            case 2:
-              this.router.navigate(['organizer']);
-              break;
-            case 3:
-              this.router.navigate(['student']);
-              break;
-            default:
-              Swal.fire(
-                "User's role is unassigned",
-                'Please contact admin for support.',
-                'warning'
-              );
-              break;
+    if (this.loginForm.valid) {
+      this.service.loginStudent(this.loginForm.value).subscribe(
+        (res: any) => {
+          if (res.token) {
+            sessionStorage.setItem('token', res.token);
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 1500,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: 'success',
+              title: 'Signed in successfully',
+            });
+            this.service.getCurrentUserRole();
+            switch (this.service.getCurrentUserRole()) {
+              case 1:
+                this.router.navigate(['admin']);
+                break;
+              case 2:
+                this.router.navigate(['organizer']);
+                break;
+              case 3:
+                this.router.navigate(['student']);
+                break;
+              default:
+                Swal.fire(
+                  "User's role is unassigned",
+                  'Please contact admin for support.',
+                  'warning'
+                );
+                break;
+            }
           }
+        },
+        (error) => {
+          let errorMessage = 'An error occurred';
+          if (error && error.error && error.error.message) {
+            errorMessage = error.error.message;
+          }
+          Swal.fire({
+            icon: 'error',
+            title: 'Login Failed',
+            text: errorMessage,
+          });
         }
-      },
-      (error) => {
-        const errorMessage =
-          error.error?.status?.message || 'An error occurred';
-      }
-    );
+      );
+    } else {
+      Swal.fire({
+        icon: 'error',
+        text: 'Missing login credentials.',
+      });
+    }
   }
 
   togglePasswordVisibility() {
