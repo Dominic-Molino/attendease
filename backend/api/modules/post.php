@@ -8,6 +8,36 @@ class Post extends GlobalMethods
     {
         $this->pdo = $pdo;
     }
+    public function login($data, $user)
+    {
+        if ($user !== false && isset($user['password'])) {
+            // Verify the password
+            if (!password_verify($data['password'], $user['password'])) {
+                return $this->sendPayload(null, "failed", "Invalid Credentials.", 401);
+            }
+
+            // Generate JWT token
+            $JwtController = new Jwt($_ENV["SECRET_KEY"]);
+            $token = $JwtController->encode([
+                "user_id" => $user['user_id'],
+                "email" => $user['email'],
+                "role_id" => $user['role_id'],
+            ]);
+
+            // Respond with the generated token
+            http_response_code(200);
+            echo json_encode(["token" => $token]);
+        } else {
+            // Check if user was found or not
+            if ($user === false) {
+                return $this->sendPayload(null, "failed", "User not found.", 404);
+            } else {
+                // This block handles cases where $user['password'] is not set or other unexpected scenarios
+                return $this->sendPayload(null, "failed", "Invalid credentials or user data.", 401);
+            }
+        }
+    }
+
 
     public function add_user($data)
     {

@@ -212,36 +212,11 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 $data = json_decode(file_get_contents("php://input"), true);
 
                 if (!isset($data['email']) || !isset($data['password'])) {
-                    http_response_code(400);
-                    echo json_encode(["message" => "Missing login credentials"]);
-                    exit();
+                    throw new Exception("Missing login credentials", 400);
                 }
 
                 $user = $get->getByEmail($data['email']);
-
-                if ($user !== false && isset($user['password'])) {
-
-                    if (!password_verify($data['password'], $user['password'])) {
-                        http_response_code(401);
-                        echo json_encode(["message" => "Invalid Credentials!"]);
-                        exit;
-                    }
-
-                    $JwtController = new Jwt($_ENV["SECRET_KEY"]);
-                    $token = $JwtController->encode([
-                        "user_id" => $user['user_id'],
-                        "email" => $user['email'],
-                        "role_id" => $user['role_id'],
-                    ]);
-
-                    http_response_code(200);
-                    echo json_encode(["token" => $token]);
-                    exit();
-                } else {
-                    http_response_code(404);
-                    echo json_encode(["message" => "User not found or invalid credentials"]);
-                    exit;
-                }
+                $post->login($data, $user);
                 break;
 
             case 'adduser':

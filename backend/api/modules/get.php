@@ -358,37 +358,26 @@ class Get extends GlobalMethods
 
     public function get_registered_users_by_course()
     {
-        // Get the latest event
-        $latestEventQuery = "SELECT event_id FROM events WHERE event_end_date < CURDATE() ORDER BY event_start_date DESC LIMIT 1";
-        $stmtLatestEvent = $this->pdo->prepare($latestEventQuery);
-        $stmtLatestEvent->execute();
-        $latestEventId = $stmtLatestEvent->fetchColumn();
-
-        if (!$latestEventId) {
-            return $this->sendPayload(null, 'failed', "No past events found.", 404);
-        }
-
-        // Query to get student counts by course for the latest event
+        // Query to get student counts by course for all events
         $sql = "SELECT u.course, COUNT(*) AS student_count 
                     FROM user u
                     INNER JOIN event_registration er ON u.user_id = er.user_id 
-                    WHERE er.event_id = :event_id
                     GROUP BY u.course 
                     ORDER BY u.course";
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':event_id', $latestEventId, PDO::PARAM_INT);
         $stmt->execute();
 
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $rowCount = $stmt->rowCount();
 
         if ($rowCount > 0) {
-            return $this->sendPayload($data, 'success', "Successfully retrieved student counts by course for the latest event.", 200);
+            return $this->sendPayload($data, 'success', "Successfully retrieved student counts by course for all events.", 200);
         } else {
-            return $this->sendPayload(null, 'failed', "No users found for the latest event.", 404);
+            return $this->sendPayload(null, 'failed', "No users found for any events.", 404);
         }
     }
+
 
 
     public function get_total_registered_users()
@@ -413,71 +402,49 @@ class Get extends GlobalMethods
 
     public function get_registered_users_by_year_level()
     {
-        // Get the latest event
-        $latestEventQuery = "SELECT event_id FROM events WHERE event_end_date < CURDATE() ORDER BY event_start_date DESC LIMIT 1";
-        $stmtLatestEvent = $this->pdo->prepare($latestEventQuery);
-        $stmtLatestEvent->execute();
-        $latestEventId = $stmtLatestEvent->fetchColumn();
-
-        if (!$latestEventId) {
-            return $this->sendPayload(null, 'failed', "No past events found.", 404);
-        }
-
-        // Query to get student counts by year level for the latest event
+        // Query to get student counts by year level for all events
         $sql = "SELECT u.year_level, COUNT(*) AS student_count 
-                    FROM user u
-                    INNER JOIN event_registration er ON u.user_id = er.user_id 
-                    WHERE er.event_id = :event_id
-                    GROUP BY u.year_level 
-                    ORDER BY u.year_level";
+                FROM user u
+                INNER JOIN event_registration er ON u.user_id = er.user_id 
+                GROUP BY u.year_level 
+                ORDER BY u.year_level";
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':event_id', $latestEventId, PDO::PARAM_INT);
         $stmt->execute();
 
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $rowCount = $stmt->rowCount();
 
         if ($rowCount > 0) {
-            return $this->sendPayload($data, 'success', "Successfully retrieved student counts by year level for the latest event.", 200);
+            return $this->sendPayload($data, 'success', "Successfully retrieved student counts by year level for all events.", 200);
         } else {
-            return $this->sendPayload(null, 'failed', "No users found for the latest event.", 404);
+            return $this->sendPayload(null, 'failed', "No users found for any events.", 404);
         }
     }
+
 
     public function get_registered_users_by_block()
     {
-        // Get the latest event
-        $latestEventQuery = "SELECT event_id FROM events WHERE event_end_date < CURDATE() ORDER BY event_start_date DESC LIMIT 1";
-        $stmtLatestEvent = $this->pdo->prepare($latestEventQuery);
-        $stmtLatestEvent->execute();
-        $latestEventId = $stmtLatestEvent->fetchColumn();
-
-        if (!$latestEventId) {
-            return $this->sendPayload(null, 'failed', "No past events found.", 404);
-        }
-
-        // Query to get student counts by block for the latest event
+        // Query to get student counts by block for all events
         $sql = "SELECT u.block, COUNT(*) AS student_count 
-                    FROM user u
-                    INNER JOIN event_registration er ON u.user_id = er.user_id 
-                    WHERE er.event_id = :event_id
-                    GROUP BY u.block 
-                    ORDER BY u.block";
+                FROM user u
+                INNER JOIN event_registration er ON u.user_id = er.user_id 
+                GROUP BY u.block 
+                ORDER BY u.block";
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':event_id', $latestEventId, PDO::PARAM_INT);
         $stmt->execute();
 
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $rowCount = $stmt->rowCount();
 
         if ($rowCount > 0) {
-            return $this->sendPayload($data, 'success', "Successfully retrieved student counts by year level for the latest event.", 200);
+            return $this->sendPayload($data, 'success', "Successfully retrieved student counts by block for all events.", 200);
         } else {
-            return $this->sendPayload(null, 'failed', "No users found for the latest event.", 404);
+            return $this->sendPayload(null, 'failed', "No users found for any events.", 404);
         }
     }
+
 
     public function getTotalAttendanceInAllPastEvents()
     {
