@@ -18,12 +18,12 @@
     <hr class="h-px mb-6 bg-dark-border border-0" />
 
     @if(eventList && eventList.length ){
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 h-full">
       <div
-        class="lg:w-full md:col-span-2 border border-dark-border shadow-md rounded-md p-10 bg-white"
+        class="lg:w-full md:col-span-2 border border-dark-border h-auto shadow-md rounded-md p-10 bg-white"
       >
         <!-- calendar here -->
-        <app-calendar></app-calendar>
+        <app-mobicalendar></app-mobicalendar>
       </div>
 
       <div class="dropdown flex flex-1 justify-end w-full col-span-2">

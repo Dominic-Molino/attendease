@@ -2,11 +2,13 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule, DatePipe, TitleCasePipe } from '@angular/common';
 import { EventService } from '../../../core/service/event.service';
+import { CardModule } from 'primeng/card';
+import { Button } from 'primeng/button';
 
 @Component({
   selector: 'app-popup',
   standalone: true,
-  imports: [DatePipe, TitleCasePipe, CommonModule],
+  imports: [DatePipe, TitleCasePipe, CommonModule, CardModule, Button],
   templateUrl: './popup.component.html',
   styleUrl: './popup.component.css',
 })
@@ -33,8 +35,8 @@ export class PopupComponent implements OnInit {
 
   getEventStatus(event: any): string {
     const currentDate = new Date();
-    const startDate = new Date(event.event_start_date);
-    const endDate = new Date(event.event_end_date);
+    const startDate = new Date(event.start);
+    const endDate = new Date(event.end);
 
     if (endDate < currentDate) {
       return 'done';
@@ -46,7 +48,7 @@ export class PopupComponent implements OnInit {
   }
 
   loadImage() {
-    this.service.getEventImage(this.data.event_id).subscribe((res: Blob) => {
+    this.service.getEventImage(this.data.id).subscribe((res: Blob) => {
       this.imageUrl = URL.createObjectURL(res);
     });
   }

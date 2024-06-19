@@ -35,7 +35,7 @@ interface Event {
   event_registration_end: Date;
   session: string;
   max_attendees: number;
-  categories: string[];
+  categories: { display: string; value: string }[];
   organizer_name: string;
   event_image$: Observable<SafeResourceUrl | undefined>;
 }
@@ -99,7 +99,9 @@ export class EventsComponent implements OnInit, OnDestroy {
       .subscribe((result: any) => {
         if (result) {
           this.eventList = result.payload.map((data: any): Event => {
-            const categories: string[] = JSON.parse(data.categories);
+            const categories: { display: string; value: string }[] = JSON.parse(
+              data.categories
+            );
             return {
               event_id: data.event_id,
               event_name: data.event_name,
@@ -146,7 +148,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   }
 
   startPolling(): void {
-    this.updateSubscription = timer(3000, 30000) // Poll every 30 seconds
+    this.updateSubscription = timer(3000, 30000)
       .pipe(switchMap(() => this.service.getAllEvents()))
       .subscribe(
         (result) => {
@@ -165,7 +167,7 @@ export class EventsComponent implements OnInit, OnDestroy {
       data: { event },
       panelClass: 'dialog-container',
       disableClose: true,
-      width: '70%',
+      width: '60%',
       height: '90%',
     });
   }

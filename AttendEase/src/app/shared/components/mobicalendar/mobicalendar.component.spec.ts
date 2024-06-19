@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PrimecalendarComponent } from './primecalendar.component';
+import { MobicalendarComponent } from './mobicalendar.component';
 
-describe('PrimecalendarComponent', () => {
-  let component: PrimecalendarComponent;
-  let fixture: ComponentFixture<PrimecalendarComponent>;
+describe('MobicalendarComponent', () => {
+  let component: MobicalendarComponent;
+  let fixture: ComponentFixture<MobicalendarComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PrimecalendarComponent]
+      imports: [MobicalendarComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(PrimecalendarComponent);
+    fixture = TestBed.createComponent(MobicalendarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

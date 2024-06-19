@@ -170,35 +170,15 @@
             ></textarea>
           </div>
 
-          <div class="col-span-2">
-            <legend>Related Topics</legend>
-            <div formArrayName="categories">
-              <label
-                *ngFor="let category of visibleCategories; let i = index"
-                class="ms-2 text-sm font-medium text-text text-center"
-              >
-                <input
-                  type="checkbox"
-                  [formControlName]="i"
-                  class="w-4 h-4 text-light-text bg-white border-light-border rounded focus:ring-1 focus:ring-light-border"
-                />
-                {{ category }}
-              </label>
-            </div>
-            <div class="inline-flex items-center justify-center w-full mt-2">
-              <hr class="w-full h-1 my-8 bg-light-border border rounded" />
-              <div
-                class="absolute px-4 -translate-x-1/2 bg-white left-1/2 dark:bg-gray-900"
-              >
-                <button
-                  type="button"
-                  class="text-white bg-light-background hover:bg-light-foregroud focus:outline-none focus:ring-0 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2"
-                  (click)="toggleShowAllCategories()"
-                >
-                  {{ showAllCategories ? "Less" : "More" }}
-                </button>
-              </div>
-            </div>
+          <div class="sm:col-span-2">
+            <label for="categories">Tags</label>
+            <tag-input
+              formControlName="categories"
+              [onlyFromAutocomplete]="false"
+              [addOnBlur]="true"
+              [separatorKeyCodes]="[13, 188]"
+            >
+            </tag-input>
           </div>
         </div>
 

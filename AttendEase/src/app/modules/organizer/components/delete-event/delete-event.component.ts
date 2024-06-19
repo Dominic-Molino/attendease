@@ -43,7 +43,7 @@ export class DeleteEventComponent {
               });
               Toast.fire({
                 icon: 'success',
-                title: 'Your file has been deleted.',
+                title: 'Event has been deleted.',
               });
               this.eventDeleted.emit();
             },

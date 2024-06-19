@@ -10,10 +10,10 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
       <!-- calendar here -->
       <div
-        class="lg:w-full md:col-span-1 border border-dark-border shadow-md rounded-md p-10 bg-white"
+        class="lg:w-full md:col-span-1 border border-dark-border shadow-md rounded-md p-5 bg-white"
       >
         <!-- calendar here -->
-        <app-calendar class="sm:max-w-[400px]"></app-calendar>
+        <app-mobicalendar></app-mobicalendar>
       </div>
 
       <div class="grid-col-2 grid-flow-row">
@@ -55,8 +55,8 @@
             >
               View all events
             </button>
+            <p-button icon="pi pi-check">Save</p-button>
           </div>
-
           <div
             *ngIf="events$ | async as events; else noEventsMessage"
             class="relative overflow-x-auto rounded-md overflow border max-h-72 border-dark-border"
@@ -213,7 +213,6 @@
             </div>
           </div>
         </div>
-        <app-primecalendar></app-primecalendar>
 
         <ng-template #noEventsMessage>
           <div class="text-center py-8">

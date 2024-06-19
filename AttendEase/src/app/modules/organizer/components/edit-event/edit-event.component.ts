@@ -21,6 +21,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { EventService } from '../../../../core/service/event.service';
 import Swal from 'sweetalert2';
+import { TagComponent, TagInputModule } from 'ngx-chips';
 
 @Component({
   selector: 'app-edit-event',
@@ -33,6 +34,7 @@ import Swal from 'sweetalert2';
     FormsModule,
     ReactiveFormsModule,
     JsonPipe,
+    TagInputModule,
   ],
   templateUrl: './edit-event.component.html',
   styleUrl: './edit-event.component.css',
@@ -43,72 +45,6 @@ export class EditEventComponent implements OnInit {
   eventVal: any;
   eventForm: FormGroup;
   categoryControls: FormArray | undefined;
-  visibleCategories: string[] = [];
-  categories: string[] = [
-    'Python',
-    'Java',
-    'JavaScript',
-    'C/C++',
-    'Ruby',
-    'Swift',
-    'Kotlin',
-    'PHP',
-    'React.js',
-    'Angular',
-    'Vue.js',
-    'Node.js',
-    'Django',
-    'Flask',
-    'Spring Framework',
-    'Express.js',
-    'HTML/CSS',
-    'Responsive Design',
-    'UI/UX Design',
-    'Bootstrap',
-    'Sass/Less',
-    'Web Accessibility',
-    'iOS Development',
-    'Android Development',
-    'Flutter',
-    'React Native',
-    'Mobile UX/UI Design',
-    'SQL',
-    'NoSQL',
-    'MySQL',
-    'PostgreSQL',
-    'MongoDB',
-    'Firebase',
-    'AWS',
-    'Microsoft Azure',
-    'Google Cloud Platform',
-    'DevOps',
-    'Serverless Computing',
-    'Containers',
-    'AI Fundamentals',
-    'Machine Learning Algorithms',
-    'Deep Learning',
-    'NLP',
-    'Computer Vision',
-    'AI Ethics',
-    'Cyber Threats',
-    'Network Security',
-    'Encryption Techniques',
-    'Penetration Testing',
-    'Cybersecurity Best Practices',
-    'Agile Methodologies',
-    'Software Design Patterns',
-    'CI/CD',
-    'Git',
-    'Software Testing',
-    'Quality Assurance',
-    'IoT',
-    'Blockchain',
-    'Virtual Reality',
-    'Augmented Reality',
-    'Quantum Computing',
-    'Edge Computing',
-  ];
-  showAllCategories: boolean = false;
 
   constructor(
     private service: EventService,
@@ -141,16 +77,14 @@ export class EditEventComponent implements OnInit {
       ],
       session: [this.eventVal.session, Validators.required],
       max_attendees: [this.eventVal.max_attendees, Validators.required],
-      categories: this.buildCategoryCheckboxes(),
+      categories: [
+        this.eventVal.categories ? JSON.parse(this.eventVal.categories) : [],
+      ],
       organizer_name: [
         this.eventVal.organizer_name.replace(/^"|"$/g, ''),
         Validators.required,
       ],
     });
-
-    if (this.eventVal.categories) {
-      this.setCategories(JSON.parse(this.eventVal.categories));
-    }
   }
 
   ngOnInit(): void {
@@ -171,13 +105,11 @@ export class EditEventComponent implements OnInit {
         organizer_name: this.eventVal.organizer_name,
       });
     }
-    this.updateVisibleCategories();
   }
 
   updateEvent() {
     if (this.eventForm.valid) {
       const formData = this.eventForm.value;
-      formData.categories = this.getSelectedCategories();
 
       this.service
         .editEvent(this.eventId, this.eventForm.value)
@@ -201,45 +133,6 @@ export class EditEventComponent implements OnInit {
         });
     } else {
       Swal.fire('Failed', 'Failed to update event!', 'error');
-    }
-  }
-
-  buildCategoryCheckboxes() {
-    const formArray = this.categories.map(() => new FormControl(false));
-    this.categoryControls = new FormArray(formArray);
-    return this.categoryControls;
-  }
-
-  setCategories(selectedCategories: string[]): void {
-    const categoryControls = this.eventForm.get('categories') as FormArray;
-    if (selectedCategories) {
-      this.categories.forEach((category, index) => {
-        if (selectedCategories.includes(category)) {
-          categoryControls.at(index).setValue(true);
-        }
-      });
-    }
-  }
-
-  getSelectedCategories() {
-    const selectedCategories = this.eventForm.value.categories
-      .map((checked: any, index: number) =>
-        checked ? this.categories[index] : null
-      )
-      .filter((value: null) => value !== null);
-    return selectedCategories;
-  }
-
-  toggleShowAllCategories() {
-    this.showAllCategories = !this.showAllCategories;
-    this.updateVisibleCategories();
-  }
-
-  updateVisibleCategories() {
-    if (this.showAllCategories) {
-      this.visibleCategories = this.categories;
-    } else {
-      this.visibleCategories = this.categories.slice(0, 15);
     }
   }
 

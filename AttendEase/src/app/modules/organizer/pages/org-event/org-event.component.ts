@@ -12,6 +12,7 @@ import { CalendarComponent } from '../../../../shared/components/calendar/calend
 import { Observable } from 'rxjs';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { UpdateimageComponent } from '../../components/updateimage/updateimage.component';
+import { MobicalendarComponent } from '../../../../shared/components/mobicalendar/mobicalendar.component';
 
 interface Event {
   event_id: number;
@@ -44,6 +45,7 @@ interface Event {
     EditEventComponent,
     CalendarComponent,
     NgxPaginationModule,
+    MobicalendarComponent,
   ],
 })
 export class OrgEventComponent implements OnInit {

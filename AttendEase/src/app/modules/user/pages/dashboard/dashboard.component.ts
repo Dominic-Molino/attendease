@@ -4,8 +4,8 @@ import { CalendarComponent } from '../../../../shared/components/calendar/calend
 import { Router, RouterLink } from '@angular/router';
 import { EventService } from '../../../../core/service/event.service';
 import { Observable, catchError, map } from 'rxjs';
-import Swal from 'sweetalert2';
-import { PrimecalendarComponent } from '../../../../shared/components/primecalendar/primecalendar.component';
+import { MobicalendarComponent } from '../../../../shared/components/mobicalendar/mobicalendar.component';
+import { ButtonModule } from 'primeng/button';
 
 interface UserEvent {
   event_id: number;
@@ -32,7 +32,8 @@ interface UserEvent {
     CommonModule,
     CalendarComponent,
     RouterLink,
-    PrimecalendarComponent,
+    MobicalendarComponent,
+    ButtonModule,
   ],
 })
 export class DashboardComponent implements OnInit {
