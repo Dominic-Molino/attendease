@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -9,6 +16,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
 import { Observable, interval, Subscription, of, timer } from 'rxjs';
 import { switchMap, catchError, map, finalize } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-feedback',
@@ -18,6 +26,9 @@ import { switchMap, catchError, map, finalize } from 'rxjs/operators';
   styleUrl: './feedback.component.css',
 })
 export class FeedbackComponent implements OnInit, OnDestroy {
+  @Input() feed: Event | undefined;
+  @Output() viewEventClicked = new EventEmitter();
+
   events: any[] = [];
   userId?: any;
   feedback: any[] = [];
@@ -34,7 +45,8 @@ export class FeedbackComponent implements OnInit, OnDestroy {
   constructor(
     private eventService: EventService,
     private service: AuthserviceService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -91,7 +103,6 @@ export class FeedbackComponent implements OnInit, OnDestroy {
             }
           });
 
-          // Fetch feedback after retrieving events
           this.getFeedback().subscribe();
         }
         return res;
@@ -118,11 +129,11 @@ export class FeedbackComponent implements OnInit, OnDestroy {
         catchError((error) => {
           const errorMessage =
             error.error?.status?.message || 'An error occurred';
-          return of(null); // Return a null observable in case of error
+          return of(null);
         })
       );
     } else {
-      return of(null); // Return a null observable if no userId
+      return of(null);
     }
   }
 
@@ -137,7 +148,7 @@ export class FeedbackComponent implements OnInit, OnDestroy {
   }
 
   startPolling(): void {
-    this.updateSubscription = timer(2000, 30000)
+    this.updateSubscription = timer(3000, 30000)
       .pipe(switchMap(() => this.getUserEvents()))
       .subscribe();
   }
@@ -150,15 +161,10 @@ export class FeedbackComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.dialog.open(FeedbackSubmissionComponent, {
-        data: {
-          curr_event_id: eventId,
-          curr_user_id: this.userId,
-        },
-        width: '75%',
-        disableClose: true,
-      });
-      document.body.classList.add('cdk-global-scrollblock');
+      let routePrefix = '/student/questionnaire';
+      if (routePrefix) {
+        this.router.navigate([`${routePrefix}/${eventId}`]);
+      }
     }
   }
 }

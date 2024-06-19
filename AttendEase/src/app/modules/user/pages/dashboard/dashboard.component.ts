@@ -3,9 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { CalendarComponent } from '../../../../shared/components/calendar/calendar.component';
 import { Router, RouterLink } from '@angular/router';
 import { EventService } from '../../../../core/service/event.service';
-import { Observable, catchError, map } from 'rxjs';
+import { Observable, catchError, finalize, map } from 'rxjs';
 import { MobicalendarComponent } from '../../../../shared/components/mobicalendar/mobicalendar.component';
-import { ButtonModule } from 'primeng/button';
 
 interface UserEvent {
   event_id: number;
@@ -28,13 +27,7 @@ interface UserEvent {
   standalone: true,
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
-  imports: [
-    CommonModule,
-    CalendarComponent,
-    RouterLink,
-    MobicalendarComponent,
-    ButtonModule,
-  ],
+  imports: [CommonModule, CalendarComponent, RouterLink, MobicalendarComponent],
 })
 export class DashboardComponent implements OnInit {
   events$?: Observable<UserEvent[]>;
@@ -69,7 +62,6 @@ export class DashboardComponent implements OnInit {
             } as UserEvent;
           });
 
-          // Sorting logic
           events.sort((a: any, b: any) => {
             if (
               a.eventState === 'done' &&

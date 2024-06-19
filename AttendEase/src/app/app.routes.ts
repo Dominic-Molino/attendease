@@ -70,6 +70,15 @@ export const routes: Routes = [
       },
 
       {
+        path: 'admin-view-attendance/:eventId',
+        loadComponent: () =>
+          import(
+            './modules/organizer/components/markattendancee/markattendancee.component'
+          ).then((c) => c.MarkattendanceeComponent),
+        canActivate: [authenGuard],
+      },
+
+      {
         path: 'admin-feedback-list',
         loadComponent: () =>
           import('./shared/components/event-list/event-list.component').then(
@@ -115,7 +124,15 @@ export const routes: Routes = [
           import('./modules/user/pages/events/events.component').then(
             (c) => c.EventsComponent
           ),
+        canActivate: [authenGuard],
+      },
 
+      {
+        path: 'preview/:eventId',
+        loadComponent: () =>
+          import('./modules/user/components/preview/preview.component').then(
+            (c) => c.PreviewComponent
+          ),
         canActivate: [authenGuard],
       },
 
@@ -144,12 +161,15 @@ export const routes: Routes = [
           import('./modules/user/pages/feedback/feedback.component').then(
             (c) => c.FeedbackComponent
           ),
-        children: [
-          {
-            path: 'questionnaire',
-            component: FeedbackSubmissionComponent,
-          },
-        ],
+        canActivate: [authenGuard],
+      },
+
+      {
+        path: 'questionnaire/:eventId',
+        loadComponent: () =>
+          import(
+            './modules/user/components/feedback-submission/feedback-submission.component'
+          ).then((c) => c.FeedbackSubmissionComponent),
         canActivate: [authenGuard],
       },
     ],

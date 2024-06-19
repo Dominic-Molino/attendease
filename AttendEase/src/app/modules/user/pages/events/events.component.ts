@@ -3,12 +3,13 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
+  Input,
   OnDestroy,
   OnInit,
+  Output,
 } from '@angular/core';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
-import { PreviewComponent } from '../../components/preview/preview.component';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { EventService } from '../../../../core/service/event.service';
 import {
@@ -23,6 +24,7 @@ import {
 } from 'rxjs';
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 interface Event {
   event_id: number;
@@ -44,14 +46,16 @@ interface Event {
   selector: 'app-events',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, MatDialogModule, NgxPaginationModule],
+  imports: [CommonModule, NgxPaginationModule],
   templateUrl: './events.component.html',
   styleUrls: ['./events.component.css'],
 })
 export class EventsComponent implements OnInit, OnDestroy {
+  @Input() latestEvent: Event | undefined;
+  @Output() viewEventClicked = new EventEmitter();
+
   eventList: Event[] = [];
   filteredEventList: any[] = [];
-  latestEvent: any;
 
   loading: boolean = false;
   maxChar: number = 100;
@@ -62,11 +66,11 @@ export class EventsComponent implements OnInit, OnDestroy {
   private updateSubscription?: Subscription;
 
   constructor(
-    private dialog: MatDialog,
     private service: AuthserviceService,
     private sanitizer: DomSanitizer,
     private eventService: EventService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -162,14 +166,11 @@ export class EventsComponent implements OnInit, OnDestroy {
       );
   }
 
-  viewEvent(event: any) {
-    this.dialog.open(PreviewComponent, {
-      data: { event },
-      panelClass: 'dialog-container',
-      disableClose: true,
-      width: '60%',
-      height: '90%',
-    });
+  openPreview(eventId: number) {
+    let routePrefix = '/student/preview';
+    if (routePrefix) {
+      this.router.navigate([`${routePrefix}/${eventId}`]);
+    }
   }
 
   truncateDescription(text: string, maxLength: number): string {

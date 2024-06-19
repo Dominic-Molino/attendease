@@ -7,6 +7,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ViewsubmissionsComponent } from '../viewsubmissions/viewsubmissions.component';
 import { finalize, zip } from 'rxjs';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface User {
   user_id: number;
@@ -29,7 +30,7 @@ interface User {
 export class MarkattendanceeComponent implements OnInit {
   datalist: User[] = [];
   attendanceRemarks: { [key: number]: number } = {};
-  eventId: number;
+  eventId: any;
 
   p: number = 1;
   itemsPerPage: number = 10;
@@ -37,20 +38,20 @@ export class MarkattendanceeComponent implements OnInit {
 
   constructor(
     private service: AuthserviceService,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialog: MatDialogRef<MarkattendanceeComponent>,
-    private dialog2: MatDialog,
-    private changeDetectorRef: ChangeDetectorRef
+    private dialog: MatDialog,
+    private changeDetectorRef: ChangeDetectorRef,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
-    this.eventId = this.data.selectedEvent;
+    this.eventId = this.route.snapshot.params['eventId'];
   }
 
   viewAttendances(userId: number) {
-    const dialogRef = this.dialog2.open(ViewsubmissionsComponent, {
+    const dialogRef = this.dialog.open(ViewsubmissionsComponent, {
       width: '50%',
       data: {
         selectedUser: userId,
-        selectedEvent: this.data.selectedEvent,
+        selectedEvent: this.eventId,
       },
       disableClose: true,
     });
@@ -58,10 +59,6 @@ export class MarkattendanceeComponent implements OnInit {
     dialogRef.afterClosed().subscribe(() => {
       this.loadData();
     });
-  }
-
-  closeDialog() {
-    this.dialog.close();
   }
 
   ngOnInit(): void {
@@ -103,13 +100,12 @@ export class MarkattendanceeComponent implements OnInit {
           this.attendanceRemarks[userId] = -1;
         }
 
-        // Manually trigger change detection
         this.changeDetectorRef.detectChanges();
       },
       (error) => {
         console.error('Error fetching attendance remark:', error);
         this.attendanceRemarks[userId] = -1;
-        this.changeDetectorRef.detectChanges(); // Handle error state
+        this.changeDetectorRef.detectChanges();
       }
     );
   }

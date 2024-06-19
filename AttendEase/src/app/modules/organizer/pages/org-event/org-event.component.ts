@@ -1,4 +1,10 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  OnDestroy,
+  PLATFORM_ID,
+} from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AddEventComponent } from '../../components/add-event/add-event.component';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -9,7 +15,8 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
 import { initFlowbite } from 'flowbite';
 import { CalendarComponent } from '../../../../shared/components/calendar/calendar.component';
-import { Observable } from 'rxjs';
+import { Observable, Subscription, interval } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { UpdateimageComponent } from '../../components/updateimage/updateimage.component';
 import { MobicalendarComponent } from '../../../../shared/components/mobicalendar/mobicalendar.component';
@@ -48,7 +55,7 @@ interface Event {
     MobicalendarComponent,
   ],
 })
-export class OrgEventComponent implements OnInit {
+export class OrgEventComponent implements OnInit, OnDestroy {
   eventList: Event[] = [];
   filteredEventList: any[] = [];
   maxChar = 100;
@@ -61,6 +68,8 @@ export class OrgEventComponent implements OnInit {
   itemsPerPage: number = 10;
   maxSize = 5;
 
+  private refreshSubscription: Subscription | undefined;
+
   constructor(
     private service: EventService,
     private dialog: MatDialog,
@@ -71,6 +80,83 @@ export class OrgEventComponent implements OnInit {
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) initFlowbite();
     this.loadEvent();
+
+    // Setup polling to refresh events every 30 seconds
+    this.setupPolling();
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
+  }
+
+  setupPolling() {
+    const pollingIntervalMs = 30000; // 30 seconds
+
+    this.refreshSubscription = interval(pollingIntervalMs)
+      .pipe(switchMap(() => this.service.getAllEvents()))
+      .subscribe(
+        (result) => {
+          this.eventList = result.payload.map((data: any): Event => {
+            const eventId = data.event_id;
+            const eventObject: Event = {
+              event_id: data.event_id,
+              event_name: data.event_name,
+              event_description: data.event_description,
+              event_location: data.event_location,
+              event_start_date: data.event_start_date,
+              event_end_date: data.event_end_date,
+              event_registration_start: data.event_registration_start,
+              event_registration_end: data.event_registration_end,
+              session: data.session,
+              max_attendees: data.max_attendees,
+              categories: data.categories,
+              organizer_name: data.organizer_name.replace(/^"|"$/g, ''),
+              event_image: undefined,
+              status: this.getEventStatus(data),
+              event_image$: undefined,
+            };
+
+            this.service.getEventImage(eventId).subscribe((imageResult) => {
+              if (imageResult.size > 0) {
+                const url = URL.createObjectURL(imageResult);
+                eventObject.event_image =
+                  this.sanitizer.bypassSecurityTrustResourceUrl(url);
+              }
+            });
+
+            this.service.getTotal(eventId).subscribe((res) => {
+              eventObject.total_attendees = res.payload;
+            });
+
+            return eventObject;
+          });
+
+          this.eventList.sort((a, b) => {
+            if (
+              a.status === 'done' &&
+              (b.status === 'ongoing' || b.status === 'upcoming')
+            ) {
+              return -1;
+            } else if (a.status === 'ongoing' && b.status === 'upcoming') {
+              return -1;
+            } else if (
+              a.status === 'upcoming' &&
+              (b.status === 'done' || b.status === 'ongoing')
+            ) {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
+
+          this.applyFilter(this.currentFilter);
+        },
+        (error) => {
+          console.error('Error fetching event details:', error);
+        }
+      );
   }
 
   loadEvent() {
@@ -183,7 +269,7 @@ export class OrgEventComponent implements OnInit {
   openDialog() {
     if (this.eventList) {
       const modal = this.dialog.open(AddEventComponent, {
-        width: '70%',
+        width: '60%',
         height: '90%',
         disableClose: true,
       });
@@ -198,7 +284,7 @@ export class OrgEventComponent implements OnInit {
     const dialogRef = this.dialog.open(UpdateimageComponent, {
       data: { eventId: eventId },
       disableClose: true,
-      width: '70%',
+      width: '60%',
     });
   }
 
@@ -207,7 +293,7 @@ export class OrgEventComponent implements OnInit {
     const modal = this.dialog.open(EditEventComponent, {
       data: { event_id: this.selectedEventId },
       disableClose: true,
-      width: '70%',
+      width: '60%',
       height: '90%',
     });
     modal.afterClosed().subscribe((response) => {

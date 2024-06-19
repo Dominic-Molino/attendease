@@ -6,6 +6,7 @@ import { DeleteEventComponent } from '../../components/delete-event/delete-event
 import { CommonModule } from '@angular/common';
 import { MarkattendanceeComponent } from '../../components/markattendancee/markattendancee.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { Router } from '@angular/router';
 
 interface Event {
   event_id: number;
@@ -42,7 +43,8 @@ export class AttendanceComponent implements OnInit {
   constructor(
     private service: EventService,
     private dialog: MatDialog,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -96,15 +98,22 @@ export class AttendanceComponent implements OnInit {
     });
   }
 
+  // viewEvent(eventId: any) {
+  //   this.dialog.open(MarkattendanceeComponent, {
+  //     width: '70%',
+  //     height: '90%',
+  //     disableClose: true,
+  //     data: {
+  //       selectedEvent: eventId,
+  //     },
+  //   });
+  // }
+
   viewEvent(eventId: any) {
-    this.dialog.open(MarkattendanceeComponent, {
-      width: '70%',
-      height: '90%',
-      disableClose: true,
-      data: {
-        selectedEvent: eventId,
-      },
-    });
+    let routePrefix = '/admin/admin-view-attendance';
+    if (routePrefix) {
+      this.router.navigate([`${routePrefix}/${eventId}`]);
+    }
   }
 
   getEventStatus(event: any): string {

@@ -1,302 +1,313 @@
-<section class="bg-white w-full">
-  <div class="max-w-full bg-white h-auto overflow-hidden rounded-lg shadow-md">
-    <!-- Header Section -->
-    <div
-      class="flex items-center justify-between p-4 md:p-5 border-b border-gray-200 rounded-t"
-    >
-      <div class="w-full flex justify-between items-center">
-        <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
-          {{ data.event.event_name }}
-        </h3>
-        <h3
-          class="text-lg font-semibold text-gray-900 dark:text-white inline-flex items-center border-b border-light-border"
+<main class="w-full">
+  <div class="p-4 mt-16 sm:ml-64">
+    <section class="bg-white w-full">
+      <div
+        class="max-w-full bg-white h-auto overflow-hidden rounded-lg shadow-md"
+      >
+        <!-- Header Section -->
+        <div
+          *ngFor="let event of event"
+          class="flex items-center justify-between p-4 md:p-5 border-b border-gray-200 rounded-t"
         >
-          <span class="me-1">
+          <div class="w-full flex justify-between items-center">
+            <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+              {{ event?.event_name }}
+            </h3>
+            <h3
+              class="text-lg font-semibold text-gray-900 dark:text-white inline-flex items-center border-b border-light-border"
+            >
+              <span class="me-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-building"
+                >
+                  <rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
+                  <path d="M9 22v-4h6v4" />
+                  <path d="M8 6h.01" />
+                  <path d="M16 6h.01" />
+                  <path d="M12 6h.01" />
+                  <path d="M12 10h.01" />
+                  <path d="M12 14h.01" />
+                  <path d="M16 10h.01" />
+                  <path d="M16 14h.01" />
+                  <path d="M8 10h.01" />
+                  <path d="M8 14h.01" />
+                </svg>
+              </span>
+              {{ event?.organizer_name }}
+            </h3>
+          </div>
+          <button
+            (click)="closePage()"
+            type="button"
+            class="mt-1.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-1.5 inline-flex justify-center items-center"
+            data-modal-hide="default-modal"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
+              width="24"
+              height="24"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               stroke-width="1"
               stroke-linecap="round"
               stroke-linejoin="round"
-              class="lucide lucide-building"
+              class="lucide lucide-move-left"
             >
-              <rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
-              <path d="M9 22v-4h6v4" />
-              <path d="M8 6h.01" />
-              <path d="M16 6h.01" />
-              <path d="M12 6h.01" />
-              <path d="M12 10h.01" />
-              <path d="M12 14h.01" />
-              <path d="M16 10h.01" />
-              <path d="M16 14h.01" />
-              <path d="M8 10h.01" />
-              <path d="M8 14h.01" />
+              <path d="M6 8L2 12L6 16" />
+              <path d="M2 12H22" />
             </svg>
-          </span>
-          {{ data.event.organizer_name }}
-        </h3>
-      </div>
-      <button
-        (click)="closeDialog()"
-        type="button"
-        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-        data-modal-toggle="crud-modal"
-      >
-        <svg
-          class="w-3 h-3"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 14 14"
+            <span class="sr-only">Close modal</span>
+          </button>
+        </div>
+
+        <!-- Body Section -->
+        <div class="p-4 md:p-5 space-y-4" *ngFor="let event of event">
+          <!-- Event Image -->
+          <div class="rounded-md h-80 w-full overflow-hidden">
+            <img
+              *ngIf="eventImage$ | async; else placeholder"
+              [src]="(eventImage$ | async) || 'path_to_placeholder_image'"
+              class="rounded-md object-cover object-center w-full h-full border border-gray-300"
+              alt="Event Image"
+            />
+            <ng-template #placeholder>
+              <div class="h-full max-h-72 rounded-md bg-gray-200"></div>
+            </ng-template>
+          </div>
+
+          <!-- Event Description -->
+          <div class="flex items-center my-2.5">
+            <p
+              class="text-base leading-relaxed text-gray-700 dark:text-gray-300"
+            >
+              Description: {{ event?.event_description }}
+            </p>
+          </div>
+
+          <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
+
+          <!-- Location -->
+          <div class="flex items-center my-2.5 space-x-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-map-pin inline-flex flex-shrink-0 me-1"
+            >
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            <p class="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              Location: {{ event?.event_location }}
+            </p>
+          </div>
+
+          <!-- Event Dates -->
+          <div class="flex items-center my-2.5 space-x-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-calendar-clock inline-flex flex-shrink-0 me-1"
+            >
+              <path
+                d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"
+              />
+              <path d="M16 2v4" />
+              <path d="M8 2v4" />
+              <path d="M3 10h5" />
+              <path d="M17.5 17.5 16 16.3V14" />
+              <circle cx="16" cy="16" r="6" />
+            </svg>
+            <p class="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              Start Date:
+              {{ event?.event_start_date | date : "MMM d, y, h:mm a" }} -
+              {{ event?.event_end_date | date : "MMM d, y, h:mm a" }}
+            </p>
+          </div>
+
+          <!-- Registration Dates -->
+          <div class="flex items-center my-2.5 space-x-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-calendar-clock inline-flex flex-shrink-0 me-1"
+            >
+              <path
+                d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"
+              />
+              <path d="M16 2v4" />
+              <path d="M8 2v4" />
+              <path d="M3 10h5" />
+              <path d="M17.5 17.5 16 16.3V14" />
+              <circle cx="16" cy="16" r="6" />
+            </svg>
+            <p class="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              Registration Date:
+              {{ event?.event_registration_start | date : "MMM d, y, h:mm a" }}
+              -
+              {{ event?.event_registration_end | date : "MMM d, y, h:mm a" }}
+            </p>
+          </div>
+
+          <!-- Event Mode -->
+          <div class="flex items-center my-2.5 space-x-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-calendar-cog inline-flex flex-shrink-0 me-1"
+            >
+              <path d="m15.2 16.9-.9-.4" />
+              <path d="m15.2 19.1-.9.4" />
+              <path d="M16 2v4" />
+              <path d="m16.9 15.2-.4-.9" />
+              <path d="m16.9 20.8-.4.9" />
+              <path d="m19.5 14.3-.4.9" />
+              <path d="m19.5 21.7-.4-.9" />
+              <path
+                d="M21 10.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"
+              />
+              <path d="m21.7 16.5-.9.4" />
+              <path d="m21.7 19.5-.9-.4" />
+              <path d="M3 10h18" />
+              <path d="M8 2v4" />
+              <circle cx="18" cy="18" r="3" />
+            </svg>
+            <p class="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              Mode: {{ event?.session }}
+            </p>
+          </div>
+
+          <!-- Event Status -->
+          <div class="flex items-center my-2.5 space-x-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-loader inline-flex flex-shrink-0 me-1"
+            >
+              <path d="M12 2v4" />
+              <path d="m16.2 7.8 2.9-2.9" />
+              <path d="M18 12h4" />
+              <path d="m16.2 16.2 2.9 2.9" />
+              <path d="M12 18v4" />
+              <path d="m4.9 19.1 2.9-2.9" />
+              <path d="M2 12h4" />
+              <path d="m4.9 4.9 2.9 2.9" />
+            </svg>
+            <p class="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              Status: {{ eventWithStatus?.status | titlecase }}
+            </p>
+          </div>
+
+          <!-- Max Participants -->
+          <div class="flex items-center my-2.5 space-x-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-users-round inline-flex flex-shrink-0 me-1"
+            >
+              <path d="M18 21a8 8 0 0 0-16 0" />
+              <circle cx="10" cy="8" r="5" />
+              <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3" />
+            </svg>
+            <p class="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              Max Participants: {{ event?.max_attendees }}
+            </p>
+          </div>
+
+          <!-- Categories -->
+          <div class="flex items-center my-2.5 space-x-2">
+            <p
+              *ngFor="let tag of event.categories"
+              class="text-sm leading-relaxed text-gray-700 dark:text-gray-300"
+            >
+              <span
+                class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full capitalize"
+              >
+                {{ tag.display }}
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Footer Section -->
+        <div
+          *ngFor="let event of event"
+          class="flex items-center justify-end p-4 md:p-5 border-t border-gray-200 rounded-b"
         >
-          <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-          />
-        </svg>
-        <span class="sr-only">Close modal</span>
-      </button>
-    </div>
-
-    <!-- Body Section -->
-    <div class="p-4 md:p-5 space-y-4">
-      <!-- Event Image -->
-      <div class="rounded-md h-80 w-full overflow-hidden">
-        <img
-          *ngIf="eventImage$ | async; else placeholder"
-          [src]="(eventImage$ | async) || 'path_to_placeholder_image'"
-          class="rounded-md object-cover object-center w-full h-full border border-gray-300"
-          alt="Event Image"
-        />
-        <ng-template #placeholder>
-          <div class="h-full max-h-72 rounded-md bg-gray-200"></div>
-        </ng-template>
-      </div>
-
-      <!-- Event Description -->
-      <div class="flex items-center my-2.5">
-        <p class="text-base leading-relaxed text-gray-700 dark:text-gray-300">
-          Description: {{ data.event.event_description }}
-        </p>
-      </div>
-
-      <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
-
-      <!-- Location -->
-      <div class="flex items-center my-2.5 space-x-2">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-map-pin inline-flex flex-shrink-0 me-1"
-        >
-          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-          <circle cx="12" cy="10" r="3" />
-        </svg>
-        <p class="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-          Location: {{ data.event.event_location }}
-        </p>
-      </div>
-
-      <!-- Event Dates -->
-      <div class="flex items-center my-2.5 space-x-2">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-calendar-clock inline-flex flex-shrink-0 me-1"
-        >
-          <path
-            d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"
-          />
-          <path d="M16 2v4" />
-          <path d="M8 2v4" />
-          <path d="M3 10h5" />
-          <path d="M17.5 17.5 16 16.3V14" />
-          <circle cx="16" cy="16" r="6" />
-        </svg>
-        <p class="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-          Start Date:
-          {{ data.event.event_start_date | date : "MMM d, y, h:mm a" }} -
-          {{ data.event.event_end_date | date : "MMM d, y, h:mm a" }}
-        </p>
-      </div>
-
-      <!-- Registration Dates -->
-      <div class="flex items-center my-2.5 space-x-2">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-calendar-clock inline-flex flex-shrink-0 me-1"
-        >
-          <path
-            d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"
-          />
-          <path d="M16 2v4" />
-          <path d="M8 2v4" />
-          <path d="M3 10h5" />
-          <path d="M17.5 17.5 16 16.3V14" />
-          <circle cx="16" cy="16" r="6" />
-        </svg>
-        <p class="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-          Registration Date:
-          {{ data.event.event_registration_start | date : "MMM d, y, h:mm a" }}
-          - {{ data.event.event_registration_end | date : "MMM d, y, h:mm a" }}
-        </p>
-      </div>
-
-      <!-- Event Mode -->
-      <div class="flex items-center my-2.5 space-x-2">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-calendar-cog inline-flex flex-shrink-0 me-1"
-        >
-          <path d="m15.2 16.9-.9-.4" />
-          <path d="m15.2 19.1-.9.4" />
-          <path d="M16 2v4" />
-          <path d="m16.9 15.2-.4-.9" />
-          <path d="m16.9 20.8-.4.9" />
-          <path d="m19.5 14.3-.4.9" />
-          <path d="m19.5 21.7-.4-.9" />
-          <path
-            d="M21 10.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"
-          />
-          <path d="m21.7 16.5-.9.4" />
-          <path d="m21.7 19.5-.9-.4" />
-          <path d="M3 10h18" />
-          <path d="M8 2v4" />
-          <circle cx="18" cy="18" r="3" />
-        </svg>
-        <p class="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-          Mode: {{ data.event.session }}
-        </p>
-      </div>
-
-      <!-- Event Status -->
-      <div class="flex items-center my-2.5 space-x-2">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-loader inline-flex flex-shrink-0 me-1"
-        >
-          <path d="M12 2v4" />
-          <path d="m16.2 7.8 2.9-2.9" />
-          <path d="M18 12h4" />
-          <path d="m16.2 16.2 2.9 2.9" />
-          <path d="M12 18v4" />
-          <path d="m4.9 19.1 2.9-2.9" />
-          <path d="M2 12h4" />
-          <path d="m4.9 4.9 2.9 2.9" />
-        </svg>
-        <p class="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-          Status: {{ eventWithStatus.status | titlecase }}
-        </p>
-      </div>
-
-      <!-- Max Participants -->
-      <div class="flex items-center my-2.5 space-x-2">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-users-round inline-flex flex-shrink-0 me-1"
-        >
-          <path d="M18 21a8 8 0 0 0-16 0" />
-          <circle cx="10" cy="8" r="5" />
-          <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3" />
-        </svg>
-        <p class="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-          Max Participants: {{ data.event.max_attendees }}
-        </p>
-      </div>
-
-      <!-- Categories -->
-      <div class="flex items-center my-2.5 space-x-2">
-        <p
-          *ngFor="let tag of data.event.categories"
-          class="text-sm leading-relaxed text-gray-700 dark:text-gray-300"
-        >
-          <span
-            class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full capitalize"
+          <button
+            (click)="registerForEvent(event.event_id)"
+            type="button"
+            [disabled]="isRegistered || eventWithStatus.status === 'done'"
+            [ngClass]="{
+              'opacity-100 cursor-not-allowed':
+                isRegistered || eventWithStatus.status === 'done',
+              'hover:bg-light-foregroud hover:text-white':
+                !isRegistered && eventWithStatus.status !== 'done'
+            }"
+            class="text-white bg-light-background hover:bg-light-foregroud focus:ring-0 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5"
           >
-            {{ tag.display }}
-          </span>
-        </p>
+            Register
+          </button>
+          <button
+            (click)="unregister(event.event_id)"
+            type="button"
+            class="py-2.5 px-5 ms-3 text-sm font-medium text-light-text bg-white border border-light-background rounded-md hover:bg-light-background hover:text-white focus:outline-none focus:ring-0"
+          >
+            Cancel Registration
+          </button>
+        </div>
       </div>
-    </div>
-
-    <!-- Footer Section -->
-    <div
-      class="flex items-center justify-end p-4 md:p-5 border-t border-gray-200 rounded-b"
-    >
-      <button
-        (click)="registerForEvent(data.event.event_id)"
-        type="button"
-        [disabled]="isRegistered || eventWithStatus.status === 'done'"
-        [ngClass]="{
-          'opacity-100 cursor-not-allowed':
-            isRegistered || eventWithStatus.status === 'done',
-          'hover:bg-light-foregroud hover:text-white':
-            !isRegistered && eventWithStatus.status !== 'done'
-        }"
-        class="text-white bg-light-background hover:bg-light-foregroud focus:ring-0 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5"
-      >
-        Register
-      </button>
-      <button
-        (click)="unregister(data.event.event_id)"
-        type="button"
-        class="py-2.5 px-5 ms-3 text-sm font-medium text-light-text bg-white border border-light-background rounded-md hover:bg-light-background hover:text-white focus:outline-none focus:ring-0"
-      >
-        Cancel Registration
-      </button>
-    </div>
+    </section>
   </div>
-</section>
+</main>

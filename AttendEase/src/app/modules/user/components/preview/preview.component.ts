@@ -1,40 +1,157 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe, TitleCasePipe } from '@angular/common';
 import { EventService } from '../../../../core/service/event.service';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
 import Swal from 'sweetalert2';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { Observable } from 'rxjs';
+import { Observable, of, Subscription, interval, timer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
+
+interface Event {
+  event_id: number;
+  event_name: string;
+  event_description: string;
+  event_location: string;
+  event_start_date: Date;
+  event_end_date: Date;
+  event_registration_start: Date;
+  event_registration_end: Date;
+  session: string;
+  max_attendees: number;
+  categories: { display: string; value: string }[];
+  organizer_name: string;
+}
 
 @Component({
   selector: 'app-preview',
   standalone: true,
   imports: [DatePipe, TitleCasePipe, CommonModule],
   templateUrl: './preview.component.html',
-  styleUrl: './preview.component.css',
+  styleUrls: ['./preview.component.css'],
 })
-export class PreviewComponent implements OnInit {
+export class PreviewComponent implements OnInit, OnDestroy {
+  event: Event[] = [];
   userId = this.userService.getCurrentUserId();
-  eventWithStatus: any;
+  eventWithStatus?: any;
   isRegistered = false;
   eventImage$: Observable<SafeResourceUrl | undefined> | undefined;
+  eventId: any;
+
+  private refreshSubscription: Subscription | undefined;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
     private service: EventService,
     private userService: AuthserviceService,
     private sanitizer: DomSanitizer,
-    private dialog: MatDialogRef<PreviewComponent>
+    private router: ActivatedRoute,
+    private route: Router
   ) {}
 
   ngOnInit(): void {
-    this.eventWithStatus = {
-      ...this.data.event,
-      status: this.getEventStatus(this.data.event),
-    };
-    this.eventImage$ = this.data.event.event_image$;
-    this.checkUserRegistration();
+    this.router.params.subscribe((params) => {
+      this.eventId = +params['eventId'];
+      this.fetchEventDetails(this.eventId);
+    });
+
+    // Setup polling to refresh event details every 30 seconds
+    this.setupPolling();
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
+  }
+
+  setupPolling() {
+    const pollingIntervalMs = 30000; // 30 seconds
+
+    this.refreshSubscription = timer(3000, pollingIntervalMs)
+      .pipe(switchMap(() => this.service.getEventById(this.eventId)))
+      .subscribe(
+        (response) => {
+          if (response.status.remarks === 'success') {
+            this.event = response.payload.map((ev: any): Event => {
+              const categories: { display: string; value: string }[] =
+                JSON.parse(ev.categories);
+              return {
+                event_id: ev.event_id,
+                event_name: ev.event_name,
+                event_description: ev.event_description,
+                event_location: ev.event_location,
+                event_start_date: new Date(ev.event_start_date),
+                event_end_date: new Date(ev.event_end_date),
+                event_registration_start: new Date(ev.event_registration_start),
+                event_registration_end: new Date(ev.event_registration_end),
+                session: ev.session,
+                max_attendees: ev.max_attendees,
+                categories: categories,
+                organizer_name: ev.organizer_name.replace(/^"|"$/g, ''),
+              };
+            });
+            this.eventWithStatus = {
+              ...this.event,
+              status: this.getEventStatus(this.event),
+            };
+            this.eventImage$ = this.service.getEventImage(this.eventId).pipe(
+              switchMap((imageResult) => {
+                if (imageResult.size > 0) {
+                  const url = URL.createObjectURL(imageResult);
+                  return of(this.sanitizer.bypassSecurityTrustResourceUrl(url));
+                } else {
+                  return of(undefined);
+                }
+              })
+            );
+            this.checkUserRegistration();
+          }
+        },
+        (error) => {
+          console.error('Error fetching event details:', error);
+        }
+      );
+  }
+
+  fetchEventDetails(eventId: number): void {
+    this.service.getEventById(eventId).subscribe((response) => {
+      if (response.status.remarks === 'success') {
+        this.event = response.payload.map((ev: any): Event => {
+          const categories: { display: string; value: string }[] = JSON.parse(
+            ev.categories
+          );
+          return {
+            event_id: ev.event_id,
+            event_name: ev.event_name,
+            event_description: ev.event_description,
+            event_location: ev.event_location,
+            event_start_date: new Date(ev.event_start_date),
+            event_end_date: new Date(ev.event_end_date),
+            event_registration_start: new Date(ev.event_registration_start),
+            event_registration_end: new Date(ev.event_registration_end),
+            session: ev.session,
+            max_attendees: ev.max_attendees,
+            categories: categories,
+            organizer_name: ev.organizer_name.replace(/^"|"$/g, ''),
+          };
+        });
+        this.eventWithStatus = {
+          ...this.event,
+          status: this.getEventStatus(this.event),
+        };
+        this.eventImage$ = this.service.getEventImage(eventId).pipe(
+          switchMap((imageResult) => {
+            if (imageResult.size > 0) {
+              const url = URL.createObjectURL(imageResult);
+              return of(this.sanitizer.bypassSecurityTrustResourceUrl(url));
+            } else {
+              return of(undefined);
+            }
+          })
+        );
+        this.checkUserRegistration();
+      }
+    });
   }
 
   getEventStatus(event: any): string {
@@ -55,7 +172,7 @@ export class PreviewComponent implements OnInit {
     this.service.getUserEvent().subscribe((res) => {
       const userEvent = res.payload;
       this.isRegistered = userEvent.some(
-        (event: any) => event.event_id === this.data.event.event_id
+        (event: any) => event.event_id === this.eventId
       );
     });
   }
@@ -87,7 +204,6 @@ export class PreviewComponent implements OnInit {
               icon: 'success',
               title: 'Successfully registered',
             });
-            this.dialog.close();
           },
           (error) => {
             Swal.fire('Warning', `${error.error.status.message}`, 'warning');
@@ -99,7 +215,7 @@ export class PreviewComponent implements OnInit {
 
   unregister(eventId: number) {
     Swal.fire({
-      title: 'Unregister to this event?',
+      title: 'Unregister from this event?',
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -133,7 +249,7 @@ export class PreviewComponent implements OnInit {
     });
   }
 
-  closeDialog() {
-    this.dialog.close();
+  closePage() {
+    this.route.navigate(['/student/events']);
   }
 }
