@@ -534,8 +534,8 @@ class Post extends GlobalMethods
 
     public function add_event_feedback($event_id, $user_id, $data)
     {
-        if (!isset($data->overall_satisfaction) || !isset($data->content_quality) || !isset($data->speaker_effectiveness) || !isset($data->venue_rating) || !isset($data->logistics_rating)) {
-            return $this->sendPayload(null, 'failed', "Incomplete feedback data. Please provide overall_satisfaction, content_quality, speaker_effectiveness, venue_rating, and logistics_rating.", 400);
+        if (!isset($data->overall_satisfaction) || !isset($data->content_quality) || !isset($data->speaker_effectiveness) || !isset($data->venue_rating) || !isset($data->logistics_rating) || !isset($data->satisfied) || !isset($data->joined) || !isset($data->learned) || !isset($data->future) || !isset($data->liked) || !isset($data->attend) || !isset($data->recommend)) {
+            return $this->sendPayload(null, 'failed', "Incomplete feedback data.", 400);
         }
 
         $overall_satisfaction = $data->overall_satisfaction;
@@ -543,6 +543,13 @@ class Post extends GlobalMethods
         $speaker_effectiveness = $data->speaker_effectiveness;
         $venue_rating = $data->venue_rating;
         $logistics_rating = $data->logistics_rating;
+        $satisfied = $data->satisfied;
+        $joined = $data->joined;
+        $learned = $data->learned;
+        $future = $data->future;
+        $liked = $data->liked;
+        $attend = $data->attend;
+        $recommend = $data->recommend;
         $improvement_suggestions = $data->improvement_suggestions ?? '';
         $additional_comments = $data->additional_comments ?? '';
         $remarks = 'Feedback submitted';
@@ -576,10 +583,10 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', "You have already submitted feedback for this event.", 400);
         }
 
-        $sql = "INSERT INTO feedback (event_id, user_id, overall_satisfaction, content_quality, speaker_effectiveness, venue_rating, logistics_rating, improvement_suggestions, additional_comments, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO feedback (event_id, user_id, overall_satisfaction, content_quality, speaker_effectiveness, venue_rating, logistics_rating, satisfied, joined, learned, future, liked, attend, recommend, improvement_suggestions, additional_comments, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,? ,? ,? ,?)";
         try {
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$event_id, $user_id, $overall_satisfaction, $content_quality, $speaker_effectiveness, $venue_rating, $logistics_rating, $improvement_suggestions, $additional_comments, $remarks]);
+            $stmt->execute([$event_id, $user_id, $overall_satisfaction, $content_quality, $speaker_effectiveness, $venue_rating, $logistics_rating, $satisfied, $joined, $learned, $future, $liked, $attend, $recommend, $improvement_suggestions, $additional_comments, $remarks]);
 
             if ($stmt->rowCount() > 0) {
                 return $this->sendPayload(null, 'success', "Feedback added successfully.", 200);

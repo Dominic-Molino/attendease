@@ -561,4 +561,13 @@ class Get extends GlobalMethods
             return $this->sendPayload(null, 'failed', "No users registered for the event.", 404);
         }
     }
+
+    public function getUserFeedbackByEvent($eventId, $userId = null)
+    {
+        $conditions = "event_id = $eventId";
+        if ($userId !== null) {
+            $conditions .= " AND user_id = $userId";
+        }
+        return $this->get_records('feedback', $conditions);
+    }
 }
