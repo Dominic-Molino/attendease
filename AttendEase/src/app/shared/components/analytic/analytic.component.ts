@@ -7,6 +7,7 @@ import { AttendanceComponent } from './components/attendance/attendance.componen
 import { CarouselModule } from 'primeng/carousel';
 import { ComparingEventsComponent } from './components/comparing-events/comparing-events.component';
 import { FeedbackChartComponent } from './components/feedback-chart/feedback-chart.component';
+import { UserFeedbackRateComponent } from '../user-feedback-rate/user-feedback-rate.component';
 
 @Component({
   selector: 'app-analytic',
@@ -22,6 +23,7 @@ import { FeedbackChartComponent } from './components/feedback-chart/feedback-cha
     CarouselModule,
     ComparingEventsComponent,
     FeedbackChartComponent,
+    UserFeedbackRateComponent,
   ],
 })
 export class AnalyticComponent implements OnInit {

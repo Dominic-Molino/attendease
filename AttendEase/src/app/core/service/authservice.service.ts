@@ -171,6 +171,10 @@ export class AuthserviceService {
     }
   }
 
+  getUserFeed(event_id: any, user_id: any = null): Observable<any> {
+    return this.http.get(`${this.API_URL}getUserFeed/${event_id}/${user_id}`);
+  }
+
   getRegisteredEvents(userId: number) {
     return this.http.get<any[]>(
       `${this.API_URL}user_registered_events_notification/${userId}`

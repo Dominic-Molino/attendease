@@ -1,5 +1,10 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule, DatePipe, TitleCasePipe } from '@angular/common';
+import {
+  CommonModule,
+  DatePipe,
+  Location,
+  TitleCasePipe,
+} from '@angular/common';
 import { EventService } from '../../../../core/service/event.service';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
 import Swal from 'sweetalert2';
@@ -53,7 +58,8 @@ export class PreviewComponent implements OnInit, OnDestroy {
     private userService: AuthserviceService,
     private sanitizer: DomSanitizer,
     private router: ActivatedRoute,
-    private route: Router
+    private route: Router,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -256,6 +262,6 @@ export class PreviewComponent implements OnInit, OnDestroy {
   }
 
   closePage() {
-    this.route.navigate(['/student/events']);
+    this.location.back();
   }
 }

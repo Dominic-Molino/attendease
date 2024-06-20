@@ -1,7 +1,7 @@
 <main class="!scroll-smooth w-full h-screen absolute z-30 bg-white">
   <div class="p-4 mt-16 sm:ml-64 bg-white">
     <div>
-      <button class="-ms-2" (click)="viewFeedback()">
+      <button class="-ms-2" (click)="goBack()">
         <svg
           class="w-7 h-7 text-gray-800 dark:text-white"
           aria-hidden="true"
@@ -28,90 +28,228 @@
       <hr class="h-px mb-6 bg-dark-border border-0" />
     </div>
     @if(feedback && feedback.length > 0){
-
-    <div class="p-5">
-      <ol class="relative border-s border-dark-border">
-        <li
-          class="mb-10 ms-6"
-          *ngFor="
-            let feeds of feedback
-              | paginate : { itemsPerPage: itemsPerPage, currentPage: p }
-          "
-        >
-          <span
-            class="absolute flex items-center justify-center w-6 h-6 bg-light-border rounded-full -start-3 ring-2 ring-light-border"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="white"
-              stroke-width="1.25"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-user-round"
-            >
-              <circle cx="12" cy="8" r="5" />
-              <path d="M20 21a8 8 0 0 0-16 0" />
-            </svg>
-          </span>
-          <div
-            class="p-4 bg-white border border-light-border rounded-md shadow-sm"
-          >
+    <mat-tab-group>
+      <mat-tab label="Ratings">
+        <div class="w-full mt-5 flex justify-center items-start gap-3.5">
+          <app-user-feedback-rate
+            [eventId]="eventId!"
+            class="w-1/2"
+          ></app-user-feedback-rate>
+          <div class="w-1/2">
             <div
-              class="flex items-center justify-between mb-3 sm:flex"
-              *ngIf="feeds.user"
+              class="w-full p-4 bg-white border border-dark-border rounded-lg shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700"
             >
-              <div>
-                <h1
-                  class="capitalize text-pretty text-base tracking-wide font-normal text-dark-input"
+              <div class="flex items-center justify-between mb-4">
+                <h5
+                  class="text-xl font-bold leading-none text-gray-900 dark:text-white"
                 >
-                  {{ feeds.user.first_name }} {{ feeds.user.last_name }}
-                </h1>
+                  Students
+                </h5>
               </div>
-              <time
-                class="mb-1 text-xs font-normal text-gray-400 sm:order-last sm:mb-0"
-                >{{ feeds.feedback_date | date : "M/d/yy, h:mm a" }}</time
-              >
-            </div>
-            <div>
-              <h1
-                class="ms-1 text-pretty text-base tracking-wide flex items-center"
-              >
-                Suggestion
-              </h1>
-              <div
-                class="p-3 text-sm italic font-normal text-dark-input border border-dark-border rounded-md bg-gray-50 mb-2.5"
-              >
-                {{ feeds.improvement_suggestions }}
-              </div>
-            </div>
-            <div>
-              <h1
-                class="ms-1 text-pretty text-base tracking-wide flex items-center"
-              >
-                Comment
-              </h1>
-              <div
-                class="p-3 text-sm italic font-normal text-dark-input border border-dark-border rounded-md bg-gray-50"
-              >
-                {{ feeds.additional_comments }}
+              <hr
+                class="h-px mb-2.5 bg-dark-border border-0 dark:bg-gray-700"
+              />
+              <div class="flow-root">
+                <ul
+                  role="list"
+                  class="divide-y divide-gray-200 dark:divide-gray-700"
+                >
+                  <li class="py-3 sm:py-4" *ngFor="let feed of feedback">
+                    <div class="flex items-center">
+                      <div class="flex-1 flex items-center min-w-0 ms-4">
+                        <div>
+                          <p
+                            class="text-base font-medium capitalize text-gray-900 truncate dark:text-white"
+                          >
+                            {{ feed.user?.first_name }}
+                            {{ feed.user?.last_name }}
+                          </p>
+                          <p
+                            class="text-sm text-gray-500 truncate dark:text-gray-400"
+                          >
+                            <span
+                              class="text-sm"
+                              *ngFor="
+                                let star of getStars(
+                                  calculateAverageRating(feed)
+                                )
+                              "
+                              [ngClass]="
+                                star ? 'text-yellow-300' : 'text-gray-300'
+                              "
+                            >
+                              ★
+                            </span>
+                            <span class="ml-2"
+                              >({{
+                                calculateAverageRating(feed).toFixed(1)
+                              }})</span
+                            >
+                          </p>
+                        </div>
+                      </div>
+                      <div
+                        class="inline-flex items-center me-5 text-sm font-semibold text-gray-900 dark:text-white"
+                      >
+                        <button (click)="viewUserFeedback(feed.user_id)">
+                          View Evaluation
+                        </button>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
-        </li>
-      </ol>
-      <div class="flex justify-center items-center mt-auto p-5">
-        <pagination-controls
-          (pageChange)="p = $event"
-          [maxSize]="maxSize"
-          [responsive]="true"
-          class="pagination"
-        ></pagination-controls>
-      </div>
-    </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Comments">
+        <div class="p-5">
+          <ol class="relative border-s border-dark-border">
+            <li
+              class="mb-10 ms-6"
+              *ngFor="
+                let feeds of feedback
+                  | paginate : { itemsPerPage: itemsPerPage, currentPage: p }
+              "
+            >
+              <span
+                class="absolute flex items-center justify-center w-6 h-6 bg-light-border rounded-full -start-3 ring-2 ring-light-border"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="1.25"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-user-round"
+                >
+                  <circle cx="12" cy="8" r="5" />
+                  <path d="M20 21a8 8 0 0 0-16 0" />
+                </svg>
+              </span>
+              <div
+                class="p-4 bg-white border border-light-border rounded-md shadow-sm"
+              >
+                <div
+                  class="flex items-center justify-between mb-3 sm:flex"
+                  *ngIf="feeds.user"
+                >
+                  <div>
+                    <h1
+                      class="capitalize text-pretty text-base tracking-wide font-normal text-dark-input"
+                    >
+                      {{ feeds.user.first_name }} {{ feeds.user.last_name }}
+                    </h1>
+                  </div>
+                  <time
+                    class="mb-1 text-xs font-normal text-gray-400 sm:order-last sm:mb-0"
+                    >{{ feeds.feedback_date | date : "M/d/yy, h:mm a" }}</time
+                  >
+                </div>
+                <div>
+                  <h1
+                    class="ms-1 text-pretty text-base tracking-wide flex items-center"
+                  >
+                    Comment
+                  </h1>
+                  <div
+                    class="p-3 text-sm italic font-normal text-dark-input border border-dark-border rounded-md bg-gray-50"
+                  >
+                    {{ feeds.additional_comments }}
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ol>
+          <div class="flex justify-center items-center mt-auto p-5">
+            <pagination-controls
+              (pageChange)="p = $event"
+              [maxSize]="maxSize"
+              [responsive]="true"
+              class="pagination"
+            ></pagination-controls>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Suggestions">
+        <div class="p-5">
+          <ol class="relative border-s border-dark-border">
+            <li
+              class="mb-10 ms-6"
+              *ngFor="
+                let feeds of feedback
+                  | paginate : { itemsPerPage: itemsPerPage, currentPage: p }
+              "
+            >
+              <span
+                class="absolute flex items-center justify-center w-6 h-6 bg-light-border rounded-full -start-3 ring-2 ring-light-border"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="1.25"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-user-round"
+                >
+                  <circle cx="12" cy="8" r="5" />
+                  <path d="M20 21a8 8 0 0 0-16 0" />
+                </svg>
+              </span>
+              <div
+                class="p-4 bg-white border border-light-border rounded-md shadow-sm"
+              >
+                <div
+                  class="flex items-center justify-between mb-3 sm:flex"
+                  *ngIf="feeds.user"
+                >
+                  <div>
+                    <h1
+                      class="capitalize text-pretty text-base tracking-wide font-normal text-dark-input"
+                    >
+                      {{ feeds.user.first_name }} {{ feeds.user.last_name }}
+                    </h1>
+                  </div>
+                  <time
+                    class="mb-1 text-xs font-normal text-gray-400 sm:order-last sm:mb-0"
+                    >{{ feeds.feedback_date | date : "M/d/yy, h:mm a" }}</time
+                  >
+                </div>
+                <div>
+                  <h1
+                    class="ms-1 text-pretty text-base tracking-wide flex items-center"
+                  >
+                    Suggestion
+                  </h1>
+                  <div
+                    class="p-3 text-sm italic font-normal text-dark-input border border-dark-border rounded-md bg-gray-50 mb-2.5"
+                  >
+                    {{ feeds.improvement_suggestions }}
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ol>
+          <div class="flex justify-center items-center mt-auto p-5">
+            <pagination-controls
+              (pageChange)="p = $event"
+              [maxSize]="maxSize"
+              [responsive]="true"
+              class="pagination"
+            ></pagination-controls>
+          </div></div
+      ></mat-tab>
+    </mat-tab-group>
+
     }@else {
     <section #noEvents>
       <div class="py-4 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">

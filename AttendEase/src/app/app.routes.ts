@@ -2,12 +2,9 @@ import { Routes } from '@angular/router';
 import { UserComponent } from './modules/user/user.component';
 import { OrganizerComponent } from './modules/organizer/organizer.component';
 import { authenGuard } from './core/authen.guard';
-import { AdminDashboardComponent } from './modules/admin/pages/admin-dashboard/admin-dashboard.component';
 import { AdminComponent } from './modules/admin/admin.component';
-import { C } from '@fullcalendar/core/internal-common';
-import { FeedbackSubmissionComponent } from './modules/user/components/feedback-submission/feedback-submission.component';
-import { FeedbackListComponent } from './shared/components/feedback-list/feedback-list.component';
 import { RoleGuard } from './core/role.guard';
+import { PagenotfoundComponent } from './shared/components/pagenotfound/pagenotfound.component';
 
 export const routes: Routes = [
   {
@@ -93,6 +90,15 @@ export const routes: Routes = [
           import(
             './shared/components/feedback-list/feedback-list.component'
           ).then((c) => c.FeedbackListComponent),
+        canActivate: [RoleGuard],
+      },
+
+      {
+        path: 'admin-user-feedback/:eventId/:userId',
+        loadComponent: () =>
+          import(
+            './shared/components/view-user-feedback/view-user-feedback.component'
+          ).then((c) => c.ViewUserFeedbackComponent),
         canActivate: [RoleGuard],
       },
     ],
@@ -220,6 +226,20 @@ export const routes: Routes = [
           ).then((c) => c.FeedbackListComponent),
         canActivate: [RoleGuard],
       },
+
+      {
+        path: 'org-user-feedback/:eventId/:userId',
+        loadComponent: () =>
+          import(
+            './shared/components/view-user-feedback/view-user-feedback.component'
+          ).then((c) => c.ViewUserFeedbackComponent),
+        canActivate: [RoleGuard],
+      },
     ],
+  },
+
+  {
+    path: '**',
+    component: PagenotfoundComponent,
   },
 ];

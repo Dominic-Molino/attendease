@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
 import Swal from 'sweetalert2';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
 import { MatDialog } from '@angular/material/dialog';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ViewsubmissionsComponent } from '../viewsubmissions/viewsubmissions.component';
 import { finalize, zip } from 'rxjs';
@@ -40,8 +40,8 @@ export class MarkattendanceeComponent implements OnInit {
     private service: AuthserviceService,
     private dialog: MatDialog,
     private changeDetectorRef: ChangeDetectorRef,
-    private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) {
     this.eventId = this.route.snapshot.params['eventId'];
   }
@@ -110,7 +110,7 @@ export class MarkattendanceeComponent implements OnInit {
     );
   }
 
-  closePage() {
-    this.router.navigate(['/admin/admin-attendance']);
+  goBack() {
+    this.location.back();
   }
 }

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -20,7 +20,8 @@ export class FeedbackSubmissionComponent implements OnInit {
     private service: AuthserviceService,
     private builder: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {}
 
   feedbackForm = this.builder.group({
@@ -29,6 +30,13 @@ export class FeedbackSubmissionComponent implements OnInit {
     speaker_effectiveness: this.builder.control('', Validators.required),
     venue_rating: this.builder.control('', Validators.required),
     logistics_rating: this.builder.control('', Validators.required),
+    satisfied: this.builder.control('', Validators.required),
+    joined: this.builder.control('', Validators.required),
+    learned: this.builder.control('', Validators.required),
+    future: this.builder.control('', Validators.required),
+    liked: this.builder.control('', Validators.required),
+    attend: this.builder.control('', Validators.required),
+    recommend: this.builder.control('', Validators.required),
     improvement_suggestions: this.builder.control('', Validators.required),
     additional_comments: this.builder.control('', Validators.required),
   });
@@ -73,6 +81,6 @@ export class FeedbackSubmissionComponent implements OnInit {
   }
 
   closePage() {
-    this.router.navigate(['/student/feedback']);
+    this.location.back();
   }
 }

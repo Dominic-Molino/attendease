@@ -22,7 +22,7 @@
       </button>
 
       <p class="mt-5 mb-2 text-text text-2xl font-semibold tracking-wide">
-        Questionnaire
+        Student Evaluation
       </p>
 
       <hr class="h-px mb-6 bg-dark-border border-0" />
@@ -31,8 +31,7 @@
       <div class="diaglog-container max-w-full bg-white">
         <form
           class="max-w-full mx-auto px-10 py-5"
-          (ngSubmit)="postFeedback()"
-          [formGroup]="feedbackForm"
+          *ngFor="let feedback of feedbackList"
         >
           <!-- 1. How would you rate your overall satisfaction with the
               event? -->
@@ -51,8 +50,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="overall_satisfaction"
-                    value="5"
+                    [checked]="feedback.overall_satisfaction === 5"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -68,8 +67,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="overall_satisfaction"
-                    value="4"
+                    [checked]="feedback.overall_satisfaction === 4"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -85,8 +84,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="overall_satisfaction"
-                    value="3"
+                    [checked]="feedback.overall_satisfaction === 3"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -102,8 +101,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="overall_satisfaction"
-                    value="2"
+                    [checked]="feedback.overall_satisfaction === 2"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -120,8 +119,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="overall_satisfaction"
-                    value="1"
+                    [checked]="feedback.overall_satisfaction === 1"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -151,8 +150,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="content_quality"
-                    value="5"
+                    [checked]="feedback.content_quality === 5"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -168,8 +167,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="content_quality"
-                    value="4"
+                    [checked]="feedback.content_quality === 4"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -185,8 +184,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="content_quality"
-                    value="3"
+                    [checked]="feedback.content_quality === 3"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -202,8 +201,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="content_quality"
-                    value="2"
+                    [checked]="feedback.content_quality === 2"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -220,8 +219,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="content_quality"
-                    value="1"
+                    [checked]="feedback.content_quality === 1"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -250,8 +249,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="speaker_effectiveness"
-                    value="5"
+                    [checked]="feedback.speaker_effectiveness === 5"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -267,8 +266,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="speaker_effectiveness"
-                    value="4"
+                    [checked]="feedback.speaker_effectiveness === 4"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -284,8 +283,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="speaker_effectiveness"
-                    value="3"
+                    [checked]="feedback.speaker_effectiveness === 3"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -301,8 +300,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="speaker_effectiveness"
-                    value="2"
+                    [checked]="feedback.speaker_effectiveness === 2"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -319,8 +318,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="speaker_effectiveness"
-                    value="1"
+                    [checked]="feedback.speaker_effectiveness === 1"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -350,8 +349,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="venue_rating"
-                    value="5"
+                    [checked]="feedback.venue_rating === 5"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -367,8 +366,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="venue_rating"
-                    value="4"
+                    [checked]="feedback.venue_rating === 4"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -384,8 +383,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="venue_rating"
-                    value="3"
+                    [checked]="feedback.venue_rating === 3"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -401,8 +400,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="venue_rating"
-                    value="2"
+                    [checked]="feedback.venue_rating === 2"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -419,8 +418,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="venue_rating"
-                    value="1"
+                    [checked]="feedback.venue_rating === 1"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -450,8 +449,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="logistics_rating"
-                    value="5"
+                    [checked]="feedback.logistics_rating === 5"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -467,8 +466,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="logistics_rating"
-                    value="4"
+                    [checked]="feedback.logistics_rating === 4"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -484,8 +483,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="logistics_rating"
-                    value="3"
+                    [checked]="feedback.logistics_rating === 3"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -501,8 +500,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="logistics_rating"
-                    value="2"
+                    [checked]="feedback.logistics_rating === 2"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -519,8 +518,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="logistics_rating"
-                    value="1"
+                    [checked]="feedback.logistics_rating === 1"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -537,8 +536,8 @@
               conference? -->
           <div class="relative z-0 w-full mb-5 group">
             <label
-              >How satisfied are you with the variety of topics presented at the
-              conference?</label
+              >6. How satisfied are you with the variety of topics presented at
+              the conference?</label
             >
 
             <ul
@@ -550,8 +549,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="satisfied"
-                    value="5"
+                    [checked]="feedback.satisfied === 5"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -567,8 +566,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="satisfied"
-                    value="4"
+                    [checked]="feedback.satisfied === 4"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -584,8 +583,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="satisfied"
-                    value="3"
+                    [checked]="feedback.satisfied === 3"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -601,8 +600,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="satisfied"
-                    value="2"
+                    [checked]="feedback.satisfied === 2"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -619,8 +618,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="satisfied"
-                    value="1"
+                    [checked]="feedback.satisfied === 1"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -639,14 +638,13 @@
               <label
                 for="joined"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >Why did you decide to attend this event?</label
+                >7. Why did you decide to attend this event?</label
               >
               <input
                 type="text"
-                id="joined"
-                formControlName="joined"
+                disabled
                 class="bg-white border border-light-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
-                placeholder="Write here"
+                [placeholder]="feedback.joined"
               />
             </div>
 
@@ -655,14 +653,13 @@
               <label
                 for="learned"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >What did you learn from the event?
+                >8. What did you learn from the event?
               </label>
               <input
                 type="text"
-                id="learned"
-                formControlName="learned"
+                disabled
                 class="bg-white border border-light-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
-                placeholder="Write here"
+                [placeholder]="feedback.learned"
               />
             </div>
 
@@ -671,14 +668,13 @@
               <label
                 for="future"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >What topics would you liked to see more of at future events?
+                >9. What topics would you liked to see more of at future events?
               </label>
               <input
                 type="text"
-                id="future"
-                formControlName="future"
+                disabled
                 class="bg-white border border-light-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
-                placeholder="Write here"
+                [placeholder]="feedback.future"
               />
             </div>
 
@@ -687,14 +683,13 @@
               <label
                 for="liked"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >What did you liked most about the event?
+                >10. What did you liked most about the event?
               </label>
               <input
                 type="text"
-                id="liked"
-                formControlName="liked"
+                disabled
                 class="bg-white border border-light-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
-                placeholder="Write here"
+                [placeholder]="feedback.liked"
               />
             </div>
           </div>
@@ -703,7 +698,7 @@
               attend future events? -->
           <div class="relative z-0 w-full mb-5 group">
             <label
-              >Based on your experience at this event, how likely are you to
+              >11. Based on your experience at this event, how likely are you to
               attend future events?</label
             >
 
@@ -716,8 +711,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="attend"
-                    value="5"
+                    [checked]="feedback.attend === 5"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -733,8 +728,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="attend"
-                    value="4"
+                    [checked]="feedback.attend === 4"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -750,8 +745,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="attend"
-                    value="3"
+                    [checked]="feedback.attend === 3"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -767,8 +762,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="attend"
-                    value="2"
+                    [checked]="feedback.attend === 2"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -785,8 +780,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="attend"
-                    value="1"
+                    [checked]="feedback.attend === 1"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -802,7 +797,8 @@
           <!-- How likely are you to recommend our events to a friend/colleague -->
           <div class="relative z-0 w-full mb-5 group">
             <label
-              >How likely are you to recommend our events to a friend/colleague?
+              >12. How likely are you to recommend our events to a
+              friend/colleague?
             </label>
 
             <ul
@@ -814,8 +810,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="recommend"
-                    value="5"
+                    [checked]="feedback.recommend === 5"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -831,8 +827,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="recommend"
-                    value="4"
+                    [checked]="feedback.recommend === 4"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -848,8 +844,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="recommend"
-                    value="3"
+                    [checked]="feedback.recommend === 3"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -865,8 +861,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="recommend"
-                    value="2"
+                    [checked]="feedback.recommend === 2"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -883,8 +879,8 @@
                 <div class="flex items-center ps-3">
                   <input
                     type="radio"
-                    formControlName="recommend"
-                    value="1"
+                    [checked]="feedback.recommend === 1"
+                    disabled
                     class="w-4 h-4 text-light-text bg-gray-100 border-light-background focus:ring-0"
                   />
                   <label
@@ -896,40 +892,6 @@
               </li>
             </ul>
           </div>
-
-          <!-- suggestion? -->
-          <div class="relative z-0 w-full mb-5 group">
-            <label for="improvement_suggestions"
-              >Suggestions for Improvement:</label
-            >
-            <textarea
-              id="improvement_suggestions"
-              formControlName="improvement_suggestions"
-              name="improvement_suggestions"
-              rows="4"
-              class="block p-2.5 w-full h-48 max-h-64 text-sm text-gray-900 bg-gray-50 rounded-md border border-light-background focus:border-light-border focus:ring-0"
-              placeholder="Write your suggestions here..."
-            ></textarea>
-          </div>
-          <!-- comment? -->
-          <div class="relative z-0 w-full mb-5 group">
-            <label for="additional_comments">Additional Comments:</label>
-            <textarea
-              id="additional_comments"
-              formControlName="additional_comments"
-              name="additional_comments"
-              rows="4"
-              class="block p-2.5 w-full h-48 max-h-64 text-sm text-gray-900 bg-gray-50 rounded-md border border-light-background focus:border-light-border focus:ring-0"
-              placeholder="Write your comments here..."
-            ></textarea>
-          </div>
-
-          <button
-            type="submit"
-            class="block mx-auto px-4 py-2 text-sm text-light-text font-semibold bg-white hover:bg-light-background hover:text-white border border-light-border rounded-md focus:outline-none"
-          >
-            Submit Feedback
-          </button>
         </form>
       </div>
     </section>

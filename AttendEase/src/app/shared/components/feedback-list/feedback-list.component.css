@@ -15,3 +15,11 @@
 .pagination ::ng-deep .ngx-pagination li :hover {
   border-radius: 25px;
 }
+
+::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #444444 !important;
+}
+
+::ng-deep .mat-mdc-tab .mdc-tab-indicator__content--underline {
+  border-color: #04bc64 !important;
+}
