@@ -16,7 +16,6 @@ import {
   Observable,
   of,
   Subscription,
-  interval,
   switchMap,
   catchError,
   finalize,

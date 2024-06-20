@@ -1,37 +1,34 @@
 <main class="w-full">
   <div class="p-4 mt-16 sm:ml-64">
+    <div>
+      <button class="-ms-2" (click)="closePage()">
+        <svg
+          class="w-7 h-7 text-gray-800 dark:text-white"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1"
+            d="M5 12h14M5 12l4-4m-4 4 4 4"
+          />
+        </svg>
+      </button>
+
+      <p class="mt-5 mb-2 text-text text-2xl font-semibold tracking-wide">
+        Questionnaire
+      </p>
+
+      <hr class="h-px mb-6 bg-dark-border border-0" />
+    </div>
     <section class="bg-white dark:bg-gray-900 w-full">
       <div class="diaglog-container max-w-full bg-white">
-        <div
-          class="flex items-center justify-between p-4 md:p-5 border-b rounded-t"
-        >
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-            Feedback Questions
-          </h3>
-          <button
-            (click)="closePage()"
-            type="button"
-            class="mt-1.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-1.5 inline-flex justify-center items-center"
-            data-modal-hide="default-modal"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-move-left"
-            >
-              <path d="M6 8L2 12L6 16" />
-              <path d="M2 12H22" />
-            </svg>
-            <span class="sr-only">Close modal</span>
-          </button>
-        </div>
         <form
           class="max-w-full mx-auto px-10 py-5"
           (ngSubmit)="postFeedback()"

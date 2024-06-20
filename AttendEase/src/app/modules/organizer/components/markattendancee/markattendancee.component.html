@@ -1,44 +1,43 @@
 <main class="w-full h-screen">
   <div class="p-4 sm:ml-64 mt-16">
+    <div>
+      <button class="-ms-2" (click)="closePage()">
+        <svg
+          class="w-7 h-7 text-gray-800 dark:text-white"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1"
+            d="M5 12h14M5 12l4-4m-4 4 4 4"
+          />
+        </svg>
+      </button>
+
+      <p class="mt-5 mb-2 text-text text-2xl font-semibold tracking-wide">
+        Attendance Submission
+      </p>
+
+      <hr class="h-px mb-6 bg-dark-border border-0" />
+    </div>
     <div class="relative overflow-x-auto h-screen flex flex-col">
       <div class="flex-grow overflow-auto">
         <div class="max-h-96 h-96 over">
-          <div
-            class="flex items-center justify-between p-2.5 md:p-3.5 border-b rounded-t"
-          >
-            <h3 class="text-xl font-semibold text-gray-900">
-              Students Submissions
-            </h3>
-            <button
-              type="button"
-              class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-              data-modal-hide="default-modal"
-            >
-              <svg
-                class="w-3 h-3"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 14 14"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                />
-              </svg>
-              <span class="sr-only">Close modal</span>
-            </button>
-          </div>
-
           @if(datalist.length > 0){
-          <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+          <table
+            class="w-full text-sm text-left rtl:text-right rounded-md text-gray-500"
+          >
             <thead
               class="text-dark-muted border-b border-dark-primary capitalize bg-dark-foreground"
             >
-              <tr>
+              <tr class="">
                 <th
                   scope="col"
                   class="px-6 py-3 tracking-widest font-medium text-center"

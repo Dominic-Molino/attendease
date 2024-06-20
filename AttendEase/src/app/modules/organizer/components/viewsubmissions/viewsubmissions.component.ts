@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription, timer, switchMap } from 'rxjs';
+import { ChangeDetectionService } from '../../../../core/service/change-detection.service';
 
 @Component({
   selector: 'app-viewsubmissions',
@@ -21,7 +22,8 @@ export class ViewsubmissionsComponent {
   constructor(
     private service: AuthserviceService,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialogRef: MatDialogRef<ViewsubmissionsComponent>
+    private dialogRef: MatDialogRef<ViewsubmissionsComponent>,
+    private changeDef: ChangeDetectionService
   ) {}
 
   ngOnInit(): void {
@@ -155,6 +157,7 @@ export class ViewsubmissionsComponent {
               title: `${action.charAt(0).toUpperCase() + action.slice(1)}d!`,
               html: `The attendance has been ${action}d.`,
             });
+            this.changeDef.notifyChange(true);
             this.dialogRef.close();
           },
           (error) => {

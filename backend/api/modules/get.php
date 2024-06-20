@@ -358,13 +358,12 @@ class Get extends GlobalMethods
 
     public function get_registered_users_by_course()
     {
-        // Query to get student counts by course for all events
-        $sql = "SELECT u.course, COUNT(*) AS student_count 
-                    FROM user u
-                    INNER JOIN event_registration er ON u.user_id = er.user_id 
-                    GROUP BY u.course 
-                    ORDER BY u.course";
+        $sql = "SELECT u.course, COUNT(u.user_id) AS student_count 
+                FROM user u
+                GROUP BY u.course 
+                ORDER BY u.course";
 
+        // Prepare and execute the query
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
 
@@ -372,11 +371,12 @@ class Get extends GlobalMethods
         $rowCount = $stmt->rowCount();
 
         if ($rowCount > 0) {
-            return $this->sendPayload($data, 'success', "Successfully retrieved student counts by course for all events.", 200);
+            return $this->sendPayload($data, 'success', "Successfully retrieved student counts by course.", 200);
         } else {
-            return $this->sendPayload(null, 'failed', "No users found for any events.", 404);
+            return $this->sendPayload(null, 'failed', "No users found.", 404);
         }
     }
+
 
 
 
@@ -402,13 +402,12 @@ class Get extends GlobalMethods
 
     public function get_registered_users_by_year_level()
     {
-        // Query to get student counts by year level for all events
-        $sql = "SELECT u.year_level, COUNT(*) AS student_count 
+        $sql = "SELECT u.year_level, COUNT(u.user_id) AS student_count 
                 FROM user u
-                INNER JOIN event_registration er ON u.user_id = er.user_id 
                 GROUP BY u.year_level 
                 ORDER BY u.year_level";
 
+        // Prepare and execute the query
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
 
@@ -416,22 +415,20 @@ class Get extends GlobalMethods
         $rowCount = $stmt->rowCount();
 
         if ($rowCount > 0) {
-            return $this->sendPayload($data, 'success', "Successfully retrieved student counts by year level for all events.", 200);
+            return $this->sendPayload($data, 'success', "Successfully retrieved student counts by year level.", 200);
         } else {
-            return $this->sendPayload(null, 'failed', "No users found for any events.", 404);
+            return $this->sendPayload(null, 'failed', "No users found.", 404);
         }
     }
 
-
     public function get_registered_users_by_block()
     {
-        // Query to get student counts by block for all events
-        $sql = "SELECT u.block, COUNT(*) AS student_count 
+        $sql = "SELECT u.block, COUNT(u.user_id) AS student_count 
                 FROM user u
-                INNER JOIN event_registration er ON u.user_id = er.user_id 
                 GROUP BY u.block 
                 ORDER BY u.block";
 
+        // Prepare and execute the query
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
 
@@ -439,9 +436,9 @@ class Get extends GlobalMethods
         $rowCount = $stmt->rowCount();
 
         if ($rowCount > 0) {
-            return $this->sendPayload($data, 'success', "Successfully retrieved student counts by block for all events.", 200);
+            return $this->sendPayload($data, 'success', "Successfully retrieved student counts by block.", 200);
         } else {
-            return $this->sendPayload(null, 'failed', "No users found for any events.", 404);
+            return $this->sendPayload(null, 'failed', "No users found.", 404);
         }
     }
 

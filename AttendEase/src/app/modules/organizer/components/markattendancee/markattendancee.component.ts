@@ -109,4 +109,8 @@ export class MarkattendanceeComponent implements OnInit {
       }
     );
   }
+
+  closePage() {
+    this.router.navigate(['/admin/admin-attendance']);
+  }
 }

@@ -30,7 +30,12 @@ export class PopupComponent implements OnInit {
   }
 
   getLabels() {
-    this.categories = JSON.parse(this.data.categories);
+    try {
+      this.categories = JSON.parse(this.data.categories);
+    } catch (error) {
+      console.error('Error parsing categories JSON:', error);
+      this.categories = [];
+    }
   }
 
   getEventStatus(event: any): string {

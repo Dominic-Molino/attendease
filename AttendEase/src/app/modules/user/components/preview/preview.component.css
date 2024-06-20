@@ -1,15 +1,14 @@
-.dialog-container {
-  width: 50%;
+.avatar-placeholder {
+  background-image: url("./../../../../../assets/images/event_placeholder.jpg");
+  object-fit: cover;
+  object-position: center;
 }
 
-@media (min-width: 768px) {
-  .dialog-container {
-    width: 70%;
-  }
-}
-
-@media (min-width: 1024px) {
-  .dialog-container {
-    width: 90%;
-  }
+.image-container {
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  background-color: #fff;
+  background-position: center;
+  background-size: cover;
 }

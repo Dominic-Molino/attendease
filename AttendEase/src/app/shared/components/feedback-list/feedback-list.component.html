@@ -1,29 +1,34 @@
 <main class="!scroll-smooth w-full h-screen absolute z-30 bg-white">
   <div class="p-4 mt-16 sm:ml-64 bg-white">
-    <button
-      (click)="viewFeedback()"
-      type="button"
-      class="mt-1.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-1.5 inline-flex justify-center items-center"
-      data-modal-hide="default-modal"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="lucide lucide-move-left"
-      >
-        <path d="M6 8L2 12L6 16" />
-        <path d="M2 12H22" />
-      </svg>
-      <span class="sr-only">Close modal</span>
-    </button>
+    <div>
+      <button class="-ms-2" (click)="viewFeedback()">
+        <svg
+          class="w-7 h-7 text-gray-800 dark:text-white"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1"
+            d="M5 12h14M5 12l4-4m-4 4 4 4"
+          />
+        </svg>
+      </button>
+
+      <p class="mt-5 mb-2 text-text text-2xl font-semibold tracking-wide">
+        Student Feedbacks
+      </p>
+
+      <hr class="h-px mb-6 bg-dark-border border-0" />
+    </div>
     @if(feedback && feedback.length > 0){
+
     <div class="p-5">
       <ol class="relative border-s border-dark-border">
         <li
@@ -60,7 +65,11 @@
               *ngIf="feeds.user"
             >
               <div>
-                <h1>{{ feeds.user.first_name }} {{ feeds.user.last_name }}</h1>
+                <h1
+                  class="capitalize text-pretty text-base tracking-wide font-normal text-dark-input"
+                >
+                  {{ feeds.user.first_name }} {{ feeds.user.last_name }}
+                </h1>
               </div>
               <time
                 class="mb-1 text-xs font-normal text-gray-400 sm:order-last sm:mb-0"

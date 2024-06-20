@@ -89,7 +89,6 @@ export class FeedbackListComponent implements OnInit, OnDestroy {
         },
         (error) => {
           console.error('Error fetching feedback:', error);
-          // Handle error as needed
         }
       );
   }
