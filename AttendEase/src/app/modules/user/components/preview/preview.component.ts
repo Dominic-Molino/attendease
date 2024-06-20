@@ -6,7 +6,8 @@ import Swal from 'sweetalert2';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Observable, of, Subscription, interval, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 interface Event {
   event_id: number;
@@ -21,12 +22,19 @@ interface Event {
   max_attendees: number;
   categories: { display: string; value: string }[];
   organizer_name: string;
+  status?: 'done' | 'ongoing' | 'upcoming';
 }
 
 @Component({
   selector: 'app-preview',
   standalone: true,
-  imports: [DatePipe, TitleCasePipe, CommonModule],
+  imports: [
+    DatePipe,
+    TitleCasePipe,
+    CommonModule,
+    MatTooltipModule,
+    RouterLink,
+  ],
   templateUrl: './preview.component.html',
   styleUrls: ['./preview.component.css'],
 })
@@ -90,10 +98,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
                 organizer_name: ev.organizer_name.replace(/^"|"$/g, ''),
               };
             });
-            this.eventWithStatus = {
-              ...this.event,
-              status: this.getEventStatus(this.event),
-            };
+
             this.eventImage$ = this.service.getEventImage(this.eventId).pipe(
               switchMap((imageResult) => {
                 if (imageResult.size > 0) {
@@ -105,6 +110,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
               })
             );
             this.checkUserRegistration();
+            this.setEventStatus();
           }
         },
         (error) => {
@@ -135,10 +141,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
             organizer_name: ev.organizer_name.replace(/^"|"$/g, ''),
           };
         });
-        this.eventWithStatus = {
-          ...this.event,
-          status: this.getEventStatus(this.event),
-        };
+
         this.eventImage$ = this.service.getEventImage(eventId).pipe(
           switchMap((imageResult) => {
             if (imageResult.size > 0) {
@@ -150,22 +153,25 @@ export class PreviewComponent implements OnInit, OnDestroy {
           })
         );
         this.checkUserRegistration();
+        this.setEventStatus();
       }
     });
   }
 
-  getEventStatus(event: any): string {
+  setEventStatus(): void {
     const currentDate = new Date();
-    const startDate = new Date(event.event_start_date);
-    const endDate = new Date(event.event_end_date);
-
-    if (endDate < currentDate) {
-      return 'done';
-    } else if (startDate <= currentDate && endDate >= currentDate) {
-      return 'ongoing';
-    } else {
-      return 'upcoming';
-    }
+    this.event.forEach((ev) => {
+      if (currentDate > ev.event_end_date) {
+        ev['status'] = 'done';
+      } else if (
+        currentDate >= ev.event_start_date &&
+        currentDate <= ev.event_end_date
+      ) {
+        ev['status'] = 'ongoing';
+      } else if (currentDate < ev.event_start_date) {
+        ev['status'] = 'upcoming';
+      }
+    });
   }
 
   checkUserRegistration(): void {

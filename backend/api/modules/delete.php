@@ -29,7 +29,7 @@ class Delete extends GlobalMethods
             $stmt = $this->pdo->prepare($deleteEventSql);
             $stmt->execute([$event_id]);
 
-            // Check if the event deletion was successful
+            // Check if the event and registrations deletion were successful
             if ($stmt->rowCount() > 0) {
                 // Commit transaction
                 $this->pdo->commit();
@@ -46,6 +46,7 @@ class Delete extends GlobalMethods
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
+
 
     public function unregister_from_event($event_id, $user_id)
     {

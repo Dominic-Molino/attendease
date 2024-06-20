@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FeedbackListComponent } from '../feedback-list/feedback-list.component';
 import { of, Subscription, timer } from 'rxjs';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 interface Event {
   event_id: number;
@@ -27,6 +28,7 @@ interface Event {
     RouterOutlet,
     FeedbackListComponent,
     NgxPaginationModule,
+    MatTooltipModule,
   ],
   templateUrl: './event-list.component.html',
   styleUrls: ['./event-list.component.css'],

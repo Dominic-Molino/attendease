@@ -83,6 +83,11 @@
             <td class="p-2">
               <button
                 type="button"
+                matTooltip="Event is either done or ongoing."
+                matTooltipPosition="above"
+                [matTooltipDisabled]="
+                  !(event.status === 'upcoming' || event.status === 'ongoing')
+                "
                 (click)="viewEvent(event.event_id)"
                 [disabled]="event.status !== 'done'"
                 [ngClass]="{

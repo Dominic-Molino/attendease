@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { MarkattendanceeComponent } from '../../components/markattendancee/markattendancee.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 interface Event {
   event_id: number;
@@ -27,7 +28,12 @@ interface Event {
   standalone: true,
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.css',
-  imports: [DeleteEventComponent, CommonModule, NgxPaginationModule],
+  imports: [
+    DeleteEventComponent,
+    CommonModule,
+    NgxPaginationModule,
+    MatTooltipModule,
+  ],
 })
 export class AttendanceComponent implements OnInit {
   eventData: any;

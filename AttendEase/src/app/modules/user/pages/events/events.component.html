@@ -36,8 +36,36 @@
             class="rounded-md shadow-md border border-dark-border container bg-white hover:bg-dark-muted"
           >
             <div
-              class="p-3.5 md:h-80 rounded-md flex flex-col md:flex-row w-full items-center"
+              class="p-3.5 md:h-80 relative rounded-md flex flex-col md:flex-row w-full items-center"
             >
+              <div *ngIf="latestEvent" class="absolute -top-3 right-0">
+                <span
+                  class="bg-white capitalize text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 border border-dark-border"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-loader inline-flex flex-shrink-0 me-1"
+                  >
+                    <path d="M12 2v4" />
+                    <path d="m16.2 7.8 2.9-2.9" />
+                    <path d="M18 12h4" />
+                    <path d="m16.2 16.2 2.9 2.9" />
+                    <path d="M12 18v4" />
+                    <path d="m4.9 19.1 2.9-2.9" />
+                    <path d="M2 12h4" />
+                    <path d="m4.9 4.9 2.9 2.9" />
+                  </svg>
+                  {{ latestEvent.status }}
+                </span>
+              </div>
               <div class="rounded-md h-80 py-3.5 md:w-1/2 w-full">
                 <img
                   *ngIf="
@@ -123,9 +151,40 @@
             "
           >
             <div
-              class="rounded-md border border-dark-border shadow-md container p-3.5 mb-5 bg-white flex flex-col h-full hover:bg-dark-muted"
+              class="rounded-md border border-dark-border relative shadow-md container p-3.5 mb-5 bg-white flex flex-col h-full hover:bg-dark-muted"
               *ngIf="event !== latestEvent"
             >
+              <div
+                *ngFor="let event of filteredEventList"
+                class="absolute -top-3 right-0"
+              >
+                <span
+                  class="bg-white capitalize text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 border border-dark-border"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-loader inline-flex flex-shrink-0 me-1"
+                  >
+                    <path d="M12 2v4" />
+                    <path d="m16.2 7.8 2.9-2.9" />
+                    <path d="M18 12h4" />
+                    <path d="m16.2 16.2 2.9 2.9" />
+                    <path d="M12 18v4" />
+                    <path d="m4.9 19.1 2.9-2.9" />
+                    <path d="M2 12h4" />
+                    <path d="m4.9 4.9 2.9 2.9" />
+                  </svg>
+                  {{ event.status }}
+                </span>
+              </div>
               <div class="flex flex-col flex-grow">
                 <div class="rounded-md overflow-hidden h-44 max-h-44">
                   <img

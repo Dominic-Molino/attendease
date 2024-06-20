@@ -11,17 +11,22 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { EventService } from '../../../../core/service/event.service';
 import { MatDialog } from '@angular/material/dialog';
-import { FeedbackSubmissionComponent } from '../../components/feedback-submission/feedback-submission.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
 import { Observable, interval, Subscription, of, timer } from 'rxjs';
 import { switchMap, catchError, map, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-feedback',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgxPaginationModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NgxPaginationModule,
+    MatTooltipModule,
+  ],
   templateUrl: './feedback.component.html',
   styleUrl: './feedback.component.css',
 })

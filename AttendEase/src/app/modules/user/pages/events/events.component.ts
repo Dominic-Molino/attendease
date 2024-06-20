@@ -24,6 +24,7 @@ import {
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 interface Event {
   event_id: number;
@@ -39,13 +40,14 @@ interface Event {
   categories: { display: string; value: string }[];
   organizer_name: string;
   event_image$: Observable<SafeResourceUrl | undefined>;
+  status?: 'done' | 'ongoing' | 'upcoming'; // Add the status property
 }
 
 @Component({
   selector: 'app-events',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, NgxPaginationModule],
+  imports: [CommonModule, NgxPaginationModule, MatTooltipModule],
   templateUrl: './events.component.html',
   styleUrls: ['./events.component.css'],
 })
@@ -146,16 +148,19 @@ export class EventsComponent implements OnInit, OnDestroy {
           this.filteredEventList = this.eventList.filter(
             (event) => event !== this.latestEvent
           );
+
+          this.setEventStatus();
         }
       });
   }
 
   startPolling(): void {
-    this.updateSubscription = timer(3000, 30000)
+    this.updateSubscription = timer(15000, 30000)
       .pipe(switchMap(() => this.service.getAllEvents()))
       .subscribe(
         (result) => {
           this.fetchEvents();
+          this.setEventStatus();
         },
         (error) => {
           const errorMessage =
@@ -163,6 +168,22 @@ export class EventsComponent implements OnInit, OnDestroy {
           Swal.fire('', errorMessage, 'warning');
         }
       );
+  }
+
+  setEventStatus(): void {
+    const currentDate = new Date();
+    this.eventList.forEach((ev: any) => {
+      if (currentDate > ev.event_end_date) {
+        ev['status'] = 'done';
+      } else if (
+        currentDate >= ev.event_start_date &&
+        currentDate <= ev.event_end_date
+      ) {
+        ev['status'] = 'ongoing';
+      } else if (currentDate < ev.event_start_date) {
+        ev['status'] = 'upcoming';
+      }
+    });
   }
 
   openPreview(eventId: number) {

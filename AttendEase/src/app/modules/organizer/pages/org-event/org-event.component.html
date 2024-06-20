@@ -197,6 +197,8 @@
 
               <td class="px-6 py-4 flex items-center gap-2 justify-center">
                 <button
+                  matTooltip="Update event image"
+                  matTooltipPosition="above"
                   (click)="openFile(event)"
                   class="flex items-center justify-center text-light-text bg-white border border-light-border hover:bg-light-foregroud rounded-md w-10 h-10 focus:outline-none shadow-md hover:text-white"
                 >
@@ -220,6 +222,9 @@
                 </button>
                 <button
                   (click)="editEvent(event)"
+                  matTooltip="Event is either done or ongoing."
+                  matTooltipPosition="above"
+                  matTooltipClass="custom"
                   [disabled]="event.status !== 'upcoming'"
                   [ngClass]="{
                     'opacity-50 cursor-not-allowed': event.status !== 'upcoming'
@@ -247,6 +252,8 @@
                   </svg>
                 </button>
                 <app-delete-event
+                  matTooltip="Delete Event"
+                  matTooltipPosition="above"
                   [event_id]="event"
                   (eventDeleted)="loadEvent()"
                 ></app-delete-event>

@@ -27,13 +27,41 @@
 
       <hr class="h-px mb-6 bg-dark-border border-0" />
     </div>
-    <section class="bg-white w-full">
+    <section class="bg-white w-full relative">
       <div
         class="max-w-full bg-white border border-dark-border rounded-md overflow-hidden"
       >
+        <div *ngFor="let event of event" class="absolute -top-3 right-0">
+          <span
+            class="bg-white capitalize text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 border border-dark-border"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-loader inline-flex flex-shrink-0 me-1"
+            >
+              <path d="M12 2v4" />
+              <path d="m16.2 7.8 2.9-2.9" />
+              <path d="M18 12h4" />
+              <path d="m16.2 16.2 2.9 2.9" />
+              <path d="M12 18v4" />
+              <path d="m4.9 19.1 2.9-2.9" />
+              <path d="M2 12h4" />
+              <path d="m4.9 4.9 2.9 2.9" />
+            </svg>
+            {{ event.status }}
+          </span>
+        </div>
         <div
           *ngFor="let event of event"
-          class="md:p-3.5 max-sm:p-2 rounded-md flex flex-col w-full items-center"
+          class="md:p-3.5 max-sm:p-2 rounded-md flex flex-col w-full items-center relative"
         >
           <div class="md:p-5 max-sm:p-3 w-full items-center">
             <div
@@ -277,24 +305,62 @@
               <button
                 (click)="registerForEvent(event.event_id)"
                 type="button"
-                [disabled]="isRegistered || eventWithStatus.status === 'done'"
+                [disabled]="isRegistered || event.status === 'done'"
+                [matTooltipDisabled]="!isRegistered"
+                matTooltipPosition="above"
+                matTooltip="You're already registered to this event."
                 [ngClass]="{
                   'opacity-100 cursor-not-allowed':
-                    isRegistered || eventWithStatus.status === 'done',
+                    isRegistered || event.status === 'done',
                   'hover:bg-light-foregroud hover:text-white':
-                    !isRegistered && eventWithStatus.status !== 'done'
+                    !isRegistered && event.status !== 'done'
                 }"
                 class="text-white bg-light-background hover:bg-light-foregroud focus:ring-0 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5"
               >
                 Register
               </button>
               <button
+                [matTooltipDisabled]="
+                  !(event.status === 'ongoing' || event.status === 'done')
+                "
+                matTooltipPosition="above"
+                matTooltip="Event is ongoing or has ended."
+                [disabled]="
+                  event.status === 'ongoing' || event.status === 'done'
+                "
+                [ngClass]="{
+                  'opacity-100 cursor-not-allowed ':
+                    event.status === 'ongoing' || event.status === 'done',
+                }"
                 (click)="unregister(event.event_id)"
                 type="button"
-                class="py-2.5 px-5 ms-3 text-sm font-medium text-light-text bg-white border border-light-background rounded-md hover:bg-light-background hover:text-white focus:outline-none focus:ring-0"
+                class="py-2.5 px-5 ms-3 text-sm font-medium text-light-text bg-white border border-light-border rounded-md hover:bg-light-background hover:text-white focus:outline-none focus:ring-0"
               >
                 Cancel Registration
               </button>
+            </div>
+            <div *ngIf="event.status === 'done'">
+              <span class="block text-sm text-red-500 sm:text-center">
+                <span class="text-text">Event has ended.</span>
+                <ul class="list-disc list-inside">
+                  <li>
+                    <a
+                      routerLink="/student/attendance"
+                      class="text-red-500 hover:underline"
+                    >
+                      Please go to attendance and submit your attendance
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      routerLink="/student/feedback"
+                      class="text-red-500 hover:underline"
+                    >
+                      Don't forget to submit your feedback
+                    </a>
+                  </li>
+                </ul>
+              </span>
             </div>
           </div>
         </div>

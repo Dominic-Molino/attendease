@@ -20,6 +20,7 @@ import { switchMap } from 'rxjs/operators';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { UpdateimageComponent } from '../../components/updateimage/updateimage.component';
 import { MobicalendarComponent } from '../../../../shared/components/mobicalendar/mobicalendar.component';
+import { MatTooltip, MatTooltipModule } from '@angular/material/tooltip';
 
 interface Event {
   event_id: number;
@@ -53,6 +54,7 @@ interface Event {
     CalendarComponent,
     NgxPaginationModule,
     MobicalendarComponent,
+    MatTooltipModule,
   ],
 })
 export class OrgEventComponent implements OnInit, OnDestroy {

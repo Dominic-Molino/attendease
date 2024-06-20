@@ -214,7 +214,7 @@ class Post extends GlobalMethods
                 $event_end_date,
                 isset($data->event_registration_start) ? date('Y-m-d H:i:s', strtotime($data->event_registration_start)) : null,
                 isset($data->event_registration_end) ? date('Y-m-d H:i:s', strtotime($data->event_registration_end)) : null,
-                $data->session ?? null,
+                isset($data->session) ?? null,
                 (int)($data->max_attendees ?? null),
                 json_encode($data->categories) ?? null,
                 $organizer_name,
@@ -232,10 +232,10 @@ class Post extends GlobalMethods
         }
     }
 
-
     public function register_for_event($event_id, $user_id)
     {
         try {
+
             $userExists = $this->checkUserExists($user_id);
             $eventExists = $this->checkEventExists($event_id);
 
@@ -253,26 +253,25 @@ class Post extends GlobalMethods
             $stmt->execute([$event_id, $user_id]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($row['count'] !== 0) {
+            if ($row['count'] != 0) {
                 return $this->sendPayload(null, 'failed', "User is already registered for this event.", 400);
             }
 
-
-            // Check if the event registration is still open
-            $sql = "SELECT event_registration_end FROM events WHERE event_id = ?";
+            // Check if the event registration dates are valid
+            $sql = "SELECT event_registration_start, event_registration_end FROM events WHERE event_id = ?";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id]);
             $event = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if (strtotime($event['event_registration_end']) < time()) {
-                return $this->sendPayload(null, 'failed', "Event registration has ended.", 400);
+            $currentDate = date('Y-m-d');
+            $registrationStartDate = date('Y-m-d', strtotime($event['event_registration_start']));
+            $registrationEndDate = date('Y-m-d', strtotime($event['event_registration_end']));
+
+            if ($currentDate < $registrationStartDate) {
+                return $this->sendPayload(null, 'failed', "Event registration is not yet available.", 400);
             }
 
-            // Get the current timestamp
-            $currentTime = time();
-
-            // Check if event registration has ended
-            if (strtotime($event['event_registration_end']) < $currentTime) {
+            if ($currentDate > $registrationEndDate) {
                 return $this->sendPayload(null, 'failed', "Event registration has ended.", 400);
             }
 
@@ -306,6 +305,7 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
+
 
     private function checkUserExists($user_id)
     {

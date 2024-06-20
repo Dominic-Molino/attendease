@@ -6,6 +6,7 @@ import { EventService } from '../../../../core/service/event.service';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgxPaginationModule } from 'ngx-pagination';
 import {
   Observable,
@@ -27,6 +28,7 @@ import {
     MatDialogModule,
     CommonModule,
     NgxPaginationModule,
+    MatTooltipModule,
   ],
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.css',
