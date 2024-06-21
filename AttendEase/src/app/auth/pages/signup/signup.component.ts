@@ -50,10 +50,7 @@ export class SignupComponent {
           this.router.navigate(['login']);
         },
         (error) => {
-          const errorMessage =
-            error.error?.status?.message ||
-            'An error occurred during registration';
-          Swal.fire('', errorMessage, 'warning');
+          Swal.fire('Warning', `${error.error.status.message}`, 'warning');
         }
       );
     } else {

@@ -72,15 +72,20 @@ export class LoginComponent implements OnInit {
           }
         },
         (error) => {
-          let errorMessage = 'An error occurred';
-          if (error && error.error && error.error.message) {
-            errorMessage = error.error.message;
+          if (error.status == 401) {
+            Swal.fire({
+              title: 'Error',
+              text: 'Invalid Credentials. Please try again.',
+              icon: 'error',
+            });
           }
-          Swal.fire({
-            icon: 'error',
-            title: 'Login Failed',
-            text: errorMessage,
-          });
+          if (error.status == 404) {
+            Swal.fire({
+              title: 'User does not exist!',
+              text: 'Please double check your entered email.',
+              icon: 'error',
+            });
+          }
         }
       );
     } else {

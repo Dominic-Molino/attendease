@@ -111,9 +111,8 @@ export class EditEventComponent implements OnInit {
     if (this.eventForm.valid) {
       const formData = this.eventForm.value;
 
-      this.service
-        .editEvent(this.eventId, this.eventForm.value)
-        .subscribe((res) => {
+      this.service.editEvent(this.eventId, this.eventForm.value).subscribe(
+        (res) => {
           const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -130,9 +129,13 @@ export class EditEventComponent implements OnInit {
             title: 'Event updated.',
           });
           this.dialog.close();
-        });
+        },
+        (error) => {
+          Swal.fire('Warning', `${error.error.status.message}`, 'warning');
+        }
+      );
     } else {
-      Swal.fire('Failed', 'Failed to update event!', 'error');
+      Swal.fire('Failed', 'Invalid Form!', 'error');
     }
   }
 

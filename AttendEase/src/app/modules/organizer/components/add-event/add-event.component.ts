@@ -108,24 +108,25 @@ export class AddEventComponent implements OnInit {
   addEvent() {
     if (this.eventForm.valid) {
       const formData = this.eventForm.value;
-      // formData.categories = this.getSelectedCategories(); // Ensure categories are set
 
       if (this.file) {
-        formData.file = this.file; // Attach the file to formData
+        formData.file = this.file;
       }
 
       this.eventService.addEvent(formData).subscribe(
         (res) => {
-          const eventId = res.payload.event_id; // Assuming the backend returns the event ID
+          const eventId = res.payload.event_id;
 
           if (this.file) {
             this.eventService.uploadEvent(eventId, this.file).subscribe(
               (uploadRes) => {
                 this.handleSuccessResponse();
               },
-              (uploadError) => {
-                this.handleError(
-                  uploadError.error?.message || 'Image upload failed'
+              (error) => {
+                Swal.fire(
+                  'Warning',
+                  `${error.error.status.message}`,
+                  'warning'
                 );
               }
             );
@@ -134,7 +135,7 @@ export class AddEventComponent implements OnInit {
           }
         },
         (error) => {
-          this.handleError(error.error?.message || 'Something went wrong');
+          Swal.fire('Warning', `${error.error.status.message}`, 'warning');
         }
       );
     } else {

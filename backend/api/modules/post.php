@@ -214,7 +214,7 @@ class Post extends GlobalMethods
                 $event_end_date,
                 isset($data->event_registration_start) ? date('Y-m-d H:i:s', strtotime($data->event_registration_start)) : null,
                 isset($data->event_registration_end) ? date('Y-m-d H:i:s', strtotime($data->event_registration_end)) : null,
-                isset($data->session) ?? null,
+                $data->session ?? null,
                 (int)($data->max_attendees ?? null),
                 json_encode($data->categories) ?? null,
                 $organizer_name,
