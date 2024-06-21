@@ -155,7 +155,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   }
 
   startPolling(): void {
-    this.updateSubscription = timer(15000, 30000)
+    this.updateSubscription = timer(10000, 60000)
       .pipe(switchMap(() => this.service.getAllEvents()))
       .subscribe(
         (result) => {

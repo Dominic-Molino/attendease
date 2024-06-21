@@ -19,7 +19,7 @@ export class BlockComponent implements OnInit, OnDestroy {
   constructor(private dataService: DataAnalyticsService) {}
 
   ngOnInit(): void {
-    this.refreshSubscription = timer(0, 30000)
+    this.refreshSubscription = timer(0, 60000)
       .pipe(switchMap(() => this.dataService.getBlock()))
       .subscribe(
         (res) => {

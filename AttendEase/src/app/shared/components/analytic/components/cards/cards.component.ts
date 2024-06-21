@@ -36,7 +36,7 @@ export class CardsComponent implements OnInit, OnDestroy {
   }
 
   private setupPolling() {
-    this.refreshSubscription = timer(0, 30000)
+    this.refreshSubscription = timer(0, 60000)
       .pipe(
         switchMap(() => {
           return this.service.getUsers();

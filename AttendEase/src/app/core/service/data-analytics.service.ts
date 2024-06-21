@@ -8,8 +8,8 @@ import { Observable } from 'rxjs';
 export class DataAnalyticsService {
   constructor(private http: HttpClient) {}
 
-  // private API_URL = 'https://gc-attendease.online/backend/api/';
-  private API_URL = 'http://localhost/attendease/backend/api/';
+  private API_URL = 'https://gc-attendease.online/backend/api/';
+  // private API_URL = 'http://localhost/attendease/backend/api/';
 
   getCourse(): Observable<any> {
     return this.http.get(`${this.API_URL}getcoursecount`);

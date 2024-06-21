@@ -35,7 +35,7 @@ export class ComparingEventsComponent implements OnInit, OnDestroy {
   }
 
   private setupPolling() {
-    this.refreshSubscription = timer(0, 30000)
+    this.refreshSubscription = timer(0, 60000)
       .pipe(switchMap(() => this.service.getAllEventAttendees()))
       .subscribe((res) => {
         const events: Event[] = res.payload;

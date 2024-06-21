@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { UserComponent } from './modules/user/user.component';
 import { OrganizerComponent } from './modules/organizer/organizer.component';
-import { authenGuard } from './core/authen.guard';
+import { AuthenGuard } from './core/authen.guard';
 import { AdminComponent } from './modules/admin/admin.component';
 import { RoleGuard } from './core/role.guard';
 import { PagenotfoundComponent } from './shared/components/pagenotfound/pagenotfound.component';
@@ -45,7 +45,7 @@ export const routes: Routes = [
           import(
             './modules/admin/pages/admin-dashboard/admin-dashboard.component'
           ).then((c) => c.AdminDashboardComponent),
-        canActivate: [authenGuard],
+        canActivate: [AuthenGuard],
       },
 
       {
@@ -54,7 +54,7 @@ export const routes: Routes = [
           import(
             './modules/admin/pages/studentlist/studentlist.component'
           ).then((c) => c.StudentlistComponent),
-        canActivate: [authenGuard],
+        canActivate: [AuthenGuard],
       },
 
       {
@@ -63,7 +63,7 @@ export const routes: Routes = [
           import(
             './modules/organizer/pages/attendance/attendance.component'
           ).then((c) => c.AttendanceComponent),
-        canActivate: [authenGuard],
+        canActivate: [AuthenGuard],
       },
 
       {
@@ -72,7 +72,7 @@ export const routes: Routes = [
           import(
             './modules/organizer/components/markattendancee/markattendancee.component'
           ).then((c) => c.MarkattendanceeComponent),
-        canActivate: [authenGuard],
+        canActivate: [AuthenGuard],
       },
 
       {
@@ -121,7 +121,7 @@ export const routes: Routes = [
             (c) => c.DashboardComponent
           ),
 
-        canActivate: [authenGuard],
+        canActivate: [AuthenGuard],
       },
 
       {
@@ -130,7 +130,7 @@ export const routes: Routes = [
           import('./modules/user/pages/events/events.component').then(
             (c) => c.EventsComponent
           ),
-        canActivate: [authenGuard],
+        canActivate: [AuthenGuard],
       },
 
       {
@@ -139,7 +139,7 @@ export const routes: Routes = [
           import('./modules/user/components/preview/preview.component').then(
             (c) => c.PreviewComponent
           ),
-        canActivate: [authenGuard],
+        canActivate: [AuthenGuard],
       },
 
       {
@@ -149,7 +149,7 @@ export const routes: Routes = [
             (c) => c.ProfileComponent
           ),
 
-        canActivate: [authenGuard],
+        canActivate: [AuthenGuard],
       },
 
       {
@@ -158,7 +158,7 @@ export const routes: Routes = [
           import('./modules/user/pages/attendance/attendance.component').then(
             (c) => c.AttendanceComponent
           ),
-        canActivate: [authenGuard],
+        canActivate: [AuthenGuard],
       },
 
       {
@@ -167,7 +167,7 @@ export const routes: Routes = [
           import('./modules/user/pages/feedback/feedback.component').then(
             (c) => c.FeedbackComponent
           ),
-        canActivate: [authenGuard],
+        canActivate: [AuthenGuard],
       },
 
       {
@@ -176,7 +176,7 @@ export const routes: Routes = [
           import(
             './modules/user/components/feedback-submission/feedback-submission.component'
           ).then((c) => c.FeedbackSubmissionComponent),
-        canActivate: [authenGuard],
+        canActivate: [AuthenGuard],
       },
     ],
   },
@@ -197,7 +197,7 @@ export const routes: Routes = [
           import(
             './modules/organizer/pages/org-dashboard/org-dashboard.component'
           ).then((c) => c.OrgDashboardComponent),
-        canActivate: [authenGuard],
+        canActivate: [AuthenGuard],
       },
 
       {
@@ -206,7 +206,7 @@ export const routes: Routes = [
           import(
             './modules/organizer/pages/org-event/org-event.component'
           ).then((c) => c.OrgEventComponent),
-        canActivate: [authenGuard],
+        canActivate: [AuthenGuard],
       },
 
       {

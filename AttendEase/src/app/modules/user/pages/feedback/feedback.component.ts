@@ -153,7 +153,7 @@ export class FeedbackComponent implements OnInit, OnDestroy {
   }
 
   startPolling(): void {
-    this.updateSubscription = timer(3000, 30000)
+    this.updateSubscription = timer(10000, 60000)
       .pipe(switchMap(() => this.getUserEvents()))
       .subscribe();
   }

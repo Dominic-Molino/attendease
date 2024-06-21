@@ -94,7 +94,7 @@ export class MobicalendarComponent implements OnInit, OnDestroy {
   }
 
   setPolling(): void {
-    const pollingInterval = 30000;
+    const pollingInterval = 60000;
 
     this.subscription = timer(0, pollingInterval)
       .pipe(

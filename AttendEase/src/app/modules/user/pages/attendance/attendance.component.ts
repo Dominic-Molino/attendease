@@ -143,7 +143,7 @@ export class AttendanceComponent {
   }
 
   startPolling(): void {
-    this.updateSubscription = timer(1500, 15000)
+    this.updateSubscription = timer(10000, 60000)
       .pipe(switchMap(() => this.getUserEvents()))
       .subscribe();
   }

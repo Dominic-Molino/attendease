@@ -20,7 +20,7 @@ export class CourseComponent implements OnInit, OnDestroy {
   constructor(private dataService: DataAnalyticsService) {}
 
   ngOnInit() {
-    this.refreshSubscription = timer(0, 30000)
+    this.refreshSubscription = timer(0, 60000)
       .pipe(switchMap(() => this.dataService.getCourse()))
       .subscribe(
         (res) => {

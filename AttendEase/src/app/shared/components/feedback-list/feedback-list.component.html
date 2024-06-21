@@ -30,14 +30,14 @@
     @if(feedback && feedback.length > 0){
     <mat-tab-group>
       <mat-tab label="Ratings">
-        <div class="w-full mt-5 flex justify-center items-start gap-3.5">
+        <div class="w-full mt-5 flex justify-center items-center gap-3.5">
           <app-user-feedback-rate
             [eventId]="eventId!"
-            class="w-1/2"
+            class="w-1/2 h-full flex-grow"
           ></app-user-feedback-rate>
-          <div class="w-1/2">
+          <div class="w-1/2 h-full flex-grow">
             <div
-              class="w-full p-4 bg-white border border-dark-border rounded-lg shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700"
+              class="w-full h-full p-4 bg-white border border-dark-border rounded-lg shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700"
             >
               <div class="flex items-center justify-between mb-4">
                 <h5
@@ -49,10 +49,10 @@
               <hr
                 class="h-px mb-2.5 bg-dark-border border-0 dark:bg-gray-700"
               />
-              <div class="flow-root">
+              <div class="flow-root overflow-y-auto">
                 <ul
                   role="list"
-                  class="divide-y divide-gray-200 dark:divide-gray-700"
+                  class="divide-y divide-gray-200 h-[416.6px] dark:divide-gray-700"
                 >
                   <li class="py-3 sm:py-4" *ngFor="let feed of feedback">
                     <div class="flex items-center">
@@ -80,11 +80,9 @@
                             >
                               ★
                             </span>
-                            <span class="ml-2"
-                              >({{
-                                calculateAverageRating(feed).toFixed(1)
-                              }})</span
-                            >
+                            <span class="ml-2">
+                              ({{ calculateAverageRating(feed).toFixed(1) }})
+                            </span>
                           </p>
                         </div>
                       </div>

@@ -30,7 +30,7 @@ export class UserFeedbackRateComponent implements OnInit, OnDestroy {
     const textColor = documentStyle.getPropertyValue('--text-color');
     this.options = {
       maintainAspectRatio: false,
-      indexAxis: 'y',
+      indexAxis: 'x',
       aspectRatio: 0.8,
       responsive: true,
       plugins: {
@@ -55,7 +55,7 @@ export class UserFeedbackRateComponent implements OnInit, OnDestroy {
           display: true,
           title: {
             display: true,
-            text: 'Number of Feedbacks',
+            text: 'Satisfaction Level ',
             font: {
               family: 'Inter',
               size: 14,
@@ -66,7 +66,7 @@ export class UserFeedbackRateComponent implements OnInit, OnDestroy {
           display: true,
           title: {
             display: true,
-            text: 'Satisfaction Level',
+            text: 'Number of Feedbacks',
             font: {
               family: 'Inter',
               size: 14,
@@ -88,7 +88,7 @@ export class UserFeedbackRateComponent implements OnInit, OnDestroy {
 
   getEventFeedback() {
     if (this.eventId) {
-      this.refreshSubscription = timer(0, 30000)
+      this.refreshSubscription = timer(0, 60000)
         .pipe(switchMap(() => this.service.getEventFeedback(this.eventId)))
         .subscribe(
           (res: any) => {

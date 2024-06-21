@@ -94,7 +94,7 @@ export class OrgEventComponent implements OnInit, OnDestroy {
   }
 
   setupPolling() {
-    const pollingIntervalMs = 30000; // 30 seconds
+    const pollingIntervalMs = 60000; // 30 seconds
 
     this.refreshSubscription = interval(pollingIntervalMs)
       .pipe(switchMap(() => this.service.getAllEvents()))

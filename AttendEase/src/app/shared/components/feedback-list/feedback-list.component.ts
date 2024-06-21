@@ -79,7 +79,7 @@ export class FeedbackListComponent implements OnInit, OnDestroy {
   }
 
   setupPolling(): void {
-    const pollingInterval = 30000; // 30 seconds
+    const pollingInterval = 60000; // 30 seconds
 
     this.subscription = timer(0, pollingInterval)
       .pipe(switchMap(() => this.service.getEventFeedback(this.eventId!)))
