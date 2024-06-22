@@ -63,9 +63,28 @@ class GetEvent extends GlobalMethods
     {
         $columns = "event_id, event_name, event_description, event_location, event_start_date, event_end_date, event_registration_start, event_registration_end, session, max_attendees, categories, organizer_name";
         $condition = ($event_id !== null) ? "event_id = $event_id" : null;
-        return $this->get_records('events', $condition, $columns);
-    }
 
+        $events = $this->get_records('events', $condition, $columns);
+
+        if ($events['status']['remarks'] == 'success') {
+            $currentDate = new DateTime();
+
+            foreach ($events['payload'] as &$event) {
+                $startDate = new DateTime($event['event_start_date']);
+                $endDate = new DateTime($event['event_end_date']);
+
+                if ($currentDate < $startDate) {
+                    $event['status'] = 'upcoming';
+                } elseif ($currentDate >= $startDate && $currentDate <= $endDate) {
+                    $event['status'] = 'ongoing';
+                } else {
+                    $event['status'] = 'done';
+                }
+            }
+        }
+
+        return $events;
+    }
     //gets all registered user on a event
     public function getRegisteredUserForEvent($event_id)
     {
