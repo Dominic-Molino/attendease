@@ -85,39 +85,38 @@ export class PreviewComponent implements OnInit, OnDestroy {
       .pipe(switchMap(() => this.service.getEventById(this.eventId)))
       .subscribe(
         (response) => {
-          if (response.status.remarks === 'success') {
-            this.event = response.payload.map((ev: any): Event => {
-              const categories: { display: string; value: string }[] =
-                JSON.parse(ev.categories);
-              return {
-                event_id: ev.event_id,
-                event_name: ev.event_name,
-                event_description: ev.event_description,
-                event_location: ev.event_location,
-                event_start_date: new Date(ev.event_start_date),
-                event_end_date: new Date(ev.event_end_date),
-                event_registration_start: new Date(ev.event_registration_start),
-                event_registration_end: new Date(ev.event_registration_end),
-                session: ev.session,
-                max_attendees: ev.max_attendees,
-                categories: categories,
-                organizer_name: ev.organizer_name.replace(/^"|"$/g, ''),
-              };
-            });
-
-            this.eventImage$ = this.service.getEventImage(this.eventId).pipe(
-              switchMap((imageResult) => {
-                if (imageResult.size > 0) {
-                  const url = URL.createObjectURL(imageResult);
-                  return of(this.sanitizer.bypassSecurityTrustResourceUrl(url));
-                } else {
-                  return of(undefined);
-                }
-              })
+          this.event = response.map((ev: any): Event => {
+            const categories: { display: string; value: string }[] = JSON.parse(
+              ev.categories
             );
-            this.checkUserRegistration();
-            this.setEventStatus();
-          }
+            return {
+              event_id: ev.event_id,
+              event_name: ev.event_name,
+              event_description: ev.event_description,
+              event_location: ev.event_location,
+              event_start_date: new Date(ev.event_start_date),
+              event_end_date: new Date(ev.event_end_date),
+              event_registration_start: new Date(ev.event_registration_start),
+              event_registration_end: new Date(ev.event_registration_end),
+              session: ev.session,
+              max_attendees: ev.max_attendees,
+              categories: categories,
+              organizer_name: ev.organizer_name.replace(/^"|"$/g, ''),
+            };
+          });
+
+          this.eventImage$ = this.service.getEventImage(this.eventId).pipe(
+            switchMap((imageResult) => {
+              if (imageResult.size > 0) {
+                const url = URL.createObjectURL(imageResult);
+                return of(this.sanitizer.bypassSecurityTrustResourceUrl(url));
+              } else {
+                return of(undefined);
+              }
+            })
+          );
+          this.checkUserRegistration();
+          this.setEventStatus();
         },
         (error) => {
           console.error('Error fetching event details:', error);
@@ -127,40 +126,38 @@ export class PreviewComponent implements OnInit, OnDestroy {
 
   fetchEventDetails(eventId: number): void {
     this.service.getEventById(eventId).subscribe((response) => {
-      if (response.status.remarks === 'success') {
-        this.event = response.payload.map((ev: any): Event => {
-          const categories: { display: string; value: string }[] = JSON.parse(
-            ev.categories
-          );
-          return {
-            event_id: ev.event_id,
-            event_name: ev.event_name,
-            event_description: ev.event_description,
-            event_location: ev.event_location,
-            event_start_date: new Date(ev.event_start_date),
-            event_end_date: new Date(ev.event_end_date),
-            event_registration_start: new Date(ev.event_registration_start),
-            event_registration_end: new Date(ev.event_registration_end),
-            session: ev.session,
-            max_attendees: ev.max_attendees,
-            categories: categories,
-            organizer_name: ev.organizer_name.replace(/^"|"$/g, ''),
-          };
-        });
-
-        this.eventImage$ = this.service.getEventImage(eventId).pipe(
-          switchMap((imageResult) => {
-            if (imageResult.size > 0) {
-              const url = URL.createObjectURL(imageResult);
-              return of(this.sanitizer.bypassSecurityTrustResourceUrl(url));
-            } else {
-              return of(undefined);
-            }
-          })
+      this.event = response.map((ev: any): Event => {
+        const categories: { display: string; value: string }[] = JSON.parse(
+          ev.categories
         );
-        this.checkUserRegistration();
-        this.setEventStatus();
-      }
+        return {
+          event_id: ev.event_id,
+          event_name: ev.event_name,
+          event_description: ev.event_description,
+          event_location: ev.event_location,
+          event_start_date: new Date(ev.event_start_date),
+          event_end_date: new Date(ev.event_end_date),
+          event_registration_start: new Date(ev.event_registration_start),
+          event_registration_end: new Date(ev.event_registration_end),
+          session: ev.session,
+          max_attendees: ev.max_attendees,
+          categories: categories,
+          organizer_name: ev.organizer_name.replace(/^"|"$/g, ''),
+        };
+      });
+
+      this.eventImage$ = this.service.getEventImage(eventId).pipe(
+        switchMap((imageResult) => {
+          if (imageResult.size > 0) {
+            const url = URL.createObjectURL(imageResult);
+            return of(this.sanitizer.bypassSecurityTrustResourceUrl(url));
+          } else {
+            return of(undefined);
+          }
+        })
+      );
+      this.checkUserRegistration();
+      this.setEventStatus();
     });
   }
 

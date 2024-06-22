@@ -24,6 +24,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { EventService } from '../../../../core/service/event.service';
 import Swal from 'sweetalert2';
 import { TagInputModule } from 'ngx-chips';
+import { ChangeDetectionService } from '../../../../core/service/change-detection.service';
 
 @Component({
   selector: 'app-add-event',
@@ -55,6 +56,7 @@ export class AddEventComponent implements OnInit {
     private builder: FormBuilder,
     private eventService: EventService,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private changeDetectionService: ChangeDetectionService,
     private dialogRef: MatDialogRef<AddEventComponent>
   ) {
     this.minDate = new Date();
@@ -121,6 +123,7 @@ export class AddEventComponent implements OnInit {
             this.eventService.uploadEvent(eventId, this.file).subscribe(
               (uploadRes) => {
                 this.handleSuccessResponse();
+                this.changeDetectionService.notifyChange(true);
               },
               (error) => {
                 Swal.fire(
@@ -132,6 +135,7 @@ export class AddEventComponent implements OnInit {
             );
           } else {
             this.handleSuccessResponse();
+            this.changeDetectionService.notifyChange(true);
           }
         },
         (error) => {

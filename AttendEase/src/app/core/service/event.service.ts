@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Observable, throwError } from 'rxjs';
+import { Observable, map, throwError } from 'rxjs';
 import { TotalAttendeesResponse } from '../total_attendees';
+import { Event } from '../../interfaces/EventInterface';
 
 @Injectable({
   providedIn: 'root',
@@ -28,16 +29,19 @@ export class EventService {
     return this.http.post(`${this.API_URL}addevent`, data);
   }
 
-  getAllEvents(): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}events`);
+  getAllEvents(): Observable<Event[]> {
+    return this.http.get<any>(`${this.API_URL}events`).pipe(
+      map((result: any) => {
+        return result.payload;
+      })
+    );
   }
-
   deleteEvent(data: any): Observable<any> {
     return this.http.delete(`${this.API_URL}deleteevent/${data}`);
   }
 
-  getEventById(eventId: any): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}events/${eventId}`);
+  getEventById(eventId: any): Observable<Event[]> {
+    return this.http.get<Event[]>(`${this.API_URL}events/${eventId}`);
   }
 
   editEvent(id: any, data: any) {

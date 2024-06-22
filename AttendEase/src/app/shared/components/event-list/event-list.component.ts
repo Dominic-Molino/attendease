@@ -34,173 +34,173 @@ interface Event {
   styleUrls: ['./event-list.component.css'],
 })
 export class EventListComponent implements OnInit, OnDestroy {
-  eventList: Event[] = [];
-  maxDescriptionLength: number = 100;
-  currentUser: any;
-  loading = false;
-  currentFilter: string = 'all';
-  filteredEventList: any[] = [];
-  isDropdownOpen: boolean = false;
-  private subscription?: Subscription;
+  // eventList: Event[] = [];
+  // maxDescriptionLength: number = 100;
+  // currentUser: any;
+  // loading = false;
+  // currentFilter: string = 'all';
+  // filteredEventList: any[] = [];
+  // isDropdownOpen: boolean = false;
+  // private subscription?: Subscription;
 
-  p: number = 1;
-  itemsPerPage: number = 9;
-  maxSize = 5;
+  // p: number = 1;
+  // itemsPerPage: number = 9;
+  // maxSize = 5;
 
-  constructor(
-    private eventService: EventService,
-    private router: Router,
-    private authService: AuthserviceService
-  ) {}
+  // constructor(
+  //   private eventService: EventService,
+  //   private router: Router,
+  //   private authService: AuthserviceService
+  // ) {}
 
   ngOnInit(): void {
-    this.currentUser = this.authService.getCurrentUserId();
-    this.loadEvents();
-    this.setupPolling();
+    //   this.currentUser = this.authService.getCurrentUserId();
+    //   this.loadEvents();
+    //   this.setupPolling();
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    //   if (this.subscription) {
+    //     this.subscription.unsubscribe();
+    //   }
   }
 
-  setupPolling(): void {
-    const pollingInterval = 60000; // 30 seconds
+  // setupPolling(): void {
+  //   const pollingInterval = 60000; // 30 seconds
 
-    this.subscription = timer(0, pollingInterval)
-      .pipe(
-        switchMap(() => this.eventService.getAllEvents()),
-        map((res) =>
-          res.payload.map(
-            (data: any): Event => ({
-              event_id: data.event_id,
-              event_name: data.event_name,
-              event_description: data.event_description,
-              event_start_date: new Date(data.event_start_date),
-              event_end_date: new Date(data.event_end_date),
-              status: this.getEventStatus(
-                new Date(data.event_start_date),
-                new Date(data.event_end_date)
-              ),
-            })
-          )
-        ),
-        catchError((error) => {
-          const errorMessage =
-            error.error?.status?.message || 'An error occurred';
-          Swal.fire('', errorMessage, 'warning');
-          return of([]);
-        }),
-        finalize(() => {
-          this.loading = false;
-        })
-      )
-      .subscribe((events) => {
-        this.eventList = events;
+  //   this.subscription = timer(0, pollingInterval)
+  //     .pipe(
+  //       switchMap(() => this.eventService.getAllEvents()),
+  //       map((res) =>
+  //         res.payload.map(
+  //           (data: any): Event => ({
+  //             event_id: data.event_id,
+  //             event_name: data.event_name,
+  //             event_description: data.event_description,
+  //             event_start_date: new Date(data.event_start_date),
+  //             event_end_date: new Date(data.event_end_date),
+  //             status: this.getEventStatus(
+  //               new Date(data.event_start_date),
+  //               new Date(data.event_end_date)
+  //             ),
+  //           })
+  //         )
+  //       ),
+  //       catchError((error) => {
+  //         const errorMessage =
+  //           error.error?.status?.message || 'An error occurred';
+  //         Swal.fire('', errorMessage, 'warning');
+  //         return of([]);
+  //       }),
+  //       finalize(() => {
+  //         this.loading = false;
+  //       })
+  //     )
+  //     .subscribe((events) => {
+  //       this.eventList = events;
 
-        // Sorting events
-        this.eventList.sort((a, b) => {
-          const statusOrder = ['done', 'ongoing', 'upcoming'];
-          return statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
-        });
-        this.applyFilter(this.currentFilter);
-      });
-  }
+  //       // Sorting events
+  //       this.eventList.sort((a, b) => {
+  //         const statusOrder = ['done', 'ongoing', 'upcoming'];
+  //         return statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+  //       });
+  //       this.applyFilter(this.currentFilter);
+  //     });
+  // }
 
-  loadEvents(): void {
-    this.loading = true;
-    this.eventService
-      .getAllEvents()
-      .pipe(
-        map((res) =>
-          res.payload.map(
-            (data: any): Event => ({
-              event_id: data.event_id,
-              event_name: data.event_name,
-              event_description: data.event_description,
-              event_start_date: new Date(data.event_start_date),
-              event_end_date: new Date(data.event_end_date),
-              status: this.getEventStatus(
-                new Date(data.event_start_date),
-                new Date(data.event_end_date)
-              ),
-            })
-          )
-        ),
-        catchError((error) => {
-          const errorMessage =
-            error.error?.status?.message || 'An error occurred';
-          Swal.fire('', errorMessage, 'warning');
-          return of([]);
-        }),
-        finalize(() => {
-          this.loading = false;
-        })
-      )
-      .subscribe((events) => {
-        this.eventList = events;
+  // loadEvents(): void {
+  //   this.loading = true;
+  //   this.eventService
+  //     .getAllEvents()
+  //     .pipe(
+  //       map((res) =>
+  //         res.payload.map(
+  //           (data: any): Event => ({
+  //             event_id: data.event_id,
+  //             event_name: data.event_name,
+  //             event_description: data.event_description,
+  //             event_start_date: new Date(data.event_start_date),
+  //             event_end_date: new Date(data.event_end_date),
+  //             status: this.getEventStatus(
+  //               new Date(data.event_start_date),
+  //               new Date(data.event_end_date)
+  //             ),
+  //           })
+  //         )
+  //       ),
+  //       catchError((error) => {
+  //         const errorMessage =
+  //           error.error?.status?.message || 'An error occurred';
+  //         Swal.fire('', errorMessage, 'warning');
+  //         return of([]);
+  //       }),
+  //       finalize(() => {
+  //         this.loading = false;
+  //       })
+  //     )
+  //     .subscribe((events) => {
+  //       this.eventList = events;
 
-        // Sorting events
-        this.eventList.sort((a, b) => {
-          const statusOrder = ['done', 'ongoing', 'upcoming'];
-          return statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
-        });
-        this.applyFilter(this.currentFilter);
-      });
-  }
+  //       // Sorting events
+  //       this.eventList.sort((a, b) => {
+  //         const statusOrder = ['done', 'ongoing', 'upcoming'];
+  //         return statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+  //       });
+  //       this.applyFilter(this.currentFilter);
+  //     });
+  // }
 
-  getEventStatus(
-    startDate: Date,
-    endDate: Date
-  ): 'upcoming' | 'ongoing' | 'done' {
-    const currentDate = new Date();
+  // getEventStatus(
+  //   startDate: Date,
+  //   endDate: Date
+  // ): 'upcoming' | 'ongoing' | 'done' {
+  //   const currentDate = new Date();
 
-    if (currentDate < startDate) {
-      return 'upcoming';
-    } else if (currentDate >= startDate && currentDate <= endDate) {
-      return 'ongoing';
-    } else {
-      return 'done';
-    }
-  }
+  //   if (currentDate < startDate) {
+  //     return 'upcoming';
+  //   } else if (currentDate >= startDate && currentDate <= endDate) {
+  //     return 'ongoing';
+  //   } else {
+  //     return 'done';
+  //   }
+  // }
 
-  truncateDescription(text: string, maxLength: number): string {
-    if (text && text.length > maxLength) {
-      return text.substring(0, maxLength) + ' ...';
-    } else {
-      return text;
-    }
-  }
+  // truncateDescription(text: string, maxLength: number): string {
+  //   if (text && text.length > maxLength) {
+  //     return text.substring(0, maxLength) + ' ...';
+  //   } else {
+  //     return text;
+  //   }
+  // }
 
-  toggleDropdown() {
-    this.isDropdownOpen = !this.isDropdownOpen;
-  }
+  // toggleDropdown() {
+  //   this.isDropdownOpen = !this.isDropdownOpen;
+  // }
 
-  applyFilter(status: string) {
-    this.currentFilter = status;
-    this.isDropdownOpen = false;
-    if (status === 'all') {
-      this.filteredEventList = this.eventList;
-    } else {
-      this.filteredEventList = this.eventList.filter(
-        (event) => event.status === status
-      );
-    }
-  }
+  // applyFilter(status: string) {
+  //   this.currentFilter = status;
+  //   this.isDropdownOpen = false;
+  //   if (status === 'all') {
+  //     this.filteredEventList = this.eventList;
+  //   } else {
+  //     this.filteredEventList = this.eventList.filter(
+  //       (event) => event.status === status
+  //     );
+  //   }
+  // }
 
-  viewFeedback(eventId: number): void {
-    const currentUserRole = this.authService.getCurrentUserRole();
-    let routePrefix = '';
+  // viewFeedback(eventId: number): void {
+  //   const currentUserRole = this.authService.getCurrentUserRole();
+  //   let routePrefix = '';
 
-    if (currentUserRole === 1) {
-      routePrefix = '/admin/admin-per-feedback';
-    } else if (currentUserRole === 2) {
-      routePrefix = '/organizer/org-per-feedback';
-    }
+  //   if (currentUserRole === 1) {
+  //     routePrefix = '/admin/admin-per-feedback';
+  //   } else if (currentUserRole === 2) {
+  //     routePrefix = '/organizer/org-per-feedback';
+  //   }
 
-    if (routePrefix) {
-      this.router.navigate([`${routePrefix}/${eventId}`]);
-    }
-  }
+  //   if (routePrefix) {
+  //     this.router.navigate([`${routePrefix}/${eventId}`]);
+  //   }
+  // }
 }

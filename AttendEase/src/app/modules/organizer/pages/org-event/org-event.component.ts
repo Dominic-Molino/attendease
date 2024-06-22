@@ -100,7 +100,7 @@ export class OrgEventComponent implements OnInit, OnDestroy {
       .pipe(switchMap(() => this.service.getAllEvents()))
       .subscribe(
         (result) => {
-          this.eventList = result.payload.map((data: any): Event => {
+          this.eventList = result.map((data: any): Event => {
             const eventId = data.event_id;
             const eventObject: Event = {
               event_id: data.event_id,
@@ -163,7 +163,7 @@ export class OrgEventComponent implements OnInit, OnDestroy {
 
   loadEvent() {
     this.service.getAllEvents().subscribe((result) => {
-      this.eventList = result.payload.map((data: any): Event => {
+      this.eventList = result.map((data: any): Event => {
         const eventId = data.event_id;
         const eventObject: Event = {
           event_id: data.event_id,

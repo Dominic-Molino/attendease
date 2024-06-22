@@ -12,36 +12,12 @@ import {
 import { AuthserviceService } from '../../../../core/service/authservice.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { EventService } from '../../../../core/service/event.service';
-import {
-  Observable,
-  of,
-  Subscription,
-  switchMap,
-  catchError,
-  finalize,
-  timer,
-} from 'rxjs';
 import { NgxPaginationModule } from 'ngx-pagination';
-import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
-interface Event {
-  event_id: number;
-  event_name: string;
-  event_description: string;
-  event_location: string;
-  event_start_date: Date;
-  event_end_date: Date;
-  event_registration_start: Date;
-  event_registration_end: Date;
-  session: string;
-  max_attendees: number;
-  categories: { display: string; value: string }[];
-  organizer_name: string;
-  event_image$: Observable<SafeResourceUrl | undefined>;
-  status?: 'done' | 'ongoing' | 'upcoming'; // Add the status property
-}
+import { Subscription, of, switchMap } from 'rxjs';
+import { Event } from '../../../../interfaces/EventInterface';
+import { ChangeDetectionService } from '../../../../core/service/change-detection.service';
 
 @Component({
   selector: 'app-events',
@@ -52,7 +28,7 @@ interface Event {
   styleUrls: ['./events.component.css'],
 })
 export class EventsComponent implements OnInit, OnDestroy {
-  @Input() latestEvent: Event | undefined;
+  latestEvent: Event | undefined;
   @Output() viewEventClicked = new EventEmitter();
 
   eventList: Event[] = [];
@@ -71,12 +47,22 @@ export class EventsComponent implements OnInit, OnDestroy {
     private sanitizer: DomSanitizer,
     private eventService: EventService,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private changeDetectionService: ChangeDetectionService
   ) {}
 
   ngOnInit(): void {
     this.fetchEvents();
-    this.startPolling();
+
+    this.updateSubscription?.add(
+      this.changeDetectionService.changeDetected$.subscribe(
+        (changeDetected) => {
+          if (changeDetected) {
+            this.fetchEvents();
+          }
+        }
+      )
+    );
   }
 
   ngOnDestroy(): void {
@@ -87,58 +73,28 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   fetchEvents(): void {
     this.loading = true;
-    this.service
-      .getAllEvents()
-      .pipe(
-        catchError((error) => {
-          const errorMessage =
-            error.error?.status?.message || 'An error occurred';
-          Swal.fire('', errorMessage, 'warning');
-          return of(null);
-        }),
-        finalize(() => {
-          this.loading = false;
-          this.cdr.markForCheck();
-        })
-      )
-      .subscribe((result: any) => {
-        if (result) {
-          this.eventList = result.payload.map((data: any): Event => {
-            const categories: { display: string; value: string }[] = JSON.parse(
-              data.categories
-            );
-            return {
-              event_id: data.event_id,
-              event_name: data.event_name,
-              event_description: data.event_description,
-              event_location: data.event_location,
-              event_start_date: new Date(data.event_start_date),
-              event_end_date: new Date(data.event_end_date),
-              event_registration_start: new Date(data.event_registration_start),
-              event_registration_end: new Date(data.event_registration_end),
-              session: data.session,
-              max_attendees: data.max_attendees,
-              categories: categories,
-              organizer_name: data.organizer_name.replace(/^"|"$/g, ''),
-              event_image$: this.eventService.getEventImage(data.event_id).pipe(
-                switchMap((imageResult) => {
-                  if (imageResult.size > 0) {
-                    const url = URL.createObjectURL(imageResult);
-                    return of(
-                      this.sanitizer.bypassSecurityTrustResourceUrl(url)
-                    );
-                  } else {
-                    return of(undefined);
-                  }
-                })
-              ),
-            };
-          });
+    this.eventService.getAllEvents().subscribe({
+      next: (result: any) => {
+        if (result && Array.isArray(result)) {
+          this.eventList = result.map((event) => ({
+            ...event,
 
-          this.eventList.sort(
-            (a, b) =>
-              b.event_start_date.getTime() - a.event_start_date.getTime()
-          );
+            event_start_date: new Date(event.event_start_date),
+            event_end_date: new Date(event.event_end_date),
+            event_registration_start: new Date(event.event_registration_start),
+            event_registration_end: new Date(event.event_registration_end),
+            categories: JSON.parse(event.categories),
+            event_image$: this.eventService.getEventImage(event.event_id).pipe(
+              switchMap((imageResult) => {
+                if (imageResult.size > 0) {
+                  const url = URL.createObjectURL(imageResult);
+                  return of(this.sanitizer.bypassSecurityTrustResourceUrl(url));
+                } else {
+                  return of(undefined);
+                }
+              })
+            ),
+          }));
 
           this.latestEvent =
             this.eventList.length > 0 ? this.eventList[0] : undefined;
@@ -148,41 +104,16 @@ export class EventsComponent implements OnInit, OnDestroy {
           this.filteredEventList = this.eventList.filter(
             (event) => event !== this.latestEvent
           );
-
-          this.setEventStatus();
+        } else {
+          console.error('Expected an array but got:', result);
         }
-      });
-  }
-
-  startPolling(): void {
-    this.updateSubscription = timer(10000, 60000)
-      .pipe(switchMap(() => this.service.getAllEvents()))
-      .subscribe(
-        (result) => {
-          this.fetchEvents();
-          this.setEventStatus();
-        },
-        (error) => {
-          const errorMessage =
-            error.error?.status?.message || 'An error occurred';
-          Swal.fire('', errorMessage, 'warning');
-        }
-      );
-  }
-
-  setEventStatus(): void {
-    const currentDate = new Date();
-    this.eventList.forEach((ev: any) => {
-      if (currentDate > ev.event_end_date) {
-        ev['status'] = 'done';
-      } else if (
-        currentDate >= ev.event_start_date &&
-        currentDate <= ev.event_end_date
-      ) {
-        ev['status'] = 'ongoing';
-      } else if (currentDate < ev.event_start_date) {
-        ev['status'] = 'upcoming';
-      }
+        this.loading = false;
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        console.error('Error fetching events:', err);
+        this.loading = false;
+      },
     });
   }
 

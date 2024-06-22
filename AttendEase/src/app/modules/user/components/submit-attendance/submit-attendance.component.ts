@@ -17,11 +17,11 @@ import Swal from 'sweetalert2';
   styleUrls: ['./submit-attendance.component.css'],
 })
 export class SubmitAttendanceComponent {
-  @Output() attendanceSubmitted = new EventEmitter<void>(); // Add an EventEmitter
+  @Output() attendanceSubmitted = new EventEmitter<void>();
 
   file: any;
   userId: any;
-  imagePreview?: string | ArrayBuffer | null = null; // Variable to store image preview URL
+  imagePreview?: string | ArrayBuffer | null = null;
 
   constructor(
     private service: AuthserviceService,
