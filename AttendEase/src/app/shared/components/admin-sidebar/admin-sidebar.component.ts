@@ -8,11 +8,18 @@ import {
 import Swal from 'sweetalert2';
 import { AuthserviceService } from '../../../core/service/authservice.service';
 import { CommonModule } from '@angular/common';
+import { NotificationComponent } from '../../../modules/admin/components/notification/notification.component';
 
 @Component({
   selector: 'app-admin-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterLinkActive, RouterOutlet, RouterLink],
+  imports: [
+    CommonModule,
+    RouterLinkActive,
+    RouterOutlet,
+    RouterLink,
+    NotificationComponent,
+  ],
   templateUrl: './admin-sidebar.component.html',
   styleUrl: './admin-sidebar.component.css',
 })

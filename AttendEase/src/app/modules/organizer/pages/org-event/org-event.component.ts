@@ -31,7 +31,7 @@ interface Event {
   event_end_date: Date;
   event_registration_start: Date;
   event_registration_end: Date;
-  session: string;
+  event_type: string;
   max_attendees: number;
   categories: string[];
   organizer_name: string;
@@ -111,7 +111,7 @@ export class OrgEventComponent implements OnInit, OnDestroy {
               event_end_date: data.event_end_date,
               event_registration_start: data.event_registration_start,
               event_registration_end: data.event_registration_end,
-              session: data.session,
+              event_type: data.event_type,
               max_attendees: data.max_attendees,
               categories: data.categories,
               organizer_name: data.organizer_name.replace(/^"|"$/g, ''),
@@ -174,7 +174,7 @@ export class OrgEventComponent implements OnInit, OnDestroy {
           event_end_date: data.event_end_date,
           event_registration_start: data.event_registration_start,
           event_registration_end: data.event_registration_end,
-          session: data.session,
+          event_type: data.event_type,
           max_attendees: data.max_attendees,
           categories: data.categories,
           organizer_name: data.organizer_name.replace(/^"|"$/g, ''),
@@ -283,7 +283,7 @@ export class OrgEventComponent implements OnInit, OnDestroy {
   }
 
   openFile(eventId: number) {
-    const dialogRef = this.dialog.open(UpdateimageComponent, {
+    this.dialog.open(UpdateimageComponent, {
       data: { eventId: eventId },
       disableClose: true,
       width: '60%',

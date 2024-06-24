@@ -3,24 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { CalendarComponent } from '../../../../shared/components/calendar/calendar.component';
 import { Router, RouterLink } from '@angular/router';
 import { EventService } from '../../../../core/service/event.service';
-import { Observable, catchError, finalize, map } from 'rxjs';
+import { Observable, catchError, map } from 'rxjs';
 import { MobicalendarComponent } from '../../../../shared/components/mobicalendar/mobicalendar.component';
-
-interface UserEvent {
-  event_id: number;
-  event_name: string;
-  event_description: string;
-  event_location: string;
-  event_start_date: Date;
-  event_end_date: Date;
-  event_registration_start: Date;
-  event_registration_end: Date;
-  session: string;
-  max_attendees: number;
-  categories: string[];
-  organizer_name: string;
-  eventState: string;
-}
+import { UserEvents } from '../../../../interfaces/UserEvents';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,7 +15,7 @@ interface UserEvent {
   imports: [CommonModule, CalendarComponent, RouterLink, MobicalendarComponent],
 })
 export class DashboardComponent implements OnInit {
-  events$?: Observable<UserEvent[]>;
+  events$?: Observable<UserEvents[]>;
 
   constructor(private router: Router, private eventService: EventService) {}
 
@@ -38,7 +23,7 @@ export class DashboardComponent implements OnInit {
     this.events$ = this.getUserEvents();
   }
 
-  getUserEvents(): Observable<UserEvent[]> {
+  getUserEvents(): Observable<UserEvents[]> {
     return this.eventService.getUserEvent().pipe(
       map((res) => {
         if (res && res.payload) {
@@ -59,10 +44,14 @@ export class DashboardComponent implements OnInit {
             return {
               ...event,
               eventState,
-            } as UserEvent;
+            } as UserEvents;
           });
 
-          events.sort((a: any, b: any) => {
+          const filteredEvents = events.filter(
+            (event: any) => event.eventState !== 'done'
+          );
+
+          filteredEvents.sort((a: any, b: any) => {
             if (
               a.eventState === 'done' &&
               (b.eventState === 'ongoing' || b.eventState === 'upcoming')
@@ -83,7 +72,7 @@ export class DashboardComponent implements OnInit {
             }
           });
 
-          return events;
+          return filteredEvents;
         } else {
           return [];
         }
@@ -97,6 +86,6 @@ export class DashboardComponent implements OnInit {
   }
 
   onClickButton(): void {
-    this.router.navigate(['student/events']);
+    this.router.navigate(['student/registeredeventhistory']);
   }
 }

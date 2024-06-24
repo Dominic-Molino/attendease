@@ -16,8 +16,12 @@ require_once './modules/GetEvent.php';
 #analytics
 require_once './modules/Analytics.php';
 
+require_once './modules/Notification.php';
+
 require_once "./modules/Get.php";
 require_once "./modules/Post.php";
+
+require_once "./modules/Approval.php";
 
 require_once "./config/database.php";
 require_once __DIR__ . '/bootstrap.php';
@@ -45,8 +49,12 @@ $getStudent = new GetStudentFunctions($pdo);
 $postEvents = new Events($pdo);
 $getEvents = new GetEvent($pdo);
 
+$approval = new Approval($pdo);
+
 #anaylicts
 $analytics = new Analytics($pdo);
+
+$notify = new GetNotification($pdo);
 
 
 switch ($_SERVER['REQUEST_METHOD']) {
@@ -77,7 +85,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
             case 'user_registered_events_notification':
                 if (isset($request[1])) {
-                    echo json_encode($getStudent->notification($request[1]));
+                    echo json_encode($notify->getUserNotification($request[1]));
                 } else {
                     echo "User ID not provided";
                     http_response_code(400);
@@ -102,6 +110,13 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 }
                 break;
 
+            case 'allevents':
+                if (isset($request[1])) {
+                    echo json_encode($getEvents->getAllEvents($request[1]));
+                } else {
+                    echo json_encode($getEvents->getAllEvents());
+                }
+                break;
 
             case 'registeredUser':
                 if (isset($request[1])) {
@@ -177,6 +192,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 } else {
                     echo json_encode($get->get_roles());
                 }
+                break;
+
+            case 'notify':
+                echo json_encode($notify->getAllNotifications());
                 break;
 
             case 'getusersbyeventattendance':
@@ -267,6 +286,25 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
             case 'toggleattendanceremark':
                 echo json_encode($post->toggleAttendanceRemark($data->attendance_id, $data->newRemark));
+                break;
+
+
+            case 'approveevent':
+                if (isset($data->event_id) && isset($data->admin_id)) {
+                    echo json_encode($approval->approveEvent($data->event_id, $data->admin_id));
+                } else {
+                    echo json_encode(['status' => 'failed', 'message' => 'Event ID or Admin ID not provided.']);
+                    http_response_code(400);
+                }
+                break;
+
+            case 'rejectevent':
+                if (isset($data->event_id) && isset($data->admin_id)) {
+                    echo json_encode($approval->rejectEvent($data->event_id, $data->admin_id));
+                } else {
+                    echo json_encode(['status' => 'failed', 'message' => 'Event ID or Admin ID not provided.']);
+                    http_response_code(400);
+                }
                 break;
 
 

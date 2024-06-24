@@ -4,6 +4,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, map, throwError } from 'rxjs';
 import { TotalAttendeesResponse } from '../total_attendees';
 import { Event } from '../../interfaces/EventInterface';
+import { UserEvents } from '../../interfaces/UserEvents';
 
 @Injectable({
   providedIn: 'root',
@@ -36,12 +37,25 @@ export class EventService {
       })
     );
   }
-  deleteEvent(data: any): Observable<any> {
-    return this.http.delete(`${this.API_URL}deleteevent/${data}`);
+
+  getEvents(event_id: any = null) {
+    if (event_id) {
+      return this.http.get(`${this.API_URL}allevents/${event_id}`);
+    } else {
+      return this.http.get(`${this.API_URL}allevents`);
+    }
   }
 
   getEventById(eventId: any): Observable<Event[]> {
-    return this.http.get<Event[]>(`${this.API_URL}events/${eventId}`);
+    return this.http.get<Event[]>(`${this.API_URL}events/${eventId}`).pipe(
+      map((result: any) => {
+        return result.payload;
+      })
+    );
+  }
+
+  deleteEvent(data: any): Observable<any> {
+    return this.http.delete(`${this.API_URL}deleteevent/${data}`);
   }
 
   editEvent(id: any, data: any) {
@@ -57,9 +71,9 @@ export class EventService {
     }
   }
 
-  getUsersEvent(userId: number): Observable<any> {
+  getUsersEvent(userId: number): Observable<Event[]> {
     if (userId) {
-      return this.http.get(`${this.API_URL}userevents/${userId}`);
+      return this.http.get<Event[]>(`${this.API_URL}userevents/${userId}`);
     } else {
       return throwError('User ID not found');
     }
@@ -95,5 +109,19 @@ export class EventService {
 
   getEventAttendeesTotal(event_id: number): Observable<any> {
     return this.http.get<any>(`${this.API_URL}total/${event_id}`);
+  }
+
+  approveEvent(event_id: number, admin_id: number): Observable<any> {
+    return this.http.post(`${this.API_URL}approveevent`, {
+      event_id,
+      admin_id,
+    });
+  }
+
+  rejectEvent(event_id: number, admin_id: number): Observable<any> {
+    return this.http.post(`${this.API_URL}rejectevent/${event_id}`, {
+      event_id,
+      admin_id,
+    });
   }
 }

@@ -892,6 +892,28 @@
               </li>
             </ul>
           </div>
+
+          <div class="relative z-0 w-full mb-5 group">
+            <label for="improvement_suggestions"
+              >Suggestions for Improvement:</label
+            >
+            <textarea
+              id="improvement_suggestions"
+              rows="4"
+              [placeholder]="feedback.improvement_suggestions"
+              class="block p-2.5 w-full h-48 max-h-64 text-sm text-gray-900 bg-gray-50 rounded-md border border-light-background focus:border-light-border focus:ring-0"
+            ></textarea>
+          </div>
+
+          <div class="relative z-0 w-full mb-5 group">
+            <label for="additional_comments">Additional Comments:</label>
+            <textarea
+              id="additional_comments"
+              [placeholder]="feedback.additional_comments"
+              rows="4"
+              class="block p-2.5 w-full h-48 max-h-64 text-sm text-gray-900 bg-gray-50 rounded-md border border-light-background focus:border-light-border focus:ring-0"
+            ></textarea>
+          </div>
         </form>
       </div>
     </section>

@@ -17,7 +17,6 @@ import { Router } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Subscription, of, switchMap } from 'rxjs';
 import { Event } from '../../../../interfaces/EventInterface';
-import { ChangeDetectionService } from '../../../../core/service/change-detection.service';
 
 @Component({
   selector: 'app-events',
@@ -43,26 +42,14 @@ export class EventsComponent implements OnInit, OnDestroy {
   private updateSubscription?: Subscription;
 
   constructor(
-    private service: AuthserviceService,
     private sanitizer: DomSanitizer,
     private eventService: EventService,
     private cdr: ChangeDetectorRef,
-    private router: Router,
-    private changeDetectionService: ChangeDetectionService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.fetchEvents();
-
-    this.updateSubscription?.add(
-      this.changeDetectionService.changeDetected$.subscribe(
-        (changeDetected) => {
-          if (changeDetected) {
-            this.fetchEvents();
-          }
-        }
-      )
-    );
   }
 
   ngOnDestroy(): void {
@@ -95,6 +82,10 @@ export class EventsComponent implements OnInit, OnDestroy {
               })
             ),
           }));
+
+          this.eventList = this.eventList.filter(
+            (event) => event.status !== 'done'
+          );
 
           this.latestEvent =
             this.eventList.length > 0 ? this.eventList[0] : undefined;

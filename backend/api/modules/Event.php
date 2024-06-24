@@ -75,10 +75,23 @@ class Events extends  GlobalMethods
                 return $this->sendPayload(null, 'failed', "Event with same name and organizer overlaps in time.", 400);
             }
 
+            if ($data->participation_type === 'open') {
+                $target_participants = null; // or handle accordingly if no specific participants
+            } else {
+                if (empty($data->target_participants->departments) && empty($data->target_participants->year_levels)) {
+                    $target_participants = null; // or handle as needed for empty selection
+                } else {
+                    $target_participants = [
+                        'departments' => $data->target_participants->departments,
+                        'year_levels' => $data->target_participants->year_levels
+                    ];
+                }
+            }
+
             // Proceed with inserting the new event
             $sql_insert = "INSERT INTO events (event_name, event_description, event_location, event_start_date, event_end_date, 
-                            event_registration_start, event_registration_end, session, max_attendees, categories, organizer_name)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                            event_registration_start, event_registration_end, event_type, max_attendees, categories, organizer_name, target_participants, participation_type)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             $stmt_insert = $this->pdo->prepare($sql_insert);
             $stmt_insert->execute([
@@ -89,14 +102,26 @@ class Events extends  GlobalMethods
                 $event_end_date,
                 isset($data->event_registration_start) ? date('Y-m-d H:i:s', strtotime($data->event_registration_start)) : null,
                 isset($data->event_registration_end) ? date('Y-m-d H:i:s', strtotime($data->event_registration_end)) : null,
-                $data->session ?? null,
+                $data->event_type ?? 'physical',
                 (int)($data->max_attendees ?? null),
                 json_encode($data->categories) ?? null,
                 $organizer_name,
+                $target_participants !== null ? json_encode($target_participants) : null,
+                $data->participation_type ?? 'open',
+                // $data->event_benefits ?? null,
+                // $data->learning_outcomes ?? null,
+                // $data->guest_speakers ?? null,
+                // isset($data->certificate) ? (bool)$data->certificate : null
             ]);
+
+
 
             $event_id = $this->pdo->lastInsertId();
             if ($event_id) {
+                $sql_approval = "INSERT INTO event_approval (event_id, status, notified_at) VALUES (?, 'Pending', NOW())";
+                $stmt_approval = $this->pdo->prepare($sql_approval);
+                $stmt_approval->execute([$event_id]);
+
                 return $this->sendPayload(['event_id' => $event_id], 'success', "Event added successfully.", 200);
             } else {
                 return $this->sendPayload(null, 'failed', "Failed to add event.", 500);
@@ -116,7 +141,7 @@ class Events extends  GlobalMethods
         $event_end_date = date('Y-m-d H:i:s', strtotime($data->event_end_date));
         $event_registration_start = isset($data->event_registration_start) ? date('Y-m-d H:i:s', strtotime($data->event_registration_start)) : null;
         $event_registration_end = isset($data->event_registration_end) ? date('Y-m-d H:i:s', strtotime($data->event_registration_end)) : null;
-        $session = $data->session ?? null;
+        $event_type = $data->event_type ?? null;
         $max_attendees = (int)($data->max_attendees ?? null);
         $categories = isset($data->categories) ? json_encode($data->categories) : null;
         $organizer_name = $data->organizer_name ?? null;
@@ -136,7 +161,7 @@ class Events extends  GlobalMethods
         $sql = "UPDATE events 
                 SET event_name = ?, event_description = ?, event_location = ?, 
                     event_start_date = ?, event_end_date = ?, 
-                    event_registration_start = ?, event_registration_end = ?, session = ?, max_attendees = ?, categories = ?, organizer_name = ?
+                    event_registration_start = ?, event_registration_end = ?, event_type = ?, max_attendees = ?, categories = ?, organizer_name = ?
                 WHERE event_id = ?";
 
         try {
@@ -149,7 +174,7 @@ class Events extends  GlobalMethods
                 $event_end_date,
                 $event_registration_start,
                 $event_registration_end,
-                $session,
+                $event_type,
                 $max_attendees,
                 $categories,
                 json_encode($organizer_name),

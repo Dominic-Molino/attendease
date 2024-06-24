@@ -19,6 +19,8 @@ interface Feedback {
   liked: string;
   attend: number;
   recommend: number;
+  improvement_suggestions: string;
+  additional_comments: string;
 }
 
 @Component({
@@ -53,7 +55,28 @@ export class ViewUserFeedbackComponent implements OnInit {
   getUserFeed() {
     this.userService.getUserFeed(this.eventId, this.userId).subscribe(
       (res) => {
-        this.feedbackList = res.payload;
+        this.feedbackList = res.payload.map((feedback: any): Feedback => {
+          return {
+            event_id: feedback.event_id,
+            user_id: feedback.user_id,
+            feedback_date: feedback.feedback_date,
+            overall_satisfaction: feedback.overall_satisfaction,
+            content_quality: feedback.content_quality,
+            speaker_effectiveness: feedback.speaker_effectiveness,
+            venue_rating: feedback.venue_rating,
+            logistics_rating: feedback.logistics_rating,
+            satisfied: feedback.satisfied,
+            joined: feedback.joined,
+            learned: feedback.learned,
+            future: feedback.future,
+            liked: feedback.liked,
+            attend: feedback.attend,
+            recommend: feedback.recommend,
+            improvement_suggestions: feedback.improvement_suggestions,
+            additional_comments: feedback.additional_comments,
+          };
+        });
+        console.log(res.payload);
       },
       (error) => {
         console.error('Error fetching user feedback:', error);

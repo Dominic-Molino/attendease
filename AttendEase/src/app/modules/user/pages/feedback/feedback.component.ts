@@ -31,7 +31,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   styleUrl: './feedback.component.css',
 })
 export class FeedbackComponent implements OnInit, OnDestroy {
-  @Input() feed: Event | undefined;
   @Output() viewEventClicked = new EventEmitter();
 
   events: any[] = [];

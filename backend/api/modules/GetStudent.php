@@ -68,13 +68,7 @@ class GetStudentFunctions extends GlobalMethods
     {
         $columns = "
             events.event_id, event_name, event_description, event_location,
-            event_start_date, event_end_date, event_registration_start, event_registration_end, session, max_attendees, categories, organizer_name,
-            CASE
-                WHEN events.event_end_date < CURDATE() THEN 'done'
-                WHEN events.event_start_date <= CURDATE() THEN 'ongoing'
-                ELSE 'upcoming'
-            END AS event_state
-        ";
+            event_start_date, event_end_date, event_registration_start, event_registration_end, event_type, max_attendees, categories, organizer_name";
 
         $sql = "
             SELECT 
@@ -103,32 +97,6 @@ class GetStudentFunctions extends GlobalMethods
         }
     }
 
-    public function notification($user_id)
-    {
-        $tomorrow = date('Y-m-d', strtotime('+1 day'));
-
-        $sql = "
-        SELECT 
-            events.event_id, event_name, event_start_date, event_end_date
-        FROM events
-        INNER JOIN event_registration ON events.event_id = event_registration.event_id
-        WHERE DATE(event_start_date) = :tomorrow
-        AND event_registration.user_id = :user_id
-    ";
-
-        try {
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':tomorrow', $tomorrow, PDO::PARAM_STR);
-            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-            $stmt->execute();
-
-            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $this->sendPayload($data, 'success', "Successfully retrieved registered events for the user.", 200);
-        } catch (PDOException $e) {
-            error_log("Database error: " . $e->getMessage());
-            return $this->sendPayload(null, 'error', $e->getMessage(), 500);
-        }
-    }
 
     public function getStudentProfile($user_id)
     {

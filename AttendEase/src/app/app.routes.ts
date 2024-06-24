@@ -5,6 +5,7 @@ import { AuthenGuard } from './core/authen.guard';
 import { AdminComponent } from './modules/admin/admin.component';
 import { RoleGuard } from './core/role.guard';
 import { PagenotfoundComponent } from './shared/components/pagenotfound/pagenotfound.component';
+import { AddEventComponent } from './modules/organizer/components/add-event/add-event.component';
 
 export const routes: Routes = [
   {
@@ -65,7 +66,6 @@ export const routes: Routes = [
           ).then((c) => c.AttendanceComponent),
         canActivate: [AuthenGuard],
       },
-
       {
         path: 'admin-view-attendance/:eventId',
         loadComponent: () =>
@@ -86,6 +86,7 @@ export const routes: Routes = [
 
       {
         path: 'admin-per-feedback/:eventId',
+
         loadComponent: () =>
           import(
             './shared/components/feedback-list/feedback-list.component'
@@ -100,6 +101,14 @@ export const routes: Routes = [
             './shared/components/view-user-feedback/view-user-feedback.component'
           ).then((c) => c.ViewUserFeedbackComponent),
         canActivate: [RoleGuard],
+      },
+
+      {
+        path: 'admin-approval/:eventId',
+        loadComponent: () =>
+          import(
+            './modules/admin/components/approval-page/approval-page.component'
+          ).then((c) => c.ApprovalPageComponent),
       },
     ],
   },
@@ -176,6 +185,15 @@ export const routes: Routes = [
           import(
             './modules/user/components/feedback-submission/feedback-submission.component'
           ).then((c) => c.FeedbackSubmissionComponent),
+        canActivate: [AuthenGuard],
+      },
+
+      {
+        path: 'registeredeventhistory',
+        loadComponent: () =>
+          import(
+            './modules/user/components/eventhistory/eventhistory.component'
+          ).then((c) => c.EventhistoryComponent),
         canActivate: [AuthenGuard],
       },
     ],

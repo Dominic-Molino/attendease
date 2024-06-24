@@ -57,19 +57,55 @@ class GetEvent extends GlobalMethods
         return array("code" => $code, "errmsg" => $errmsg);
     }
 
+    public function getAllEvents($event_id = null)
+    {
+        $columns = "e.event_id, e.event_name, e.event_description, e.event_location, 
+                    e.event_start_date, e.event_end_date, e.event_registration_start, 
+                    e.event_registration_end, e.event_type, e.max_attendees, e.categories, 
+                    e.organizer_name, e.event_image, e.created_at, e.target_participants, 
+                    e.participation_type, COALESCE(a.status, 'Pending') AS approval_status, 
+                    a.notified_at, a.approved_by, a.approved_at";
+
+        $sql = "SELECT $columns 
+                FROM events e
+                LEFT JOIN event_approval a ON e.event_id = a.event_id";
+
+        if ($event_id !== null) {
+            $sql .= " WHERE e.event_id = :event_id";
+        }
+        $stmt = $this->pdo->prepare($sql);
+
+        if ($event_id !== null) {
+            $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($data) {
+            return $this->sendPayload($data, 'success', "Successfully retrieved events with approval status.", 200);
+        } else {
+            return $this->sendPayload(null, 'failed', "No events found with approval status or specified event ID.", 404);
+        }
+    }
+
 
     // gets all event
     public function getEvents($event_id = null)
     {
-        $columns = "event_id, event_name, event_description, event_location, event_start_date, event_end_date, event_registration_start, event_registration_end, session, max_attendees, categories, organizer_name";
-        $condition = ($event_id !== null) ? "event_id = $event_id" : null;
+        $columns = "e.event_id, e.event_name, e.event_description, e.event_location, e.event_start_date, e.event_end_date, e.event_registration_start, e.event_registration_end, e.event_type, e.max_attendees, e.categories, e.organizer_name, e.target_participants, e.participation_type";
+        $condition = ($event_id !== null) ? "e.event_id = $event_id" : "ea.status = 'Approved'";
 
-        $events = $this->get_records('events', $condition, $columns);
+        $sql = "SELECT $columns 
+                FROM events e 
+                JOIN event_approval ea ON e.event_id = ea.event_id 
+                WHERE $condition";
 
-        if ($events['status']['remarks'] == 'success') {
+        $events = $this->executeQuery($sql);
+
+        if ($events['code'] == 200) {
             $currentDate = new DateTime();
 
-            foreach ($events['payload'] as &$event) {
+            foreach ($events['data'] as &$event) {
                 $startDate = new DateTime($event['event_start_date']);
                 $endDate = new DateTime($event['event_end_date']);
 
@@ -81,10 +117,14 @@ class GetEvent extends GlobalMethods
                     $event['status'] = 'done';
                 }
             }
+
+            return $this->sendPayload($events['data'], 'success', "Successfully retrieved data.", 200);
         }
 
-        return $events;
+        return $this->sendPayload(null, 'failed', "Failed to retrieve data.", $events['code']);
     }
+
+
     //gets all registered user on a event
     public function getRegisteredUserForEvent($event_id)
     {

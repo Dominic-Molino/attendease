@@ -22,6 +22,7 @@ export class SubmitAttendanceComponent {
   file: any;
   userId: any;
   imagePreview?: string | ArrayBuffer | null = null;
+  eventId: any;
 
   constructor(
     private service: AuthserviceService,
@@ -30,6 +31,8 @@ export class SubmitAttendanceComponent {
     private dialog: MatDialogRef<SubmitAttendanceComponent>
   ) {
     this.userId = this.service.getCurrentUserId();
+    this.eventId = data.eventId;
+    console.log(this.eventId);
   }
 
   onFileChange(event: any) {
@@ -60,11 +63,7 @@ export class SubmitAttendanceComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.service
-          .uploadAttendanceImage(
-            this.data.eventId.event_id,
-            this.userId,
-            this.file
-          )
+          .uploadAttendanceImage(this.eventId, this.userId, this.file)
           .subscribe(
             (data: any) => {
               const Toast = Swal.mixin({
@@ -83,6 +82,7 @@ export class SubmitAttendanceComponent {
                 title: 'Successfully uploaded photo',
               });
               this.resetInput();
+              this.attendanceSubmitted.emit();
               this.dialog.close();
             },
             (error) => {
@@ -102,7 +102,7 @@ export class SubmitAttendanceComponent {
     ) as HTMLInputElement;
     if (input) {
       input.value = '';
-      this.imagePreview = null; // Reset image preview
+      this.imagePreview = null;
     }
   }
 

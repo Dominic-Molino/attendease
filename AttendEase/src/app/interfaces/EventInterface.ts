@@ -10,10 +10,12 @@ export interface Event {
   event_end_date: Date | string;
   event_registration_start: Date | string;
   event_registration_end: Date | string;
-  session: string;
+  event_type: string;
   max_attendees: number;
   categories: { display: string; value: string }[];
   organizer_name: string;
   event_image$: Observable<SafeResourceUrl | undefined>;
   status: string;
+  event_state: 'upcoming' | 'ongoing' | 'done';
+  feedbackSubmitted: boolean;
 }

@@ -1,0 +1,71 @@
+<main class="!scroll-smooth w-full h-screen dark:bg-black">
+  <div class="p-4 mt-16 sm:ml-64">
+    <div
+      *ngIf="events && events.length > 0"
+      class="relative overflow-x-auto shadow-md sm:rounded-lg"
+    >
+      <table
+        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      >
+        <thead
+          class="text-dark-muted border-b border-dark-primary capitalize bg-dark-foreground sticky top-0 z-10"
+        >
+          <tr>
+            <th
+              scope="col"
+              class="px-6 py-3 text-start tracking-widest font-medium"
+            >
+              Product name
+            </th>
+            <th scope="col" class="px-6 py-3 tracking-widest font-medium">
+              Organized By
+            </th>
+            <th scope="col" class="px-6 py-3 tracking-widest font-medium">
+              Status
+            </th>
+            <th scope="col" class="px-6 py-3 tracking-widest font-medium">
+              <span class="sr-only">Edit</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let event of events
+                | paginate : { currentPage: p, itemsPerPage: itemsPerPage }
+            "
+            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+          >
+            <th
+              scope="row"
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            >
+              {{ event.event_name }}
+            </th>
+            <td class="px-6 py-4">{{ event.organizer_name }}</td>
+            <td class="px-6 py-4">{{ event.approval_status }}</td>
+            <td class="px-6 py-4 text-center">
+              <button
+                (click)="openPage(event.event_id)"
+                class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+              >
+                View Event
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div
+      *ngIf="events && events.length > 0"
+      class="flex justify-center items-center mt-auto p-5"
+    >
+      <pagination-controls
+        (pageChange)="p = $event"
+        [maxSize]="maxSize"
+        [responsive]="true"
+        class="pagination"
+      ></pagination-controls>
+    </div>
+  </div>
+</main>

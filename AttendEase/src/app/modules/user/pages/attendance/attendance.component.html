@@ -59,7 +59,13 @@
               scope="col"
               class="px-6 py-3 text-center tracking-widest font-medium"
             >
-              Action
+              Attendance
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 text-center tracking-widest font-medium"
+            >
+              Evaluation
             </th>
           </tr>
         </thead>
@@ -85,7 +91,7 @@
               <td class="py-4 text-center">
                 <div
                   class="text-sm font-medium bg-green-100 inline-flex items-center text-green-800 py-1 px-2 rounded-full"
-                  *ngIf="event.eventState === 'done'"
+                  *ngIf="event.status === 'done'"
                 >
                   <span
                     class="flex w-2.5 h-2.5 bg-light-foregroud rounded-full text-center me-1.5 flex-shrink-0"
@@ -94,7 +100,7 @@
                 </div>
                 <div
                   class="text-sm font-medium bg-blue-100 inline-flex items-center text-blue-800 py-1 px-2 rounded-full"
-                  *ngIf="event.eventState === 'ongoing'"
+                  *ngIf="event.status === 'ongoing'"
                 >
                   <span
                     class="flex w-2.5 h-2.5 bg-blue-500 rounded-full text-center me-1.5 flex-shrink-0"
@@ -103,7 +109,7 @@
                 </div>
                 <div
                   class="text-sm font-medium bg-yellow-100 inline-flex items-center text-yellow-800 py-1 px-2 rounded-full"
-                  *ngIf="event.eventState === 'upcoming'"
+                  *ngIf="event.status === 'upcoming'"
                 >
                   <span
                     class="flex w-2.5 h-2.5 bg-yellow-500 rounded-full text-center me-1.5 flex-shrink-0"
@@ -135,14 +141,11 @@
             <td>
               <button
                 [matTooltipDisabled]="
-                  !(
-                    event.eventState === 'upcoming' ||
-                    event.eventState === 'ongoing'
-                  )
+                  !(event.status === 'upcoming' || event.status === 'ongoing')
                 "
                 matTooltipPosition="above"
                 matTooltip="Please wait for the event to be done."
-                (click)="openFile(event.eventState, event)"
+                (click)="openFile(event.status, event.event_id)"
                 [disabled]="
                   attendanceRemarks[event.event_id] !== 0 &&
                   attendanceRemarks[event.event_id] !== -1
@@ -151,12 +154,36 @@
                   'opacity-50 cursor-not-allowed':
                     (attendanceRemarks[event.event_id] !== 0 &&
                       attendanceRemarks[event.event_id] !== -1) ||
-                    event.eventState === 'upcoming' ||
-                    event.eventState === 'ongoing'
+                    event.status === 'upcoming' ||
+                    event.status === 'ongoing'
                 }"
                 class="block mx-auto px-4 py-2 text-sm text-white font-semibold bg-light-background hover:bg-light-foregroud rounded-md focus:outline-none"
               >
                 Upload photo
+              </button>
+            </td>
+            <td>
+              <button
+                [matTooltipDisabled]="
+                  !(event.status === 'upcoming' || event.status === 'ongoing')
+                "
+                matTooltipPosition="above"
+                matTooltip="Please wait for the event to be done."
+                (click)="openEvaluation(event.status, event.event_id)"
+                [disabled]="
+                  attendanceRemarks[event.event_id] !== 0 &&
+                  attendanceRemarks[event.event_id] !== -1
+                "
+                [ngClass]="{
+                  'opacity-50 cursor-not-allowed':
+                    (attendanceRemarks[event.event_id] !== 0 &&
+                      attendanceRemarks[event.event_id] !== -1) ||
+                    event.status === 'upcoming' ||
+                    event.status === 'ongoing'
+                }"
+                class="block mx-auto px-4 py-2 text-sm text-white font-semibold bg-light-background hover:bg-light-foregroud rounded-md focus:outline-none"
+              >
+                Post Feedback
               </button>
             </td>
           </tr>

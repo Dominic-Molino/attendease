@@ -13,22 +13,7 @@ import { Observable, of, Subscription, interval, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
-interface Event {
-  event_id: number;
-  event_name: string;
-  event_description: string;
-  event_location: string;
-  event_start_date: Date;
-  event_end_date: Date;
-  event_registration_start: Date;
-  event_registration_end: Date;
-  session: string;
-  max_attendees: number;
-  categories: { display: string; value: string }[];
-  organizer_name: string;
-  status?: 'done' | 'ongoing' | 'upcoming';
-}
+import { Event } from '../../../../interfaces/EventInterface';
 
 @Component({
   selector: 'app-preview',
@@ -44,7 +29,7 @@ interface Event {
   styleUrls: ['./preview.component.css'],
 })
 export class PreviewComponent implements OnInit, OnDestroy {
-  event: Event[] = [];
+  events: Event[] = [];
   userId = this.userService.getCurrentUserId();
   eventWithStatus?: any;
   isRegistered = false;
@@ -67,9 +52,6 @@ export class PreviewComponent implements OnInit, OnDestroy {
       this.eventId = +params['eventId'];
       this.fetchEventDetails(this.eventId);
     });
-
-    // Setup polling to refresh event details every 30 seconds
-    this.setupPolling();
   }
 
   ngOnDestroy(): void {
@@ -78,103 +60,32 @@ export class PreviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  setupPolling() {
-    const pollingIntervalMs = 30000; // 30 seconds
-
-    this.refreshSubscription = timer(3000, pollingIntervalMs)
-      .pipe(switchMap(() => this.service.getEventById(this.eventId)))
-      .subscribe(
-        (response) => {
-          this.event = response.map((ev: any): Event => {
-            const categories: { display: string; value: string }[] = JSON.parse(
-              ev.categories
-            );
-            return {
-              event_id: ev.event_id,
-              event_name: ev.event_name,
-              event_description: ev.event_description,
-              event_location: ev.event_location,
-              event_start_date: new Date(ev.event_start_date),
-              event_end_date: new Date(ev.event_end_date),
-              event_registration_start: new Date(ev.event_registration_start),
-              event_registration_end: new Date(ev.event_registration_end),
-              session: ev.session,
-              max_attendees: ev.max_attendees,
-              categories: categories,
-              organizer_name: ev.organizer_name.replace(/^"|"$/g, ''),
-            };
-          });
-
-          this.eventImage$ = this.service.getEventImage(this.eventId).pipe(
-            switchMap((imageResult) => {
-              if (imageResult.size > 0) {
-                const url = URL.createObjectURL(imageResult);
-                return of(this.sanitizer.bypassSecurityTrustResourceUrl(url));
-              } else {
-                return of(undefined);
-              }
-            })
-          );
-          this.checkUserRegistration();
-          this.setEventStatus();
-        },
-        (error) => {
-          console.error('Error fetching event details:', error);
-        }
-      );
-  }
-
   fetchEventDetails(eventId: number): void {
-    this.service.getEventById(eventId).subscribe((response) => {
-      this.event = response.map((ev: any): Event => {
-        const categories: { display: string; value: string }[] = JSON.parse(
-          ev.categories
-        );
-        return {
-          event_id: ev.event_id,
-          event_name: ev.event_name,
-          event_description: ev.event_description,
-          event_location: ev.event_location,
-          event_start_date: new Date(ev.event_start_date),
-          event_end_date: new Date(ev.event_end_date),
-          event_registration_start: new Date(ev.event_registration_start),
-          event_registration_end: new Date(ev.event_registration_end),
-          session: ev.session,
-          max_attendees: ev.max_attendees,
-          categories: categories,
-          organizer_name: ev.organizer_name.replace(/^"|"$/g, ''),
-        };
-      });
-
-      this.eventImage$ = this.service.getEventImage(eventId).pipe(
-        switchMap((imageResult) => {
-          if (imageResult.size > 0) {
-            const url = URL.createObjectURL(imageResult);
-            return of(this.sanitizer.bypassSecurityTrustResourceUrl(url));
-          } else {
-            return of(undefined);
-          }
-        })
-      );
-      this.checkUserRegistration();
-      this.setEventStatus();
+    this.service.getEventById(eventId).subscribe({
+      next: (result: any) => {
+        if (result && Array.isArray(result)) {
+          this.events = result.map((event) => ({
+            ...event,
+            event_start_date: new Date(event.event_start_date),
+            event_end_date: new Date(event.event_end_date),
+            event_registration_start: new Date(event.event_registration_start),
+            event_registration_end: new Date(event.event_registration_end),
+            categories: JSON.parse(event.categories),
+            event_image$: this.service.getEventImage(event.event_id).pipe(
+              switchMap((imageResult) => {
+                if (imageResult.size > 0) {
+                  const url = URL.createObjectURL(imageResult);
+                  return of(this.sanitizer.bypassSecurityTrustResourceUrl(url));
+                } else {
+                  return of(undefined);
+                }
+              })
+            ),
+          }));
+        }
+      },
     });
-  }
-
-  setEventStatus(): void {
-    const currentDate = new Date();
-    this.event.forEach((ev) => {
-      if (currentDate > ev.event_end_date) {
-        ev['status'] = 'done';
-      } else if (
-        currentDate >= ev.event_start_date &&
-        currentDate <= ev.event_end_date
-      ) {
-        ev['status'] = 'ongoing';
-      } else if (currentDate < ev.event_start_date) {
-        ev['status'] = 'upcoming';
-      }
-    });
+    this.checkUserRegistration();
   }
 
   checkUserRegistration(): void {

@@ -46,6 +46,17 @@
               placeholder="Event name"
               required=""
             />
+            <mat-error
+              *ngIf="
+                eventForm.get('event_name')?.invalid &&
+                (eventForm.get('event_name')?.dirty ||
+                  eventForm.get('event_name')?.touched)
+              "
+            >
+              <mat-error class="text-red-900"
+                >Email is <strong>required</strong></mat-error
+              >
+            </mat-error>
           </div>
 
           <div class="w-full">
@@ -62,17 +73,26 @@
               class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
               placeholder="Event location"
             />
+            <mat-error
+              *ngIf="
+                eventForm.get('event_location')?.invalid &&
+                (eventForm.get('event_location')?.dirty ||
+                  eventForm.get('event_location')?.touched)
+              "
+            >
+              Event Name is required.
+            </mat-error>
           </div>
 
           <div class="w-full">
             <label
-              for="session"
+              for="event_type"
               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >Event Type</label
             >
             <select
-              id="session"
-              formControlName="session"
+              id="event_type"
+              formControlName="event_type"
               class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
             >
               <option value="" disabled selected>Select Event Type</option>
@@ -179,6 +199,52 @@
               [separatorKeyCodes]="[13, 188]"
             >
             </tag-input>
+          </div>
+        </div>
+
+        <div>
+          <label>Participation Type</label>
+          <select
+            formControlName="participation_type"
+            (change)="onParticipationTypeChange($event)"
+          >
+            <option value="open">Open for All</option>
+            <option value="selected">Select Participants</option>
+          </select>
+        </div>
+
+        <div
+          formGroupName="target_participants"
+          *ngIf="eventForm.get('participation_type')?.value === 'selected'"
+        >
+          <div class="form-group">
+            <label>Departments</label>
+            <div *ngFor="let dep of departments">
+              <label>
+                <input
+                  type="checkbox"
+                  [checked]="isDepartmentChecked(dep)"
+                  [value]="dep"
+                  (change)="onCheckboxChange($event, departmentsArray)"
+                />
+                {{ dep }}
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Year Levels</label>
+            <div *ngFor="let year of year_levels">
+              <label>
+                <input
+                  type="checkbox"
+                  [checked]="isYearLevelChecked(year)"
+                  [value]="year"
+                  (change)="onCheckboxChange($event, yearLevelsArray)"
+                />
+                {{ year }}
+              </label>
+            </div>
           </div>
         </div>
 
