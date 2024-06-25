@@ -75,16 +75,15 @@ class Events extends  GlobalMethods
                 return $this->sendPayload(null, 'failed', "Event with same name and organizer overlaps in time.", 400);
             }
 
-            if ($data->participation_type === 'open') {
-                $target_participants = null; // or handle accordingly if no specific participants
-            } else {
-                if (empty($data->target_participants->departments) && empty($data->target_participants->year_levels)) {
-                    $target_participants = null; // or handle as needed for empty selection
-                } else {
-                    $target_participants = [
-                        'departments' => $data->target_participants->departments,
-                        'year_levels' => $data->target_participants->year_levels
-                    ];
+            $target_participants = [];
+            if ($data->participation_type !== 'open' && !empty($data->target_participants)) {
+                foreach ($data->target_participants as $department => $year_levels) {
+                    if (!empty($year_levels)) {
+                        $target_participants[] = [
+                            'department' => $department,
+                            'year_levels' => implode(', ', $year_levels)
+                        ];
+                    }
                 }
             }
 
@@ -106,12 +105,8 @@ class Events extends  GlobalMethods
                 (int)($data->max_attendees ?? null),
                 json_encode($data->categories) ?? null,
                 $organizer_name,
-                $target_participants !== null ? json_encode($target_participants) : null,
+                !empty($target_participants) ? json_encode($target_participants) : null,
                 $data->participation_type ?? 'open',
-                // $data->event_benefits ?? null,
-                // $data->learning_outcomes ?? null,
-                // $data->guest_speakers ?? null,
-                // isset($data->certificate) ? (bool)$data->certificate : null
             ]);
 
 

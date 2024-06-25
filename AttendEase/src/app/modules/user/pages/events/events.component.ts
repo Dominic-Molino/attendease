@@ -36,9 +36,9 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   loading: boolean = false;
   maxChar: number = 100;
-
   p: number = 1;
   itemsPerPage: number = 6;
+  registeredUsers: { [eventId: number]: number } = {};
 
   private updateSubscription?: Subscription;
 
@@ -63,7 +63,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   subscribeToUserEvents(): void {
     this.eventService.getUserEvent().subscribe((res) => {
       console.log(res.payload);
-      this.registeredEvents = res.payload; // Assuming res.payload contains the list of registered events
+      this.registeredEvents = res.payload;
       this.filterRegisteredEvents();
       this.cdr.markForCheck();
     });
@@ -94,6 +94,11 @@ export class EventsComponent implements OnInit, OnDestroy {
               })
             ),
           }));
+
+          this.eventList.forEach((ev: any) => {
+            this.fetchRegisteredUser(ev.event_id);
+            console.log(ev.target_participants);
+          });
 
           const currentDate = new Date();
           this.eventList = this.eventList.filter(
@@ -126,6 +131,16 @@ export class EventsComponent implements OnInit, OnDestroy {
         console.error('Error fetching events:', err);
         this.loading = false;
       },
+    });
+  }
+
+  fetchRegisteredUser(eventId: number) {
+    this.eventService.getRegisteredUser(eventId).subscribe((res: any) => {
+      console.log(
+        `Registered users for event ${eventId}: ${res.payload.length}`
+      );
+      this.registeredUsers[eventId] = res.payload.length;
+      this.cdr.markForCheck();
     });
   }
 

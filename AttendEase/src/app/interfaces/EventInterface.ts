@@ -18,6 +18,7 @@ export interface Event {
   status: string;
   event_state: 'upcoming' | 'ongoing' | 'done';
   participation_type: string;
-  target_participants: string[];
+  target_participants: { department: string; year_levels: string }[];
+  registeredUserCount?: number;
   feedbackSubmitted: boolean;
 }

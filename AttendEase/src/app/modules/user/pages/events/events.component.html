@@ -132,6 +132,7 @@
                     >
                   </div>
                 </div>
+
                 <p
                   class="leading-tight text-base overflow-hidden whitespace-pre-line text-ellipsis text-dark-text"
                 >
@@ -139,14 +140,56 @@
                     truncateDescription(latestEvent!.event_description, maxChar)
                   }}
                 </p>
+                <p>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-users-round"
+                  >
+                    <path d="M18 21a8 8 0 0 0-16 0" />
+                    <circle cx="10" cy="8" r="5" />
+                    <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3" />
+                  </svg>
+                  <span class="text-sm font-medium text-gray-500">
+                    Registered Users:
+                    {{ registeredUsers[latestEvent!.event_id] || 0 }}
+                  </span>
+                </p>
                 <p class="" *ngIf="latestEvent?.participation_type === 'open'">
                   Open for All
                 </p>
                 <p
-                  class=""
                   *ngIf="latestEvent?.participation_type === 'selected'"
+                  class="text-sm"
                 >
-                  {{ latestEvent?.target_participants }}
+                  Target Participants:
+                  <ng-container
+                    *ngFor="
+                      let participant of latestEvent?.target_participants;
+                      let i = index
+                    "
+                  >
+                    <span class="inline-block">
+                      <span class="font-medium">{{
+                        participant.department
+                      }}</span>
+                      - {{ participant.year_levels }}
+                      <span
+                        *ngIf="
+                          i !== (latestEvent?.target_participants)!.length - 1
+                        "
+                      >
+                        &
+                      </span>
+                    </span>
+                  </ng-container>
                 </p>
 
                 <button
@@ -256,18 +299,18 @@
                     event.event_registration_end | date
                   }}</span>
                 </div>
+
                 <p class="text-dark-text text-sm mt-3">
                   {{ truncateDescription(event.event_description, maxChar) }}
                 </p>
-                <p>
-                  {{ event.max_attendees }}
-                </p>
+
                 <p class="" *ngIf="event.participation_type === 'open'">
                   Open for All
                 </p>
                 <p class="" *ngIf="event.participation_type === 'selected'">
                   {{ event.target_participants.departments }}
                   {{ event.target_participants.year_levels }}
+                  sleweteasd
                 </p>
                 <div class="flex mt-auto justify-start mb-4 items-center">
                   <button
@@ -277,6 +320,10 @@
                     Read More
                   </button>
                 </div>
+                <span class="text-sm font-medium text-gray-500">
+                  Registered Users:
+                  {{ registeredUsers[event?.event_id] || 0 }}
+                </span>
               </div>
             </div>
           </ng-container>

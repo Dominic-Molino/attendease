@@ -129,7 +129,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
             datasets: [
               {
                 label: 'Events',
-                backgroundColor: '#04c464',
+                backgroundColor: '#db7c24',
                 barThickness: 20,
                 borderRadius: 15,
                 data: [ongoing, done, upcoming],

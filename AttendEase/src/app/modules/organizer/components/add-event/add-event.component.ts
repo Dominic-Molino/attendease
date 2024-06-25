@@ -91,8 +91,10 @@ export class AddEventComponent implements OnInit {
       organizer_name: ['', Validators.required],
       participation_type: ['open', Validators.required],
       target_participants: this.builder.group({
-        departments: this.builder.array([]),
-        year_levels: this.builder.array([]),
+        BSEMC: this.builder.array([]),
+        BSIT: this.builder.array([]),
+        BSCS: this.builder.array([]),
+        ACT: this.builder.array([]),
       }),
     });
   }
@@ -101,34 +103,20 @@ export class AddEventComponent implements OnInit {
 
   onParticipationTypeChange(event: Event) {
     const value = (event.target as HTMLSelectElement).value;
-
     if (value === 'open') {
       this.eventForm.get('target_participants')?.disable();
-      this.clearFormArray(this.departmentsArray);
-      this.clearFormArray(this.yearLevelsArray);
     } else {
       this.eventForm.get('target_participants')?.enable();
     }
-
-    this.eventForm.get('target_participants')?.updateValueAndValidity();
   }
 
-  get departmentsArray() {
-    return this.eventForm.get('target_participants.departments') as FormArray;
+  getTargetParticipantsArray(department: string): FormArray {
+    return this.eventForm.get(`target_participants.${department}`) as FormArray;
   }
 
-  get yearLevelsArray() {
-    return this.eventForm.get('target_participants.year_levels') as FormArray;
-  }
-
-  clearFormArray(formArray: FormArray) {
-    while (formArray.length) {
-      formArray.removeAt(0);
-    }
-  }
-
-  onCheckboxChange(event: Event, formArray: FormArray) {
+  onCheckboxChange(event: Event, department: string) {
     const checkbox = event.target as HTMLInputElement;
+    const formArray = this.getTargetParticipantsArray(department);
     if (checkbox.checked) {
       formArray.push(new FormControl(checkbox.value));
     } else {
@@ -141,24 +129,23 @@ export class AddEventComponent implements OnInit {
     }
   }
 
-  isDepartmentChecked(department: string): boolean {
-    return this.departmentsArray.controls.some(
-      (control) => control.value === department
-    );
-  }
+  // isDepartmentChecked(department: string): boolean {
+  //   return this.departmentsArray.controls.some(
+  //     (control) => control.value === department
+  //   );
+  // }
 
-  isYearLevelChecked(yearLevel: string): boolean {
-    return this.yearLevelsArray.controls.some(
-      (control) => control.value === yearLevel
-    );
-  }
+  // isYearLevelChecked(yearLevel: string): boolean {
+  //   return this.yearLevelsArray.controls.some(
+  //     (control) => control.value === yearLevel
+  //   );
+  // }
 
   onSelectChange(event: Event, formArray: FormArray) {
     const selectedOptions = (event.target as HTMLSelectElement).selectedOptions;
     const values = Array.from(selectedOptions).map(
       (option) => (option as HTMLOptionElement).value
     );
-    this.clearFormArray(formArray);
     values.forEach((value) => formArray.push(new FormControl(value)));
   }
 
@@ -182,28 +169,20 @@ export class AddEventComponent implements OnInit {
     if (this.eventForm.valid) {
       const formData = this.eventForm.value;
 
-      if (this.file) {
-        formData.file = this.file;
-      }
-
-      if (formData.participation_type === 'open') {
-        formData.target_participants = null; // or any other representation for empty
-      } else {
-        // Check if both departments and year_levels are empty arrays
-        if (
-          formData.target_participants.departments.length === 0 &&
-          formData.target_participants.year_levels.length === 0
-        ) {
-          formData.target_participants = null; // or any other representation for empty
-        } else {
-          formData.target_participants = {
-            departments: formData.target_participants.departments,
-            year_levels: formData.target_participants.year_levels,
-          };
+      const targetParticipants: any = {};
+      for (const dept of this.departments) {
+        const selectedYearLevels = this.getTargetParticipantsArray(dept).value;
+        if (selectedYearLevels.length > 0) {
+          targetParticipants[dept] = selectedYearLevels;
         }
       }
 
+      formData.target_participants = targetParticipants;
       console.log(formData);
+
+      if (this.file) {
+        formData.file = this.file;
+      }
 
       this.eventService.addEvent(formData).subscribe(
         (res) => {

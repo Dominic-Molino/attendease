@@ -114,7 +114,7 @@ export class FeedbackChartComponent implements OnInit, OnDestroy {
               datasets: [
                 {
                   label: 'Average Rating',
-                  backgroundColor: '#04c464',
+                  backgroundColor: '#db7c24',
                   barThickness: 20,
                   borderRadius: 15,
                   data: [

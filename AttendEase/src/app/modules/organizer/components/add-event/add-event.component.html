@@ -217,30 +217,14 @@
           formGroupName="target_participants"
           *ngIf="eventForm.get('participation_type')?.value === 'selected'"
         >
-          <div class="form-group">
-            <label>Departments</label>
-            <div *ngFor="let dep of departments">
-              <label>
-                <input
-                  type="checkbox"
-                  [checked]="isDepartmentChecked(dep)"
-                  [value]="dep"
-                  (change)="onCheckboxChange($event, departmentsArray)"
-                />
-                {{ dep }}
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Year Levels</label>
+          <div class="form-group" *ngFor="let dep of departments">
+            <label>{{ dep }}</label>
             <div *ngFor="let year of year_levels">
               <label>
                 <input
                   type="checkbox"
-                  [checked]="isYearLevelChecked(year)"
                   [value]="year"
-                  (change)="onCheckboxChange($event, yearLevelsArray)"
+                  (change)="onCheckboxChange($event, dep)"
                 />
                 {{ year }}
               </label>

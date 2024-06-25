@@ -58,7 +58,7 @@ export class ComparingEventsComponent implements OnInit, OnDestroy {
           datasets: [
             {
               label: 'Number of Students per Events',
-              backgroundColor: '#04c464',
+              backgroundColor: '#db7c24',
               barThickness: 20,
               borderRadius: 15,
               data: attendeeCounts,

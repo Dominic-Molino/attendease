@@ -11,7 +11,7 @@ module.exports = {
           foreground: "#2d2d2b",
           // blockss
           primary: "#fafafa",
-          border: "#b7b5ae",
+          border: "#8e8c87",
           input: "#27272a",
           text: "#71717a",
           // for bg
@@ -19,11 +19,11 @@ module.exports = {
         },
         light: {
           // for buttons
-          background: "#04bc64",
-          foregroud: "#049151",
+          background: "#db7c24",
+          foregroud: "#d26c1c",
           // for readability
-          text: "#04bc64",
-          border: "#04bc64",
+          text: "#db7c24",
+          border: "#db7c24",
         },
         text: "#444444",
       },
