@@ -1,102 +1,20 @@
 <main class="w-full h-screen">
   <div class="p-4 sm:ml-64 mt-16">
-    <div class="flex justify-center">
-      <div
-        class="flex flex-col md:flex-row max-w-7xl justify-center items-center"
-      >
-        <div
-          class="overflow-hidden w-3/4 md:w-1/3 bg-white m-4 shadow-sm flex flex-col justify-center"
-        >
-          <div class="h-26 w-full overflow-hidden">
-            <img
-              src="https://source.unsplash.com/random/500x400/?nature "
-              alt=""
-              class=""
-            />
-          </div>
-          <div class="text-sm text-gray-500 m-2">30 March, 2023</div>
-          <div class="font-bold text-lg text-black m-2">
-            There is something about nature that just feels so calming.
-          </div>
-          <div class="text-gray-500 m-2 text-sm">
-            <a href=""
-              >There is something about nature that just feels so calming.
-              Whether you are out hiking through the wilderness or simply taking
-              a stroll through your local park, being surrounded by natural
-              beauty can really put you in a good mood. And there is definitely
-              something therapeutic about spending time in nature, whether it is
-              clearing your mind after a long day or just enjoying the peace and
-              quiet.</a
-            >
-          </div>
-          <div class="flex justify-between">
-            <div class="flex m-2"></div>
-          </div>
-        </div>
-        <div
-          class="overflow-hidden w-3/4 md:w-1/3 bg-white m-4 shadow-sm flex flex-col justify-center"
-        >
-          <div class="h-26 w-full overflow-hidden">
-            <img
-              src="https://source.unsplash.com/random/500x400/?beach "
-              alt=""
-              class=""
-            />
-          </div>
-          <div class="text-sm text-gray-500 m-2">30 March, 2023</div>
-          <div class="font-bold text-lg text-black m-2">This is post title</div>
-          <div class="text-gray-500 m-2 text-sm">
-            <a href=""
-              >When you go to the beach, there are a few things that you should
-              expect. The first thing is that the beach will be hot. The beaches
-              in California are typically hot, and the beaches in Florida are
-              typically hot.</a
-            >
-          </div>
-          <div class="flex justify-between">
-            <div class="flex m-2"></div>
-          </div>
-        </div>
-        <div
-          class="overflow-hidden w-3/4 md:w-1/3 bg-white m-4 shadow-sm flex flex-col justify-center"
-        >
-          <div class="h-26 w-full overflow-hidden">
-            <img
-              src="https://source.unsplash.com/random/500x400/?galaxy "
-              alt=""
-              class=""
-            />
-          </div>
-          <div class="text-sm text-gray-500 m-2">30 March, 2023</div>
-          <div class="font-bold text-lg text-black m-2">This is post title</div>
-          <div class="text-gray-500 m-2 text-sm">
-            <a href=""
-              >Galaxies are one of the biggest things in the Universe. They are
-              so big that they can be seen with the naked eye. Galaxies are made
-              up of billions of stars.</a
-            >
-          </div>
-          <div class="flex justify-between">
-            <div class="flex m-2"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://use.fontawesome.com/03f8a0ebd4.js"></script>
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
-    ></script>
-
     <div>
-      <p class="mt-5 mb-2 text-text text-2xl font-semibold tracking-wide">
-        Events
-      </p>
+      <div class="flex items-center w-full">
+        <p
+          class="mt-5 mb-2 w-full text-text text-2xl font-semibold tracking-wide"
+        >
+          Events
+        </p>
+
+        <button
+          (click)="onClickButton()"
+          class="text-sm mr-5 font-medium whitespace-nowrap self-center w-fit justify-self-center text-dark-text hover:text-light-background hover:underline"
+        >
+          Your events
+        </button>
+      </div>
 
       <hr class="h-px mb-6 bg-dark-border border-0" />
     </div>
@@ -114,17 +32,19 @@
         ></div>
       </div>
     </div>
-    }@else if(!loading && eventList.length > 0){
+    }@else if(!loading && filteredEventList.length > 0){
     <div class="container">
       @defer{
-      <section class="flex items-center flex-col">
-        <ng-container *ngIf="latestEvent">
-          <h5
-            class="flex self-start mb-2 text-lg font-bold tracking-tight text-text"
-          >
-            Latest Event
-          </h5>
+      <h5
+        class="flex self-start mb-2 text-lg font-bold tracking-tight text-text"
+      >
+        Latest Event
+      </h5>
 
+      <section class="flex items-center flex-col">
+        <ng-container
+          *ngIf="filteredEventList && !isUserRegisteredForLatestEvent()"
+        >
           <div
             class="rounded-md shadow-md border border-dark-border container bg-white hover:bg-dark-muted"
           >
@@ -162,7 +82,7 @@
               <div class="rounded-md h-80 py-3.5 md:w-1/2 w-full">
                 <img
                   *ngIf="
-                    latestEvent.event_image$ | async as eventImage;
+                    latestEvent?.event_image$ | async as eventImage;
                     else placeholder
                   "
                   [src]="eventImage"
@@ -182,7 +102,7 @@
                   <h1
                     class="overflow-hidden text-ellipsis text-text text-2xl md:text-2xl font-medium mt-3"
                   >
-                    {{ latestEvent.event_name }}
+                    {{ latestEvent?.event_name }}
                   </h1>
                   <div class="flex items-center">
                     <svg
@@ -204,11 +124,11 @@
                     </svg>
                     <span class="ms-1 text-[13px] text-text"
                       >Registration Date:
-                      {{ latestEvent.event_registration_start | date }}
+                      {{ latestEvent?.event_registration_start | date }}
                     </span>
                     <span class="ms-1 text-text"> - </span>
                     <span class="ms-2 text-[13px] text-text">
-                      {{ latestEvent.event_registration_end | date }}</span
+                      {{ latestEvent?.event_registration_end | date }}</span
                     >
                   </div>
                 </div>
@@ -216,12 +136,22 @@
                   class="leading-tight text-base overflow-hidden whitespace-pre-line text-ellipsis text-dark-text"
                 >
                   {{
-                    truncateDescription(latestEvent.event_description, maxChar)
+                    truncateDescription(latestEvent!.event_description, maxChar)
                   }}
                 </p>
+                <p class="" *ngIf="latestEvent?.participation_type === 'open'">
+                  Open for All
+                </p>
+                <p
+                  class=""
+                  *ngIf="latestEvent?.participation_type === 'selected'"
+                >
+                  {{ latestEvent?.target_participants }}
+                </p>
+
                 <button
                   class="bg-light-background hover:bg-light-foregroud text-white text-sm font-semibold shadow-sm rounded-md py-2 px-6 relative -bottom-3.5"
-                  (click)="openPreview(latestEvent.event_id)"
+                  (click)="openPreview(latestEvent!.event_id)"
                 >
                   Read More
                 </button>
@@ -329,6 +259,16 @@
                 <p class="text-dark-text text-sm mt-3">
                   {{ truncateDescription(event.event_description, maxChar) }}
                 </p>
+                <p>
+                  {{ event.max_attendees }}
+                </p>
+                <p class="" *ngIf="event.participation_type === 'open'">
+                  Open for All
+                </p>
+                <p class="" *ngIf="event.participation_type === 'selected'">
+                  {{ event.target_participants.departments }}
+                  {{ event.target_participants.year_levels }}
+                </p>
                 <div class="flex mt-auto justify-start mb-4 items-center">
                   <button
                     (click)="openPreview(event.event_id)"
@@ -344,7 +284,7 @@
       </section>
       }
       <div
-        *ngIf="eventList.length > 0"
+        *ngIf="filteredEventList.length > 0"
         class="flex justify-center items-center mt-auto p-5"
       >
         <pagination-controls

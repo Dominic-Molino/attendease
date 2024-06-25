@@ -17,5 +17,7 @@ export interface Event {
   event_image$: Observable<SafeResourceUrl | undefined>;
   status: string;
   event_state: 'upcoming' | 'ongoing' | 'done';
+  participation_type: string;
+  target_participants: string[];
   feedbackSubmitted: boolean;
 }

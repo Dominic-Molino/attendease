@@ -75,7 +75,7 @@ export class EditEventComponent implements OnInit {
         this.eventVal.event_registration_end,
         Validators.required,
       ],
-      session: [this.eventVal.session, Validators.required],
+      event_type: [this.eventVal.event_type, Validators.required],
       max_attendees: [this.eventVal.max_attendees, Validators.required],
       categories: [
         this.eventVal.categories ? JSON.parse(this.eventVal.categories) : [],
@@ -97,7 +97,7 @@ export class EditEventComponent implements OnInit {
         event_end_date: this.eventVal.event_end_date,
         event_registration_start: this.eventVal.event_registration_start,
         event_registration_end: this.eventVal.event_registration_end,
-        session: this.eventVal.session,
+        event_type: this.eventVal.event_type,
         max_attendees: this.eventVal.max_attendees,
         categories: this.eventVal.categories
           ? JSON.parse(this.eventVal.categories)

@@ -20,7 +20,6 @@ interface Event {
   event_registration_end: Date;
   session: string;
   status?: string;
-  event_image: SafeResourceUrl | undefined;
 }
 
 @Component({
@@ -72,17 +71,7 @@ export class AttendanceComponent implements OnInit {
           event_registration_end: data.event_registration_end,
           session: data.session,
           status: this.getEventStatus(data),
-          event_image: undefined,
         };
-
-        this.service.getEventImage(eventId).subscribe((imageResult) => {
-          if (imageResult.size > 0) {
-            const url = URL.createObjectURL(imageResult);
-            eventObject.event_image =
-              this.sanitizer.bypassSecurityTrustResourceUrl(url);
-          }
-        });
-
         return eventObject;
       });
 

@@ -6,8 +6,19 @@ import { CommonModule, TitleCasePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { EventService } from '../../../../core/service/event.service';
-import { forkJoin, of, throwError, Subscription, timer } from 'rxjs';
-import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
+import { forkJoin, of, throwError, Subscription, timer, concat } from 'rxjs';
+import {
+  catchError,
+  delay,
+  map,
+  mergeMap,
+  retry,
+  retryWhen,
+  scan,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
 interface User {
@@ -43,6 +54,7 @@ export class StudentlistComponent implements OnInit, OnDestroy {
   totalRecords: number = 0;
   maxSize = 5;
   private subscription?: Subscription;
+  private usersWithoutEvents: Set<number> = new Set(); // Cache for users with no events
 
   constructor(
     private service: AuthserviceService,
@@ -70,7 +82,7 @@ export class StudentlistComponent implements OnInit, OnDestroy {
   }
 
   setupPolling(): void {
-    const pollingInterval = 60000; // 30 seconds
+    const pollingInterval = 60000; // 60 seconds
 
     this.subscription = timer(0, pollingInterval)
       .pipe(
@@ -90,29 +102,49 @@ export class StudentlistComponent implements OnInit, OnDestroy {
                 })
               )
             ),
+            tap((datalist) => (this.datalist = datalist)),
             mergeMap((datalist) => {
-              this.datalist = datalist;
-              const userObservables = this.datalist.map((user) =>
-                this.eventService.getUsersEvent(user.user_id).pipe(
-                  map((eventRes: any) => {
-                    user.eventCount = eventRes.payload
-                      ? eventRes.payload.length
-                      : 0;
-                  }),
-                  catchError((error) => {
-                    if (error.status === 404) {
-                      user.eventCount = 0;
-                      return of(null);
-                    }
-                    return throwError(error);
-                  })
-                )
-              );
+              const userObservables = datalist
+                .filter(
+                  (user: { user_id: number }) =>
+                    !this.usersWithoutEvents.has(user.user_id)
+                ) // Filter out users without events
+                .map((user: { user_id: number; eventCount: number }) =>
+                  this.eventService.getUsersEvent(user.user_id).pipe(
+                    tap((eventRes: any) => {
+                      user.eventCount = eventRes.payload
+                        ? eventRes.payload.length
+                        : 0;
+                      if (!eventRes.payload) {
+                        this.usersWithoutEvents.add(user.user_id);
+                      }
+                    }),
+                    catchError((error) => {
+                      if (error.status === 404) {
+                        user.eventCount = 0;
+                        this.usersWithoutEvents.add(user.user_id);
+                        return of(null);
+                      }
+                      return throwError(error);
+                    })
+                  )
+                );
               return forkJoin(userObservables);
             }),
             map(() => {
               this.filterData(this.searchForm.get('searchValue')!.value);
-            })
+            }),
+            retryWhen((errors) =>
+              errors.pipe(
+                scan((retryCount, error) => {
+                  if (retryCount >= 2) {
+                    throw error;
+                  }
+                  return retryCount + 1;
+                }, 0),
+                delay(5000)
+              )
+            )
           )
         ),
         catchError((error) => {
@@ -140,20 +172,26 @@ export class StudentlistComponent implements OnInit, OnDestroy {
         })
       );
 
-      const userObservables = this.datalist.map((user) =>
-        this.eventService.getUsersEvent(user.user_id).pipe(
-          map((eventRes: any) => {
-            user.eventCount = eventRes.payload ? eventRes.payload.length : 0;
-          }),
-          catchError((error) => {
-            if (error.status === 404) {
-              user.eventCount = 0;
-              return of(null);
-            }
-            return throwError(error);
-          })
-        )
-      );
+      const userObservables = this.datalist
+        .filter((user) => !this.usersWithoutEvents.has(user.user_id)) // Filter out users without events
+        .map((user) =>
+          this.eventService.getUsersEvent(user.user_id).pipe(
+            tap((eventRes: any) => {
+              user.eventCount = eventRes.payload ? eventRes.payload.length : 0;
+              if (!eventRes.payload) {
+                this.usersWithoutEvents.add(user.user_id); // Cache users without events
+              }
+            }),
+            catchError((error) => {
+              if (error.status === 404) {
+                user.eventCount = 0;
+                this.usersWithoutEvents.add(user.user_id); // Cache users without events
+                return of(null);
+              }
+              return throwError(error);
+            })
+          )
+        );
 
       forkJoin(userObservables).subscribe(() => {
         this.filterData(this.searchForm.get('searchValue')!.value);

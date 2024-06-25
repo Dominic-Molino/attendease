@@ -16,10 +16,10 @@
           class="text-dark-muted border-b border-dark-primary capitalize bg-dark-foreground sticky top-0 z-10"
         >
           <tr>
-            <th scope="col" class="px-6 py-3">
-              <span class="sr-only">Image</span>
-            </th>
-            <th scope="col" class="px-6 py-3 tracking-widest font-medium">
+            <th
+              scope="col"
+              class="px-6 py-3 tracking-widest text-center font-medium"
+            >
               Event Name
             </th>
             <th scope="col" class="px-6 py-3 tracking-widest font-medium">
@@ -41,14 +41,7 @@
             "
             class="bg-white border-b border-dark-border"
           >
-            <td class="w-16 md:w-32 h-12 max-w-full max-h-full">
-              <img
-                *ngIf="event.event_image"
-                [src]="event.event_image"
-                class="w-16 md:w-32 h-16 max-w-full max-h-full object-contain"
-              />
-            </td>
-            <td class="font-semibold text-gray-900 dark:text-white text-left">
+            <td class="font-semibold text-gray-900 text-center dark:text-white">
               {{ event.event_name }}
             </td>
             <td class="font-semibold text-gray-900 dark:text-white">
