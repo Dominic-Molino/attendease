@@ -35,6 +35,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
   isRegistered = false;
   eventImage$: Observable<SafeResourceUrl | undefined> | undefined;
   eventId: any;
+  userEvents: Event[] = [];
 
   private refreshSubscription: Subscription | undefined;
 
@@ -71,6 +72,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
             event_registration_start: new Date(event.event_registration_start),
             event_registration_end: new Date(event.event_registration_end),
             categories: JSON.parse(event.categories),
+            target_participants: JSON.parse(event.target_participants),
             event_image$: this.service.getEventImage(event.event_id).pipe(
               switchMap((imageResult) => {
                 if (imageResult.size > 0) {
@@ -83,6 +85,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
             ),
           }));
         }
+        console.log(this.events);
       },
     });
     this.checkUserRegistration();
@@ -91,8 +94,13 @@ export class PreviewComponent implements OnInit, OnDestroy {
   checkUserRegistration(): void {
     this.service.getUserEvent().subscribe((res) => {
       const userEvent = res.payload;
-      this.isRegistered = userEvent.some(
-        (event: any) => event.event_id === this.eventId
+      this.userEvents = userEvent.map((event: any) => ({
+        ...event,
+        event_start_date: new Date(event.event_start_date),
+        event_end_date: new Date(event.event_end_date),
+      }));
+      this.isRegistered = this.userEvents.some(
+        (event) => event.event_id === this.eventId
       );
     });
   }
@@ -171,5 +179,23 @@ export class PreviewComponent implements OnInit, OnDestroy {
 
   closePage() {
     this.location.back();
+  }
+
+  getFormattedTargetParticipants(participants: any[]): string {
+    const groupedParticipants: { [key: string]: string[] } = {};
+
+    participants.forEach((participant) => {
+      if (!groupedParticipants[participant.department]) {
+        groupedParticipants[participant.department] = [];
+      }
+      groupedParticipants[participant.department].push(participant.year_levels);
+    });
+
+    return Object.keys(groupedParticipants)
+      .map((department) => {
+        const years = groupedParticipants[department].join(', ');
+        return `${department} - ${years}`;
+      })
+      .join(' | ');
   }
 }

@@ -195,7 +195,9 @@
                   >
                     Location:
                   </p>
-                  <h3 class="text-sm ms-1 font-semibold text-gray-900">
+                  <h3
+                    class="text-sm ms-1 capitalize font-semibold text-gray-900"
+                  >
                     {{ event?.event_location }}
                   </h3>
                 </li>
@@ -222,11 +224,13 @@
                     </svg>
                   </span>
                   <p
-                    class="mb-1 text-sm ms-1 font-normal leading-none text-text dark:text-gray-500"
+                    class="mb-1 text-sm ms-1 capitalize font-normal leading-none text-text dark:text-gray-500"
                   >
-                    Event Type`:
+                    Event Type:
                   </p>
-                  <h3 class="text-sm ms-1 font-semibold text-gray-900">
+                  <h3
+                    class="text-sm ms-1 capitalize font-semibold text-gray-900"
+                  >
                     {{ event?.event_type }}
                   </h3>
                 </li>
@@ -259,6 +263,43 @@
                   <h3 class="text-sm ms-1 font-semibold text-gray-900">
                     {{ event?.max_attendees }}
                   </h3>
+                </li>
+                <li class="mb-5 ms-4 flex items-center">
+                  <span
+                    class="absolute flex items-center justify-center w-6 h-6 bg-light-background rounded-full -start-3"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      stroke-width="1"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="lucide lucide-target"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <circle cx="12" cy="12" r="6" />
+                      <circle cx="12" cy="12" r="2" />
+                    </svg>
+                  </span>
+                  <p class="" *ngIf="event?.participation_type === 'open'">
+                    <span
+                      class="bg-light-foregroud text-white text-sm font-medium me-2 px-2.5 py-0.5 rounded-full"
+                      >Open for All</span
+                    >
+                  </p>
+                  <p
+                    *ngIf="event?.participation_type === 'selected'"
+                    class="text-sm"
+                  >
+                    Open for:
+                    <span>{{
+                      getFormattedTargetParticipants(event.target_participants)
+                    }}</span>
+                  </p>
                 </li>
                 <li class="mb-5 ms-4 flex items-center gap-1">
                   <p

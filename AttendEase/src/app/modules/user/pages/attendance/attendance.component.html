@@ -61,12 +61,6 @@
             >
               Attendance
             </th>
-            <th
-              scope="col"
-              class="px-6 py-3 text-center tracking-widest font-medium"
-            >
-              Evaluation
-            </th>
           </tr>
         </thead>
         <!-- body -->
@@ -94,7 +88,7 @@
                   *ngIf="event.status === 'done'"
                 >
                   <span
-                    class="flex w-2.5 h-2.5 bg-light-foregroud rounded-full text-center me-1.5 flex-shrink-0"
+                    class="flex w-2.5 h-2.5 bg-green-500 rounded-full text-center me-1.5 flex-shrink-0"
                   ></span>
                   Done
                 </div>
@@ -140,50 +134,23 @@
             </td>
             <td>
               <button
-                [matTooltipDisabled]="
-                  !(event.status === 'upcoming' || event.status === 'ongoing')
-                "
-                matTooltipPosition="above"
-                matTooltip="Please wait for the event to be done."
                 (click)="openFile(event.status, event.event_id)"
                 [disabled]="
                   attendanceRemarks[event.event_id] !== 0 &&
                   attendanceRemarks[event.event_id] !== -1
                 "
                 [ngClass]="{
-                  'opacity-50 cursor-not-allowed':
+                  'bg-gray-300 cursor-not-allowed':
                     (attendanceRemarks[event.event_id] !== 0 &&
                       attendanceRemarks[event.event_id] !== -1) ||
                     event.status === 'upcoming' ||
-                    event.status === 'ongoing'
+                    event.status === 'ongoing',
+                  'bg-light-background hover:bg-light-foregroud':
+                    event.status === 'done'
                 }"
-                class="block mx-auto px-4 py-2 text-sm text-white font-semibold bg-light-background hover:bg-light-foregroud rounded-md focus:outline-none"
+                class="block mx-auto px-4 py-2 text-sm text-white font-semibold rounded-md focus:outline-none"
               >
                 Upload photo
-              </button>
-            </td>
-            <td>
-              <button
-                [matTooltipDisabled]="
-                  !(event.status === 'upcoming' || event.status === 'ongoing')
-                "
-                matTooltipPosition="above"
-                matTooltip="Please wait for the event to be done."
-                (click)="openEvaluation(event.status, event.event_id)"
-                [disabled]="
-                  attendanceRemarks[event.event_id] !== 0 &&
-                  attendanceRemarks[event.event_id] !== -1
-                "
-                [ngClass]="{
-                  'opacity-50 cursor-not-allowed':
-                    (attendanceRemarks[event.event_id] !== 0 &&
-                      attendanceRemarks[event.event_id] !== -1) ||
-                    event.status === 'upcoming' ||
-                    event.status === 'ongoing'
-                }"
-                class="block mx-auto px-4 py-2 text-sm text-white font-semibold bg-light-background hover:bg-light-foregroud rounded-md focus:outline-none"
-              >
-                Post Feedback
               </button>
             </td>
           </tr>

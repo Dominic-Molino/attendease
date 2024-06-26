@@ -52,31 +52,12 @@ export class EventhistoryComponent implements OnInit {
             } as UserEvents;
           });
 
-          // const filteredEvents = events.filter(
-          //   (event: any) => event.eventState !== 'done'
-          // );
-
-          // filteredEvents.sort((a: any, b: any) => {
-          //   if (
-          //     a.eventState === 'done' &&
-          //     (b.eventState === 'ongoing' || b.eventState === 'upcoming')
-          //   ) {
-          //     return -1;
-          //   } else if (
-          //     a.eventState === 'ongoing' &&
-          //     b.eventState === 'upcoming'
-          //   ) {
-          //     return -1;
-          //   } else if (
-          //     a.eventState === 'upcoming' &&
-          //     (b.eventState === 'done' || b.eventState === 'ongoing')
-          //   ) {
-          //     return 1;
-          //   } else {
-          //     return 0;
-          //   }
-          // });
-
+          events.sort((a: any, b: any) => {
+            if (a.eventState === 'done' && b.eventState !== 'done') return -1;
+            if (a.eventState === 'upcoming' && b.eventState !== 'upcoming')
+              return 1;
+            return 0;
+          });
           return events;
         } else {
           return [];

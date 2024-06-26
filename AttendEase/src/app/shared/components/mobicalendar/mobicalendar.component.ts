@@ -5,25 +5,14 @@ import {
   MbscOptionsService,
   MbscCalendarEvent,
   MbscEventcalendarOptions,
-  setOptions,
   MbscEventcalendarView,
 } from '@mobiscroll/angular';
 import { CommonModule } from '@angular/common';
 import { EventService } from '../../../core/service/event.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PopupComponent } from '../popup/popup.component';
-import {
-  Observable,
-  Subscription,
-  catchError,
-  map,
-  of,
-  switchMap,
-  timer,
-} from 'rxjs';
-import { AddEventComponent } from '../../../modules/organizer/components/add-event/add-event.component';
+import { Subscription } from 'rxjs';
 import { AuthserviceService } from '../../../core/service/authservice.service';
-import { UserEvents } from '../../../interfaces/UserEvents';
 import { Router } from '@angular/router';
 
 interface CustomCalendarEvent extends MbscCalendarEvent {

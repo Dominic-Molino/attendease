@@ -32,7 +32,7 @@ table {
   height: 40px;
   width: 40px;
   padding: 0.35rem;
-  background-color: #04bc64;
+  background-color: #ff8a00;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -44,7 +44,7 @@ table {
 }
 
 .icon-wrapper:hover {
-  background-color: #049151;
+  background-color: #f6aa54;
 }
 
 .icon-wrapper label {

@@ -4,6 +4,7 @@
     [view]="calView"
     [options]="eventSettings"
     [headerTemplate]="customTemplate"
+    (onPageLoading)="fetchUserEvents()"
   >
     <ng-template #customTemplate>
       <mbsc-calendar-nav class="cal-header-nav"></mbsc-calendar-nav>

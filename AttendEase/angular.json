@@ -26,7 +26,10 @@
               "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
               "node_modules/primeng/resources/primeng.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/flowbite/dist/flowbite.min.js",
+              "node_modules/flowbite-datepicker/dist/js/datepicker-full.min.js"
+            ]
           },
           "configurations": {
             "production": {

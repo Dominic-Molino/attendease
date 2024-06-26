@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import {
   FormsModule,
@@ -21,7 +28,6 @@ import Swal from 'sweetalert2';
 import { TagInputModule } from 'ngx-chips';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -60,7 +66,7 @@ export class AddEventComponent implements OnInit {
   imagePreview?: string | ArrayBuffer | null = null;
   matcher = new MyErrorStateMatcher();
   departments: string[] = ['BSEMC', 'BSIT', 'BSCS', 'ACT']; // Example options
-  year_levels: string[] = ['Year 1', 'Year 2', 'Year 3', 'Year 4'];
+  year_levels: string[] = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
 
   constructor(
     private builder: FormBuilder,
@@ -128,18 +134,6 @@ export class AddEventComponent implements OnInit {
       }
     }
   }
-
-  // isDepartmentChecked(department: string): boolean {
-  //   return this.departmentsArray.controls.some(
-  //     (control) => control.value === department
-  //   );
-  // }
-
-  // isYearLevelChecked(yearLevel: string): boolean {
-  //   return this.yearLevelsArray.controls.some(
-  //     (control) => control.value === yearLevel
-  //   );
-  // }
 
   onSelectChange(event: Event, formArray: FormArray) {
     const selectedOptions = (event.target as HTMLSelectElement).selectedOptions;

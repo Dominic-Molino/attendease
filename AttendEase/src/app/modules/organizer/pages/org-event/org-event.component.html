@@ -25,75 +25,34 @@
         <!-- calendar here -->
         <app-mobicalendar></app-mobicalendar>
       </div>
+      <mat-tab-group>
+        <mat-tab label="Approved">
+          <div *ngFor="let event of filteredEventList['Approved']">
+            <div>{{ event.event_name }}</div>
+            <div>{{ event.approval_status }}</div>
+            <!-- Display approval status -->
+            <!-- Other event details -->
+          </div>
+        </mat-tab>
+        <mat-tab label="Rejected">
+          <div *ngFor="let event of filteredEventList['Rejected']">
+            <div>{{ event.event_name }}</div>
+            <div>{{ event.approval_status }}</div>
+            <!-- Display approval status -->
+            <!-- Other event details -->
+          </div>
+        </mat-tab>
+        <mat-tab label="Pending">
+          <div *ngFor="let event of filteredEventList['Pending']">
+            <div>{{ event.event_name }}</div>
+            <div>{{ event.approval_status }}</div>
+            <!-- Display approval status -->
+            <!-- Other event details -->
+          </div>
+        </mat-tab>
+      </mat-tab-group>
 
-      <div class="dropdown flex flex-1 justify-end w-full col-span-2">
-        <button
-          class="text-white bg-light-background hover:bg-light-foregroud hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center p-2 items-center relative z-10 overflow-hidden inline-flex"
-          (click)="toggleDropdown()"
-        >
-          Filter Events
-          <svg
-            class="w-6 h-6 text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1"
-              d="m19 9-7 7-7-7"
-            />
-          </svg>
-        </button>
-        <ul
-          class="dropdown-menu flex flex-col absolute border border-dark-border right-5 mt-12 py-2 w-36 bg-white rounded-md shadow-xl z-20 divide-y-0"
-          *ngIf="isDropdownOpen"
-        >
-          <li
-            class="dropdown-item hover:bg-dark-primary w-full p-1.5 flex justify-center"
-            (click)="applyFilter('all')"
-          >
-            <span
-              class="flex cursor-pointer items-center text-sm font-medium text-gray-900 me-3"
-              >All Events
-            </span>
-          </li>
-          <li
-            class="dropdown-item hover:bg-dark-primary w-full p-1.5 flex justify-center"
-            (click)="applyFilter('upcoming')"
-          >
-            <span
-              class="flex cursor-pointer items-center text-sm font-medium text-gray-900 me-3"
-              >Upcoming
-            </span>
-          </li>
-          <li
-            class="dropdown-item hover:bg-dark-primary w-full p-1.5 flex justify-center"
-            (click)="applyFilter('ongoing')"
-          >
-            <span
-              class="flex cursor-pointer items-center text-sm font-medium text-gray-900 me-3"
-              >Ongoing
-            </span>
-          </li>
-          <li
-            class="dropdown-item hover:bg-dark-primary w-full p-1.5 flex justify-center"
-            (click)="applyFilter('done')"
-          >
-            <span
-              class="flex cursor-pointer items-center font-medium text-sm text-gray-900 me-3"
-              >Done
-            </span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="rounded-md border border-dark-border col-span-2">
+      <!-- <div class="rounded-md border border-dark-border col-span-2">
         <table
           class="overflow-x-auto shadow-md bg-white rounded-md relative z-0"
         >
@@ -261,7 +220,7 @@
             </tr>
           </tbody>
         </table>
-      </div>
+      </div> -->
     </div>
 
     <div class="flex justify-center items-center mt-2.5 p-5">

@@ -18,6 +18,7 @@
 
       <hr class="h-px mb-6 bg-dark-border border-0" />
     </div>
+
     @if(loading){
     <div class="h-screen w-full flex justify-center bg-white">
       <div class="flex flex-row gap-2">
@@ -33,6 +34,7 @@
       </div>
     </div>
     }@else if(!loading && filteredEventList.length > 0){
+
     <div class="container">
       @defer{
       <h5
@@ -140,56 +142,28 @@
                     truncateDescription(latestEvent!.event_description, maxChar)
                   }}
                 </p>
-                <p>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="lucide lucide-users-round"
-                  >
-                    <path d="M18 21a8 8 0 0 0-16 0" />
-                    <circle cx="10" cy="8" r="5" />
-                    <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3" />
-                  </svg>
+                <p class="flex items-center my-2.5">
                   <span class="text-sm font-medium text-gray-500">
                     Registered Users:
                     {{ registeredUsers[latestEvent!.event_id] || 0 }}
                   </span>
                 </p>
                 <p class="" *ngIf="latestEvent?.participation_type === 'open'">
-                  Open for All
+                  <span
+                    class="bg-light-foregroud text-white text-sm font-medium me-2 px-2.5 py-0.5 rounded-full"
+                    >Open for All</span
+                  >
                 </p>
                 <p
                   *ngIf="latestEvent?.participation_type === 'selected'"
                   class="text-sm"
                 >
-                  Target Participants:
-                  <ng-container
-                    *ngFor="
-                      let participant of latestEvent?.target_participants;
-                      let i = index
-                    "
-                  >
-                    <span class="inline-block">
-                      <span class="font-medium">{{
-                        participant.department
-                      }}</span>
-                      - {{ participant.year_levels }}
-                      <span
-                        *ngIf="
-                          i !== (latestEvent?.target_participants)!.length - 1
-                        "
-                      >
-                        &
-                      </span>
-                    </span>
-                  </ng-container>
+                  Open for:
+                  <span>{{
+                    getFormattedTargetParticipants(
+                      latestEvent!.target_participants
+                    )
+                  }}</span>
                 </p>
 
                 <button
@@ -304,14 +278,29 @@
                   {{ truncateDescription(event.event_description, maxChar) }}
                 </p>
 
-                <p class="" *ngIf="event.participation_type === 'open'">
-                  Open for All
+                <p class="flex items-center my-2.5">
+                  <span class="text-sm font-medium text-gray-500">
+                    Registered Users:
+                    {{ registeredUsers[event!.event_id] || 0 }}
+                  </span>
                 </p>
-                <p class="" *ngIf="event.participation_type === 'selected'">
-                  {{ event.target_participants.departments }}
-                  {{ event.target_participants.year_levels }}
-                  sleweteasd
+
+                <p class="" *ngIf="event?.participation_type === 'open'">
+                  <span
+                    class="bg-light-foregroud text-white text-sm font-medium me-2 px-2.5 py-0.5 rounded-full"
+                    >Open for All</span
+                  >
                 </p>
+                <p
+                  *ngIf="event?.participation_type === 'selected'"
+                  class="text-sm"
+                >
+                  Open for:
+                  <span>{{
+                    getFormattedTargetParticipants(event?.target_participants)
+                  }}</span>
+                </p>
+
                 <div class="flex mt-auto justify-start mb-4 items-center">
                   <button
                     (click)="openPreview(event.event_id)"
@@ -320,10 +309,6 @@
                     Read More
                   </button>
                 </div>
-                <span class="text-sm font-medium text-gray-500">
-                  Registered Users:
-                  {{ registeredUsers[event?.event_id] || 0 }}
-                </span>
               </div>
             </div>
           </ng-container>
@@ -446,3 +431,62 @@
     }
   </div>
 </main>
+<!-- 
+
+<div class="dropdown flex flex-1 justify-end w-full col-span-2">
+  <button
+    class="text-white bg-light-background hover:bg-light-foregroud hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center p-2 items-center relative z-10 overflow-hidden inline-flex"
+    (click)="toggleDropdown()"
+  >
+    Filter Events
+    <svg
+      class="w-6 h-6 text-white"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1"
+        d="m19 9-7 7-7-7"
+      />
+    </svg>
+  </button>
+  <ul
+    class="dropdown-menu flex flex-col absolute border border-dark-border right-5 mt-12 py-2 w-36 bg-white rounded-md shadow-xl z-20 divide-y-0"
+    *ngIf="isDropdownOpen"
+  >
+    <li
+      class="dropdown-item hover:bg-dark-primary w-full p-1.5 flex justify-center"
+      (click)="resetFilter()"
+    >
+      <span
+        class="flex cursor-pointer items-center text-sm font-medium text-gray-900 me-3"
+        >All Events
+      </span>
+    </li>
+    <li
+      class="dropdown-item hover:bg-dark-primary w-full p-1.5 flex justify-center"
+      (click)="filterEvents('open')"
+    >
+      <span
+        class="flex cursor-pointer items-center text-sm font-medium text-gray-900 me-3"
+        >Open for all
+      </span>
+    </li>
+    <li
+      class="dropdown-item hover:bg-dark-primary w-full p-1.5 flex justify-center"
+      (click)="filterEvents('selected')"
+    >
+      <span
+        class="flex cursor-pointer items-center text-sm font-medium text-gray-900 me-3"
+        >Not for all
+      </span>
+    </li>
+  </ul>
+</div> -->

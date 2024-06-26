@@ -2,7 +2,7 @@
   <div class="p-4 mt-16 sm:ml-64">
     <div>
       <p class="mt-5 mb-2 text-text text-2xl tracking-wide font-semibold">
-        Feedback Submission
+        Event Evaluation
       </p>
 
       <hr class="h-px mb-6 bg-dark-border border-0" />
@@ -88,7 +88,7 @@
                   *ngIf="event.eventState === 'done'"
                 >
                   <span
-                    class="flex w-2.5 h-2.5 bg-light-foregroud rounded-full text-center me-1.5 flex-shrink-0"
+                    class="flex w-2.5 h-2.5 bg-green-500 rounded-full text-center me-1.5 flex-shrink-0"
                   ></span>
                   Done
                 </div>
@@ -138,20 +138,14 @@
                 (click)="openDialog(event.eventState, event.event_id)"
                 [disabled]="event.feedbackSubmitted"
                 [ngClass]="{
-                  'opacity-50 cursor-not-allowed':
+                  'bg-gray-300 cursor-not-allowed text-gray-600':
                     event.feedbackSubmitted ||
                     event.eventState === 'upcoming' ||
-                    event.eventState === 'ongoing'
+                    event.eventState === 'ongoing',
+                  ' bg-light-background hover:bg-light-foregroud text-white':
+                    event.eventState === 'done'
                 }"
-                matTooltipPosition="above"
-                matTooltip="Please wait for the event to be done."
-                [matTooltipDisabled]="
-                  !(
-                    event.eventState === 'upcoming' ||
-                    event.eventState === 'ongoing'
-                  )
-                "
-                class="block mx-auto px-4 py-2 text-sm text-white font-semibold bg-light-background hover:bg-light-foregroud border border-gray-200 rounded-md focus:outline-none"
+                class="block mx-auto px-4 py-2 text-sm font-semibold border border-gray-200 rounded-md focus:outline-none"
               >
                 Post Feedback
               </button>

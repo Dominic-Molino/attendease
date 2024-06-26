@@ -29,7 +29,7 @@
 }
 
 .mbsc-calendar-cell-inner .mbsc-calendar-labels .mbsc-calendar-text {
-  color: #049151;
+  color: #ff8a00;
   font-weight: bold;
   padding: -0.2rem 0.1rem;
   margin: 1px 4px;
@@ -43,7 +43,7 @@
 }
 
 .mbsc-material.mbsc-colored-event.mbsc-list-item {
-  background: #049151;
+  background: #ff8a00;
   color: #fff;
 }
 

@@ -19,11 +19,11 @@ module.exports = {
         },
         light: {
           // for buttons
-          background: "#db7c24",
-          foregroud: "#d26c1c",
+          background: "#ff8a00",
+          foregroud: "#f6aa54",
           // for readability
-          text: "#db7c24",
-          border: "#db7c24",
+          text: "#c75519",
+          border: "#c75519",
         },
         text: "#444444",
       },

@@ -39,6 +39,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   p: number = 1;
   itemsPerPage: number = 6;
   registeredUsers: { [eventId: number]: number } = {};
+  isDropdownOpen: boolean = false;
 
   private updateSubscription?: Subscription;
 
@@ -95,6 +96,8 @@ export class EventsComponent implements OnInit, OnDestroy {
             ),
           }));
 
+          console.log(this.eventList);
+
           this.eventList.forEach((ev: any) => {
             this.fetchRegisteredUser(ev.event_id);
             console.log(ev.target_participants);
@@ -132,6 +135,10 @@ export class EventsComponent implements OnInit, OnDestroy {
         this.loading = false;
       },
     });
+  }
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
   }
 
   fetchRegisteredUser(eventId: number) {
@@ -179,4 +186,43 @@ export class EventsComponent implements OnInit, OnDestroy {
       ? `${text.substring(0, maxLength)} ...`
       : text;
   }
+
+  getFormattedTargetParticipants(participants: any[]): string {
+    const groupedParticipants: { [key: string]: string[] } = {};
+
+    participants.forEach((participant) => {
+      if (!groupedParticipants[participant.department]) {
+        groupedParticipants[participant.department] = [];
+      }
+      groupedParticipants[participant.department].push(participant.year_levels);
+    });
+
+    return Object.keys(groupedParticipants)
+      .map((department) => {
+        const years = groupedParticipants[department].join(', ');
+        return `${department} - ${years}`;
+      })
+      .join(' | ');
+  }
+
+  // filterEvents(participationType: string): void {
+  //   if (participationType === 'open') {
+  //     this.filteredEventList = this.eventList.filter(
+  //       (event) => event.participation_type === 'open'
+  //     );
+  //   } else if (participationType === 'selected') {
+  //     this.filteredEventList = this.eventList.filter(
+  //       (event) => event.participation_type === 'selected'
+  //     );
+  //   }
+  //   // Optionally, you can update latestEvent if filtered list changes
+  //   this.latestEvent =
+  //     this.filteredEventList.length > 0 ? this.filteredEventList[0] : undefined;
+  // }
+
+  // resetFilter(): void {
+  //   this.filteredEventList = [...this.eventList];
+  //   this.latestEvent =
+  //     this.filteredEventList.length > 0 ? this.filteredEventList[0] : undefined;
+  // }
 }

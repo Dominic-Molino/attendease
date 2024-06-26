@@ -29,7 +29,6 @@ export class AttendanceComponent {
   events: Event[] = [];
   userId?: any;
   attendanceRemarks: { [key: number]: number } = {};
-  feedbackSubmitted: { [key: number]: boolean } = {};
   loading: boolean = false;
 
   //pagination variables
