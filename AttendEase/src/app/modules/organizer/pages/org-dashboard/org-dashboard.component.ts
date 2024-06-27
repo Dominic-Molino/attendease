@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { CalendarComponent } from '../../../../shared/components/calendar/calendar.component';
 import { Router } from '@angular/router';
 import { EventService } from '../../../../core/service/event.service';
 import { CardModule } from 'primeng/card';

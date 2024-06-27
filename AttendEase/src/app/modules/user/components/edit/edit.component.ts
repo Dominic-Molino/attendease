@@ -38,6 +38,7 @@ export class EditComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    console.log(this.data);
     if (this.user_id) {
       this.service.getStudentProfile(this.user_id).subscribe((res) => {
         for (const student of res.payload) {

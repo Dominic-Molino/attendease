@@ -55,7 +55,7 @@
             >
               <div *ngIf="latestEvent" class="absolute -top-3 right-0">
                 <span
-                  class="bg-white capitalize text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 border border-dark-border"
+                  class="bg-white capitalize text-gray-800 text-sm font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 border border-dark-border"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +102,7 @@
               <div class="p-5 w-full lg:w-1/2 pr-3">
                 <div class="mb-3">
                   <h1
-                    class="overflow-hidden text-ellipsis text-text text-2xl md:text-2xl font-medium mt-3"
+                    class="overflow-hidden text-ellipsis text-text text-2xl md:text-4xl font-medium mt-3"
                   >
                     {{ latestEvent?.event_name }}
                   </h1>
@@ -125,7 +125,7 @@
                       />
                     </svg>
                     <span class="ms-1 text-[13px] text-text"
-                      >Registration Date:
+                      >Registration:
                       {{ latestEvent?.event_registration_start | date }}
                     </span>
                     <span class="ms-1 text-text"> - </span>
@@ -142,15 +142,14 @@
                     truncateDescription(latestEvent!.event_description, maxChar)
                   }}
                 </p>
-                <p class="flex items-center my-2.5">
+                <p class="flex items-center mt-5">
                   <span class="text-sm font-medium text-gray-500">
                     Registered Users:
                     {{ registeredUsers[latestEvent!.event_id] || 0 }}
                   </span>
                 </p>
                 <p class="" *ngIf="latestEvent?.participation_type === 'open'">
-                  <span
-                    class="bg-light-foregroud text-white text-sm font-medium me-2 px-2.5 py-0.5 rounded-full"
+                  <span class="text-sm font-medium text-gray-500"
                     >Open for All</span
                   >
                 </p>
@@ -191,7 +190,7 @@
             "
           >
             <div
-              class="rounded-md border border-dark-border relative shadow-md container p-3.5 mb-5 bg-white flex flex-col h-full hover:bg-dark-muted"
+              class="rounded-md border max-w-md w-full border-dark-border relative shadow-md container p-3.5 mb-5 bg-white flex flex-col h-full hover:bg-dark-muted"
               *ngIf="event !== latestEvent"
             >
               <div
@@ -199,7 +198,7 @@
                 class="absolute -top-3 right-0"
               >
                 <span
-                  class="bg-white capitalize text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 border border-dark-border"
+                  class="bg-white capitalize text-gray-800 text-sm font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 border border-dark-border"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -242,7 +241,7 @@
                     ></div
                   ></ng-template>
                 </div>
-                <h5 class="text-xl md:text-xl font-medium mt-3">
+                <h5 class="text-xl md:text-2xl font-medium mt-3">
                   {{ event.event_name }}
                 </h5>
                 <div class="flex items-center">
@@ -264,7 +263,7 @@
                     />
                   </svg>
                   <span class="ms-2 text-[13px]"
-                    >Registration Date:{{
+                    >Registration:{{
                       event.event_registration_start | date
                     }}</span
                   >
@@ -278,7 +277,7 @@
                   {{ truncateDescription(event.event_description, maxChar) }}
                 </p>
 
-                <p class="flex items-center my-2.5">
+                <p class="flex items-center mt-5">
                   <span class="text-sm font-medium text-gray-500">
                     Registered Users:
                     {{ registeredUsers[event!.event_id] || 0 }}
@@ -286,14 +285,13 @@
                 </p>
 
                 <p class="" *ngIf="event?.participation_type === 'open'">
-                  <span
-                    class="bg-light-foregroud text-white text-sm font-medium me-2 px-2.5 py-0.5 rounded-full"
+                  <span class="text-sm font-medium text-gray-500"
                     >Open for All</span
                   >
                 </p>
                 <p
                   *ngIf="event?.participation_type === 'selected'"
-                  class="text-sm"
+                  class="text-sm font-medium text-gray-500"
                 >
                   Open for:
                   <span>{{

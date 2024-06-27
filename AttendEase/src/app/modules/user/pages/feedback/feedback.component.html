@@ -136,14 +136,18 @@
             <td>
               <button
                 (click)="openDialog(event.eventState, event.event_id)"
-                [disabled]="event.feedbackSubmitted"
+                [disabled]="
+                  event.feedbackSubmitted ||
+                  event.eventState === 'upcoming' ||
+                  event.eventState === 'ongoing'
+                "
                 [ngClass]="{
                   'bg-gray-300 cursor-not-allowed text-gray-600':
                     event.feedbackSubmitted ||
                     event.eventState === 'upcoming' ||
                     event.eventState === 'ongoing',
-                  ' bg-light-background hover:bg-light-foregroud text-white':
-                    event.eventState === 'done'
+                  'bg-light-background hover:bg-light-foregroud text-white':
+                    !event.feedbackSubmitted && event.eventState === 'done'
                 }"
                 class="block mx-auto px-4 py-2 text-sm font-semibold border border-gray-200 rounded-md focus:outline-none"
               >

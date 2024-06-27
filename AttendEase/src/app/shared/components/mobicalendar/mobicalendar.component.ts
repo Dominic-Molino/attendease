@@ -10,7 +10,6 @@ import {
 import { CommonModule } from '@angular/common';
 import { EventService } from '../../../core/service/event.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { PopupComponent } from '../popup/popup.component';
 import { Subscription } from 'rxjs';
 import { AuthserviceService } from '../../../core/service/authservice.service';
 import { Router } from '@angular/router';
@@ -32,7 +31,6 @@ interface CustomCalendarEvent extends MbscCalendarEvent {
 export class MobicalendarComponent {
   events: CustomCalendarEvent[] = [];
   userId: any;
-  today = new Date(new Date().setDate(new Date().getDate() - 1));
   private subscription?: Subscription;
 
   view = 'month';
@@ -44,14 +42,6 @@ export class MobicalendarComponent {
     theme: 'material',
     themeVariant: 'light',
     eventOverlap: true,
-    invalid: [
-      {
-        recurring: {
-          repeat: 'daily',
-          until: this.today,
-        },
-      },
-    ],
     colors: [
       {
         date: this.events.map((event: any) => {

@@ -23,213 +23,511 @@
         class="lg:w-full md:col-span-2 border border-dark-border h-auto shadow-md rounded-md p-10 bg-white"
       >
         <!-- calendar here -->
-        <app-mobicalendar></app-mobicalendar>
+        <app-organizer-calendar></app-organizer-calendar>
       </div>
-      <mat-tab-group>
-        <mat-tab label="Approved">
-          <div *ngFor="let event of filteredEventList['Approved']">
-            <div>{{ event.event_name }}</div>
-            <div>{{ event.approval_status }}</div>
-            <!-- Display approval status -->
-            <!-- Other event details -->
-          </div>
-        </mat-tab>
-        <mat-tab label="Rejected">
-          <div *ngFor="let event of filteredEventList['Rejected']">
-            <div>{{ event.event_name }}</div>
-            <div>{{ event.approval_status }}</div>
-            <!-- Display approval status -->
-            <!-- Other event details -->
-          </div>
-        </mat-tab>
-        <mat-tab label="Pending">
-          <div *ngFor="let event of filteredEventList['Pending']">
-            <div>{{ event.event_name }}</div>
-            <div>{{ event.approval_status }}</div>
-            <!-- Display approval status -->
-            <!-- Other event details -->
-          </div>
-        </mat-tab>
-      </mat-tab-group>
-
-      <!-- <div class="rounded-md border border-dark-border col-span-2">
-        <table
-          class="overflow-x-auto shadow-md bg-white rounded-md relative z-0"
-        >
-          <thead
-            class="text-dark-muted border-b border-dark-primary capitalize bg-dark-foreground"
-          >
-            <tr>
-              <th
-                scope="col"
-                class="px-6 py-3 text-center tracking-widest font-medium"
+      <div class="w-full col-span-2">
+        <mat-tab-group>
+          <mat-tab label="Approved">
+            <div class="rounded-md border border-dark-border col-span-2">
+              <table
+                class="overflow-x-auto shadow-md bg-white rounded-md relative z-0"
               >
-                Students
-              </th>
-              <th
-                scope="col"
-                class="px-6 py-3 text-center tracking-widest font-medium"
-              >
-                Event Name
-              </th>
-              <th
-                scope="col"
-                class="px-6 py-3 text-center tracking-widest font-medium"
-              >
-                Start Date
-              </th>
-              <th
-                scope="col"
-                class="px-6 py-3 text-center tracking-widest font-medium"
-              >
-                Status
-              </th>
-              <th
-                scope="col"
-                class="px-6 py-3 text-center tracking-widest font-medium"
-              >
-                Event Type
-              </th>
-              <th
-                scope="col"
-                class="px-6 py-3 text-center tracking-widest font-medium"
-              >
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody
-            *ngFor="
-              let event of filteredEventList
-                | paginate : { itemsPerPage: itemsPerPage, currentPage: p };
-              let i = index
-            "
-          >
-            <tr>
-              <td class="px-6 text-sm py-4 font-primary text-center">
-                {{ event.total_attendees }}
-              </td>
-
-              <td class="px-6 py-4 text-sm font-primary text-center">
-                {{ event.event_name }}
-              </td>
-
-              <td class="px-6 py-4 text-sm font-primary text-center">
-                {{ event.event_start_date | date }}
-              </td>
-
-              <div class="flex items-center justify-center">
-                <td class="px-6 py-4 text-sm font-primary">
-                  <div
-                    class="text-sm font-medium bg-green-100 inline-flex items-center text-green-800 py-1 px-2 rounded-full"
-                    *ngIf="event.status === 'done'"
-                  >
-                    <span
-                      class="flex w-2.5 h-2.5 bg-light-foregroud rounded-full text-center me-1.5 flex-shrink-0"
-                    ></span>
-                    Done
-                  </div>
-                  <div
-                    class="text-sm font-medium bg-blue-100 inline-flex items-center text-blue-800 py-1 px-2 rounded-full"
-                    *ngIf="event.status === 'ongoing'"
-                  >
-                    <span
-                      class="flex w-2.5 h-2.5 bg-blue-500 rounded-full text-center me-1.5 flex-shrink-0"
-                    ></span>
-                    Ongoing
-                  </div>
-                  <div
-                    class="text-sm font-medium bg-yellow-100 inline-flex items-center text-yellow-800 py-1 px-2 rounded-full"
-                    *ngIf="event.status === 'upcoming'"
-                  >
-                    <span
-                      class="flex w-2.5 h-2.5 bg-yellow-500 rounded-full text-center me-1.5 flex-shrink-0"
-                    ></span>
-                    Upcoming
-                  </div>
-                </td>
-              </div>
-
-              <td class="px-6 py-4 text-sm font-primary text-center capitalize">
-                {{ event.event_type }}
-              </td>
-
-              <td class="px-6 py-4 flex items-center gap-2 justify-center">
-                <button
-                  matTooltip="Update event image"
-                  matTooltipPosition="above"
-                  (click)="openFile(event)"
-                  class="flex items-center justify-center text-light-text bg-white border border-light-border hover:bg-light-foregroud rounded-md w-10 h-10 focus:outline-none shadow-md hover:text-white"
+                <thead
+                  class="text-dark-muted border-b border-dark-primary capitalize bg-dark-foreground"
                 >
-                  <svg
-                    class="w-6 h-6 text-light-text hover:text-white"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1"
-                      d="m3 16 5-7 6 6.5m6.5 2.5L16 13l-4.286 6M14 10h.01M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
-                    />
-                  </svg>
-                </button>
-                <button
-                  (click)="editEvent(event)"
-                  matTooltip="Event is either done or ongoing."
-                  matTooltipPosition="above"
-                  matTooltipClass="custom"
-                  [disabled]="event.status !== 'upcoming'"
-                  [ngClass]="{
-                    'opacity-50 cursor-not-allowed': event.status !== 'upcoming'
-                  }"
-                  type="button"
-                  aria-expanded="false"
-                  class="flex items-center justify-center text-white bg-light-background border border-light-border hover:bg-light-foregroud rounded-md w-10 h-10 focus:outline-none shadow-md"
+                  <tr>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-center tracking-widest font-medium"
+                    >
+                      Event Name
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-center tracking-widest font-medium"
+                    >
+                      Start Date
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-center tracking-widest font-medium"
+                    >
+                      Status
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-center tracking-widest font-medium"
+                    >
+                      Event Type
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-center tracking-widest font-medium"
+                    >
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  *ngFor="
+                    let event of filteredEventList['Approved']
+                      | paginate
+                        : { itemsPerPage: itemsPerPage, currentPage: p }
+                  "
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="lucide lucide-pencil"
-                  >
-                    <path
-                      d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"
-                    />
-                    <path d="m15 5 4 4" />
-                  </svg>
-                </button>
-                <app-delete-event
-                  matTooltip="Delete Event"
-                  matTooltipPosition="above"
-                  [event_id]="event"
-                  (eventDeleted)="loadEvent()"
-                ></app-delete-event>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div> -->
-    </div>
-
-    <div class="flex justify-center items-center mt-2.5 p-5">
-      <pagination-controls
-        (pageChange)="p = $event"
-        [maxSize]="maxSize"
-        [responsive]="true"
-        class="pagination"
-      ></pagination-controls>
+                  <tr>
+                    <td class="px-6 py-4 text-sm font-primary text-center">
+                      {{ event.event_name }}
+                    </td>
+                    <td class="px-6 py-4 text-sm font-primary text-center">
+                      {{ event.event_start_date | date }}
+                    </td>
+                    <td class="px-6 py-4 text-sm font-primary text-center">
+                      {{ getEventState(event) }}
+                      <div class="flex items-center justify-center">
+                        <div
+                          class="text-sm font-medium bg-green-100 inline-flex items-center text-green-800 py-1 px-2 rounded-full"
+                          *ngIf="event.status === 'done'"
+                        >
+                          <span
+                            class="flex w-2.5 h-2.5 bg-light-foregroud rounded-full text-center me-1.5 flex-shrink-0"
+                          ></span>
+                          Done
+                        </div>
+                        <div
+                          class="text-sm font-medium bg-blue-100 inline-flex items-center text-blue-800 py-1 px-2 rounded-full"
+                          *ngIf="event.status === 'ongoing'"
+                        >
+                          <span
+                            class="flex w-2.5 h-2.5 bg-blue-500 rounded-full text-center me-1.5 flex-shrink-0"
+                          ></span>
+                          Ongoing
+                        </div>
+                        <div
+                          class="text-sm font-medium bg-yellow-100 inline-flex items-center text-yellow-800 py-1 px-2 rounded-full"
+                          *ngIf="event.status === 'upcoming'"
+                        >
+                          <span
+                            class="flex w-2.5 h-2.5 bg-yellow-500 rounded-full text-center me-1.5 flex-shrink-0"
+                          ></span>
+                          Upcoming
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="px-6 py-4 text-sm font-primary text-center capitalize"
+                    >
+                      {{ event.event_type }}
+                    </td>
+                    <td
+                      class="px-6 py-4 flex items-center gap-2 justify-center"
+                    >
+                      <button
+                        (click)="openFile(event.event_id)"
+                        class="flex items-center justify-center text-light-text bg-white border border-light-border hover:bg-light-foregroud rounded-md w-10 h-10 focus:outline-none shadow-md hover:text-white"
+                      >
+                        <svg
+                          class="w-6 h-6 text-light-text hover:text-white"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1"
+                            d="m3 16 5-7 6 6.5m6.5 2.5L16 13l-4.286 6M14 10h.01M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        (click)="editEvent(event.event_id)"
+                        type="button"
+                        aria-expanded="false"
+                        class="flex items-center justify-center text-white bg-light-background border border-light-border hover:bg-light-foregroud rounded-md w-10 h-10 focus:outline-none shadow-md"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-pencil"
+                        >
+                          <path
+                            d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"
+                          />
+                          <path d="m15 5 4 4" />
+                        </svg>
+                      </button>
+                      <app-delete-event
+                        [event_id]="event.event_id"
+                        (eventDeleted)="loadEvent()"
+                      ></app-delete-event>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="flex justify-center items-center mt-2.5 p-5">
+              <mat-paginator
+                [length]="filteredEventList['Approved'].length"
+                [pageSize]="itemsPerPage"
+                (page)="p = $event.pageIndex + 1"
+              ></mat-paginator>
+            </div>
+          </mat-tab>
+          <mat-tab label="Rejected">
+            <div class="rounded-md border border-dark-border col-span-2">
+              <table
+                class="overflow-x-auto shadow-md bg-white rounded-md relative z-0"
+              >
+                <thead
+                  class="text-dark-muted border-b border-dark-primary capitalize bg-dark-foreground"
+                >
+                  <tr>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-center tracking-widest font-medium"
+                    >
+                      Event Name
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-center tracking-widest font-medium"
+                    >
+                      Start Date
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-center tracking-widest font-medium"
+                    >
+                      Status
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-center tracking-widest font-medium"
+                    >
+                      Event Type
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-center tracking-widest font-medium"
+                    >
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  *ngFor="
+                    let event of filteredEventList['Rejected']
+                      | paginate
+                        : { itemsPerPage: itemsPerPage, currentPage: p };
+                    let i = index
+                  "
+                >
+                  <tr>
+                    <td class="px-6 py-4 text-sm font-primary text-center">
+                      {{ event.event_name }}
+                    </td>
+                    <td class="px-6 py-4 text-sm font-primary text-center">
+                      {{ event.event_start_date | date }}
+                    </td>
+                    <td class="px-6 py-4 text-sm font-primary text-center">
+                      <div class="flex items-center justify-center">
+                        {{ getEventState(event) }}
+                        <!-- <div
+                          class="text-sm font-medium bg-green-100 inline-flex items-center text-green-800 py-1 px-2 rounded-full"
+                          *ngIf="event.status === 'done'"
+                        >
+                          <span
+                            class="flex w-2.5 h-2.5 bg-light-foregroud rounded-full text-center me-1.5 flex-shrink-0"
+                          ></span>
+                          Done
+                        </div>
+                        <div
+                          class="text-sm font-medium bg-blue-100 inline-flex items-center text-blue-800 py-1 px-2 rounded-full"
+                          *ngIf="event.status === 'ongoing'"
+                        >
+                          <span
+                            class="flex w-2.5 h-2.5 bg-blue-500 rounded-full text-center me-1.5 flex-shrink-0"
+                          ></span>
+                          Ongoing
+                        </div>
+                        <div
+                          class="text-sm font-medium bg-yellow-100 inline-flex items-center text-yellow-800 py-1 px-2 rounded-full"
+                          *ngIf="event.status === 'upcoming'"
+                        >
+                          <span
+                            class="flex w-2.5 h-2.5 bg-yellow-500 rounded-full text-center me-1.5 flex-shrink-0"
+                          ></span>
+                          Upcoming
+                        </div> -->
+                      </div>
+                    </td>
+                    <td
+                      class="px-6 py-4 text-sm font-primary text-center capitalize"
+                    >
+                      {{ event.event_type }}
+                    </td>
+                    <td
+                      class="px-6 py-4 flex items-center gap-2 justify-center"
+                    >
+                      <button
+                        matTooltip="Update event image"
+                        matTooltipPosition="above"
+                        (click)="openFile(event.event_id)"
+                        class="flex items-center justify-center text-light-text bg-white border border-light-border hover:bg-light-foregroud rounded-md w-10 h-10 focus:outline-none shadow-md hover:text-white"
+                      >
+                        <svg
+                          class="w-6 h-6 text-light-text hover:text-white"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1"
+                            d="m3 16 5-7 6 6.5m6.5 2.5L16 13l-4.286 6M14 10h.01M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        (click)="editEvent(event.event_id)"
+                        matTooltip="Event is either done or ongoing."
+                        matTooltipPosition="above"
+                        matTooltipClass="custom"
+                        [disabled]="event.status !== 'upcoming'"
+                        [ngClass]="{
+                          'opacity-50 cursor-not-allowed':
+                            event.status !== 'upcoming'
+                        }"
+                        type="button"
+                        aria-expanded="false"
+                        class="flex items-center justify-center text-white bg-light-background border border-light-border hover:bg-light-foregroud rounded-md w-10 h-10 focus:outline-none shadow-md"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-pencil"
+                        >
+                          <path
+                            d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"
+                          />
+                          <path d="m15 5 4 4" />
+                        </svg>
+                      </button>
+                      <app-delete-event
+                        matTooltip="Delete Event"
+                        matTooltipPosition="above"
+                        [event_id]="event.event_id"
+                        (eventDeleted)="loadEvent()"
+                      ></app-delete-event>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="flex justify-center items-center mt-2.5 p-5">
+              <mat-paginator
+                [length]="filteredEventList['Rejected'].length"
+                [pageSize]="itemsPerPage"
+                (page)="p = $event.pageIndex + 1"
+              ></mat-paginator>
+            </div>
+          </mat-tab>
+          <mat-tab label="Pending">
+            <div class="rounded-md border border-dark-border col-span-2">
+              <table
+                class="overflow-x-auto shadow-md bg-white rounded-md relative z-0"
+              >
+                <thead
+                  class="text-dark-muted border-b border-dark-primary capitalize bg-dark-foreground"
+                >
+                  <tr>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-center tracking-widest font-medium"
+                    >
+                      Event Name
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-center tracking-widest font-medium"
+                    >
+                      Start Date
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-center tracking-widest font-medium"
+                    >
+                      Status
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-center tracking-widest font-medium"
+                    >
+                      Event Type
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-center tracking-widest font-medium"
+                    >
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  *ngFor="
+                    let event of filteredEventList['Pending']
+                      | paginate
+                        : { itemsPerPage: itemsPerPage, currentPage: p };
+                    let i = index
+                  "
+                >
+                  <tr>
+                    <td class="px-6 py-4 text-sm font-primary text-center">
+                      {{ event.event_name }}
+                    </td>
+                    <td class="px-6 py-4 text-sm font-primary text-center">
+                      {{ event.event_start_date | date }}
+                    </td>
+                    <td class="px-6 py-4 text-sm font-primary text-center">
+                      <div class="flex items-center justify-center">
+                        <div
+                          class="text-sm font-medium bg-green-100 inline-flex items-center text-green-800 py-1 px-2 rounded-full"
+                          *ngIf="event.status === 'done'"
+                        >
+                          <span
+                            class="flex w-2.5 h-2.5 bg-light-foregroud rounded-full text-center me-1.5 flex-shrink-0"
+                          ></span>
+                          Done
+                        </div>
+                        <div
+                          class="text-sm font-medium bg-blue-100 inline-flex items-center text-blue-800 py-1 px-2 rounded-full"
+                          *ngIf="event.status === 'ongoing'"
+                        >
+                          <span
+                            class="flex w-2.5 h-2.5 bg-blue-500 rounded-full text-center me-1.5 flex-shrink-0"
+                          ></span>
+                          Ongoing
+                        </div>
+                        <div
+                          class="text-sm font-medium bg-yellow-100 inline-flex items-center text-yellow-800 py-1 px-2 rounded-full"
+                          *ngIf="event.status === 'upcoming'"
+                        >
+                          <span
+                            class="flex w-2.5 h-2.5 bg-yellow-500 rounded-full text-center me-1.5 flex-shrink-0"
+                          ></span>
+                          Upcoming
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="px-6 py-4 text-sm font-primary text-center capitalize"
+                    >
+                      {{ event.event_type }}
+                    </td>
+                    <td
+                      class="px-6 py-4 flex items-center gap-2 justify-center"
+                    >
+                      <button
+                        matTooltip="Update event image"
+                        matTooltipPosition="above"
+                        (click)="openFile(event.event_id)"
+                        class="flex items-center justify-center text-light-text bg-white border border-light-border hover:bg-light-foregroud rounded-md w-10 h-10 focus:outline-none shadow-md hover:text-white"
+                      >
+                        <svg
+                          class="w-6 h-6 text-light-text hover:text-white"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1"
+                            d="m3 16 5-7 6 6.5m6.5 2.5L16 13l-4.286 6M14 10h.01M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        (click)="editEvent(event.event_id)"
+                        matTooltip="Event is either done or ongoing."
+                        matTooltipPosition="above"
+                        matTooltipClass="custom"
+                        [disabled]="event.status !== 'upcoming'"
+                        [ngClass]="{
+                          'opacity-50 cursor-not-allowed':
+                            event.status !== 'upcoming'
+                        }"
+                        type="button"
+                        aria-expanded="false"
+                        class="flex items-center justify-center text-white bg-light-background border border-light-border hover:bg-light-foregroud rounded-md w-10 h-10 focus:outline-none shadow-md"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-pencil"
+                        >
+                          <path
+                            d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"
+                          />
+                          <path d="m15 5 4 4" />
+                        </svg>
+                      </button>
+                      <app-delete-event
+                        matTooltip="Delete Event"
+                        matTooltipPosition="above"
+                        [event_id]="event.event_id"
+                        (eventDeleted)="loadEvent()"
+                      ></app-delete-event>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="flex justify-center items-center mt-2.5 p-5">
+              <mat-paginator
+                [length]="filteredEventList['Pending'].length"
+                [pageSize]="itemsPerPage"
+                (page)="p = $event.pageIndex + 1"
+              ></mat-paginator>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
     </div>
 
     }@else {

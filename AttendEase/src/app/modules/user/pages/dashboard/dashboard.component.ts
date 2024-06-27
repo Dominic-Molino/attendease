@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { CalendarComponent } from '../../../../shared/components/calendar/calendar.component';
 import { Router, RouterLink } from '@angular/router';
 import { EventService } from '../../../../core/service/event.service';
 import { Observable, catchError, map } from 'rxjs';
@@ -12,7 +11,7 @@ import { UserEvents } from '../../../../interfaces/UserEvents';
   standalone: true,
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
-  imports: [CommonModule, CalendarComponent, RouterLink, MobicalendarComponent],
+  imports: [CommonModule, RouterLink, MobicalendarComponent],
 })
 export class DashboardComponent implements OnInit {
   events$?: Observable<UserEvents[]>;

@@ -5,16 +5,19 @@ import { Observable, catchError, map } from 'rxjs';
 import { UserEvents } from '../../../../interfaces/UserEvents';
 import { initFlowbite } from 'flowbite';
 import { Router } from '@angular/router';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-eventhistory',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatPaginatorModule],
   templateUrl: './eventhistory.component.html',
   styleUrl: './eventhistory.component.css',
 })
 export class EventhistoryComponent implements OnInit {
   events$?: Observable<UserEvents[]>;
+  itemPerPage: number = 10;
+  p: number = 1;
 
   constructor(
     private location: Location,

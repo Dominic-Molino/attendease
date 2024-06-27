@@ -30,6 +30,7 @@ export class EventService {
     return this.http.post(`${this.API_URL}addevent`, data);
   }
 
+  //approved
   getAllEvents(): Observable<Event[]> {
     return this.http.get<any>(`${this.API_URL}events`).pipe(
       map((result: any) => {

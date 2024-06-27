@@ -28,10 +28,10 @@
       <hr class="h-px mb-6 bg-dark-border border-0" />
     </div>
 
-    <div class="relative overflow-x-auto">
+    <div class="relative overflow-x-auto border border-dark-border rounded-md">
       <table
         *ngIf="events$ | async as events; else noEventsMessage"
-        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 shadow-md sm:rounded-lg"
+        class="w-full text-sm text-left rtl:text-right text-gray-500 shadow-md sm:rounded-lg"
       >
         <thead
           class="text-dark-muted border-b border-dark-primary capitalize bg-dark-foreground sticky top-0 z-10"
@@ -107,6 +107,13 @@
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="flex justify-center items-center mt-2.5 p-5">
+      <mat-paginator
+        [length]="events$"
+        [pageSize]="itemPerPage"
+        (page)="p = $event.pageIndex + 1"
+      ></mat-paginator>
     </div>
   </div>
 </main>

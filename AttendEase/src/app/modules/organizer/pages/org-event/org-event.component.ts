@@ -14,7 +14,6 @@ import { EventService } from '../../../../core/service/event.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
 import { initFlowbite } from 'flowbite';
-import { CalendarComponent } from '../../../../shared/components/calendar/calendar.component';
 import { Observable, Subscription, interval } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -22,25 +21,9 @@ import { UpdateimageComponent } from '../../components/updateimage/updateimage.c
 import { MobicalendarComponent } from '../../../../shared/components/mobicalendar/mobicalendar.component';
 import { MatTooltip, MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
-
-interface Event {
-  event_id: number;
-  event_name: string;
-  event_description: string;
-  event_location: string;
-  event_start_date: Date;
-  event_end_date: Date;
-  event_registration_start: Date;
-  event_registration_end: Date;
-  event_type: string;
-  max_attendees: number;
-  categories: string[];
-  organizer_name: string;
-  event_image: SafeResourceUrl | undefined;
-  event_image$?: Observable<SafeResourceUrl>;
-  approval_status: 'Approved' | 'Rejected' | 'Pending'; // Update as per your backend enum
-  total_attendees?: number;
-}
+import { Event } from '../../../../interfaces/EventInterface';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { OrganizerCalendarComponent } from '../../../../shared/components/organizer-calendar/organizer-calendar.component';
 
 @Component({
   selector: 'app-org-event',
@@ -52,11 +35,12 @@ interface Event {
     CommonModule,
     DeleteEventComponent,
     EditEventComponent,
-    CalendarComponent,
     NgxPaginationModule,
     MobicalendarComponent,
     MatTooltipModule,
     MatTabsModule,
+    MatPaginatorModule,
+    OrganizerCalendarComponent,
   ],
 })
 export class OrgEventComponent implements OnInit, OnDestroy {
@@ -65,7 +49,11 @@ export class OrgEventComponent implements OnInit, OnDestroy {
   selectedEventId: any;
   isDropdownOpen: boolean = false;
 
-  filteredEventList: { [key: string]: Event[] } = {}; // Corrected structure
+  filteredEventList: { [key: string]: Event[] } = {
+    Approved: [],
+    Rejected: [],
+    Pending: [],
+  };
 
   currentFilter: string = 'Approved';
 
@@ -86,9 +74,6 @@ export class OrgEventComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) initFlowbite();
     this.loadEvent();
-
-    // Setup polling to refresh events every 30 seconds
-    this.setupPolling();
   }
 
   ngOnDestroy(): void {
@@ -97,95 +82,35 @@ export class OrgEventComponent implements OnInit, OnDestroy {
     }
   }
 
-  setupPolling() {
-    const pollingIntervalMs = 30000; // 30 seconds
-
-    this.refreshSubscription = interval(pollingIntervalMs)
-      .pipe(switchMap(() => this.service.getAllEvents()))
-      .subscribe(
-        (result: any[]) => {
-          this.eventList = result.map((data: any) => {
-            return {
-              event_id: data.event_id,
-              event_name: data.event_name,
-              event_description: data.event_description,
-              event_location: data.event_location,
-              event_start_date: new Date(data.event_start_date),
-              event_end_date: new Date(data.event_end_date),
-              event_registration_start: new Date(data.event_registration_start),
-              event_registration_end: new Date(data.event_registration_end),
-              event_type: data.event_type,
-              max_attendees: data.max_attendees,
-              categories: JSON.parse(data.categories),
-              organizer_name: data.organizer_name.replace(/^"|"$/g, ''),
-              event_image: undefined,
-              approval_status: data.approval_status,
-              event_image$: undefined,
-            };
-          });
-
-          console.log(this.eventList);
-
-          this.filteredEventList = {
-            Approved: this.eventList.filter(
-              (event) => event.approval_status === 'Approved'
-            ),
-            Rejected: this.eventList.filter(
-              (event) => event.approval_status === 'Rejected'
-            ),
-            Pending: this.eventList.filter(
-              (event) => event.approval_status === 'Pending'
-            ),
-          };
-
-          console.log(this.filteredEventList);
-        },
-        (error) => {
-          console.error('Error fetching event details:', error);
-        }
-      );
-  }
-
   loadEvent() {
-    this.service.getAllEvents().subscribe((result: any[]) => {
-      this.eventList = result.map((data: any) => {
-        return {
-          event_id: data.event_id,
-          event_name: data.event_name,
-          event_description: data.event_description,
-          event_location: data.event_location,
-          event_start_date: new Date(data.event_start_date),
-          event_end_date: new Date(data.event_end_date),
-          event_registration_start: new Date(data.event_registration_start),
-          event_registration_end: new Date(data.event_registration_end),
-          event_type: data.event_type,
-          max_attendees: data.max_attendees,
-          categories: JSON.parse(data.categories),
-          organizer_name: data.organizer_name.replace(/^"|"$/g, ''),
-          event_image: undefined,
-          approval_status: data.approval_status,
-          event_image$: undefined,
-        };
-      });
-
-      console.log(this.eventList);
-
-      // Group events by approval approval_status
-      this.filteredEventList = {
-        Approved: this.eventList.filter(
-          (event) => event.approval_status === 'Approved'
-        ),
-        Rejected: this.eventList.filter(
-          (event) => event.approval_status === 'Rejected'
-        ),
-        Pending: this.eventList.filter(
-          (event) => event.approval_status === 'Pending'
-        ),
-      };
-
-      console.log(this.filteredEventList);
-    });
+    this.service.getEvents().subscribe(
+      (response: any) => {
+        this.eventList = response.payload;
+        console.log(this.eventList);
+        this.filterEventsByApprovalStatus();
+        this.p = 1;
+      },
+      (error: any) => {
+        console.error('Error loading events:', error);
+      }
+    );
   }
+
+  filterEventsByApprovalStatus() {
+    this.filteredEventList['Approved'] = this.eventList.filter(
+      (event) => event.approval_status === 'Approved'
+    );
+    console.log(this.filteredEventList['Approved']);
+    this.filteredEventList['Rejected'] = this.eventList.filter(
+      (event) => event.approval_status === 'Rejected'
+    );
+    console.log(this.filteredEventList['Rejected']);
+    this.filteredEventList['Pending'] = this.eventList.filter(
+      (event) => event.approval_status === 'Pending'
+    );
+    console.log(this.filteredEventList['Pending']);
+  }
+
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
@@ -265,7 +190,7 @@ export class OrgEventComponent implements OnInit, OnDestroy {
     }
   }
 
-  getEventapproval_status(event: any): string {
+  getEventState(event: any): string {
     const currentDate = new Date();
     const startDate = new Date(event.event_start_date);
     const endDate = new Date(event.event_end_date);

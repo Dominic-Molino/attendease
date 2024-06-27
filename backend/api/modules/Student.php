@@ -16,8 +16,7 @@ class PostStudentFunctions extends GlobalMethods
     public function editUser($data, $user_id)
     {
         $sql = "UPDATE user 
-                SET first_name = ?, last_name = ?, year_level = ?, block = ?, course = ?,  
-                email = ?
+                SET first_name = ?, last_name = ?, year_level = ?, course = ?, block = ?, email = ?
                 WHERE user_id = ?";
         try {
             $stmt = $this->pdo->prepare($sql);
@@ -134,6 +133,7 @@ class PostStudentFunctions extends GlobalMethods
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row['count'] > 0;
     }
+
 
     //post evaluation 
     public function addEventFeedback($event_id, $user_id, $data)

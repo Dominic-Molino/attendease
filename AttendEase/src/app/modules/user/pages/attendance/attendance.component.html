@@ -135,20 +135,16 @@
             <td>
               <button
                 (click)="openFile(event.status, event.event_id)"
-                [disabled]="
-                  attendanceRemarks[event.event_id] !== 0 &&
-                  attendanceRemarks[event.event_id] !== -1
-                "
+                [disabled]="attendanceRemarks[event.event_id] !== -1"
                 [ngClass]="{
-                  'bg-gray-300 cursor-not-allowed':
-                    (attendanceRemarks[event.event_id] !== 0 &&
-                      attendanceRemarks[event.event_id] !== -1) ||
-                    event.status === 'upcoming' ||
-                    event.status === 'ongoing',
-                  'bg-light-background hover:bg-light-foregroud':
+                  'cursor-not-allowed bg-gray-300 text-gray-500 border-gray-300':
+                    attendanceRemarks[event.event_id] !== -1 ||
+                    event.status === 'upcoming',
+                  'bg-light-background hover:bg-light-foregroud text-white':
+                    attendanceRemarks[event.event_id] === -1 &&
                     event.status === 'done'
                 }"
-                class="block mx-auto px-4 py-2 text-sm text-white font-semibold rounded-md focus:outline-none"
+                class="block mx-auto px-4 py-2 text-sm font-semibold rounded-md focus:outline-none"
               >
                 Upload photo
               </button>

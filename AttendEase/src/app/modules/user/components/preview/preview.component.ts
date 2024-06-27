@@ -10,10 +10,21 @@ import { AuthserviceService } from '../../../../core/service/authservice.service
 import Swal from 'sweetalert2';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Observable, of, Subscription, interval, timer } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Event } from '../../../../interfaces/EventInterface';
+
+export interface User {
+  user_id: number;
+  first_name: string;
+  last_name: string;
+  year_level: string;
+  course: string;
+  block: string;
+  email: string;
+  role_id: number;
+}
 
 @Component({
   selector: 'app-preview',
@@ -36,6 +47,8 @@ export class PreviewComponent implements OnInit, OnDestroy {
   eventImage$: Observable<SafeResourceUrl | undefined> | undefined;
   eventId: any;
   userEvents: Event[] = [];
+  user?: User;
+  canRegister = false;
 
   private refreshSubscription: Subscription | undefined;
 
@@ -53,12 +66,30 @@ export class PreviewComponent implements OnInit, OnDestroy {
       this.eventId = +params['eventId'];
       this.fetchEventDetails(this.eventId);
     });
+    this.getStudentInfo();
   }
 
   ngOnDestroy(): void {
     if (this.refreshSubscription) {
       this.refreshSubscription.unsubscribe();
     }
+  }
+
+  getStudentInfo(): void {
+    this.userService.getStudentProfile(this.userId).subscribe(
+      (response: any) => {
+        if (response.payload && response.payload.length > 0) {
+          this.user = response.payload[0]; // Assuming payload contains user data
+          console.log('User fetched:', this.user);
+          this.checkEligibility();
+        } else {
+          console.error('User data not found in API response:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching user:', error);
+      }
+    );
   }
 
   fetchEventDetails(eventId: number): void {
@@ -86,9 +117,45 @@ export class PreviewComponent implements OnInit, OnDestroy {
           }));
         }
         console.log(this.events);
+        this.checkEligibility();
       },
     });
     this.checkUserRegistration();
+    this.getStudentInfo();
+  }
+
+  checkEligibility(): void {
+    if (this.events.length > 0 && this.user) {
+      console.log('User:', this.user);
+
+      const targetParticipants = this.events[0].target_participants;
+      const isEventOpenForAll = this.events[0].participation_type === 'open';
+
+      if (isEventOpenForAll) {
+        this.canRegister = true; // Directly allow registration if open for all
+      } else {
+        this.canRegister = targetParticipants.some((participant: any) => {
+          const isSameDepartment = participant.department === this.user?.course;
+          console.log('Department check:', isSameDepartment);
+          console.log(
+            `Department: ${participant.department} || Course: ${this.user?.course}`
+          );
+
+          const yearLevels = participant.year_levels
+            .split(', ')
+            .map((level: any) => level.trim());
+          const isSameYearLevel = yearLevels.includes(this.user?.year_level);
+          console.log('Year Level check:', isSameYearLevel);
+          console.log(
+            `Year Levels: ${yearLevels} || User Year Level: ${this.user?.year_level}`
+          );
+
+          return isSameDepartment && isSameYearLevel;
+        });
+      }
+
+      console.log('Can Register:', this.canRegister);
+    }
   }
 
   checkUserRegistration(): void {
@@ -106,39 +173,52 @@ export class PreviewComponent implements OnInit, OnDestroy {
   }
 
   registerForEvent(eventId: number) {
-    Swal.fire({
-      title: 'Register to this event?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes!',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.service.registerForEvent(eventId, this.userId).subscribe(
-          (response) => {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 1500,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
-            Toast.fire({
-              icon: 'success',
-              title: 'Successfully registered',
-            });
-          },
-          (error) => {
-            Swal.fire('Warning', `${error.error.status.message}`, 'warning');
-          }
-        );
-      }
-    });
+    const event = this.events.find((e) => e.event_id === eventId);
+
+    if (!this.canRegister) {
+      Swal.fire(
+        'Warning',
+        'You are not eligible to register for this event.',
+        'warning'
+      );
+      return;
+    }
+
+    if (event?.participation_type === 'open' || this.canRegister) {
+      Swal.fire({
+        title: 'Register to this event?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.service.registerForEvent(eventId, this.userId).subscribe(
+            (response) => {
+              const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                },
+              });
+              Toast.fire({
+                icon: 'success',
+                title: 'Successfully registered',
+              });
+            },
+            (error) => {
+              Swal.fire('Warning', `${error.error.status.message}`, 'warning');
+            }
+          );
+        }
+      });
+    }
   }
 
   unregister(eventId: number) {

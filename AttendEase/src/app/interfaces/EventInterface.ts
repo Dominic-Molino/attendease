@@ -19,6 +19,6 @@ export interface Event {
   event_state: 'upcoming' | 'ongoing' | 'done';
   participation_type: string;
   target_participants: { department: string; year_levels: string }[];
-  registeredUserCount?: number;
-  feedbackSubmitted: boolean;
+  approval_status: 'Pending' | 'Rejected' | 'Approved';
+  feedbackSubmitted: boolean | null;
 }
