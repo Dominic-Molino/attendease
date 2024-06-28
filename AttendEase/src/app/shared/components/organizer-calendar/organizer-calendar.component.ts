@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MbscModule,
@@ -17,20 +17,22 @@ import { EventService } from '../../../core/service/event.service';
   providers: [MbscOptionsService],
   templateUrl: './organizer-calendar.component.html',
   styleUrls: ['./organizer-calendar.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class OrganizerCalendarComponent implements OnInit {
   event: MbscCalendarEvent[] = [];
+  @ViewChild('eventcalendar') eventcalendar: any;
 
   view = 'month';
   calView: MbscEventcalendarView = {
-    calendar: { labels: 1 },
+    agenda: { type: 'day' },
   };
 
   eventSettings: MbscEventcalendarOptions = {
     theme: 'material',
     themeVariant: 'light',
     eventOverlap: true,
-    data: this.event, // Bind the events to the calendar
+    data: this.event,
   };
 
   constructor(private service: EventService) {}
@@ -42,7 +44,6 @@ export class OrganizerCalendarComponent implements OnInit {
   fetchEvents(): void {
     this.service.getAllEvents().subscribe(
       (res: any) => {
-        console.log('Response:', res);
         if (res && Array.isArray(res)) {
           this.event = res.map((event: any) => ({
             start: new Date(event.event_start_date),
@@ -51,11 +52,12 @@ export class OrganizerCalendarComponent implements OnInit {
             description: event.event_description,
             status: event.status,
           }));
-          console.log('Mapped Events:', this.event);
           this.eventSettings = {
             ...this.eventSettings,
             data: this.event,
           };
+
+          this.refreshCalendar();
         } else {
           console.error('Invalid response format or payload missing');
         }
@@ -66,27 +68,13 @@ export class OrganizerCalendarComponent implements OnInit {
     );
   }
 
-  changeView(): void {
-    setTimeout(() => {
-      switch (this.view) {
-        case 'month':
-          this.calView = {
-            calendar: { type: 'month' },
-            agenda: { type: 'month' },
-          };
-          break;
-        case 'week':
-          this.calView = {
-            calendar: { type: 'week' },
-            agenda: { type: 'week' },
-          };
-          break;
-        case 'day':
-          this.calView = {
-            agenda: { type: 'day' },
-          };
-          break;
-      }
-    });
+  refreshCalendar(): void {
+    if (this.eventcalendar && this.eventcalendar.instance) {
+      this.eventcalendar.instance.refresh();
+    }
+  }
+
+  onPageLoading(event: any): void {
+    this.fetchEvents();
   }
 }

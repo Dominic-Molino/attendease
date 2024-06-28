@@ -20,10 +20,15 @@
     @if(eventList && eventList.length ){
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 h-full">
       <div
-        class="lg:w-full md:col-span-2 border border-dark-border h-auto shadow-md rounded-md p-10 bg-white"
+        class="lg:w-full md:col-span-1 border border-dark-border min-h-[433.175px] max-h-[433.175px] h-auto shadow-md rounded-md p-10 bg-white"
       >
         <!-- calendar here -->
         <app-organizer-calendar></app-organizer-calendar>
+      </div>
+      <div
+        class="lg:w-full md:col-span-1 border border-dark-border min-h-[433.175px] max-h-[433.175px] h-auto shadow-md rounded-md p-10 bg-white"
+      >
+        <app-monitored-event></app-monitored-event>
       </div>
       <div class="w-full col-span-2">
         <mat-tab-group>

@@ -1,0 +1,145 @@
+.mbsc-material.mbsc-selected .mbsc-calendar-cell-text {
+  background-color: #27272a;
+  border-color: #27272a;
+  border-radius: 100%;
+}
+
+.mbsc-material.mbsc-calendar-height-md .mbsc-calendar-day,
+.mbsc-material.mbsc-calendar-height-md .mbsc-calendar-day:after,
+.mbsc-material.mbsc-calendar-height-md .mbsc-calendar-week-day {
+  border-color: #b7b5ae;
+}
+
+.mbsc-material.mbsc-eventcalendar {
+  border: 1px solid #3030303c;
+  background: #fff;
+  border-radius: 0.35rem;
+  color: #303030;
+}
+
+.mbsc-material.mbsc-calendar-label-background {
+  margin: 0 -0.1em;
+  border-radius: 20px;
+}
+
+.mbsc-calendar-labels {
+  left: -1px;
+  position: absolute;
+  right: -1px;
+}
+
+.mbsc-calendar-cell-inner .mbsc-calendar-labels .mbsc-calendar-text {
+  color: #ff8a00;
+  font-weight: bold;
+  padding: -0.2rem 0.1rem;
+  margin: 1px 4px;
+  margin-left: 6px;
+  text-align: center;
+}
+
+.mbsc-material.mbsc-popover-list {
+  padding: 10px 0px;
+  width: 18em;
+}
+
+.mbsc-material.mbsc-colored-event.mbsc-list-item {
+  background: #ff8a00;
+  color: #fff;
+}
+
+.mbsc-material.mbsc-popover-list .mbsc-event {
+  margin: 0.125em 0.5em;
+  padding: 0.25em 0.5em;
+}
+
+.mbsc-material.mbsc-calendar-popup .mbsc-popup-arrow,
+.mbsc-material.mbsc-calendar-popup .mbsc-popup-body {
+  border: 1px solid #3030303c;
+  background: #fff;
+}
+
+.md-switching-view-cont {
+  height: 100%;
+}
+
+.md-switching-view-cont .mbsc-segmented {
+  margin: 0;
+  border-radius: 0.2rem;
+}
+
+.md-switching-view-cont .mbsc-segmented.mbsc-material,
+.md-switching-view-cont .mbsc-segmented.mbsc-windows {
+  padding: 0;
+}
+
+.md-switching-view-cont .mbsc-segmented .mbsc-segmented-button {
+  padding: 0 1px;
+}
+
+.md-switching-view-cont .mbsc-segmented .mbsc-icon {
+  font-size: 20px;
+}
+
+.md-switching-view-cont .mbsc-segmented-button.mbsc-windows {
+  border: 1px solid #3030303c;
+}
+
+.cal-header-picker {
+  -webkit-flex: 1 0 auto;
+  -moz-box-flex: 1;
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+  -moz-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.cal-header-nav {
+  width: 165px;
+}
+
+.cal-header-nav .mbsc-calendar-title.mbsc-material {
+  font-size: 16px;
+}
+
+.cal-header-picker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cal-header-nav {
+  width: 165px;
+}
+
+.mds-header-filter button {
+  position: relative;
+  margin: 0 10px; /* Add margin to space out the buttons */
+}
+
+.mds-header-filter button span {
+  visibility: hidden;
+  width: max-content;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position above the button */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.mds-header-filter button:hover span {
+  visibility: visible;
+  opacity: 1;
+}

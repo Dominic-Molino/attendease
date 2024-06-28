@@ -9,15 +9,16 @@ import { EventService } from '../../../../core/service/event.service';
   standalone: true,
   imports: [CommonModule, MatDialogModule],
   templateUrl: './delete-event.component.html',
-  styleUrl: './delete-event.component.css',
+  styleUrls: ['./delete-event.component.css'],
 })
 export class DeleteEventComponent {
   @Output() eventDeleted: EventEmitter<void> = new EventEmitter<void>();
   @Input() event_id: any;
+
   constructor(private service: EventService) {}
 
   deleteEvent() {
-    if (this.event_id.event_id) {
+    if (this.event_id) {
       Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -27,8 +28,8 @@ export class DeleteEventComponent {
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, delete it!',
       }).then((result) => {
-        if (result.isConfirmed && this.event_id.event_id) {
-          this.service.deleteEvent(this.event_id.event_id).subscribe(
+        if (result.isConfirmed) {
+          this.service.deleteEvent(this.event_id).subscribe(
             (res) => {
               const Toast = Swal.mixin({
                 toast: true,

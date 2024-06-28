@@ -120,10 +120,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
             case 'registeredUser':
                 if (isset($request[1])) {
-                    echo json_encode($getEvents->getRegisteredUserForEvent($request[1]));
+                    echo json_encode($getEvents->getRegisteredUsersForApprovedEvents($request[1]));
                 } else {
-                    echo "Event ID not provided";
-                    http_response_code(400);
+                    echo json_encode($getEvents->getRegisteredUsersForApprovedEvents());
                 }
                 break;
 

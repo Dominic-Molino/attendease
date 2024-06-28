@@ -63,11 +63,11 @@ export class EventService {
     return this.http.post(`${this.API_URL}editevent/${id}`, data);
   }
 
-  getRegisteredUser(eventId: any): Observable<any> {
+  getRegisteredUser(eventId: any = null): Observable<any> {
     if (eventId) {
       return this.http.get(`${this.API_URL}registeredUser/${eventId}`);
     } else {
-      return throwError('User ID not found');
+      return this.http.get(`${this.API_URL}registeredUser`);
     }
   }
 

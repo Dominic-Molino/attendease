@@ -15,7 +15,6 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
 import { initFlowbite } from 'flowbite';
 import { Observable, Subscription, interval } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { UpdateimageComponent } from '../../components/updateimage/updateimage.component';
 import { MobicalendarComponent } from '../../../../shared/components/mobicalendar/mobicalendar.component';
@@ -24,6 +23,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { Event } from '../../../../interfaces/EventInterface';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { OrganizerCalendarComponent } from '../../../../shared/components/organizer-calendar/organizer-calendar.component';
+import { MonitoredEventComponent } from '../../../../shared/components/monitored-event/monitored-event.component';
 
 @Component({
   selector: 'app-org-event',
@@ -41,6 +41,7 @@ import { OrganizerCalendarComponent } from '../../../../shared/components/organi
     MatTabsModule,
     MatPaginatorModule,
     OrganizerCalendarComponent,
+    MonitoredEventComponent,
   ],
 })
 export class OrgEventComponent implements OnInit, OnDestroy {
@@ -86,7 +87,6 @@ export class OrgEventComponent implements OnInit, OnDestroy {
     this.service.getEvents().subscribe(
       (response: any) => {
         this.eventList = response.payload;
-        console.log(this.eventList);
         this.filterEventsByApprovalStatus();
         this.p = 1;
       },
@@ -100,15 +100,12 @@ export class OrgEventComponent implements OnInit, OnDestroy {
     this.filteredEventList['Approved'] = this.eventList.filter(
       (event) => event.approval_status === 'Approved'
     );
-    console.log(this.filteredEventList['Approved']);
     this.filteredEventList['Rejected'] = this.eventList.filter(
       (event) => event.approval_status === 'Rejected'
     );
-    console.log(this.filteredEventList['Rejected']);
     this.filteredEventList['Pending'] = this.eventList.filter(
       (event) => event.approval_status === 'Pending'
     );
-    console.log(this.filteredEventList['Pending']);
   }
 
   toggleDropdown() {
@@ -169,17 +166,24 @@ export class OrgEventComponent implements OnInit, OnDestroy {
     });
   }
 
-  editEvent(eventId: any) {
-    this.selectedEventId = eventId;
-    const modal = this.dialog.open(EditEventComponent, {
-      data: { event_id: this.selectedEventId },
-      disableClose: true,
-      width: '60%',
-      height: '90%',
-    });
-    modal.afterClosed().subscribe((response) => {
-      this.loadEvent();
-    });
+  editEvent(eventId: number) {
+    this.service.getEventById(eventId).subscribe(
+      (eventDetails: any) => {
+        const modal = this.dialog.open(EditEventComponent, {
+          data: eventDetails,
+          disableClose: true,
+          width: '60%',
+          height: '90%',
+        });
+
+        modal.afterClosed().subscribe((response) => {
+          this.loadEvent();
+        });
+      },
+      (error) => {
+        console.error('Error fetching event details:', error);
+      }
+    );
   }
 
   truncateDescription(text: string, maxLength: number): string {

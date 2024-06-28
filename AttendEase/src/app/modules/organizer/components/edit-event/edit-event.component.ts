@@ -37,11 +37,11 @@ import { TagComponent, TagInputModule } from 'ngx-chips';
     TagInputModule,
   ],
   templateUrl: './edit-event.component.html',
-  styleUrl: './edit-event.component.css',
+  styleUrls: ['./edit-event.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
 export class EditEventComponent implements OnInit {
-  eventId: number;
+  eventId?: number;
   eventVal: any;
   eventForm: FormGroup;
   categoryControls: FormArray | undefined;
@@ -50,23 +50,17 @@ export class EditEventComponent implements OnInit {
     private service: EventService,
     private builder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialog: MatDialogRef<EditEventComponent>
+    private dialogRef: MatDialogRef<EditEventComponent>
   ) {
-    this.eventId = this.data.event_id.event_id;
-    this.eventVal = this.data.event_id;
+    this.eventVal = data[0];
+    console.log(this.eventVal);
 
     this.eventForm = this.builder.group({
       event_name: [this.eventVal.event_name, Validators.required],
       event_description: [this.eventVal.event_description, Validators.required],
       event_location: [this.eventVal.event_location, Validators.required],
-      event_start_date: [
-        this.eventVal.event_start_date,
-        [Validators.required, this.futureDateValidator()],
-      ],
-      event_end_date: [
-        this.eventVal.event_end_date,
-        [Validators.required, this.futureDateValidator()],
-      ],
+      event_start_date: [this.eventVal.event_start_date, [Validators.required]],
+      event_end_date: [this.eventVal.event_end_date, [Validators.required]],
       event_registration_start: [
         this.eventVal.event_registration_start,
         Validators.required,
@@ -81,14 +75,16 @@ export class EditEventComponent implements OnInit {
         this.eventVal.categories ? JSON.parse(this.eventVal.categories) : [],
       ],
       organizer_name: [
-        this.eventVal.organizer_name.replace(/^"|"$/g, ''),
+        this.eventVal.organizer_name
+          ? this.eventVal.organizer_name.replace(/^"|"$/g, '')
+          : '',
         Validators.required,
       ],
     });
   }
 
   ngOnInit(): void {
-    if (this.eventId) {
+    if (this.eventVal) {
       this.eventForm.patchValue({
         event_name: this.eventVal.event_name,
         event_description: this.eventVal.event_description,
@@ -111,7 +107,7 @@ export class EditEventComponent implements OnInit {
     if (this.eventForm.valid) {
       const formData = this.eventForm.value;
 
-      this.service.editEvent(this.eventId, this.eventForm.value).subscribe(
+      this.service.editEvent(this.eventVal.event_id, formData).subscribe(
         (res) => {
           const Toast = Swal.mixin({
             toast: true,
@@ -128,7 +124,7 @@ export class EditEventComponent implements OnInit {
             icon: 'success',
             title: 'Event updated.',
           });
-          this.dialog.close();
+          this.dialogRef.close();
         },
         (error) => {
           Swal.fire('Warning', `${error.error.status.message}`, 'warning');
@@ -140,7 +136,7 @@ export class EditEventComponent implements OnInit {
   }
 
   closeDialog() {
-    this.dialog.close();
+    this.dialogRef.close();
   }
 
   futureDateValidator(): ValidatorFn {
@@ -155,7 +151,7 @@ export class EditEventComponent implements OnInit {
         Swal.fire({
           icon: 'warning',
           title: 'Invalid Date',
-          text: "You've enter a past date!",
+          text: "You've entered a past date!",
         });
         return { pastDate: true };
       }

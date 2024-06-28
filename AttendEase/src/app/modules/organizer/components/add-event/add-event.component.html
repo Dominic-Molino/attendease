@@ -131,52 +131,118 @@
             />
           </div>
 
-          <div class="w-full col-span-2">
-            <label for="event_start_date">Event Start Date</label>
-            <input
-              type="datetime-local"
-              id="event_start_date"
-              formControlName="event_start_date"
-              required
-              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
-            />
+          <!-- start date -->
+          <div class="w-full relative col-span-1">
+            <label for="event_start_date">Start Date</label>
+            <div class="relative max-w-full">
+              <div
+                class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none"
+              >
+                <svg
+                  class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="datetime-local"
+                id="event_start_date"
+                formControlName="event_start_date"
+                required
+                class="bg-gray-50 border border-dark-border text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-dark-border block w-full ps-10 p-2.5"
+              />
+            </div>
           </div>
 
-          <div class="w-full col-span-2">
-            <label for="event_end_date">Event End Date</label>
-            <input
-              type="datetime-local"
-              id="event_end_date"
-              formControlName="event_end_date"
-              required
-              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
-            />
+          <div class="w-full relative col-span-1">
+            <label for="event_end_date">End Date</label>
+            <div class="relative max-w-full">
+              <div
+                class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none"
+              >
+                <svg
+                  class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="datetime-local"
+                id="event_end_date"
+                formControlName="event_end_date"
+                required
+                class="bg-gray-50 border border-dark-border text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-dark-border block w-full ps-10 p-2.5"
+              />
+            </div>
           </div>
 
-          <div class="w-full col-span-2">
-            <label for="event_registration_start"
-              >Event Registration Start Date</label
-            >
-            <input
-              type="datetime-local"
-              id="event_registration_start"
-              formControlName="event_registration_start"
-              required
-              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
-            />
+          <!-- registration date -->
+          <div class="w-full relative col-span-1">
+            <label for="event_registration_start">Registration Start</label>
+            <div class="relative max-w-full">
+              <div
+                class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none"
+              >
+                <svg
+                  class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="datetime-local"
+                id="event_registration_start"
+                formControlName="event_registration_start"
+                required
+                class="bg-gray-50 border border-dark-border text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-dark-border block w-full ps-10 p-2.5"
+              />
+            </div>
           </div>
 
-          <div class="w-full col-span-2">
-            <label for="event_registration_end"
-              >Event Registration End Date</label
-            >
-            <input
-              type="datetime-local"
-              id="event_registration_end"
-              formControlName="event_registration_end"
-              required
-              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
-            />
+          <div class="w-full relative col-span-1">
+            <label for="event_registration_end">Registration End</label>
+            <div class="relative max-w-full">
+              <div
+                class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none"
+              >
+                <svg
+                  class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="datetime-local"
+                id="event_registration_end"
+                formControlName="event_registration_end"
+                required
+                class="bg-gray-50 border border-dark-border text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-dark-border block w-full ps-10 p-2.5"
+              />
+            </div>
           </div>
 
           <div class="sm:col-span-2">

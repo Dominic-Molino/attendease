@@ -1,0 +1,18 @@
+<mat-tab-group>
+  <mat-tab *ngFor="let event of events" [label]="event.event_name">
+    <div>
+      <h2>{{ event.event_name }}</h2>
+      <p>{{ event.event_description }}</p>
+      <p>{{ event.event_location }}</p>
+      <p>{{ event.event_start_date }} to {{ event.event_end_date }}</p>
+
+      <h3>Registered Users</h3>
+      <ul>
+        <li *ngFor="let user of registeredUsersMap[event.event_id]">
+          {{ user.first_name }} {{ user.last_name }} ({{ user.year_level }},
+          {{ user.course }})
+        </li>
+      </ul>
+    </div>
+  </mat-tab>
+</mat-tab-group>
