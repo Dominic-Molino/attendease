@@ -133,4 +133,24 @@ export class EventService {
       admin_id,
     });
   }
+
+  //org
+  getApprovedOrganizerEvents(org_id: any): Observable<any> {
+    return this.http.get<any>(
+      `${this.API_URL}getapprovedorganizerevents/${org_id}`
+    );
+  }
+
+  getAllOrganizerEvents(org_id: any): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}getallorganizerevents/${org_id}`);
+  }
+
+  //org getRegisteredUser
+  getRegisteredUserInOrgEvent(org_id: any): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}getregistereduser/${org_id}`);
+  }
+
+  getDataForDashboard(org_id: any): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}getdatadashboard/${org_id}`);
+  }
 }

@@ -26,6 +26,7 @@ export class DashboardComponent implements OnInit {
     return this.eventService.getUserEvent().pipe(
       map((res) => {
         if (res && res.payload) {
+          console.log(res.payload);
           const events = res.payload.map((event: any) => {
             const currentDate = new Date();
             const endDate = new Date(event.event_end_date);
@@ -86,5 +87,9 @@ export class DashboardComponent implements OnInit {
 
   onClickButton(): void {
     this.router.navigate(['student/registeredeventhistory']);
+  }
+
+  goToPreview(eventId: number): void {
+    this.router.navigate([`student/preview/${eventId}`]);
   }
 }

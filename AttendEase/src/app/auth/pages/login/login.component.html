@@ -78,11 +78,13 @@
         <div class="my-5">
           <p class="text-center text-sm py-0 max-sm:text-xs">
             Don't have an account?
-            <a
+            <button
+              (click)="openPopup()"
+              type="button"
               class="text-dark-text font-semibold hover:text-light-text hover:underline"
-              routerLink="/signup"
-              >Signup here</a
             >
+              Signup here
+            </button>
           </p>
         </div>
       </form>
@@ -103,4 +105,9 @@
       </div>
     </div>
   </div>
+
+  <app-register-route
+    *ngIf="showPopup"
+    (closePopup)="closePopup()"
+  ></app-register-route>
 </section>

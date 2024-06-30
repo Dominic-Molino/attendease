@@ -102,33 +102,53 @@
             </select>
           </div>
 
-          <div class="w-full">
-            <label
-              for="organizer_name"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >Organizer Name</label
-            >
-            <input
-              type="text"
-              name="organizer_name"
-              id="organizer_name"
-              formControlName="organizer_name"
-              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
-              placeholder="Organizer Name"
-            />
-          </div>
+          <div class="w-full col-span-2 grid grid-cols-3 gap-2.5">
+            <div class="w-full">
+              <label
+                for="organizer_name"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Organizer Name</label
+              >
+              <input
+                type="text"
+                name="organizer_name"
+                id="disabled-input"
+                aria-label="disabled input"
+                readonly
+                formControlName="organizer_name"
+                class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
+              />
+            </div>
 
-          <div class="w-full">
-            <label
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >No. Participants</label
-            >
-            <input
-              type="number"
-              placeholder="1"
-              formControlName="max_attendees"
-              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
-            />
+            <div class="w-full">
+              <label
+                for="organizer_organization"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Organization</label
+              >
+              <input
+                type="text"
+                name="organizer_organization"
+                id="disabled-input"
+                aria-label="disabled input"
+                readonly
+                formControlName="organizer_organization"
+                class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
+              />
+            </div>
+
+            <div class="w-full">
+              <label
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >No. Participants</label
+              >
+              <input
+                type="number"
+                placeholder="1"
+                formControlName="max_attendees"
+                class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
+              />
+            </div>
           </div>
 
           <!-- start date -->
@@ -256,7 +276,7 @@
             ></textarea>
           </div>
 
-          <div class="sm:col-span-2">
+          <div class="sm:col-span-2 mb-2.5">
             <label for="categories">Tags</label>
             <tag-input
               formControlName="categories"
@@ -268,11 +288,12 @@
           </div>
         </div>
 
-        <div>
+        <div class="sm:col-span-2">
           <label>Participation Type</label>
           <select
             formControlName="participation_type"
             (change)="onParticipationTypeChange($event)"
+            class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
           >
             <option value="open">Open for All</option>
             <option value="selected">Select Participants</option>
@@ -283,13 +304,17 @@
           formGroupName="target_participants"
           *ngIf="eventForm.get('participation_type')?.value === 'selected'"
         >
-          <div class="form-group" *ngFor="let dep of departments">
+          <div
+            class="flex justify-center items-center gap-2.5 my-2.5 w-full text-sm font-medium text-gray-900 bg-white"
+            *ngFor="let dep of departments"
+          >
             <label>{{ dep }}</label>
             <div *ngFor="let year of year_levels">
               <label>
                 <input
                   type="checkbox"
                   [value]="year"
+                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                   (change)="onCheckboxChange($event, dep)"
                 />
                 {{ year }}

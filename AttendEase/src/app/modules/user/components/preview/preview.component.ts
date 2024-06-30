@@ -213,7 +213,22 @@ export class PreviewComponent implements OnInit, OnDestroy {
               });
             },
             (error) => {
-              Swal.fire('Warning', `${error.error.status.message}`, 'warning');
+              if (error.status === 409) {
+                console.log(error);
+                Swal.fire({
+                  title: 'Warning',
+                  html: `<p>${error.error.status.message}:</p><br><h1>${error.error.payload.event_name}</h1>`,
+                  icon: 'warning',
+                  footer:
+                    '<a href="http://localhost:4200/student/registeredeventhistory">View your registered events.</a>',
+                });
+              } else {
+                Swal.fire(
+                  'Warning',
+                  `${error.error.status.message}`,
+                  'warning'
+                );
+              }
             }
           );
         }
@@ -248,6 +263,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
               icon: 'success',
               title: 'Successfully unregistered',
             });
+            this.route.navigate(['student/registeredeventhistory']);
           },
           (error) => {
             Swal.fire('Warning', `${error.error.status.message}`, 'warning');

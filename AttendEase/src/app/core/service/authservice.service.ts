@@ -190,4 +190,24 @@ export class AuthserviceService {
   getAllRemarks(eventId: number): Observable<any> {
     return this.http.get(`${this.API_URL}getAllRemarks/${eventId}`);
   }
+
+  getConversation(currentUser: number, otherUser: number) {
+    return this.http.get(
+      `${this.API_URL}getConversations/${currentUser}/${otherUser}`
+    );
+  }
+
+  getConversationMessages(conversationId: number) {
+    return this.http.get(
+      `${this.API_URL}getConversationMessages/${conversationId}`
+    );
+  }
+
+  sendMessage(inputdata: any) {
+    return this.http.post(`${this.API_URL}/sendmessage`, inputdata);
+  }
+
+  getMessageRequests(currentUser: number) {
+    return this.http.get(`${this.API_URL}getMessageRequests/${currentUser}`);
+  }
 }

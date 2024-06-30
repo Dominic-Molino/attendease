@@ -22,8 +22,7 @@ import { MatTooltip, MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Event } from '../../../../interfaces/EventInterface';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { OrganizerCalendarComponent } from '../../../../shared/components/organizer-calendar/organizer-calendar.component';
-import { MonitoredEventComponent } from '../../../../shared/components/monitored-event/monitored-event.component';
+import { AuthserviceService } from '../../../../core/service/authservice.service';
 
 @Component({
   selector: 'app-org-event',
@@ -40,8 +39,6 @@ import { MonitoredEventComponent } from '../../../../shared/components/monitored
     MatTooltipModule,
     MatTabsModule,
     MatPaginatorModule,
-    OrganizerCalendarComponent,
-    MonitoredEventComponent,
   ],
 })
 export class OrgEventComponent implements OnInit, OnDestroy {
@@ -49,6 +46,7 @@ export class OrgEventComponent implements OnInit, OnDestroy {
   maxChar = 100;
   selectedEventId: any;
   isDropdownOpen: boolean = false;
+  currId: any;
 
   filteredEventList: { [key: string]: Event[] } = {
     Approved: [],
@@ -67,12 +65,15 @@ export class OrgEventComponent implements OnInit, OnDestroy {
 
   constructor(
     private service: EventService,
+    private user: AuthserviceService,
     private dialog: MatDialog,
     private sanitizer: DomSanitizer,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
+    this.currId = this.user.getCurrentUserId();
+    console.log(this.currId);
     if (isPlatformBrowser(this.platformId)) initFlowbite();
     this.loadEvent();
   }
@@ -84,7 +85,7 @@ export class OrgEventComponent implements OnInit, OnDestroy {
   }
 
   loadEvent() {
-    this.service.getEvents().subscribe(
+    this.service.getAllOrganizerEvents(this.currId).subscribe(
       (response: any) => {
         this.eventList = response.payload;
         this.filterEventsByApprovalStatus();

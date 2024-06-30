@@ -9,6 +9,8 @@ import Swal from 'sweetalert2';
 import { AuthserviceService } from '../../../core/service/authservice.service';
 import { CommonModule } from '@angular/common';
 import { NotificationComponent } from '../../../modules/admin/components/notification/notification.component';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MessageComponent } from '../message/message.component';
 
 @Component({
   selector: 'app-admin-sidebar',
@@ -27,7 +29,11 @@ export class AdminSidebarComponent implements OnInit {
   userId = this.service.getCurrentUserId();
   studentProfile: any;
 
-  constructor(private router: Router, private service: AuthserviceService) {
+  constructor(
+    private router: Router,
+    private service: AuthserviceService,
+    private dialog: MatDialog
+  ) {
     this.userId = this.service.getCurrentUserId();
   }
 
@@ -71,6 +77,24 @@ export class AdminSidebarComponent implements OnInit {
         sessionStorage.removeItem('token');
         this.router.navigate(['login']);
       }
+    });
+  }
+
+  openChat() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.position = {
+      bottom: '75px',
+      right: '95px',
+    };
+
+    dialogConfig.width = '30%';
+
+    const openDia = this.dialog.open(MessageComponent, {
+      data: {
+        currentUser: this.userId,
+        otherUser: 12,
+      },
     });
   }
 }

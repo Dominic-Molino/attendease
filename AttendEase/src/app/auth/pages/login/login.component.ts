@@ -3,19 +3,30 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthserviceService } from '../../../core/service/authservice.service';
 import Swal from 'sweetalert2';
+import { MatDialog } from '@angular/material/dialog';
+import { RegisterRouteComponent } from '../register-route/register-route.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [
+    RouterLink,
+    ReactiveFormsModule,
+    RegisterRouteComponent,
+    CommonModule,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
 export class LoginComponent implements OnInit {
+  showPopup = false;
+
   constructor(
     private builder: FormBuilder,
     private service: AuthserviceService,
-    private router: Router
+    private router: Router,
+    private diloag: MatDialog
   ) {
     sessionStorage.clear();
   }
@@ -94,6 +105,14 @@ export class LoginComponent implements OnInit {
         text: 'Missing login credentials.',
       });
     }
+  }
+
+  openPopup() {
+    this.showPopup = true;
+  }
+
+  closePopup() {
+    this.showPopup = false;
   }
 
   togglePasswordVisibility() {

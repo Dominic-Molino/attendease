@@ -10,6 +10,8 @@ import { AuthserviceService } from '../../../core/service/authservice.service';
 import Swal from 'sweetalert2';
 import { NotificationComponent } from '../../../modules/user/components/notification/notification.component';
 import { Subscription } from 'rxjs';
+import { MessageComponent } from '../message/message.component';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-sidebar',
@@ -20,6 +22,7 @@ import { Subscription } from 'rxjs';
     RouterOutlet,
     RouterLinkActive,
     NotificationComponent,
+    MessageComponent,
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',
@@ -31,7 +34,11 @@ export class SidebarComponent implements OnInit {
   animationStopped = false;
   private subscription?: Subscription;
 
-  constructor(private service: AuthserviceService, private router: Router) {}
+  constructor(
+    private service: AuthserviceService,
+    private router: Router,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.userId = this.service.getCurrentUserId();
@@ -66,6 +73,24 @@ export class SidebarComponent implements OnInit {
 
   toggleNotification() {
     this.animationStopped = true;
+  }
+
+  openChat() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.position = {
+      bottom: '75px',
+      right: '95px',
+    };
+
+    dialogConfig.width = '30%';
+
+    const openDia = this.dialog.open(MessageComponent, {
+      data: {
+        currentUser: this.userId,
+        otherUser: 12,
+      },
+    });
   }
 
   logout(): void {

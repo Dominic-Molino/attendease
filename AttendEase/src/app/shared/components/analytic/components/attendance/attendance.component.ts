@@ -61,33 +61,6 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           },
         },
       },
-      scales: {
-        x: {
-          display: true,
-          title: {
-            display: true,
-            text: 'Number of Events',
-            font: {
-              family: 'Inter',
-              size: 14,
-            },
-          },
-        },
-        y: {
-          display: true,
-          title: {
-            display: true,
-            text: 'Event Status',
-            font: {
-              family: 'Inter',
-              size: 14,
-            },
-          },
-          ticks: {
-            beginAtZero: true,
-          },
-        },
-      },
     };
   }
 
@@ -99,7 +72,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
 
   private setupPolling() {
     this.refreshSubscription = timer(0, 60000)
-      .pipe(switchMap(() => this.eventService.getAllEvents()))
+      .pipe(switchMap(() => this.eventService.getEvents()))
       .subscribe(
         (res: any) => {
           const events: Event[] = res.payload;
@@ -129,9 +102,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
             datasets: [
               {
                 label: 'Events',
-                backgroundColor: '#db7c24',
-                barThickness: 20,
-                borderRadius: 15,
+                backgroundColor: ['#ff8a00', '#f6aa54', '#c75519'],
                 data: [ongoing, done, upcoming],
               },
             ],

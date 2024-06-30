@@ -92,7 +92,8 @@
               <tbody>
                 <tr
                   *ngFor="let event of events; let i = index"
-                  class="bg-white border-b border-dark-border"
+                  (click)="goToPreview(event.event_id)"
+                  class="bg-white border-b border-dark-border cursor-pointer"
                 >
                   <td
                     scope="row"

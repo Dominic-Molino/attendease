@@ -23,10 +23,18 @@ export const routes: Routes = [
   },
 
   {
-    path: 'signup',
+    path: 'student/signup',
     loadComponent: () =>
       import('./auth/pages/signup/signup.component').then(
         (c) => c.SignupComponent
+      ),
+  },
+
+  {
+    path: 'organizer/signup',
+    loadComponent: () =>
+      import('./auth/pages/org-signup/org-signup.component').then(
+        (c) => c.OrgSignupComponent
       ),
   },
 

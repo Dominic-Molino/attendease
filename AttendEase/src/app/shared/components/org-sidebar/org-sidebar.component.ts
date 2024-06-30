@@ -8,6 +8,9 @@ import {
 } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthserviceService } from '../../../core/service/authservice.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MessageComponent } from '../message/message.component';
+import { UserComponent } from '../../../modules/user/user.component';
 
 @Component({
   selector: 'app-org-sidebar',
@@ -20,8 +23,13 @@ export class OrgSidebarComponent implements OnInit {
   userId = this.service.getCurrentUserId();
   studentProfile: any;
 
-  constructor(private service: AuthserviceService, private router: Router) {
+  constructor(
+    private service: AuthserviceService,
+    private router: Router,
+    private dialog: MatDialog
+  ) {
     this.userId = this.service.getCurrentUserId();
+    console.log(this.userId);
   }
 
   ngOnInit(): void {
@@ -64,6 +72,24 @@ export class OrgSidebarComponent implements OnInit {
         sessionStorage.removeItem('token');
         this.router.navigate(['login']);
       }
+    });
+  }
+
+  openChat() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.position = {
+      bottom: '75px',
+      right: '95px',
+    };
+
+    dialogConfig.width = '30%';
+
+    const openDia = this.dialog.open(MessageComponent, {
+      data: {
+        currentUser: this.userId,
+        otherUser: 11,
+      },
     });
   }
 }

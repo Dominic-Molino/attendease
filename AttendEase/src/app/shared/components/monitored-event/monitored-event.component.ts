@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { EventService } from '../../../core/service/event.service';
 import { Event } from '../../../interfaces/EventInterface';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
-import { ContentObserver } from '@angular/cdk/observers';
+import { AuthserviceService } from '../../../core/service/authservice.service';
+import { formatDistanceToNow } from 'date-fns';
 
 @Component({
   standalone: true,
@@ -11,29 +12,45 @@ import { ContentObserver } from '@angular/cdk/observers';
   selector: 'app-monitored-event',
   templateUrl: './monitored-event.component.html',
   styleUrls: ['./monitored-event.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class MonitoredEventComponent implements OnInit {
   events: Event[] = [];
   selectedEvent: Event | null = null;
   registeredUsers: any[] = [];
   registeredUsersMap: { [eventId: number]: any[] } = {};
+  currentIndex: number = 0;
+  currId: any;
 
-  constructor(private eventService: EventService) {}
+  constructor(
+    private eventService: EventService,
+    private service: AuthserviceService
+  ) {}
 
   ngOnInit(): void {
-    this.eventService.getAllEvents().subscribe((res: any) => {
-      this.events = res.sort(
-        (a: Event, b: Event) =>
-          new Date(b.event_start_date).getTime() -
-          new Date(a.event_start_date).getTime()
-      );
-      console.log(this.events);
+    this.currId = this.service.getCurrentUserId();
+    this.loadData(this.currId);
+    if (this.events.length > 0) {
+      this.selectedEvent = this.events[this.currentIndex];
+      this.loadRegisteredUsers(this.selectedEvent.event_id);
+    }
+  }
 
-      // Load registered users for each event
-      this.events.forEach((event) => {
-        this.loadRegisteredUsers(event.event_id);
+  loadData(id: any) {
+    if (id) {
+      this.eventService.getApprovedOrganizerEvents(id).subscribe((res: any) => {
+        this.events = res.payload;
+        console.log(this.events);
+
+        this.events.forEach((event) => {
+          this.loadRegisteredUsers(event.event_id);
+        });
+
+        if (this.events.length > 0) {
+          this.selectedEvent = this.events[this.currentIndex];
+        }
       });
-    });
+    }
   }
 
   loadRegisteredUsers(eventId: number): void {
@@ -42,5 +59,25 @@ export class MonitoredEventComponent implements OnInit {
       this.registeredUsersMap[eventId] = res.payload || [];
       console.log(this.registeredUsersMap);
     });
+  }
+
+  prevEvent(): void {
+    if (this.currentIndex > 0) {
+      this.currentIndex--;
+      this.selectedEvent = this.events[this.currentIndex];
+      this.loadRegisteredUsers(this.selectedEvent.event_id);
+    }
+  }
+
+  nextEvent(): void {
+    if (this.currentIndex < this.events.length - 1) {
+      this.currentIndex++;
+      this.selectedEvent = this.events[this.currentIndex];
+      this.loadRegisteredUsers(this.selectedEvent.event_id);
+    }
+  }
+
+  formatRegistrationDate(date: string): string {
+    return formatDistanceToNow(new Date(date), { addSuffix: true });
   }
 }

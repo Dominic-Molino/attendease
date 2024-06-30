@@ -78,12 +78,14 @@ export class MobicalendarComponent {
     this.eventService.getUserEvent().subscribe(
       (res: any) => {
         if (res && res.payload && Array.isArray(res.payload)) {
-          this.events = res.payload.map((event: any) => ({
-            ...event,
-            start: new Date(event.event_start_date),
-            end: new Date(event.event_end_date),
-            title: event.event_name,
-          }));
+          this.events = res.payload
+            .filter((event: any) => event.status !== 'done') // Filter out done events
+            .map((event: any) => ({
+              ...event,
+              start: new Date(event.event_start_date),
+              end: new Date(event.event_end_date),
+              title: event.event_name,
+            }));
         } else {
           console.error('Invalid response format or payload missing');
         }
@@ -93,7 +95,6 @@ export class MobicalendarComponent {
       }
     );
   }
-
   changeView(): void {
     setTimeout(() => {
       switch (this.view) {

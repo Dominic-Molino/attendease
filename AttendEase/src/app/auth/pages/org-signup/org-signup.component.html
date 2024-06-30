@@ -1,0 +1,140 @@
+<section class="w-full h-screen">
+  <div
+    class="flex max-sm:flex-col-reverse flex-row justify-center items-center h-screen w-full px-52 relative z-20 max-sm:p-10 max-md:flex-col-reverse md:px-28 xl:justify-evenly"
+  >
+    <!-- form -->
+    <div class="w-1/2 max-md:w-full max-md:-mt-10 max-sm:-mt-20 md:-mb-10">
+      <h1
+        class="text-center md:text-center font-primary font-bold mb-5 text-2x max-sm:text-base text-nowrap text-text"
+      >
+        Welcome <span class="text-serpentine">GCians!</span>
+      </h1>
+      <div>
+        <form
+          [formGroup]="registerForm"
+          (ngSubmit)="registerStudent()"
+          class="max-w-sm mx-auto sm:w-full"
+          autocomplete="off"
+        >
+          <h2
+            class="font-primary text-dark-text text-wrap text-center max-sm:text-xs my-3.5"
+          >
+            Enter your information to create an account
+          </h2>
+          <!-- first name -->
+          <div class="grid md:grid-cols-2 md:gap-6">
+            <div class="mb-5">
+              <input
+                formControlName="first_name"
+                type="text"
+                name="firstName"
+                id="firstName"
+                class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2 max-sm:text-xs"
+                placeholder="First Name"
+                required
+              />
+            </div>
+
+            <!-- last name -->
+
+            <div class="mb-5">
+              <input
+                formControlName="last_name"
+                type="text"
+                name="lastName"
+                id="lastName"
+                class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border block max-sm:text-xs w-full p-2"
+                placeholder="Last Name"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- email -->
+
+          <div class="mb-5">
+            <input
+              formControlName="email"
+              type="email"
+              name="email"
+              id="email"
+              class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border max-sm:text-xs block w-full p-2.5"
+              placeholder="Domain Email"
+              required
+            />
+          </div>
+
+          <!-- organizer -->
+
+          <div class="mb-5">
+            <select
+              id="organization"
+              formControlName="organization"
+              class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border max-sm:text-xs block w-full p-2.5"
+            >
+              <option value="" disabled selected style="color: gray">
+                Select organization
+              </option>
+              <option>SPECS</option>
+              <option>ELITES</option>
+              <option>IMAGES</option>
+              <option>CCS Student Council</option>
+            </select>
+          </div>
+
+          <!-- password -->
+
+          <div class="mb-5">
+            <input
+              formControlName="password"
+              type="password"
+              name="password"
+              id="password"
+              class="bg-white border-dark-border text-gray-900 text-sm rounded-md focus:ring-0 focus:border-light-border max-sm:text-xs block w-full p-2.5"
+              required
+              placeholder="Password"
+            />
+          </div>
+
+          <div class="flex w-full justify-center">
+            <button
+              type="submit"
+              class="text-light-text font-semibold mx-auto max-sm:text-xs block md:w-[50%] bg-white border border-light-border hover:bg-light-background hover:text-white focus:outline-none rounded-md text-sm sm:w-auto px-5 py-2.5 text-center"
+            >
+              Signup
+            </button>
+          </div>
+
+          <div class="mb-0">
+            <p
+              class="text-center text-sm max-sm:text-xs mt-4 py-0 font-primary"
+            >
+              Already have an account?
+              <a
+                class="text-dark-text max-sm:text-xs font-semibold hover:text-light-text hover:underline"
+                routerLink="/login"
+                >Login Here</a
+              >
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- logo -->
+
+    <div class="sm:mx-auto max-sm:-mt-20">
+      <div class="relative bottom-14 max-sm:bottom-2 max-sm:mb-20">
+        <img
+          src="../../../../assets/images/attendeaselogo.png"
+          class="w-72 h-72 max-sm:w-60 max-sm:h-60"
+          alt=""
+        />
+        <h1
+          class="text-center text-4xl -mt-20 max-sm:text-xl font-bold text-text"
+        >
+          AttendEase
+        </h1>
+      </div>
+    </div>
+  </div>
+</section>

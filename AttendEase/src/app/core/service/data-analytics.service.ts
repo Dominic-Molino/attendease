@@ -34,4 +34,8 @@ export class DataAnalyticsService {
   getAllEventAttendees(): Observable<any> {
     return this.http.get(`${this.API_URL}totalAttendees`);
   }
+
+  getAnalytics(): Observable<any> {
+    return this.http.get(`${this.API_URL}analytics`);
+  }
 }

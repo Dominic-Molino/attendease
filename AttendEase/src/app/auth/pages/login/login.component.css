@@ -1,0 +1,4 @@
+.transparent-dialog .mat-dialog-container {
+  background-color: transparent;
+  box-shadow: none;
+}

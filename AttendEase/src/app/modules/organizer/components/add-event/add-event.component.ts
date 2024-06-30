@@ -28,6 +28,7 @@ import Swal from 'sweetalert2';
 import { TagInputModule } from 'ngx-chips';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
+import { AuthserviceService } from '../../../../core/service/authservice.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -65,13 +66,16 @@ export class AddEventComponent implements OnInit {
   file: any;
   imagePreview?: string | ArrayBuffer | null = null;
   matcher = new MyErrorStateMatcher();
-  departments: string[] = ['BSEMC', 'BSIT', 'BSCS', 'ACT']; // Example options
+  departments: string[] = ['BSEMC', 'BSIT', 'BSCS', 'ACT'];
   year_levels: string[] = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
+  profile: any;
+  currId: any;
 
   constructor(
     private builder: FormBuilder,
     private eventService: EventService,
-    private dialogRef: MatDialogRef<AddEventComponent>
+    private dialogRef: MatDialogRef<AddEventComponent>,
+    private service: AuthserviceService
   ) {
     this.minDate = new Date();
     this.eventForm = this.builder.group({
@@ -94,7 +98,9 @@ export class AddEventComponent implements OnInit {
       event_type: ['', Validators.required],
       max_attendees: ['', Validators.required],
       categories: [''],
+      organizer_user_id: [''],
       organizer_name: ['', Validators.required],
+      organizer_organization: ['', Validators.required],
       participation_type: ['open', Validators.required],
       target_participants: this.builder.group({
         BSEMC: this.builder.array([]),
@@ -105,7 +111,18 @@ export class AddEventComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.currId = this.service.getCurrentUserId();
+    this.service.getStudentProfile(this.currId).subscribe((res) => {
+      this.profile = res.payload[0];
+      console.log(this.profile);
+
+      this.eventForm.patchValue({
+        organizer_name: `${this.profile.first_name} ${this.profile.last_name}`,
+        organizer_organization: this.profile.organization,
+      });
+    });
+  }
 
   onParticipationTypeChange(event: Event) {
     const value = (event.target as HTMLSelectElement).value;
@@ -163,6 +180,10 @@ export class AddEventComponent implements OnInit {
     if (this.eventForm.valid) {
       const formData = this.eventForm.value;
 
+      formData.organizer_user_id = this.currId;
+      formData.organizer_name = `${this.profile.first_name} ${this.profile.last_name}`;
+      formData.organizer_organization = this.profile.organization;
+
       const targetParticipants: any = {};
       for (const dept of this.departments) {
         const selectedYearLevels = this.getTargetParticipantsArray(dept).value;
@@ -174,6 +195,7 @@ export class AddEventComponent implements OnInit {
       formData.target_participants = targetParticipants;
       console.log(formData);
 
+      console.log(formData.value);
       if (this.file) {
         formData.file = this.file;
       }
