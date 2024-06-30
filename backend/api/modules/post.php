@@ -47,7 +47,7 @@ class Post extends GlobalMethods
                 $data->first_name,
                 $data->last_name,
                 $data->email,
-                $data->password
+                $data->password,
             )
         ) {
             return $this->sendPayload(null, 'failed', "Incomplete user data.", 400);
@@ -65,14 +65,17 @@ class Post extends GlobalMethods
         $last_name = $data->last_name;
         $email = $data->email;
         $password = $data->password;
+        $organization = isset($data->organization) ? $data->organization : null;
+        $role_id = isset($data->role_id) ? $data->role_id : 3;
+
 
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-        $sql = "INSERT INTO user (first_name, last_name, email, password) 
-                VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO user (first_name, last_name, email, password, role_id, organization) 
+                VALUES (?, ?, ?, ?, ?, ?)";
         try {
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$first_name, $last_name, $email, $hashed_password]);
+            $stmt->execute([$first_name, $last_name, $email, $hashed_password,  $role_id, $organization]);
 
             if ($stmt->rowCount() > 0) {
                 return $this->sendPayload(null, 'success', "User added successfully.", 200);
@@ -160,6 +163,44 @@ class Post extends GlobalMethods
         } catch (PDOException $e) {
             $errmsg = $e->getMessage();
             return $this->sendPayload(null, "failed", $errmsg, 400);
+        }
+    }
+
+    public function startConversation($data)
+    {
+        $sql = "INSERT INTO conversations (user1, user2) VALUES (?, ?)";
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([
+                $data->user1,
+                $data->user2
+            ]);
+
+            if ($stmt->rowCount() > 0) {
+                return $this->sendPayload(null, 'success', "Successfully created conversation.", 200);
+            } else {
+                return $this->sendPayload(null, 'failed', "Failed to create conversation.", 500);
+            }
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+        }
+    }
+
+    public function sendMessage($data)
+    {
+        $sql = "INSERT INTO conversation_messages (conversation_id, sender_id, message) VALUES (?, ?, ?)";
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([
+                $data->conversation_id,
+                $data->sender_id,
+                $data->message
+            ]);
+            return $this->sendPayload(null, "success", "Successfully sent message", 200);
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
 }

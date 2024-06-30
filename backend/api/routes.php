@@ -181,6 +181,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($analytics->get_total_registered_users($request[0]));
                 break;
 
+            case 'analytics':
+                echo json_encode($analytics->getApprovedDoneEventsWithStatus());
+                break;
+
                 #end of analytics
 
                 #admin module
@@ -246,6 +250,65 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
             case 'getUserFeed':
                 echo json_encode($get->getUserFeedbackByEvent($request[1], $request[2]));
+                break;
+
+            case 'getConversations':
+                if (isset($request[1]) && isset($request[2])) {
+                    echo json_encode($get->getConversation($request[1], $request[2]));
+                } else {
+                    echo "Invalid endpoints!";
+                }
+                break;
+
+            case 'getConversationMessages':
+                if (isset($request[1])) {
+                    echo json_encode($get->getConversationMessages($request[1]));
+                } else {
+                    echo "Invalid endpoints!";
+                }
+                break;
+
+            case 'getMessageRequests':
+                if (isset($request[1])) {
+                    echo json_encode($get->getMessageRequests($request[1]));
+                } else {
+                    echo "Invalid endpoints!";
+                }
+                break;
+
+
+                #gets the approved event by org_id
+            case 'getapprovedorganizerevents':
+                if (isset($request[1])) {
+                    echo json_encode($getEvents->getApprovedEventsByOrganizerId($request[1]));
+                } else {
+                    echo 'no event id';
+                }
+                break;
+
+            case 'getallorganizerevents':
+                if (isset($request[1])) {
+                    echo json_encode($getEvents->getAllEventsByOrganizerId($request[1]));
+                } else {
+                    echo 'no event id';
+                }
+                break;
+
+                #dashboard
+            case 'getregistereduser':
+                if (isset($request[1])) {
+                    echo json_encode($getEvents->get_total_registered_users_by_organizer($request[1]));
+                } else {
+                    echo 'no event id';
+                }
+                break;
+
+            case 'getdatadashboard':
+                if (isset($request[1])) {
+                    echo json_encode($getEvents->getDashboardDataByOrganizerId($request[1]));
+                } else {
+                    echo 'no event id';
+                }
                 break;
 
             default:
@@ -347,6 +410,14 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
             case 'editevent':
                 echo json_encode($postEvents->editEvent($data, $request[1]));
+                break;
+
+            case 'startconversation':
+                echo json_encode($post->startConversation($data));
+                break;
+
+            case 'sendmessage':
+                echo json_encode($post->sendMessage($data));
                 break;
 
             default:

@@ -27,6 +27,8 @@ class Events extends  GlobalMethods
 
         $event_name =  htmlspecialchars($data->event_name, ENT_QUOTES, 'UTF-8');
         $organizer_name = htmlspecialchars($data->organizer_name, ENT_QUOTES, 'UTF-8');
+        $organizer_user_id = (int)$data->organizer_user_id;
+        $organizer_organization = htmlspecialchars($data->organizer_organization, ENT_QUOTES, 'UTF-8');
         $event_start_date = date('Y-m-d H:i:s', strtotime($data->event_start_date));
         $event_end_date = date('Y-m-d H:i:s', strtotime($data->event_end_date));
 
@@ -89,8 +91,8 @@ class Events extends  GlobalMethods
 
             // Proceed with inserting the new event
             $sql_insert = "INSERT INTO events (event_name, event_description, event_location, event_start_date, event_end_date, 
-                            event_registration_start, event_registration_end, event_type, max_attendees, categories, organizer_name, target_participants, participation_type)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                            event_registration_start, event_registration_end, event_type, max_attendees, categories, organizer_user_id, organizer_organization,organizer_name, target_participants, participation_type)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
 
             $stmt_insert = $this->pdo->prepare($sql_insert);
             $stmt_insert->execute([
@@ -104,6 +106,8 @@ class Events extends  GlobalMethods
                 $data->event_type ?? 'physical',
                 (int)($data->max_attendees ?? null),
                 json_encode($data->categories) ?? null,
+                $organizer_user_id,
+                $organizer_organization,
                 $organizer_name,
                 !empty($target_participants) ? json_encode($target_participants) : null,
                 $data->participation_type ?? 'open',

@@ -128,7 +128,7 @@ class GetEvent extends GlobalMethods
     public function getRegisteredUsersForApprovedEvents($event_id = null)
     {
         try {
-            $sql = "SELECT u.user_id, u.first_name, u.last_name, u.year_level, u.course, u.block, u.email 
+            $sql = "SELECT u.user_id, u.first_name, u.last_name, u.year_level, u.course, u.block, u.email, er.registration_date 
                 FROM user u
                 INNER JOIN event_registration er ON u.user_id = er.user_id
                 INNER JOIN events e ON er.event_id = e.event_id
@@ -214,6 +214,129 @@ class GetEvent extends GlobalMethods
             return array("event_image" => $fileData);
         } else {
             return array("event_image" => null);
+        }
+    }
+
+    //approved event
+    public function getApprovedEventsByOrganizerId($organizer_user_id)
+    {
+        $sql = "SELECT e.event_id, e.event_name, e.event_description, e.event_location, 
+                       e.event_start_date, e.event_end_date, e.event_registration_start, e.event_registration_end,
+                       e.event_type, e.max_attendees, e.categories, e.organizer_user_id, e.organizer_organization,
+                       e.organizer_name, e.event_image, e.created_at, e.target_participants, e.participation_type
+                FROM events e
+                INNER JOIN event_approval ea ON e.event_id = ea.event_id
+                LEFT JOIN user u ON e.organizer_user_id = u.user_id
+                WHERE e.organizer_user_id = :organizer_user_id
+                  AND ea.status = 'Approved'";
+
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':organizer_user_id' => $organizer_user_id]);
+            $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Return the payload using the sendPayload method from GlobalMethods
+            return $this->sendPayload($events, 'success', 'Approved events fetched successfully.', 200);
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', 'Failed to fetch approved events.', 500);
+        }
+    }
+
+    //all event of orgnizer
+    public function getAllEventsByOrganizerId($organizer_user_id)
+    {
+        $sql = "SELECT e.event_id, e.event_name, e.event_description, e.event_location, 
+                       e.event_start_date, e.event_end_date, e.event_registration_start, e.event_registration_end,
+                       e.event_type, e.max_attendees, e.categories, e.organizer_user_id, e.organizer_organization,
+                       e.organizer_name, e.event_image, e.created_at, e.target_participants, e.participation_type,
+                       ea.status AS approval_status
+                FROM events e
+                LEFT JOIN event_approval ea ON e.event_id = ea.event_id
+                LEFT JOIN user u ON e.organizer_user_id = u.user_id
+                WHERE e.organizer_user_id = :organizer_user_id";
+
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':organizer_user_id' => $organizer_user_id]);
+            $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Return the payload using the sendPayload method from GlobalMethods
+            return $this->sendPayload($events, 'success', 'All events fetched successfully.', 200);
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', 'Failed to fetch events.', 500);
+        }
+    }
+
+    // for dashboard of the organizer
+    public function get_total_registered_users_by_organizer($organizer_user_id)
+    {
+        try {
+            $sql = "SELECT COUNT(DISTINCT er.user_id) AS total_users, 
+                           u.user_id, u.first_name, u.last_name, u.year_level, u.course, u.block, u.email
+                    FROM event_registration er
+                    JOIN events e ON er.event_id = e.event_id
+                    JOIN user u ON er.user_id = u.user_id
+                    WHERE e.organizer_user_id = :organizer_user_id
+                    GROUP BY u.user_id";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':organizer_user_id', $organizer_user_id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $usersData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if ($usersData) {
+                $totalUsers = count($usersData);
+                return $this->sendPayload(['total_users' => $totalUsers, 'users' => $usersData], 'success', "Successfully retrieved total number of registered users for the organizer.", 200);
+            } else {
+                return $this->sendPayload(null, 'failed', "Failed to retrieve total number of registered users for the organizer.", 404);
+            }
+        } catch (PDOException $e) {
+            return $this->sendPayload(null, 'error', $e->getMessage(), 500);
+        }
+    }
+
+    public function getDashboardDataByOrganizerId($organizer_user_id)
+    {
+        // SQL query to get the counts of approved and pending events
+        $eventCountsSql = "SELECT 
+                               SUM(CASE WHEN ea.status = 'Approved' THEN 1 ELSE 0 END) AS approved_events,
+                               SUM(CASE WHEN ea.status = 'Pending' THEN 1 ELSE 0 END) AS pending_events
+                           FROM events e
+                           LEFT JOIN event_approval ea ON e.event_id = ea.event_id
+                           WHERE e.organizer_user_id = :organizer_user_id";
+
+        // SQL query to get the total number of registered students
+        $registeredStudentsSql = "SELECT COUNT(DISTINCT er.user_id) AS total_registered_students
+                                  FROM event_registration er
+                                  JOIN events e ON er.event_id = e.event_id
+                                  WHERE e.organizer_user_id = :organizer_user_id";
+
+        try {
+            // Fetch event counts
+            $stmt = $this->pdo->prepare($eventCountsSql);
+            $stmt->execute([':organizer_user_id' => $organizer_user_id]);
+            $eventCounts = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Fetch total registered students
+            $stmt = $this->pdo->prepare($registeredStudentsSql);
+            $stmt->execute([':organizer_user_id' => $organizer_user_id]);
+            $registeredStudents = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Prepare payload
+            $payload = [
+                'approved_events' => $eventCounts['approved_events'] ?? 0,
+                'pending_events' => $eventCounts['pending_events'] ?? 0,
+                'total_registered_students' => $registeredStudents['total_registered_students'] ?? 0
+            ];
+
+            // Return the payload using the sendPayload method from GlobalMethods
+            return $this->sendPayload($payload, 'success', 'Dashboard data fetched successfully.', 200);
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', 'Failed to fetch dashboard data.', 500);
         }
     }
 }

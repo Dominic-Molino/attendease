@@ -151,6 +151,7 @@ class Get extends GlobalMethods
     }
 
 
+    // analytics?
 
     public function get_event_feedback($event_id = null)
     {
@@ -202,5 +203,104 @@ class Get extends GlobalMethods
             $conditions .= " AND user_id = $userId";
         }
         return $this->get_records('feedback', $conditions);
+    }
+
+
+    public function getConversation($currentuser, $otheruser)
+    {
+        $sql = "SELECT 
+        c.*,
+        u1.first_name AS user1_first_name,
+        u1.last_name AS user1_last_name,
+        u2.first_name AS user2_first_name,
+        u2.last_name AS user2_last_name
+        FROM 
+        conversations c
+        JOIN 
+        user u1 ON c.user1 = u1.user_id
+        JOIN 
+        user u2 ON c.user2 = u2.user_id
+        WHERE 
+        (c.user1 = $currentuser AND c.user2 = $otheruser) OR (c.user1 = $otheruser AND c.user2 = $currentuser)";
+
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$result) {
+            $sql2 = "INSERT INTO conversations (user1, user2) VALUES (?, ?)";
+            try {
+                $stmt = $this->pdo->prepare($sql2);
+                $stmt->execute([
+                    $currentuser,
+                    $otheruser
+                ]);
+            } catch (PDOException $e) {
+                error_log("Database error: " . $e->getMessage());
+                return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+            }
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return $this->sendPayload($result, 'success', "Successfully retrieved conversation.", 200);
+    }
+
+
+    public function getConversationMessages($conversation_id)
+    {
+        $sql = "SELECT 
+        ce.*,
+        e.first_name AS senderFirstName,
+        e.last_name AS senderLastName
+        FROM 
+        conversation_messages ce
+        JOIN 
+        user e ON ce.sender_id = e.user_id
+        WHERE 
+        ce.conversation_id = ?";
+
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$conversation_id]);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $this->sendPayload($result, 'success', "Successfully retrieved messages", 200);
+        } catch (PDOException $e) {
+            return $this->sendPayload([], 'error', "Failed to retrieve messages: " . $e->getMessage(), 500);
+        }
+    }
+
+    public function getMessageRequests($currentuser)
+    {
+        $sql = "SELECT 
+            u.user_id, 
+            u.first_name, 
+            u.last_name
+            FROM 
+            user u
+            JOIN 
+            (
+            SELECT DISTINCT 
+            CASE 
+                WHEN user1 = $currentuser THEN user2 
+                ELSE user1 
+            END AS user_id
+            FROM 
+            conversations
+            WHERE 
+            user1 = $currentuser OR user2 = $currentuser
+            ) AS c ON u.user_id = c.user_id";
+
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $this->sendPayload($result, 'success', "Successfully retrieved messages", 200);
+        } catch (PDOException $e) {
+            return $this->sendPayload([], 'error', "Failed to retrieve messages: " . $e->getMessage(), 500);
+        }
     }
 }

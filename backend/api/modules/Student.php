@@ -41,21 +41,23 @@ class PostStudentFunctions extends GlobalMethods
         }
     }
 
+
     //register for event
     public function registerUserForEvent($event_id, $user_id)
     {
         try {
 
-            $userExists = $this->checkUserExists($user_id);
-            $eventExists = $this->checkEventExists($event_id);
+            // $userExists = $this->checkUserExists($user_id);
+            // $eventExists = $this->checkEventExists($event_id);
 
-            if (!$userExists) {
-                return $this->sendPayload(null, 'failed', "User does not exist.", 400);
-            }
+            // if (!$userExists) {
+            //     return $this->sendPayload(null, 'failed', "User does not exist.", 400);
+            // }
 
-            if (!$eventExists) {
-                return $this->sendPayload(null, 'failed', "Event does not exist.", 400);
-            }
+            // if (!$eventExists) {
+            //     return $this->sendPayload(null, 'failed', "Event does not exist.", 400);
+            // }
+
 
             // Check if the user is already registered for the event
             $sql = "SELECT COUNT(*) AS count FROM event_registration WHERE event_id = ? AND user_id = ?";
@@ -98,6 +100,23 @@ class PostStudentFunctions extends GlobalMethods
 
             if ($attendeeCount >= $maxAttendees) {
                 return $this->sendPayload(null, 'failed', "Event has reached maximum attendees.", 400);
+            }
+
+            // Check if there is conflicting start dates within your registered events
+            $sql = "SELECT er.*, e.event_name
+            FROM event_registration er
+            JOIN events e ON er.event_id = e.event_id
+            WHERE e.event_start_date = (
+            SELECT event_start_date
+            FROM events
+            WHERE event_id = ?
+            ) AND user_id = $user_id";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$event_id]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($result) {
+                return $this->sendPayload($result, 'failed', "You have an existing registered event that has a conflicting start date with this event.", 409);
             }
 
             // Register the user for the event
