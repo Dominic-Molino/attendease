@@ -4,7 +4,7 @@ import { Event } from '../../../interfaces/EventInterface';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { AuthserviceService } from '../../../core/service/authservice.service';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, isBefore } from 'date-fns';
 
 @Component({
   standalone: true,
@@ -79,5 +79,12 @@ export class MonitoredEventComponent implements OnInit {
 
   formatRegistrationDate(date: string): string {
     return formatDistanceToNow(new Date(date), { addSuffix: true });
+  }
+
+  isNewUser(user: any): boolean {
+    // Example: Check if the registration date is within the last minute
+    const oneMinuteAgo = new Date();
+    oneMinuteAgo.setMinutes(oneMinuteAgo.getMinutes() - 1);
+    return isBefore(new Date(user.registration_date), oneMinuteAgo);
   }
 }

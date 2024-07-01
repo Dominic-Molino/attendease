@@ -339,4 +339,32 @@ class GetEvent extends GlobalMethods
             return $this->sendPayload(null, 'failed', 'Failed to fetch dashboard data.', 500);
         }
     }
+
+    public function getFeedbackByOrganizer($organizer_user_id)
+    {
+        $sql = "SELECT f.feedback_id, f.event_id, f.user_id, f.overall_satisfaction, f.content_quality, 
+                       f.speaker_effectiveness, f.venue_rating, f.logistics_rating, f.satisfied, f.joined, 
+                       f.learned, f.future, f.liked, f.attend, f.recommend, f.improvement_suggestions, 
+                       f.additional_comments, f.feedback_date, f.remarks,
+                       e.event_name, e.organizer_user_id
+                FROM feedback f
+                JOIN events e ON f.event_id = e.event_id
+                WHERE e.organizer_user_id = :organizer_user_id";
+
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':organizer_user_id', $organizer_user_id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $feedbackData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if ($feedbackData) {
+                return $this->sendPayload($feedbackData, 'success', "Successfully retrieved feedback for the organizer's events.", 200);
+            } else {
+                return $this->sendPayload(null, 'failed', "No feedback found for the organizer's events.", 404);
+            }
+        } catch (PDOException $e) {
+            return $this->sendPayload(null, 'error', $e->getMessage(), 500);
+        }
+    }
 }

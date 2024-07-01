@@ -4,13 +4,21 @@ import { Router } from '@angular/router';
 import { EventService } from '../../../../core/service/event.service';
 import { CardsComponent } from '../../components/cards/cards.component';
 import { MonitoredEventComponent } from '../../../../shared/components/monitored-event/monitored-event.component';
+import { OrganizerCalendarComponent } from '../../../../shared/components/organizer-calendar/organizer-calendar.component';
+import { FeedbackComponent } from '../../components/feedback/feedback.component';
 
 @Component({
   selector: 'app-org-dashboard',
   standalone: true,
   templateUrl: './org-dashboard.component.html',
   styleUrl: './org-dashboard.component.css',
-  imports: [CommonModule, CardsComponent, MonitoredEventComponent],
+  imports: [
+    CommonModule,
+    CardsComponent,
+    MonitoredEventComponent,
+    OrganizerCalendarComponent,
+    FeedbackComponent,
+  ],
 })
 export class OrgDashboardComponent implements OnInit {
   eventData: any;

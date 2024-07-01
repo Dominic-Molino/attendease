@@ -79,7 +79,7 @@ export class MobicalendarComponent {
       (res: any) => {
         if (res && res.payload && Array.isArray(res.payload)) {
           this.events = res.payload
-            .filter((event: any) => event.status !== 'done') // Filter out done events
+            .filter((event: any) => event.status !== 'done')
             .map((event: any) => ({
               ...event,
               start: new Date(event.event_start_date),

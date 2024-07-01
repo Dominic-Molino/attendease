@@ -1,6 +1,26 @@
 <main class="!scroll-smooth w-full h-screen">
   <div class="p-4 mt-16 sm:ml-64">
+    <div>
+      <p class="mt-5 mb-2 text-text text-2xl tracking-wide font-semibold">
+        Dashboard
+      </p>
+      <hr class="h-px mb-5 bg-dark-border border-0" />
+    </div>
     <app-cards></app-cards>
-    <app-monitored-event></app-monitored-event>
+    <div class="w-full flex gap-5 mt-5 h-screen">
+      <div
+        class="w-full flex-1 border border-dark-border rounded-md flex flex-col"
+      >
+        <app-organizer-calendar
+          class="w-full flex-1 shadow-md"
+        ></app-organizer-calendar>
+      </div>
+      <div class="w-full h-screen flex-1 flex flex-col gap-1.5">
+        <app-monitored-event
+          class="w-full max-h-[350px] shadow-md"
+        ></app-monitored-event>
+        <app-feedback class="w-full border shadow-md"></app-feedback>
+      </div>
+    </div>
   </div>
 </main>

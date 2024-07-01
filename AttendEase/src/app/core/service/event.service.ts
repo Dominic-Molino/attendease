@@ -39,7 +39,7 @@ export class EventService {
     );
   }
 
-  getEvents(event_id: any = null) {
+  getEvents(event_id: any = null): Observable<any> {
     if (event_id) {
       return this.http.get(`${this.API_URL}allevents/${event_id}`);
     } else {
@@ -152,5 +152,9 @@ export class EventService {
 
   getDataForDashboard(org_id: any): Observable<any> {
     return this.http.get<any>(`${this.API_URL}getdatadashboard/${org_id}`);
+  }
+
+  getFeedbackEventOfOrgEvent(org_id: any): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}getfeedbackoforgevent/${org_id}`);
   }
 }

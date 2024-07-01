@@ -74,12 +74,7 @@ export class EditEventComponent implements OnInit {
       categories: [
         this.eventVal.categories ? JSON.parse(this.eventVal.categories) : [],
       ],
-      organizer_name: [
-        this.eventVal.organizer_name
-          ? this.eventVal.organizer_name.replace(/^"|"$/g, '')
-          : '',
-        Validators.required,
-      ],
+      organizer_name: [this.eventVal.organizer_name, Validators.required],
     });
   }
 
