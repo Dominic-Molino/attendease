@@ -249,7 +249,7 @@ class GetEvent extends GlobalMethods
         $sql = "SELECT e.event_id, e.event_name, e.event_description, e.event_location, 
                        e.event_start_date, e.event_end_date, e.event_registration_start, e.event_registration_end,
                        e.event_type, e.max_attendees, e.categories, e.organizer_user_id, e.organizer_organization,
-                       e.organizer_name, e.event_image, e.created_at, e.target_participants, e.participation_type,
+                       e.organizer_name, e.created_at, e.target_participants, e.participation_type,
                        ea.status AS approval_status
                 FROM events e
                 LEFT JOIN event_approval ea ON e.event_id = ea.event_id
@@ -365,6 +365,182 @@ class GetEvent extends GlobalMethods
             }
         } catch (PDOException $e) {
             return $this->sendPayload(null, 'error', $e->getMessage(), 500);
+        }
+    }
+
+
+    // Function to get all approved and done events with status and student information
+    public function getApprovedDoneEventsWithStatus($organizer_user_id)
+    {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT 
+                    e.event_id, e.event_name, e.event_start_date, e.event_end_date, e.max_attendees,
+                    CASE 
+                        WHEN e.event_end_date < NOW() THEN 'done'
+                        ELSE 'ongoing'
+                    END AS event_status
+                FROM events e
+                JOIN event_approval ea ON e.event_id = ea.event_id
+                WHERE ea.status = 'Approved' 
+                  AND e.event_end_date < NOW()
+                  AND e.organizer_user_id = :organizer_user_id
+            ");
+            $stmt->bindParam(':organizer_user_id', $organizer_user_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($events as &$event) {
+                // Get registered count for the event
+                $registeredCount = $this->getRegisteredCount($event['event_id']);
+                $event['registered_users'] = $registeredCount;
+
+                // Get student details for the event
+                $event['student_details'] = $this->getStudentDetails($event['event_id']);
+
+                // Calculate number of students who submitted both attendance and feedback
+                $presentCount = $this->getPresentCount($event['event_id']);
+
+                // Calculate attendance and feedback counts individually
+                $feedbackCount = $this->getFeedbackCount($event['event_id']);
+
+                // Get number of students who submitted both attendance and feedback
+                $presentCount = $this->getPresentCount($event['event_id']);
+                $event['present_count'] = $presentCount; // Adjusted to return the count directly
+
+                $feedbackCount = $this->getFeedbackCount($event['event_id']);
+                $event['feedback_count'] = $feedbackCount;
+
+                // Calculate average feedback scores
+                $averageFeedback = $this->getAverageFeedback($event['event_id']);
+                $event['average_feedback'] = $averageFeedback['avg_overall_satisfaction'];
+            }
+
+            return $this->sendPayload($events, 'success', "Successfully retrieved data.", 200);
+        } catch (PDOException $e) {
+            return $this->sendPayload(null, 'error', $e->getMessage(), 500);
+        }
+    }
+
+    // Function to get student details for an event including course and year level
+    private function getStudentDetails($event_id)
+    {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT 
+                    u.user_id, u.first_name, u.last_name, u.email, u.year_level, u.course, u.block
+                FROM user u
+                JOIN event_registration er ON u.user_id = er.user_id
+                WHERE er.event_id = :event_id
+            ");
+            $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+
+    // Function to get present count for an event (students who submitted attendance and feedback)
+    private function getPresentCount($event_id)
+    {
+        try {
+            $stmt = $this->pdo->prepare("
+            SELECT COUNT(*) as present_count
+            FROM (
+                SELECT DISTINCT a.user_id
+                FROM attendance a
+                JOIN feedback f ON a.event_id = f.event_id AND a.user_id = f.user_id
+                WHERE a.event_id = :event_id
+                  AND a.remarks = 1
+            ) AS present_users
+        ");
+            $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['present_count'];
+        } catch (PDOException $e) {
+            return 0;
+        }
+    }
+
+
+    // // Function to get attendance count for an event
+    // private function getAttendanceCount($event_id)
+    // {
+    //     try {
+    //         $stmt = $this->pdo->prepare("
+    //             SELECT COUNT(*) as attendance_count
+    //             FROM attendance
+    //             WHERE event_id = :event_id 
+    //                 AND remarks = 1
+    //         ");
+    //         $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
+    //         $stmt->execute();
+    //         $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    //         return $result['attendance_count'];
+    //     } catch (PDOException $e) {
+    //         return 0;
+    //     }
+    // }
+
+    // Function to get feedback count for an event
+    private function getFeedbackCount($event_id)
+    {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT COUNT(*) as feedback_count
+                FROM feedback
+                WHERE event_id = :event_id
+            ");
+            $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['feedback_count'];
+        } catch (PDOException $e) {
+            return 0;
+        }
+    }
+
+    // Function to get registered count for an event
+    private function getRegisteredCount($event_id)
+    {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT COUNT(*) as registered_count
+                FROM event_registration
+                WHERE event_id = :event_id
+            ");
+            $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['registered_count'];
+        } catch (PDOException $e) {
+            return 0;
+        }
+    }
+
+    // Function to get average feedback scores for an event
+    private function getAverageFeedback($event_id)
+    {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT 
+                    AVG(overall_satisfaction) as avg_overall_satisfaction
+                FROM feedback
+                WHERE event_id = :event_id
+            ");
+            $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return [
+                'avg_overall_satisfaction' => $result['avg_overall_satisfaction']
+            ];
+        } catch (PDOException $e) {
+            return [
+                'avg_overall_satisfaction' => null
+            ];
         }
     }
 }

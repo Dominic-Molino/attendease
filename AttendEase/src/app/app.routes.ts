@@ -238,11 +238,13 @@ export const routes: Routes = [
       {
         path: 'org-feedback-list',
         loadComponent: () =>
-          import('./shared/components/event-list/event-list.component').then(
-            (c) => c.EventListComponent
-          ),
+          import(
+            './modules/organizer/components/feedback-page/feedback-page.component'
+          ).then((c) => c.FeedbackPageComponent),
         canActivate: [RoleGuard],
       },
+
+      // copy
 
       {
         path: 'org-per-feedback/:eventId',

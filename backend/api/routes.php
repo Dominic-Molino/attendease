@@ -319,6 +319,14 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 }
                 break;
 
+            case 'getreports':
+                if (isset($request[1])) {
+                    echo json_encode($getEvents->getApprovedDoneEventsWithStatus($request[1]));
+                } else {
+                    echo 'no event id';
+                }
+                break;
+
             default:
                 echo "This is forbidden";
                 http_response_code(403);

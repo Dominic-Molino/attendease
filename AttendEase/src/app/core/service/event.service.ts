@@ -157,4 +157,8 @@ export class EventService {
   getFeedbackEventOfOrgEvent(org_id: any): Observable<any> {
     return this.http.get<any>(`${this.API_URL}getfeedbackoforgevent/${org_id}`);
   }
+
+  getReport(org_id: any): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}getreports/${org_id}`);
+  }
 }

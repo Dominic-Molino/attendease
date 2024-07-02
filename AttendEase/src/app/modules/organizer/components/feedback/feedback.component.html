@@ -5,11 +5,12 @@
     <h5 class="text-xl font-bold mb-2.5 text-start leading-none text-gray-900">
       Feedback
     </h5>
-    <div class="flow-root w-full max-h-[300px] h-[250px] overflow-auto">
+    <div class="flow-root w-full max-h-[345px] h-[275px] overflow-auto">
       <ul role="list" class="w-full p-0">
         <li
-          class="py-3 my-1 sm:py-4 w-full border border-dark-border p-1.5 rounded-md"
+          class="py-3 my-1 sm:py-4 w-full border border-dark-border p-1.5 rounded-md cursor-pointer"
           *ngFor="let feedback of feedback"
+          (click)="openFeedback(feedback.event_id, feedback.user_id)"
         >
           <div class="flex items-center w-full">
             <div class="flex-1 min-w-0 ms-4">

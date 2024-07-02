@@ -93,17 +93,6 @@ export class AttendanceComponent implements OnInit {
     });
   }
 
-  // viewEvent(eventId: any) {
-  //   this.dialog.open(MarkattendanceeComponent, {
-  //     width: '70%',
-  //     height: '90%',
-  //     disableClose: true,
-  //     data: {
-  //       selectedEvent: eventId,
-  //     },
-  //   });
-  // }
-
   viewEvent(eventId: any) {
     let routePrefix = '/admin/admin-view-attendance';
     if (routePrefix) {

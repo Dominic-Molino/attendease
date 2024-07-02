@@ -23,7 +23,6 @@ export class CardsComponent implements OnInit {
   getData(id: any) {
     this.event.getDataForDashboard(id).subscribe((res) => {
       this.data = res.payload;
-      console.log(res.payload);
     });
   }
 }

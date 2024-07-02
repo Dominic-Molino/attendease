@@ -36,7 +36,7 @@ import { AuthserviceService } from '../../../../core/service/authservice.service
     EditEventComponent,
     NgxPaginationModule,
     MobicalendarComponent,
-    MatTooltipModule,
+    MatTooltipModule, 
     MatTabsModule,
     MatPaginatorModule,
   ],

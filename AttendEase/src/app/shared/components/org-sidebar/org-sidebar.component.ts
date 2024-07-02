@@ -10,7 +10,6 @@ import Swal from 'sweetalert2';
 import { AuthserviceService } from '../../../core/service/authservice.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MessageComponent } from '../message/message.component';
-import { UserComponent } from '../../../modules/user/user.component';
 
 @Component({
   selector: 'app-org-sidebar',

@@ -40,7 +40,6 @@ export class MonitoredEventComponent implements OnInit {
     if (id) {
       this.eventService.getApprovedOrganizerEvents(id).subscribe((res: any) => {
         this.events = res.payload;
-        console.log(this.events);
 
         this.events.forEach((event) => {
           this.loadRegisteredUsers(event.event_id);
@@ -55,9 +54,7 @@ export class MonitoredEventComponent implements OnInit {
 
   loadRegisteredUsers(eventId: number): void {
     this.eventService.getRegisteredUser(eventId).subscribe((res: any) => {
-      console.log(`Registered users for event ${eventId}:`, res.payload);
       this.registeredUsersMap[eventId] = res.payload || [];
-      console.log(this.registeredUsersMap);
     });
   }
 

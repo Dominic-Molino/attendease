@@ -146,14 +146,9 @@ export class EventListComponent implements OnInit, OnDestroy {
   }
 
   viewFeedback(eventId: number): void {
-    const currentUserRole = this.authService.getCurrentUserRole();
     let routePrefix = '';
 
-    if (currentUserRole === 1) {
-      routePrefix = '/admin/admin-per-feedback';
-    } else if (currentUserRole === 2) {
-      routePrefix = '/organizer/org-per-feedback';
-    }
+    routePrefix = '/admin/admin-per-feedback';
 
     if (routePrefix) {
       this.router.navigate([`${routePrefix}/${eventId}`]);

@@ -1,26 +1,44 @@
 <main class="!scroll-smooth w-full h-screen">
   <div class="p-4 mt-16 sm:ml-64">
-    <div>
+    <div class="relative w-full">
       <p class="mt-5 mb-2 text-text text-2xl tracking-wide font-semibold">
         Dashboard
       </p>
+      <button
+        (click)="op.toggle($event)"
+        class="absolute -top-6 right-1 inline-flex items-center text-white bg-light-background hover:bg-light-foregroud focus:outline-none focus:ring-0 font-medium rounded-md text-sm px-5 py-2.5 me-2 mt-5 mb-2"
+      >
+        <svg
+          class="w-5 h-5 text-white me-1"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.1"
+            d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
+          />
+        </svg>
+        Agenda
+      </button>
+      <p-overlayPanel #op styleClass="w-30rem">
+        <app-organizer-calendar class="w-50%"></app-organizer-calendar>
+      </p-overlayPanel>
       <hr class="h-px mb-5 bg-dark-border border-0" />
     </div>
     <app-cards></app-cards>
-    <div class="w-full flex gap-5 mt-5 h-screen">
-      <div
-        class="w-full flex-1 border border-dark-border rounded-md flex flex-col"
-      >
-        <app-organizer-calendar
-          class="w-full flex-1 shadow-md"
-        ></app-organizer-calendar>
-      </div>
-      <div class="w-full h-screen flex-1 flex flex-col gap-1.5">
-        <app-monitored-event
-          class="w-full max-h-[350px] shadow-md"
-        ></app-monitored-event>
-        <app-feedback class="w-full border shadow-md"></app-feedback>
-      </div>
+    <div class="w-full mt-5">
+      <app-report></app-report>
+    </div>
+    <div class="w-full grid grid-cols-2 gap-5 mt-5">
+      <app-monitored-event></app-monitored-event>
+      <app-feedback></app-feedback>
     </div>
   </div>
 </main>

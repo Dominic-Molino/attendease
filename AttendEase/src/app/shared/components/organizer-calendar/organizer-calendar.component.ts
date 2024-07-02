@@ -21,6 +21,7 @@ import { EventService } from '../../../core/service/event.service';
 })
 export class OrganizerCalendarComponent implements OnInit {
   event: MbscCalendarEvent[] = [];
+  currId: any;
   @ViewChild('eventcalendar') eventcalendar: any;
 
   view = 'month';
@@ -38,14 +39,15 @@ export class OrganizerCalendarComponent implements OnInit {
   constructor(private service: EventService) {}
 
   ngOnInit(): void {
-    this.fetchEvents();
+    this.currId = this.service.getCurrentUserId();
+    this.fetchEvents(this.currId);
   }
 
-  fetchEvents(): void {
-    this.service.getAllEvents().subscribe(
+  fetchEvents(id: any): void {
+    this.service.getApprovedOrganizerEvents(id).subscribe(
       (res: any) => {
-        if (res && Array.isArray(res)) {
-          this.event = res.map((event: any) => ({
+        if (res.payload && Array.isArray(res.payload)) {
+          this.event = res.payload.map((event: any) => ({
             start: new Date(event.event_start_date),
             end: new Date(event.event_end_date),
             title: event.event_name,
@@ -75,6 +77,6 @@ export class OrganizerCalendarComponent implements OnInit {
   }
 
   onPageLoading(event: any): void {
-    this.fetchEvents();
+    this.fetchEvents(this.currId);
   }
 }

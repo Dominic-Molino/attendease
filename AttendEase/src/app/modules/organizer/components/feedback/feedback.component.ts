@@ -3,6 +3,7 @@ import { EventService } from '../../../../core/service/event.service';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
 import { CommonModule } from '@angular/common';
 import { formatDistanceToNow } from 'date-fns';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-feedback',
@@ -18,7 +19,8 @@ export class FeedbackComponent implements OnInit {
 
   constructor(
     private service: EventService,
-    private user: AuthserviceService
+    private user: AuthserviceService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -30,7 +32,6 @@ export class FeedbackComponent implements OnInit {
     this.service.getFeedbackEventOfOrgEvent(this.currId).subscribe((res) => {
       this.feedback = res.payload;
       this.feedback.sort((a, b) => {
-        // Sort by feedback_date in descending order
         return (
           new Date(b.feedback_date).getTime() -
           new Date(a.feedback_date).getTime()
@@ -67,5 +68,9 @@ export class FeedbackComponent implements OnInit {
 
   formatRegistrationDate(date: string): string {
     return formatDistanceToNow(new Date(date), { addSuffix: true });
+  }
+
+  openFeedback(eventId: any, userId: any) {
+    this.router.navigate([`organizer/org-user-feedback/${eventId}/${userId}`]);
   }
 }
