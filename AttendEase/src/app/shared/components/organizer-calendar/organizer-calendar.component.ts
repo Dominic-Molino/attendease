@@ -58,8 +58,6 @@ export class OrganizerCalendarComponent implements OnInit {
             ...this.eventSettings,
             data: this.event,
           };
-
-          this.refreshCalendar();
         } else {
           console.error('Invalid response format or payload missing');
         }
@@ -68,12 +66,6 @@ export class OrganizerCalendarComponent implements OnInit {
         console.error('Error fetching events:', error);
       }
     );
-  }
-
-  refreshCalendar(): void {
-    if (this.eventcalendar && this.eventcalendar.instance) {
-      this.eventcalendar.instance.refresh();
-    }
   }
 
   onPageLoading(event: any): void {

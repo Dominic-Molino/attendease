@@ -96,8 +96,6 @@ export class EventsComponent implements OnInit, OnDestroy {
             ),
           }));
 
-          console.log(this.eventList);
-
           this.eventList.forEach((ev: any) => {
             this.fetchRegisteredUser(ev.event_id);
             console.log(ev.target_participants);

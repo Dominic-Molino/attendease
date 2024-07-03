@@ -49,10 +49,10 @@ class Approval extends GlobalMethods
         }
     }
 
-    public function rejectEvent($event_id, $admin_id)
+    public function rejectEvent($event_id, $admin_id, $rejection_message)
     {
         // Check if admin_id exists in user table
-        $adminCheckSql = "SELECT COUNT(*) FROM user WHERE user_id = ? AND  role_id = 1";
+        $adminCheckSql = "SELECT COUNT(*) FROM user WHERE user_id = ? AND role_id = 1";
         $adminCheckStmt = $this->pdo->prepare($adminCheckSql);
         $adminCheckStmt->execute([$admin_id]);
         $adminExists = $adminCheckStmt->fetchColumn();
@@ -61,10 +61,12 @@ class Approval extends GlobalMethods
             return $this->sendPayload(null, 'failed', "Invalid administrator ID.", 400);
         }
 
-        $sql = "UPDATE event_approval SET status = 'Rejected', approved_by = ?, approved_at = NOW() WHERE event_id = ? AND status = 'Pending'";
+        $sql = "UPDATE event_approval 
+                SET status = 'Rejected', approved_by = ?, approved_at = NOW(), rejection_message = ? 
+                WHERE event_id = ? AND status = 'Pending'";
         try {
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$admin_id, $event_id]);
+            $stmt->execute([$admin_id, $rejection_message, $event_id]);
 
             if ($stmt->rowCount() > 0) {
                 return $this->sendPayload(null, 'success', "Event rejected successfully.", 200);

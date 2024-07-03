@@ -1,0 +1,11 @@
+#drawer-example {
+  transform: translateX(100%); /* Hidden state */
+}
+
+#drawer-example.translate-x-0 {
+  transform: translateX(0); /* Visible state */
+}
+
+#drawer-example.translate-x-full {
+  transform: translateX(100%); /* Hidden state */
+}

@@ -45,6 +45,8 @@ export class EditEventComponent implements OnInit {
   eventVal: any;
   eventForm: FormGroup;
   categoryControls: FormArray | undefined;
+  departments: string[] = ['BSEMC', 'BSIT', 'BSCS', 'ACT'];
+  year_levels: string[] = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
 
   constructor(
     private service: EventService,
@@ -74,8 +76,36 @@ export class EditEventComponent implements OnInit {
       categories: [
         this.eventVal.categories ? JSON.parse(this.eventVal.categories) : [],
       ],
+      participation_type: [
+        this.eventVal.participation_type,
+        Validators.required,
+      ],
+      target_participants: this.builder.group({}),
       organizer_name: [this.eventVal.organizer_name, Validators.required],
+      organizer_organization: [
+        this.eventVal.organizer_organization,
+        Validators.required,
+      ],
     });
+
+    const targetParticipantsGroup = this.eventForm.get(
+      'target_participants'
+    ) as FormGroup;
+    if (targetParticipantsGroup) {
+      this.departments.forEach((dep) => {
+        targetParticipantsGroup.addControl(dep, this.builder.array([]));
+      });
+    }
+
+    if (this.eventVal.target_participants) {
+      const targetParticipants = JSON.parse(this.eventVal.target_participants);
+      targetParticipants.forEach((participant: any) => {
+        const formArray = this.getTargetParticipantsArray(
+          participant.department
+        );
+        formArray.push(new FormControl(participant.year_levels));
+      });
+    }
   }
 
   ngOnInit(): void {
@@ -93,7 +123,12 @@ export class EditEventComponent implements OnInit {
         categories: this.eventVal.categories
           ? JSON.parse(this.eventVal.categories)
           : null,
-        organizer_name: this.eventVal.organizer_name,
+        participation_type: this.eventVal.participation_type,
+        target_participants: this.eventVal.target_participants
+          ? JSON.parse(this.eventVal.target_participants)
+          : null,
+        organizer_organization: this.eventVal.organizer_organization,
+        organizer_name: `${this.eventVal.first_name} ${this.eventVal.last_name}`,
       });
     }
   }
@@ -152,5 +187,38 @@ export class EditEventComponent implements OnInit {
       }
       return null;
     };
+  }
+
+  onParticipationTypeChange(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+    if (value === 'open') {
+      this.eventForm.get('target_participants')?.disable();
+    } else {
+      this.eventForm.get('target_participants')?.enable();
+    }
+  }
+
+  getTargetParticipantsArray(department: string): FormArray {
+    return this.eventForm.get(`target_participants.${department}`) as FormArray;
+  }
+
+  onCheckboxChange(event: Event, department: string) {
+    const checkbox = event.target as HTMLInputElement;
+    const formArray = this.getTargetParticipantsArray(department);
+    if (checkbox.checked) {
+      formArray.push(new FormControl(checkbox.value));
+    } else {
+      const index = formArray.controls.findIndex(
+        (x) => x.value === checkbox.value
+      );
+      if (index >= 0) {
+        formArray.removeAt(index);
+      }
+    }
+  }
+
+  isCheckboxChecked(department: string, year: string): boolean {
+    const formArray = this.getTargetParticipantsArray(department);
+    return formArray.controls.some((control) => control.value === year);
   }
 }

@@ -236,6 +236,15 @@ export const routes: Routes = [
       },
 
       {
+        path: 'events-preview/:eventId',
+        loadComponent: () =>
+          import(
+            './modules/organizer/components/eventpreview/eventpreview.component'
+          ).then((c) => c.EventpreviewComponent),
+        canActivate: [AuthenGuard],
+      },
+
+      {
         path: 'org-feedback-list',
         loadComponent: () =>
           import(

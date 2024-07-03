@@ -378,7 +378,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
             case 'rejectevent':
                 if (isset($data->event_id) && isset($data->admin_id)) {
-                    echo json_encode($approval->rejectEvent($data->event_id, $data->admin_id));
+                    echo json_encode($approval->rejectEvent($data->event_id, $data->admin_id, $data->rejection_message));
                 } else {
                     echo json_encode(['status' => 'failed', 'message' => 'Event ID or Admin ID not provided.']);
                     http_response_code(400);

@@ -21,4 +21,9 @@ export interface Event {
   target_participants: { department: string; year_levels: string }[];
   approval_status: 'Pending' | 'Rejected' | 'Approved';
   feedbackSubmitted: boolean | null;
+  first_name: string;
+  last_name: string;
+  organizer_organization: string;
+  rejection_message: string;
+  approved_at: string;
 }

@@ -94,12 +94,12 @@
                           class="flex items-center p-3 text-smfont-bold text-gray-900"
                         >
                           <span class="flex-1 ms-3 whitespace-nowrap"
-                            >Total Participants</span
+                            >Attendance Submitted</span
                           >
                           <span
                             class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
                           >
-                            {{ event.registered_users }}</span
+                            {{ event.attendance_count }}</span
                           >
                         </div>
                       </li>
@@ -140,8 +140,15 @@
                           >
                           <span
                             class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                            *ngIf="event.average_feedback; else zero"
                           >
                             {{ event.average_feedback | number : "1.1" }}</span
+                          >
+                          <ng-template #zero>
+                            <span
+                              class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                              >0</span
+                            ></ng-template
                           >
                         </div>
                       </li>

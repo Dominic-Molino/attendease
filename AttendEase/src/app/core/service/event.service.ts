@@ -127,10 +127,15 @@ export class EventService {
     });
   }
 
-  rejectEvent(event_id: number, admin_id: number): Observable<any> {
+  rejectEvent(
+    event_id: number,
+    admin_id: number,
+    rejection_message: string
+  ): Observable<any> {
     return this.http.post(`${this.API_URL}rejectevent/${event_id}`, {
       event_id,
       admin_id,
+      rejection_message,
     });
   }
 

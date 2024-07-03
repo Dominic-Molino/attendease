@@ -133,17 +133,24 @@ class Events extends  GlobalMethods
 
     public function editEvent($data, $event_id)
     {
-        $event_name = $data->event_name ?? null;
-        $event_description = $data->event_description ?? null;
-        $event_location = $data->event_location ?? null;
+        // Sanitize and validate input data
+        $event_name = htmlspecialchars($data->event_name ?? '', ENT_QUOTES, 'UTF-8');
+        $event_description = htmlspecialchars($data->event_description ?? '', ENT_QUOTES, 'UTF-8');
+        $event_location = htmlspecialchars($data->event_location ?? '', ENT_QUOTES, 'UTF-8');
         $event_start_date = date('Y-m-d H:i:s', strtotime($data->event_start_date));
         $event_end_date = date('Y-m-d H:i:s', strtotime($data->event_end_date));
         $event_registration_start = isset($data->event_registration_start) ? date('Y-m-d H:i:s', strtotime($data->event_registration_start)) : null;
         $event_registration_end = isset($data->event_registration_end) ? date('Y-m-d H:i:s', strtotime($data->event_registration_end)) : null;
-        $event_type = $data->event_type ?? null;
-        $max_attendees = (int)($data->max_attendees ?? null);
+        $event_type = htmlspecialchars($data->event_type ?? 'physical', ENT_QUOTES, 'UTF-8');
+        $max_attendees = isset($data->max_attendees) ? (int)$data->max_attendees : null;
         $categories = isset($data->categories) ? json_encode($data->categories) : null;
-        $organizer_name = $data->organizer_name ?? null;
+        $organizer_name = $data->organizer_name ?? ''; // No escaping here
+        $participation_type = htmlspecialchars($data->participation_type ?? 'open', ENT_QUOTES, 'UTF-8');
+
+        // Validate maximum attendees
+        if ($max_attendees !== null && $max_attendees <= 0) {
+            return $this->sendPayload(null, 'failed', "Maximum attendees must be a positive number.", 400);
+        }
 
         // Date validations
         if ($event_start_date >= $event_end_date) {
@@ -156,40 +163,52 @@ class Events extends  GlobalMethods
             return $this->sendPayload(null, 'failed', "Registration start date must be before start of the event.", 400);
         }
 
-        // Update the event
-        $sql = "UPDATE events 
-                SET event_name = ?, event_description = ?, event_location = ?, 
-                    event_start_date = ?, event_end_date = ?, 
-                    event_registration_start = ?, event_registration_end = ?, event_type = ?, max_attendees = ?, categories = ?, organizer_name = ?
-                WHERE event_id = ?";
+        // Prepare target participants
+        $target_participants = [];
+        if ($participation_type !== 'open' && !empty($data->target_participants)) {
+            foreach ($data->target_participants as $department => $year_levels) {
+                if (!empty($year_levels)) {
+                    $target_participants[] = [
+                        'department' => $department,
+                        'year_levels' => implode(', ', $year_levels)
+                    ];
+                }
+            }
+        }
+
+        // Update event details in the database
+        $sql = "UPDATE events SET event_name = :event_name, event_description = :event_description, event_location = :event_location,
+            event_start_date = :event_start_date, event_end_date = :event_end_date, event_registration_start = :event_registration_start,
+            event_registration_end = :event_registration_end, event_type = :event_type, max_attendees = :max_attendees, categories = :categories,
+            organizer_name = :organizer_name, target_participants = :target_participants, participation_type = :participation_type
+            WHERE event_id = :event_id";
 
         try {
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
-                $event_name,
-                $event_description,
-                $event_location,
-                $event_start_date,
-                $event_end_date,
-                $event_registration_start,
-                $event_registration_end,
-                $event_type,
-                $max_attendees,
-                $categories,
-                json_encode($organizer_name),
-                $event_id
+                ':event_name' => $event_name,
+                ':event_description' => $event_description,
+                ':event_location' => $event_location,
+                ':event_start_date' => $event_start_date,
+                ':event_end_date' => $event_end_date,
+                ':event_registration_start' => $event_registration_start,
+                ':event_registration_end' => $event_registration_end,
+                ':event_type' => $event_type,
+                ':max_attendees' => $max_attendees,
+                ':categories' => $categories,
+                ':organizer_name' => htmlspecialchars($organizer_name, ENT_QUOTES, 'UTF-8'), // Escape here
+                ':target_participants' => json_encode($target_participants),
+                ':participation_type' => $participation_type,
+                ':event_id' => $event_id
             ]);
 
-            if ($stmt->rowCount() > 0) {
-                return $this->sendPayload(null, 'success', "Event updated successfully.", 200);
-            } else {
-                return $this->sendPayload(null, 'failed', "Failed to update event.", 500);
-            }
+            return $this->sendPayload(null, 'success', 'Event updated successfully.', 200);
         } catch (PDOException $e) {
             error_log("Database error: " . $e->getMessage());
-            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+            return $this->sendPayload(null, 'failed', 'Failed to update event.', 500);
         }
     }
+
 
     public function deleteEvent($event_id)
     {

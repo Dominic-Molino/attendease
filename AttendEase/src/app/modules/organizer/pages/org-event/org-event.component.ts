@@ -14,7 +14,7 @@ import { EventService } from '../../../../core/service/event.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
 import { initFlowbite } from 'flowbite';
-import { Observable, Subscription, interval } from 'rxjs';
+import { Observable, Subscription, interval, map } from 'rxjs';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { UpdateimageComponent } from '../../components/updateimage/updateimage.component';
 import { MobicalendarComponent } from '../../../../shared/components/mobicalendar/mobicalendar.component';
@@ -23,6 +23,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { Event } from '../../../../interfaces/EventInterface';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
+import { CarouselModule } from 'primeng/carousel';
+import { Router } from '@angular/router';
+import { formatDistanceToNow } from 'date-fns';
 
 @Component({
   selector: 'app-org-event',
@@ -36,9 +39,10 @@ import { AuthserviceService } from '../../../../core/service/authservice.service
     EditEventComponent,
     NgxPaginationModule,
     MobicalendarComponent,
-    MatTooltipModule, 
+    MatTooltipModule,
     MatTabsModule,
     MatPaginatorModule,
+    CarouselModule,
   ],
 })
 export class OrgEventComponent implements OnInit, OnDestroy {
@@ -58,7 +62,8 @@ export class OrgEventComponent implements OnInit, OnDestroy {
 
   //pagination variables
   p: number = 1;
-  itemsPerPage: number = 10;
+  itemsPerPage: number = 5;
+  responsiveOptions: any[] | undefined;
   maxSize = 5;
 
   private refreshSubscription: Subscription | undefined;
@@ -68,6 +73,7 @@ export class OrgEventComponent implements OnInit, OnDestroy {
     private user: AuthserviceService,
     private dialog: MatDialog,
     private sanitizer: DomSanitizer,
+    private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -76,6 +82,24 @@ export class OrgEventComponent implements OnInit, OnDestroy {
     console.log(this.currId);
     if (isPlatformBrowser(this.platformId)) initFlowbite();
     this.loadEvent();
+
+    this.responsiveOptions = [
+      {
+        breakpoint: '1199px',
+        numVisible: 1,
+        numScroll: 1,
+      },
+      {
+        breakpoint: '991px',
+        numVisible: 2,
+        numScroll: 1,
+      },
+      {
+        breakpoint: '767px',
+        numVisible: 1,
+        numScroll: 1,
+      },
+    ];
   }
 
   ngOnDestroy(): void {
@@ -87,13 +111,29 @@ export class OrgEventComponent implements OnInit, OnDestroy {
   loadEvent() {
     this.service.getAllOrganizerEvents(this.currId).subscribe(
       (response: any) => {
-        this.eventList = response.payload;
+        this.eventList = response.payload.map((event: any) => {
+          if (event.target_participants) {
+            event.target_participants = JSON.parse(event.target_participants);
+          }
+          event.event_image$ = this.getEventImage(event.event_id);
+          return event;
+        });
         this.filterEventsByApprovalStatus();
         this.p = 1;
+        console.log(this.eventList);
       },
       (error: any) => {
         console.error('Error loading events:', error);
       }
+    );
+  }
+
+  getEventImage(eventId: number): Observable<SafeResourceUrl> {
+    return this.service.getEventImage(eventId).pipe(
+      map((blob: Blob) => {
+        const url = URL.createObjectURL(blob);
+        return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      })
     );
   }
 
@@ -113,7 +153,7 @@ export class OrgEventComponent implements OnInit, OnDestroy {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
-  onFileChange(event: any, eventId: number) {
+  onFileChange(eventId: number, event: any) {
     const files = event.target.files as FileList;
     if (files.length > 0) {
       const file = files[0];
@@ -137,6 +177,29 @@ export class OrgEventComponent implements OnInit, OnDestroy {
         this.resetInput(event.target);
       });
     }
+  }
+
+  getFormattedTargetParticipants(participants: any[]): string {
+    if (!Array.isArray(participants)) {
+      console.error('Invalid participants data:', participants);
+      return '';
+    }
+
+    const groupedParticipants: { [key: string]: string[] } = {};
+
+    participants.forEach((participant) => {
+      if (!groupedParticipants[participant.department]) {
+        groupedParticipants[participant.department] = [];
+      }
+      groupedParticipants[participant.department].push(participant.year_levels);
+    });
+
+    return Object.keys(groupedParticipants)
+      .map((department) => {
+        const years = groupedParticipants[department].join(', ');
+        return `${department} - ${years}`;
+      })
+      .join(' | ');
   }
 
   resetInput(inputElement: HTMLInputElement) {
@@ -163,8 +226,15 @@ export class OrgEventComponent implements OnInit, OnDestroy {
     this.dialog.open(UpdateimageComponent, {
       data: { eventId: eventId },
       disableClose: true,
-      width: '60%',
+      width: '40%',
     });
+  }
+
+  previewEvent(eventId: any) {
+    let routePrefix = 'organizer/events-preview';
+    if (routePrefix) {
+      this.router.navigate([`${routePrefix}/${eventId}`]);
+    }
   }
 
   editEvent(eventId: number) {
@@ -206,6 +276,54 @@ export class OrgEventComponent implements OnInit, OnDestroy {
       return 'ongoing';
     } else {
       return 'upcoming';
+    }
+  }
+
+  formatRegistrationDate(date: string): string {
+    return formatDistanceToNow(new Date(date), { addSuffix: true });
+  }
+
+  deleteEvent(eventId: any) {
+    if (eventId) {
+      Swal.fire({
+        title: 'Are you sure you want to delete this event?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.service.deleteEvent(eventId).subscribe(
+            (res) => {
+              const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                },
+              });
+              Toast.fire({
+                icon: 'success',
+                title: 'Event has been deleted.',
+              });
+              this.loadEvent();
+            },
+            (error) => {
+              Swal.fire({
+                title: 'Error!',
+                text: 'Failed to delete event.',
+                icon: 'error',
+              });
+            }
+          );
+        }
+      });
     }
   }
 }

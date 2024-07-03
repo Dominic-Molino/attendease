@@ -64,8 +64,8 @@
                 class="rounded-md max-h-[304px] md:w-1/2 w-full flex-shrink-0"
               >
                 <img
-                  *ngIf="eventImage$ | async; else placeholder"
-                  [src]="eventImage$ | async"
+                  *ngIf="event.event_image$ | async; else placeholder"
+                  [src]="event.event_image$ | async"
                   alt="fetch images"
                   loading="lazy"
                   class="rounded-md object-cover max-h-[304px] h-full object-center w-full flex-grow border border-dark-border"
@@ -346,76 +346,27 @@
               class="flex items-center justify-end relative p-4 md:p-5 border-t border-gray-200 rounded-b"
             >
               <button
-                (click)="registerForEvent(event.event_id)"
+                (click)="openDialog(event.event_id)"
                 type="button"
-                [disabled]="
-                  isRegistered || event.status === 'done' || !canRegister
-                "
-                [ngClass]="{
-                  'cursor-not-allowed bg-gray-300 border-0 text-text':
-                    isRegistered || event.status === 'done' || !canRegister,
-                  'text-white bg-light-background hover:bg-light-foregroud':
-                    !isRegistered && event.status !== 'done' && canRegister
-                }"
-                class="focus:ring-0 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5"
+                aria-expanded="false"
+                class="inline-flex py-2 px-5 items-center justify-center text-white bg-light-background border border-light-border hover:bg-light-foregroud rounded-md focus:outline-none shadow-md"
               >
-                Register
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-pencil me-1"
+                >
+                  <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                  <path d="m15 5 4 4" /></svg
+                >Edit Event
               </button>
-
-              <button
-                [disabled]="
-                  event.status === 'ongoing' ||
-                  event.status === 'done' ||
-                  !isRegistered
-                "
-                [ngClass]="{
-                  'cursor-not-allowed bg-gray-300 border-0 text-text':
-                    event.status === 'ongoing' ||
-                    event.status === 'done' ||
-                    !isRegistered,
-                  'text-light-text bg-white border border-light-border hover:bg-light-background hover:text-white':
-                    !(
-                      event.status === 'ongoing' ||
-                      event.status === 'done' ||
-                      !isRegistered
-                    )
-                }"
-                (click)="unregister(event.event_id)"
-                type="button"
-                class="py-2.5 px-5 ms-3 text-sm font-medium rounded-md focus:outline-none focus:ring-0"
-              >
-                Cancel Registration
-              </button>
-              <div
-                *ngIf="!canRegister"
-                class="absolute -bottom-2 right-8 text-xs text-red-500"
-              >
-                You are not eligible to register for this event.
-              </div>
-            </div>
-
-            <div *ngIf="event.status === 'done'">
-              <span class="block text-sm text-red-500 sm:text-center">
-                <span class="text-text">Event has ended.</span>
-                <ul class="list-disc list-inside">
-                  <li>
-                    <a
-                      routerLink="/student/attendance"
-                      class="text-red-500 hover:underline"
-                    >
-                      Please go to attendance and submit your attendance
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      routerLink="/student/feedback"
-                      class="text-red-500 hover:underline"
-                    >
-                      Don't forget to submit your feedback
-                    </a>
-                  </li>
-                </ul>
-              </span>
             </div>
           </div>
         </div>

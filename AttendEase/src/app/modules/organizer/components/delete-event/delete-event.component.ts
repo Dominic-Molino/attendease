@@ -20,7 +20,7 @@ export class DeleteEventComponent {
   deleteEvent() {
     if (this.event_id) {
       Swal.fire({
-        title: 'Are you sure?',
+        title: 'Are you sure you want to delete this event?',
         text: "You won't be able to revert this!",
         icon: 'warning',
         showCancelButton: true,

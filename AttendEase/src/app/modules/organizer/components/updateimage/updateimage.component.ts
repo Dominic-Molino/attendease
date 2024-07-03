@@ -19,7 +19,7 @@ import { EventService } from '../../../../core/service/event.service';
   styleUrl: './updateimage.component.css',
 })
 export class UpdateimageComponent {
-  @Output() attendanceSubmitted = new EventEmitter<void>(); // Add an EventEmitter
+  @Output() attendanceSubmitted = new EventEmitter<void>();
 
   file: any;
   eventId: any;
@@ -31,7 +31,7 @@ export class UpdateimageComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialogRef<UpdateimageComponent>
   ) {
-    this.eventId = data.eventId.event_id;
+    this.eventId = data.eventId;
     console.log(this.eventId);
   }
 

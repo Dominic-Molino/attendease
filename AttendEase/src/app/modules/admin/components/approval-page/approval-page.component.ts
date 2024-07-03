@@ -88,17 +88,20 @@ export class ApprovalPageComponent implements OnInit {
     if (this.userId) {
       Swal.fire({
         title: 'Are you sure?',
-        text: "Did you review the event details? You won't be able to revert this!",
+        text: 'Please provide a reason for rejection:',
+        input: 'textarea',
+        inputPlaceholder: 'Type your reason here...',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, reject it!',
       }).then((result) => {
-        if (result.isConfirmed) {
-          if (this.eventId && this.userId) {
+        if (result.isConfirmed && result.value) {
+          const rejectionMessage = result.value;
+          if (this.eventId && this.userId && rejectionMessage) {
             this.evService
-              .rejectEvent(this.eventId, this.userId)
+              .rejectEvent(this.eventId, this.userId, rejectionMessage)
               .subscribe((response) => {
                 const Toast = Swal.mixin({
                   toast: true,

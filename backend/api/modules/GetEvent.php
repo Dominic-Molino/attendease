@@ -92,23 +92,41 @@ class GetEvent extends GlobalMethods
     // gets all approved event
     public function getEvents($event_id = null)
     {
-        $columns = "e.event_id, e.event_name, e.event_description, e.event_location, e.event_start_date, e.event_end_date, e.event_registration_start, e.event_registration_end, e.event_type, e.max_attendees, e.categories, e.organizer_name, e.target_participants, e.participation_type";
+        // Specify the columns you need
+        $columns = "e.event_id, e.event_name, e.event_description, e.event_location, 
+                e.event_start_date, e.event_end_date, e.event_registration_start, 
+                e.event_registration_end, e.event_type, e.max_attendees, e.categories, 
+                e.target_participants, e.participation_type, 
+                u.user_id as organizer_id, u.first_name as first_name, 
+                u.last_name as last_name, u.organization as organizer_organization";
+
+        // Define the condition based on event_id
         $condition = ($event_id !== null) ? "e.event_id = $event_id" : "ea.status = 'Approved'";
 
+        // Write the SQL query
         $sql = "SELECT $columns 
-                FROM events e 
-                JOIN event_approval ea ON e.event_id = ea.event_id 
-                WHERE $condition";
+            FROM events e 
+            JOIN event_approval ea ON e.event_id = ea.event_id 
+            JOIN user u ON e.organizer_user_id = u.user_id
+            WHERE $condition";
 
+        // Log the SQL query for debugging
+        error_log("SQL Query: " . $sql);
+
+        // Execute the query
         $events = $this->executeQuery($sql);
 
+        // Check if the query was successful
         if ($events['code'] == 200) {
+            // Get the current date
             $currentDate = new DateTime();
 
+            // Loop through the events to determine their status
             foreach ($events['data'] as &$event) {
                 $startDate = new DateTime($event['event_start_date']);
                 $endDate = new DateTime($event['event_end_date']);
 
+                // Determine the event status based on the current date
                 if ($currentDate < $startDate) {
                     $event['status'] = 'upcoming';
                 } elseif ($currentDate >= $startDate && $currentDate <= $endDate) {
@@ -118,11 +136,17 @@ class GetEvent extends GlobalMethods
                 }
             }
 
+            // Return the payload with the events data
             return $this->sendPayload($events['data'], 'success', "Successfully retrieved data.", 200);
         }
 
+        // Log the error if the query failed
+        error_log("Query failed with code: " . $events['code']);
+
+        // Return a failed payload if the query was not successful
         return $this->sendPayload(null, 'failed', "Failed to retrieve data.", $events['code']);
     }
+
 
 
     public function getRegisteredUsersForApprovedEvents($event_id = null)
@@ -223,7 +247,7 @@ class GetEvent extends GlobalMethods
         $sql = "SELECT e.event_id, e.event_name, e.event_description, e.event_location, 
                        e.event_start_date, e.event_end_date, e.event_registration_start, e.event_registration_end,
                        e.event_type, e.max_attendees, e.categories, e.organizer_user_id, e.organizer_organization,
-                       e.organizer_name, e.event_image, e.created_at, e.target_participants, e.participation_type
+                       e.organizer_name, e.created_at, e.target_participants, e.participation_type
                 FROM events e
                 INNER JOIN event_approval ea ON e.event_id = ea.event_id
                 LEFT JOIN user u ON e.organizer_user_id = u.user_id
@@ -247,14 +271,14 @@ class GetEvent extends GlobalMethods
     public function getAllEventsByOrganizerId($organizer_user_id)
     {
         $sql = "SELECT e.event_id, e.event_name, e.event_description, e.event_location, 
-                       e.event_start_date, e.event_end_date, e.event_registration_start, e.event_registration_end,
-                       e.event_type, e.max_attendees, e.categories, e.organizer_user_id, e.organizer_organization,
-                       e.organizer_name, e.created_at, e.target_participants, e.participation_type,
-                       ea.status AS approval_status
-                FROM events e
-                LEFT JOIN event_approval ea ON e.event_id = ea.event_id
-                LEFT JOIN user u ON e.organizer_user_id = u.user_id
-                WHERE e.organizer_user_id = :organizer_user_id";
+                   e.event_start_date, e.event_end_date, e.event_registration_start, e.event_registration_end,
+                   e.event_type, e.max_attendees, e.categories, e.organizer_user_id, e.organizer_organization,
+                   e.organizer_name, e.created_at, e.target_participants, e.participation_type,
+                   ea.status AS approval_status, ea.rejection_message, ea.approved_at
+            FROM events e
+            LEFT JOIN event_approval ea ON e.event_id = ea.event_id
+            LEFT JOIN user u ON e.organizer_user_id = u.user_id
+            WHERE e.organizer_user_id = :organizer_user_id";
 
         try {
             $stmt = $this->pdo->prepare($sql);
@@ -268,6 +292,7 @@ class GetEvent extends GlobalMethods
             return $this->sendPayload(null, 'failed', 'Failed to fetch events.', 500);
         }
     }
+
 
     // for dashboard of the organizer
     public function get_total_registered_users_by_organizer($organizer_user_id)
@@ -411,6 +436,9 @@ class GetEvent extends GlobalMethods
                 $feedbackCount = $this->getFeedbackCount($event['event_id']);
                 $event['feedback_count'] = $feedbackCount;
 
+                $attendance_count = $this->getAttendanceCount($event['event_id']);
+                $event['attendance_count'] = $attendance_count;
+
                 // Calculate average feedback scores
                 $averageFeedback = $this->getAverageFeedback($event['event_id']);
                 $event['average_feedback'] = $averageFeedback['avg_overall_satisfaction'];
@@ -467,23 +495,22 @@ class GetEvent extends GlobalMethods
 
 
     // // Function to get attendance count for an event
-    // private function getAttendanceCount($event_id)
-    // {
-    //     try {
-    //         $stmt = $this->pdo->prepare("
-    //             SELECT COUNT(*) as attendance_count
-    //             FROM attendance
-    //             WHERE event_id = :event_id 
-    //                 AND remarks = 1
-    //         ");
-    //         $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
-    //         $stmt->execute();
-    //         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    //         return $result['attendance_count'];
-    //     } catch (PDOException $e) {
-    //         return 0;
-    //     }
-    // }
+    private function getAttendanceCount($event_id)
+    {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT COUNT(*) as attendance_count
+                FROM attendance
+                WHERE event_id = :event_id 
+            ");
+            $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['attendance_count'];
+        } catch (PDOException $e) {
+            return 0;
+        }
+    }
 
     // Function to get feedback count for an event
     private function getFeedbackCount($event_id)

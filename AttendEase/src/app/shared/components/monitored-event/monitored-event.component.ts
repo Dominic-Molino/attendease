@@ -19,8 +19,11 @@ export class MonitoredEventComponent implements OnInit {
   selectedEvent: Event | null = null;
   registeredUsers: any[] = [];
   registeredUsersMap: { [eventId: number]: any[] } = {};
+  groupedRegisteredUsersMap: { [eventId: number]: { [date: string]: any[] } } =
+    {};
   currentIndex: number = 0;
   currId: any;
+  isDrawerVisible: boolean = false;
 
   constructor(
     private eventService: EventService,
@@ -55,7 +58,27 @@ export class MonitoredEventComponent implements OnInit {
   loadRegisteredUsers(eventId: number): void {
     this.eventService.getRegisteredUser(eventId).subscribe((res: any) => {
       this.registeredUsersMap[eventId] = res.payload || [];
+      this.groupRegisteredUsersByDate(eventId);
     });
+  }
+
+  groupRegisteredUsersByDate(eventId: number): void {
+    const users = this.registeredUsersMap[eventId] || [];
+    this.groupedRegisteredUsersMap[eventId] = users.reduce(
+      (acc: any, user: any) => {
+        const date = new Date(user.registration_date).toLocaleDateString();
+        if (!acc[date]) {
+          acc[date] = [];
+        }
+        acc[date].push(user);
+        return acc;
+      },
+      {}
+    );
+  }
+
+  getDates(eventId: number): string[] {
+    return Object.keys(this.groupedRegisteredUsersMap[eventId] || {});
   }
 
   prevEvent(): void {
@@ -83,5 +106,13 @@ export class MonitoredEventComponent implements OnInit {
     const oneMinuteAgo = new Date();
     oneMinuteAgo.setMinutes(oneMinuteAgo.getMinutes() - 1);
     return isBefore(new Date(user.registration_date), oneMinuteAgo);
+  }
+
+  toggleDrawer(): void {
+    this.isDrawerVisible = !this.isDrawerVisible;
+  }
+
+  closeDrawer(): void {
+    this.isDrawerVisible = false;
   }
 }
