@@ -1,165 +1,274 @@
-<p-accordion [activeIndex]="0">
-  <p-accordionTab header="Overall Report of the events">
-    <p-carousel
-      [value]="report"
-      [numVisible]="1"
-      [numScroll]="1"
-      [circular]="true"
-    >
-      <ng-template pTemplate="item" let-event>
-        <div class="border border-dark-border rounded-md p-3.5">
-          <div class="">
-            <h3 class="text-center capitalize text-lg">
-              {{ event.event_name }}
-            </h3>
-            <div class="w-full flex flex-wrap">
-              <div class="w-full flex items-center gap-1.5 p-2">
-                <div class="w-1/2">
+<main class="scroll-smooth w-full h-screen">
+  <div class="p-4 mt-16 sm:ml-64">
+    <button class="-ms-2" (click)="goBack()">
+      <svg
+        class="w-7 h-7 text-gray-800 dark:text-white"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1"
+          d="M5 12h14M5 12l4-4m-4 4 4 4"
+        />
+      </svg>
+    </button>
+    <div class="w-full flex justify-between items-center">
+      <div>
+        <p class="mt-5 mb-2 text-text text-2xl tracking-wide font-semibold">
+          Event Report
+        </p>
+      </div>
+    </div>
+    <hr class="h-px mb-6 bg-dark-border border-0" />
+    <div class="p-1.5 h-fit">
+      <div>
+        <div class="w-full flex flex-wrap">
+          <div class="w-full flex items-center gap-1.5 p-2">
+            <div class="w-1/2">
+              <div class="w-full flex flex-col items-center gap-1.5">
+                <div class="w-full">
                   <p-chart
-                    type="pie"
-                    [data]="getChartData(event)"
+                    *ngIf="
+                      reportDetail.registered_users > 0 ||
+                      reportDetail.present_count > 0 ||
+                      reportDetail.feedback_count > 0
+                    "
+                    type="doughnut"
+                    [data]="chartData"
                     [options]="chartOptions"
                   ></p-chart>
-                </div>
-                <div class="w-1/2">
                   <div
-                    class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 dark:bg-gray-800 dark:border-gray-700"
+                    *ngIf="
+                      reportDetail.registered_users === 0 &&
+                      reportDetail.present_count === 0 &&
+                      reportDetail.feedback_count === 0
+                    "
+                    class="text-center"
                   >
-                    <h5
-                      class="mb-3 text-smfont-semibold text-gray-900 md:text-xl dark:text-white"
-                    >
-                      Details
-                    </h5>
-
-                    <ul class="my-4">
-                      <li>
-                        <div
-                          class="flex items-center p-3 text-smfont-bold text-gray-900"
-                        >
-                          <span class="flex-1 ms-3 whitespace-nowrap"
-                            >Event Status</span
-                          >
-                          <span
-                            class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded capitalize"
-                            >{{ event.event_status }}</span
-                          >
-                        </div>
-                      </li>
-                      <li>
-                        <div
-                          class="flex items-center p-3 text-smfont-bold text-gray-900"
-                        >
-                          <span class="flex-1 ms-3 whitespace-nowrap"
-                            >Event Date</span
-                          >
-                          <span
-                            class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
-                          >
-                            {{ event.event_start_date | date : "longDate" }}-
-                            {{ event.event_end_date | date : "longDate" }}</span
-                          >
-                        </div>
-                      </li>
-
-                      <li>
-                        <div
-                          class="flex items-center p-3 text-smfont-bold text-gray-900"
-                        >
-                          <span class="flex-1 ms-3 whitespace-nowrap"
-                            >Max Participants</span
-                          >
-                          <span
-                            class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
-                          >
-                            {{ event.max_attendees }}</span
-                          >
-                        </div>
-                      </li>
-                      <li>
-                        <div
-                          class="flex items-center p-3 text-smfont-bold text-gray-900"
-                        >
-                          <span class="flex-1 ms-3 whitespace-nowrap"
-                            >Total Participants</span
-                          >
-                          <span
-                            class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
-                          >
-                            {{ event.registered_users }}</span
-                          >
-                        </div>
-                      </li>
-                      <li>
-                        <div
-                          class="flex items-center p-3 text-smfont-bold text-gray-900"
-                        >
-                          <span class="flex-1 ms-3 whitespace-nowrap"
-                            >Attendance Submitted</span
-                          >
-                          <span
-                            class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
-                          >
-                            {{ event.attendance_count }}</span
-                          >
-                        </div>
-                      </li>
-                      <li>
-                        <div
-                          class="flex items-center p-3 text-smfont-bold text-gray-900"
-                        >
-                          <span class="flex-1 ms-3 whitespace-nowrap"
-                            >Feedback Submitted</span
-                          >
-                          <span
-                            class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
-                          >
-                            {{ event.feedback_count }}</span
-                          >
-                        </div>
-                      </li>
-                      <li>
-                        <div
-                          class="flex items-center p-3 text-smfont-bold text-gray-900"
-                        >
-                          <span class="flex-1 ms-3 whitespace-nowrap"
-                            >Present Participants</span
-                          >
-                          <span
-                            class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
-                          >
-                            {{ event.present_count }}</span
-                          >
-                        </div>
-                      </li>
-                      <li>
-                        <div
-                          class="flex items-center p-3 text-smfont-bold text-gray-900"
-                        >
-                          <span class="flex-1 ms-3 whitespace-nowrap"
-                            >Satisfaction of user</span
-                          >
-                          <span
-                            class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
-                            *ngIf="event.average_feedback; else zero"
-                          >
-                            {{ event.average_feedback | number : "1.1" }}</span
-                          >
-                          <ng-template #zero>
-                            <span
-                              class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
-                              >0</span
-                            ></ng-template
-                          >
-                        </div>
-                      </li>
-                    </ul>
+                    <p>(￣ ￣|||)</p>
+                    <span class="text-gray-500">No data available...</span>
                   </div>
                 </div>
               </div>
             </div>
+            <div class="w-1/2">
+              <div
+                class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 dark:bg-gray-800 dark:border-gray-700"
+              >
+                <h5
+                  class="mb-3 text-sm font-semibold text-gray-900 md:text-xl dark:text-white"
+                >
+                  Details
+                </h5>
+                <ul class="my-2">
+                  <li>
+                    <div
+                      class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                    >
+                      <span class="flex-1 ms-3 whitespace-nowrap"> Name</span>
+                      <span
+                        class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded capitalize"
+                        >{{ reportDetail.event_name }}</span
+                      >
+                    </div>
+                  </li>
+
+                  <li>
+                    <div
+                      class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                    >
+                      <span class="flex-1 ms-3 whitespace-nowrap"> Status</span>
+                      <span
+                        class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded capitalize"
+                        >{{ reportDetail.event_status }}</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                    >
+                      <span class="flex-1 ms-3 whitespace-nowrap"> Date</span>
+                      <span
+                        class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                        >{{ reportDetail.event_start_date | date : "longDate" }}
+                        -
+                        {{
+                          reportDetail.event_end_date | date : "longDate"
+                        }}</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                    >
+                      <span class="flex-1 ms-3 whitespace-nowrap">Time</span>
+                      <span
+                        class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                        >{{
+                          reportDetail.event_start_date | date : "shortTime"
+                        }}
+                        -
+                        {{
+                          reportDetail.event_end_date | date : "shortTime"
+                        }}</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                    >
+                      <span class="flex-1 ms-3 whitespace-nowrap"
+                        >Max Participants</span
+                      >
+                      <span
+                        class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                        >{{ reportDetail.max_attendees }}</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                    >
+                      <span class="flex-1 ms-3 whitespace-nowrap"
+                        >Registered Participants</span
+                      >
+                      <span
+                        class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                        >{{ reportDetail.registered_users }}</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                    >
+                      <span class="flex-1 ms-3 whitespace-nowrap"
+                        >Present Participants</span
+                      >
+                      <span
+                        class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                        >{{ reportDetail.present_count }}</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                    >
+                      <span class="flex-1 ms-3 whitespace-nowrap"
+                        >Attendance Submitted</span
+                      >
+                      <span
+                        class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                        >{{ reportDetail.attendance_count }}</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                    >
+                      <span class="flex-1 ms-3 whitespace-nowrap"
+                        >Feedback Submitted</span
+                      >
+                      <span
+                        class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                        >{{ reportDetail.feedback_count }}</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                    >
+                      <span class="flex-1 ms-3 whitespace-nowrap"
+                        >Satisfacation Rating</span
+                      >
+                      <span
+                        *ngIf="reportDetail.average_feedback !== 0"
+                        class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                      >
+                        {{ reportDetail.average_feedback | number : "1.1" }}
+                      </span>
+                      <span
+                        *ngIf="reportDetail.average_feedback == null"
+                        class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                      >
+                        0
+                      </span>
+                    </div>
+                  </li>
+
+                  <!-- Iterate over student_details -->
+                  <!-- <li *ngFor="let student of reportDetail.student_details">
+                    <div
+                      class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                    >
+                      <span class="flex-1 ms-3 whitespace-nowrap"
+                        >Student Name</span
+                      >
+                      <span
+                        class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                        >{{ student.first_name }} {{ student.last_name }}</span
+                      >
+                    </div>
+                    <div
+                      class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                    >
+                      <span class="flex-1 ms-3 whitespace-nowrap">Email</span>
+                      <span
+                        class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                        >{{ student.email }}</span
+                      >
+                    </div>
+                    <div
+                      class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                    >
+                      <span class="flex-1 ms-3 whitespace-nowrap"
+                        >Year Level</span
+                      >
+                      <span
+                        class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                        >{{ student.year_level }}</span
+                      >
+                    </div>
+                    <div
+                      class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                    >
+                      <span class="flex-1 ms-3 whitespace-nowrap">Course</span>
+                      <span
+                        class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                        >{{ student.course }}</span
+                      >
+                    </div>
+                    <div
+                      class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                    >
+                      <span class="flex-1 ms-3 whitespace-nowrap">Block</span>
+                      <span
+                        class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                        >{{ student.block }}</span
+                      >
+                    </div>
+                  </li> -->
+                  <!-- End of iteration over student_details -->
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
-      </ng-template>
-    </p-carousel>
-  </p-accordionTab>
-</p-accordion>
+      </div>
+    </div>
+  </div>
+</main>

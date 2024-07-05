@@ -5,7 +5,6 @@ import { AuthenGuard } from './core/authen.guard';
 import { AdminComponent } from './modules/admin/admin.component';
 import { RoleGuard } from './core/role.guard';
 import { PagenotfoundComponent } from './shared/components/pagenotfound/pagenotfound.component';
-import { AddEventComponent } from './modules/organizer/components/add-event/add-event.component';
 
 export const routes: Routes = [
   {
@@ -223,6 +222,15 @@ export const routes: Routes = [
           import(
             './modules/organizer/pages/org-dashboard/org-dashboard.component'
           ).then((c) => c.OrgDashboardComponent),
+        canActivate: [AuthenGuard],
+      },
+
+      {
+        path: 'event-report/:eventId',
+        loadComponent: () =>
+          import('./modules/organizer/components/report/report.component').then(
+            (c) => c.ReportComponent
+          ),
         canActivate: [AuthenGuard],
       },
 

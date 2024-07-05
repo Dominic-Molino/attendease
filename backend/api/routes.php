@@ -327,6 +327,14 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 }
                 break;
 
+            case 'getongoingreports':
+                if (isset($request[1])) {
+                    echo json_encode($getEvents->getApprovedOngoingEventsWithStatus($request[1]));
+                } else {
+                    echo 'no event id';
+                }
+                break;
+
             default:
                 echo "This is forbidden";
                 http_response_code(403);

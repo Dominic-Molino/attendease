@@ -7,6 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CommonModule, Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { EditEventComponent } from '../edit-event/edit-event.component';
+import { UpdateimageComponent } from '../updateimage/updateimage.component';
 
 @Component({
   selector: 'app-eventpreview',
@@ -108,5 +109,17 @@ export class EventpreviewComponent implements OnInit {
         console.error('Error fetching event details:', error);
       }
     );
+  }
+
+  openFile(eventId: number) {
+    const modal = this.dialog.open(UpdateimageComponent, {
+      data: { eventId: eventId },
+      disableClose: true,
+      width: '40%',
+    });
+
+    modal.afterClosed().subscribe((response) => {
+      this.fetchEventDetails(eventId);
+    });
   }
 }

@@ -1,41 +1,80 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { EventService } from '../../../../core/service/event.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { CarouselModule } from 'primeng/carousel';
 import { AccordionModule } from 'primeng/accordion';
+import { ActivatedRoute } from '@angular/router';
+import th from '@mobiscroll/angular/dist/js/i18n/th';
 
 @Component({
   selector: 'app-report',
   standalone: true,
   imports: [CommonModule, ChartModule, CarouselModule, AccordionModule],
   templateUrl: './report.component.html',
-  styleUrl: './report.component.css',
+  styleUrls: ['./report.component.css'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportComponent implements OnInit {
-  currId: any;
-  report: any[] = [];
+  reportDetail: any;
+  eventId: any;
   chartOptions: any;
   chartDataCache: Map<number, any> = new Map();
+  chartData: any;
 
-  constructor(private service: EventService) {}
+  constructor(
+    private service: EventService,
+    private router: ActivatedRoute,
+    private location: Location
+  ) {}
 
   ngOnInit(): void {
-    this.currId = this.service.getCurrentUserId();
-    this.loadReport(this.currId);
-    this.chartOptions = {
-      indexAxis: 'y',
-      responsive: true,
-      maintainAspectRatio: false,
-    };
+    this.router.params.subscribe((params) => {
+      this.eventId = +params['eventId'];
+      this.loadReport(this.eventId);
+    });
   }
 
-  loadReport(id: any) {
-    this.service.getReport(id).subscribe((res) => {
-      this.report = res.payload;
-      console.log(this.report);
+  loadReport(eventId: number) {
+    this.service.getReport(eventId).subscribe((reportDetails) => {
+      this.reportDetail = reportDetails.payload[0];
+      console.log(this.reportDetail); // Check what is logged in the console
+      this.initializeChartOptions();
+      this.chartData = this.getChartData(this.reportDetail);
     });
+  }
+
+  initializeChartOptions() {
+    this.chartOptions = {
+      indexAxis: 'x',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+        },
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+        },
+        y: {
+          beginAtZero: true,
+          max: 0,
+          ticks: {
+            stepSize: 1,
+          },
+        },
+      },
+    };
   }
 
   getChartData(event: any) {
@@ -44,22 +83,28 @@ export class ReportComponent implements OnInit {
     }
 
     const chartData = {
-      labels: ['Registered Users', 'Presence', 'Feedback'],
+      labels: ['Participants'],
       datasets: [
         {
-          label: event.event_name,
-          backgroundColor: ['#c75519', ' #ff8a00', '#f6aa54'],
-          borderRadius: 0.5,
-          data: [
-            event.registered_users,
-            event.present_count,
-            event.feedback_count,
-          ],
+          label: 'Present Participants',
+          backgroundColor: '#c75519',
+          data: [event.present_count],
+        },
+        {
+          label: 'Total Participants',
+          backgroundColor: '#ff8a00',
+          data: [event.registered_users],
         },
       ],
     };
 
+    this.chartOptions.scales.y.max = event.max_attendees;
+
     this.chartDataCache.set(event.event_id, chartData);
     return chartData;
+  }
+
+  goBack() {
+    this.location.back();
   }
 }

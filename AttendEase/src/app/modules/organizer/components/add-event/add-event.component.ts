@@ -44,6 +44,16 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
+export function positiveNumberValidator(
+  control: AbstractControl
+): ValidationErrors | null {
+  const value = control.value;
+  if (value !== null && (isNaN(value) || value <= 0)) {
+    return { positiveNumber: true };
+  }
+  return null;
+}
+
 @Component({
   selector: 'app-add-event',
   standalone: true,
@@ -96,7 +106,7 @@ export class AddEventComponent implements OnInit {
         [Validators.required, this.futureDateValidator()],
       ],
       event_type: ['', Validators.required],
-      max_attendees: ['', Validators.required],
+      max_attendees: ['', [Validators.required, positiveNumberValidator]],
       categories: [''],
       organizer_user_id: [''],
       organizer_name: ['', Validators.required],

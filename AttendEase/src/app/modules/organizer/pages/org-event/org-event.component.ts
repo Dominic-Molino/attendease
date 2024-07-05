@@ -26,6 +26,7 @@ import { AuthserviceService } from '../../../../core/service/authservice.service
 import { CarouselModule } from 'primeng/carousel';
 import { Router } from '@angular/router';
 import { formatDistanceToNow } from 'date-fns';
+import { MessagepopComponent } from '../../components/messagepop/messagepop.component';
 
 @Component({
   selector: 'app-org-event',
@@ -45,28 +46,26 @@ import { formatDistanceToNow } from 'date-fns';
     CarouselModule,
   ],
 })
-export class OrgEventComponent implements OnInit, OnDestroy {
+export class OrgEventComponent implements OnInit {
   eventList: Event[] = [];
   maxChar = 100;
   selectedEventId: any;
   isDropdownOpen: boolean = false;
   currId: any;
+  registeredUsers: any;
 
   filteredEventList: { [key: string]: Event[] } = {
     Approved: [],
     Rejected: [],
     Pending: [],
   };
-
   currentFilter: string = 'Approved';
 
   //pagination variables
   p: number = 1;
-  itemsPerPage: number = 5;
+  itemsPerPage: number = 10;
   responsiveOptions: any[] | undefined;
   maxSize = 5;
-
-  private refreshSubscription: Subscription | undefined;
 
   constructor(
     private service: EventService,
@@ -102,12 +101,6 @@ export class OrgEventComponent implements OnInit, OnDestroy {
     ];
   }
 
-  ngOnDestroy(): void {
-    if (this.refreshSubscription) {
-      this.refreshSubscription.unsubscribe();
-    }
-  }
-
   loadEvent() {
     this.service.getAllOrganizerEvents(this.currId).subscribe(
       (response: any) => {
@@ -115,9 +108,9 @@ export class OrgEventComponent implements OnInit, OnDestroy {
           if (event.target_participants) {
             event.target_participants = JSON.parse(event.target_participants);
           }
-          event.event_image$ = this.getEventImage(event.event_id);
           return event;
         });
+
         this.filterEventsByApprovalStatus();
         this.p = 1;
         console.log(this.eventList);
@@ -128,18 +121,9 @@ export class OrgEventComponent implements OnInit, OnDestroy {
     );
   }
 
-  getEventImage(eventId: number): Observable<SafeResourceUrl> {
-    return this.service.getEventImage(eventId).pipe(
-      map((blob: Blob) => {
-        const url = URL.createObjectURL(blob);
-        return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-      })
-    );
-  }
-
   filterEventsByApprovalStatus() {
-    this.filteredEventList['Approved'] = this.eventList.filter(
-      (event) => event.approval_status === 'Approved'
+    this.filteredEventList['Approved'] = this.sortEventsByState(
+      this.eventList.filter((event) => event.approval_status === 'Approved')
     );
     this.filteredEventList['Rejected'] = this.eventList.filter(
       (event) => event.approval_status === 'Rejected'
@@ -149,34 +133,23 @@ export class OrgEventComponent implements OnInit, OnDestroy {
     );
   }
 
+  sortEventsByState(events: Event[]): Event[] {
+    return events.sort((a, b) => {
+      const stateOrder = ['done', 'ongoing', 'upcoming'];
+      const stateA = this.getEventState(a);
+      const stateB = this.getEventState(b);
+      return stateOrder.indexOf(stateA) - stateOrder.indexOf(stateB);
+    });
+  }
+
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
-  onFileChange(eventId: number, event: any) {
-    const files = event.target.files as FileList;
-    if (files.length > 0) {
-      const file = files[0];
-      this.service.uploadEvent(eventId, file).subscribe((data) => {
-        const Toast = Swal.mixin({
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 1500,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          },
-        });
-        Toast.fire({
-          icon: 'success',
-          title: 'Image uploaded successfully.',
-        });
-        this.loadEvent();
-        this.resetInput(event.target);
-      });
-    }
+  getRegisteredUser(eventId: number) {
+    this.service.getRegisteredUser(eventId).subscribe((res) => {
+      this.registeredUsers = res.payload;
+    });
   }
 
   getFormattedTargetParticipants(participants: any[]): string {
@@ -202,12 +175,6 @@ export class OrgEventComponent implements OnInit, OnDestroy {
       .join(' | ');
   }
 
-  resetInput(inputElement: HTMLInputElement) {
-    if (inputElement) {
-      inputElement.value = '';
-    }
-  }
-
   openDialog() {
     if (this.eventList) {
       const modal = this.dialog.open(AddEventComponent, {
@@ -222,39 +189,11 @@ export class OrgEventComponent implements OnInit, OnDestroy {
     }
   }
 
-  openFile(eventId: number) {
-    this.dialog.open(UpdateimageComponent, {
-      data: { eventId: eventId },
-      disableClose: true,
-      width: '40%',
-    });
-  }
-
   previewEvent(eventId: any) {
     let routePrefix = 'organizer/events-preview';
     if (routePrefix) {
       this.router.navigate([`${routePrefix}/${eventId}`]);
     }
-  }
-
-  editEvent(eventId: number) {
-    this.service.getEventById(eventId).subscribe(
-      (eventDetails: any) => {
-        const modal = this.dialog.open(EditEventComponent, {
-          data: eventDetails,
-          disableClose: true,
-          width: '60%',
-          height: '90%',
-        });
-
-        modal.afterClosed().subscribe((response) => {
-          this.loadEvent();
-        });
-      },
-      (error) => {
-        console.error('Error fetching event details:', error);
-      }
-    );
   }
 
   truncateDescription(text: string, maxLength: number): string {
@@ -263,6 +202,14 @@ export class OrgEventComponent implements OnInit, OnDestroy {
     } else {
       return text;
     }
+  }
+
+  openMessage(message: any, approved_at: any, name: any) {
+    this.dialog.open(MessagepopComponent, {
+      data: { message: message, date: approved_at, name: name },
+      disableClose: true,
+      width: '35%',
+    });
   }
 
   getEventState(event: any): string {

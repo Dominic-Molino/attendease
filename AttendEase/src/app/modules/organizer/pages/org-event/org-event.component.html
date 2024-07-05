@@ -18,255 +18,196 @@
     <hr class="h-px mb-6 bg-dark-border border-0" />
 
     @if(eventList && eventList.length ){
-    <p class="mt-5 mb-2 text-text text-2xl tracking-wide font-semibold">
-      Approved Events
-    </p>
-    <p-carousel
-      [value]="filteredEventList['Approved']"
-      [numVisible]="3"
-      [numScroll]="1"
-      [circular]="true"
-      [responsiveOptions]="responsiveOptions"
-    >
-      <ng-template pTemplate="item" let-event>
-        <div
-          class="rounded-md border ml-5 border-dark-border relative shadow-md p-3.5 bg-white h-full hover:bg-dark-muted"
-        >
-          <div class="flex flex-col">
-            <div class="rounded-md overflow-hidden h-44 max-h-44 relative">
-              <img
-                *ngIf="
-                  event.event_image$ | async as eventImageUrl;
-                  else placeholder
-                "
-                [src]="eventImageUrl"
-                alt="Event Image"
-                class="rounded-md object-cover object-center max-h-44 h-44 w-full border border-dark-border"
-              />
-              <ng-template #placeholder>
-                <div
-                  class="image-container avatar-placeholder h-44 rounded-md"
-                ></div>
-              </ng-template>
-              <button
-                (click)="openFile(event.event_id)"
-                class="absolute z-50 inset-0 flex items-center justify-center text-light-text bg-opacity-50 bg-dark-foreground hover:bg-opacity-55"
-              >
-                <svg
-                  class="w-6 h-6 text-light-text hover:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1"
-                    d="m3 16 5-7 6 6.5m6.5 2.5L16 13l-4.286 6M14 10h.01M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
-                  />
-                </svg>
-              </button>
-            </div>
-            <h5 class="text-xl md:text-2xl font-medium mt-3">
-              {{ event.event_name }}
-            </h5>
-            <div class="flex items-center">
-              <svg
-                class="w-5 h-5 inline flex-shrink-0 text-gray-800"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
-                />
-              </svg>
-              <span class="ms-2 text-[13px]"
-                >Event Date: {{ event.event_start_date | date }}</span
-              >
-              <span class="ms-1"> - </span>
-              <span class="ms-2 text-[13px]">{{
-                event.event_end_date | date
-              }}</span>
-            </div>
-            <p class="text-dark-text text-sm mt-3">
-              {{ truncateDescription(event.event_description, maxChar) }}
-            </p>
-            <p class="flex items-center">
-              <span class="text-sm font-medium text-gray-500"
-                >Max Participants: {{ event.max_attendees }}</span
-              >
-            </p>
-            <p class="" *ngIf="event?.participation_type === 'open'">
-              <span class="text-sm font-medium text-gray-500"
-                >Open for All</span
-              >
-            </p>
-            <p
-              class="text-sm font-medium text-gray-500"
-              *ngIf="event?.participation_type === 'selected'"
-            >
-              Open for:
-              <span>{{
-                getFormattedTargetParticipants(event!.target_participants)
-              }}</span>
-            </p>
-          </div>
-          <div class="flex items-center justify-end relative gap-1.5 mt-2.5">
-            <button
-              (click)="previewEvent(event.event_id)"
-              type="button"
-              aria-expanded="false"
-              class="flex items-center justify-center text-white bg-light-background border border-light-border hover:bg-light-foregroud rounded-md w-10 h-10 focus:outline-none shadow-md"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-eye"
-              >
-                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-            </button>
-            <app-delete-event
-              [event_id]="event.event_id"
-              (eventDeleted)="loadEvent()"
-            ></app-delete-event>
-          </div>
-        </div>
-      </ng-template>
-    </p-carousel>
 
-    <div class="flex items-center gap-3.5 w-full h-full">
-      <div class="max-w-[30%] w-full">
-        <div class="rounded-md w-full border border-dark-border">
+    <div class="w-full h-full flex gap-2.5 items-center">
+      <div class="max-w-[65%] w-full self-start">
+        <div class="relative w-full overflow-x-auto border border-dark-border">
           <table
-            class="overflow-x-auto w-full shadow-md bg-white rounded-s-md relative z-0"
+            class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
           >
             <thead
-              class="text-dark-muted border-b rounded-md border-dark-primary capitalize bg-dark-foreground"
+              class="text-sm text-white border-dark-primary capitalize bg-dark-foreground"
             >
               <tr>
-                <th
-                  scope="col"
-                  class="px-6 py-3 text-start tracking-widest font-medium"
-                >
+                <th scope="col" class="p-4"></th>
+                <th scope="col" class="px-6 py-3 tracking-widest font-medium">
                   Event Name
                 </th>
-
-                <th
-                  scope="col"
-                  class="px-6 py-3 text-end tracking-widest font-medium"
-                >
+                <th scope="col" class="px-6 py-3 tracking-widest font-medium">
+                  Event Date
+                </th>
+                <th scope="col" class="px-6 py-3 tracking-widest font-medium">
+                  Event Time
+                </th>
+                <th scope="col" class="px-6 py-3 tracking-widest font-medium">
                   Status
                 </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 tracking-widest font-medium"
+                ></th>
               </tr>
             </thead>
-            <tbody *ngFor="let event of filteredEventList['Pending']">
-              <tr>
-                <td class="px-6 py-4 text-sm font-primary text-start">
+            <tbody>
+              <tr
+                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                *ngFor="
+                  let event of filteredEventList['Approved']
+                    | paginate : { itemsPerPage: itemsPerPage, currentPage: p }
+                "
+              >
+                <td class="w-4 p-4"></td>
+                <th
+                  scope="row"
+                  class="px-6 py-1.5 font-medium text-gray-900 whitespace-nowrap capitalize dark:text-white"
+                >
                   {{ event.event_name }}
+                </th>
+                <td class="px-6 py-1.5 text-gray-700">
+                  {{ event.event_start_date | date }}
                 </td>
-                <td class="px-6 py-4 text-sm font-primary text-end">
-                  {{ event.approval_status }}
+                <td class="px-6 py-1.5 text-gray-700">
+                  {{ event.event_start_date | date : "hh:mm a" }} -
+                  {{ event.event_end_date | date : "hh:mm a" }}
+                </td>
+                <td class="px-6 py-1.5 text-gray-700 capitalize">
+                  {{ getEventState(event) }}
+                </td>
+
+                <td class="px-6 py-1.5 text-gray-700">
+                  <div
+                    class="flex items-center justify-end relative gap-1.5 mt-2.5"
+                  >
+                    <button
+                      (click)="previewEvent(event.event_id)"
+                      type="button"
+                      aria-expanded="false"
+                      class="flex items-center justify-center text-white bg-light-background border border-light-border hover:bg-light-foregroud rounded-md w-10 h-10 focus:outline-none shadow-md"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-eye"
+                      >
+                        <path
+                          d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"
+                        />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    </button>
+                    <app-delete-event
+                      [event_id]="event.event_id"
+                      (eventDeleted)="loadEvent()"
+                    ></app-delete-event>
+                  </div>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-      </div>
-      <div class="w-[70%] self-start">
-        <p class="mb-2 text-text text-2xl tracking-wide font-semibold">
-          Rejected Events
-        </p>
-        <div
-          class="w-full border border-dark-border rounded-md shadow-md p-2.5"
-        >
-          <ol
-            class="relative w-full"
-            *ngFor="
-              let event of filteredEventList['Rejected']
-                | paginate : { itemsPerPage: itemsPerPage, currentPage: p }
-            "
-          >
-            <li class="my-2.5">
-              <div
-                class="p-4 relative bg-white border border-dark-border rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600"
-              >
-                <button
-                  (click)="deleteEvent(event.event_id)"
-                  type="button"
-                  class="absolute -top-2 -right-2 text-white border border-red-500 bg-red-500 hover:bg-red-400 hover:text-white focus:ring-0 focus:outline-nonefont-medium rounded-full text-sm text-center inline-flex items-center"
-                >
-                  <svg
-                    class="w-4 h-4"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1"
-                      d="M6 18 17.94 6M18 18 6.06 6"
-                    />
-                  </svg>
-
-                  <span class="sr-only">Icon description</span>
-                </button>
-                <div class="items-center justify-between mb-3 sm:flex">
-                  <time
-                    class="mb-1 text-xs font-normal text-gray-400 sm:order-last sm:mb-0"
-                    >{{ formatRegistrationDate(event.approved_at) }}</time
-                  >
-                  <div
-                    class="text-sm font-normal text-gray-500 lex dark:text-gray-300"
-                  >
-                    The admin rejected your event
-                    <a class="font-semibold text-gray-900 dark:text-white">{{
-                      event.event_name
-                    }}</a>
-                  </div>
-                </div>
-                <div
-                  class="p-3 text-sm italic font-normal text-text border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300"
-                >
-                  <span class="font-semibold text-gray-900"
-                    >Rejection Message:</span
-                  >
-                  {{ event.rejection_message }}
-                </div>
-              </div>
-            </li>
-          </ol>
-        </div>
-        <div class="flex justify-center items-center mt-2.5">
+        <div class="flex justify-center items-center p-5">
           <pagination-controls
             (pageChange)="p = $event"
-            [maxSize]="maxSize"
             [responsive]="true"
             class="pagination"
           ></pagination-controls>
+        </div>
+      </div>
+      <div
+        class="flex flex-col items-center self-baseline gap-3.5 w-[35%] h-full"
+      >
+        <div class="w-full">
+          <div
+            class="w-full p-4 bg-white border border-dark-border rounded-md shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
+          >
+            <div class="flex items-center justify-between mb-4">
+              <h5
+                class="text-xl font-bold leading-none text-gray-900 dark:text-white"
+              >
+                Pending Events
+              </h5>
+            </div>
+            <div class="flow-root max-h-1/2 overflow-y-auto">
+              <ul
+                role="list"
+                class="divide-y divide-gray-200 dark:divide-gray-700"
+              >
+                <li
+                  class="py-3 px-5"
+                  *ngFor="let event of filteredEventList['Pending']"
+                >
+                  <div class="flex items-center">
+                    <div class="flex-1 min-w-0 ms-4">
+                      <p
+                        class="text-sm font-medium text-gray-900 truncate dark:text-white capitalize"
+                      >
+                        {{ event.event_name }}
+                      </p>
+                    </div>
+                    <div
+                      class="inline-flex items-center text-xs font-semibold text-blue-500 dark:text-white capitalize"
+                    >
+                      {{ event.approval_status }}
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="w-full">
+          <div
+            class="w-full p-4 bg-white border border-dark-border rounded-md shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
+          >
+            <div class="flex items-center justify-between mb-4">
+              <h5
+                class="text-xl font-bold leading-none text-gray-900 dark:text-white"
+              >
+                Rejected Events
+              </h5>
+            </div>
+            <div class="flow-root max-h-1/2 overflow-y-auto">
+              <ul
+                role="list"
+                class="divide-y divide-gray-200 dark:divide-gray-700"
+              >
+                <li
+                  class="py-3 px-5"
+                  *ngFor="let event of filteredEventList['Rejected']"
+                >
+                  <div class="flex items-center">
+                    <div class="flex-1 min-w-0 ms-4">
+                      <p
+                        class="text-sm font-medium text-gray-900 truncate dark:text-white capitalize"
+                      >
+                        {{ event.event_name }}
+                      </p>
+                    </div>
+                    <button
+                      (click)="
+                        openMessage(
+                          event.rejection_message,
+                          event.approved_at,
+                          event.event_name
+                        )
+                      "
+                      class="inline-flex items-center text-xs font-semibold text-blue-500 dark:text-white capitalize"
+                    >
+                      View message
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>

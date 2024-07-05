@@ -3,3 +3,23 @@
   z-index: 1000; /* Ensure it appears above other content */
   bottom: 0; /* Stick it to the bottom */
 }
+
+.message-left {
+  margin-right: auto;
+  max-width: 80%;
+  background-color: #f1f5f9; /* Light background color for received messages */
+  color: #334155; /* Text color for received messages */
+  border-radius: 0 16px 16px 16px;
+  padding: 16px;
+  margin-bottom: 8px;
+}
+
+.message-right {
+  margin-left: auto;
+  max-width: 80%;
+  background-color: #3b82f6; /* Blue background color for sent messages */
+  color: #ffffff; /* Text color for sent messages */
+  border-radius: 16px 0 16px 16px;
+  padding: 16px;
+  margin-bottom: 8px;
+}

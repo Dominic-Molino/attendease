@@ -26,4 +26,5 @@ export interface Event {
   organizer_organization: string;
   rejection_message: string;
   approved_at: string;
+  registered_user: number;
 }

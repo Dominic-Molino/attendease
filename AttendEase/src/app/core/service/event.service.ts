@@ -163,7 +163,11 @@ export class EventService {
     return this.http.get<any>(`${this.API_URL}getfeedbackoforgevent/${org_id}`);
   }
 
-  getReport(org_id: any): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}getreports/${org_id}`);
+  getReport(event_id: any): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}getreports/${event_id}`);
+  }
+
+  getOngoingReport(org_id: any): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}getongoingreports/${org_id}`);
   }
 }

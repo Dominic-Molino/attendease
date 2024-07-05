@@ -2,33 +2,7 @@
   <div
     class="flex w-full p-2.5 h-full flex-col gap-4 rounded-t-md overflow-y-scroll"
   >
-    <!-- <div
-      class="mr-auto flex max-w-[80%] flex-col gap-2 rounded-r-xl rounded-tl-xl bg-slate-100 p-4 md:max-w-[60%] dark:bg-slate-800"
-    >
-      <span class="font-semibold text-black dark:text-white">Penguin UI</span>
-      <div class="text-sm text-slate-700 dark:text-slate-300">
-        Hi there! How can I assist you today?
-      </div>
-    </div>
-
-    
-    <div
-      class="ml-auto flex max-w-[80%] flex-col gap-2 rounded-l-xl rounded-tr-xl bg-blue-700 p-4 text-sm text-slate-100 md:max-w-[60%] dark:bg-blue-600 dark:text-slate-100"
-    >
-      I accidentally deleted some important files. Can they be recovered?
-    </div>
-
-    
-    <div
-      class="mr-auto flex max-w-[80%] flex-col gap-2 rounded-r-xl rounded-tl-xl bg-slate-100 p-4 text-slate-700 md:max-w-[60%] dark:bg-slate-800 dark:text-slate-300"
-    >
-      <span class="font-semibold text-black dark:text-white">Penguin UI</span>
-      <div class="text-sm">
-        I'm sorry to hear that. Let me guide you through the process to resolve
-        it. Could you please provide your username?
-      </div>
-    </div> -->
-
+    <!-- ?names of user -->
     <div
       *ngFor="let request of messageRequests"
       class="bg-sky-200"
@@ -37,18 +11,21 @@
       <h1>{{ request.first_name }} {{ request.last_name }}</h1>
     </div>
 
+    <!-- message of bth user-->
     <div
       *ngFor="let message of messages"
-      class="mr-auto flex max-w-[80%] flex-col gap-2 rounded-r-xl rounded-tl-xl bg-slate-100 p-4 text-slate-700 md:max-w-[60%] dark:bg-slate-800 dark:text-slate-300"
+      [ngClass]="{
+        'message-left': message.sender_id !== data.currentUser,
+        'message-right': message.sender_id === data.currentUser
+      }"
     >
-      <span class="font-semibold text-black dark:text-white"
-        >{{ message.senderFirstName }} {{ message.senderLastName
-        }}<span
-          class="opacity-40"
-          *ngIf="message.sender_id == this.data.currentUser"
-          >(You)</span
-        ></span
-      ><span>{{ message.created_at | date : "medium" }}</span>
+      <span class="font-semibold"
+        >{{ message.senderFirstName }} {{ message.senderLastName }}
+        <span class="opacity-40" *ngIf="message.sender_id == data.currentUser">
+          (You)
+        </span>
+      </span>
+      <span>{{ message.created_at | date : "medium" }}</span>
       <div class="text-sm">
         {{ message.message }}
       </div>

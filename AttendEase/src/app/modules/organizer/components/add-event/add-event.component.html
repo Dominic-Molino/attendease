@@ -53,8 +53,8 @@
                   eventForm.get('event_name')?.touched)
               "
             >
-              <mat-error class="text-red-900"
-                >Email is <strong>required</strong></mat-error
+              <mat-error class="text-rose-500 text-xs"
+                >Event name is <strong>required</strong></mat-error
               >
             </mat-error>
           </div>
@@ -80,7 +80,9 @@
                   eventForm.get('event_location')?.touched)
               "
             >
-              Event Name is required.
+              <mat-error class="text-rose-500 text-xs"
+                >Event location is <strong>required</strong></mat-error
+              >
             </mat-error>
           </div>
 
@@ -100,6 +102,18 @@
               <option>Online</option>
               <option>Hybrid(Physical or Online)</option>
             </select>
+
+            <mat-error
+              *ngIf="
+                eventForm.get('event_type')?.invalid &&
+                (eventForm.get('event_type')?.dirty ||
+                  eventForm.get('event_type')?.touched)
+              "
+            >
+              <mat-error class="text-rose-500 text-xs"
+                >Event types is <strong>required</strong></mat-error
+              >
+            </mat-error>
           </div>
 
           <div class="w-full col-span-2 grid grid-cols-3 gap-2.5">
@@ -140,14 +154,37 @@
             <div class="w-full">
               <label
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >No. Participants</label
               >
+                No. Participants
+              </label>
               <input
                 type="number"
                 placeholder="1"
                 formControlName="max_attendees"
                 class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
               />
+              <mat-error
+                *ngIf="
+                  eventForm.get('max_attendees')?.hasError('required') &&
+                  (eventForm.get('max_attendees')?.dirty ||
+                    eventForm.get('max_attendees')?.touched)
+                "
+              >
+                <mat-error class="text-rose-500 text-xs">
+                  Max participants is <strong>required</strong>
+                </mat-error>
+              </mat-error>
+              <mat-error
+                *ngIf="
+                  eventForm.get('max_attendees')?.hasError('positiveNumber') &&
+                  (eventForm.get('max_attendees')?.dirty ||
+                    eventForm.get('max_attendees')?.touched)
+                "
+              >
+                <mat-error class="text-rose-500 text-xs">
+                  Max participants must be a positive number
+                </mat-error>
+              </mat-error>
             </div>
           </div>
 
@@ -178,6 +215,17 @@
                 class="bg-gray-50 border border-dark-border text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-dark-border block w-full ps-10 p-2.5"
               />
             </div>
+            <mat-error
+              *ngIf="
+                eventForm.get('event_start_date')?.invalid &&
+                (eventForm.get('event_start_date')?.dirty ||
+                  eventForm.get('event_start_date')?.touched)
+              "
+            >
+              <mat-error class="text-rose-500 text-xs"
+                >Event date is <strong>required</strong></mat-error
+              >
+            </mat-error>
           </div>
 
           <div class="w-full relative col-span-1">
@@ -206,6 +254,17 @@
                 class="bg-gray-50 border border-dark-border text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-dark-border block w-full ps-10 p-2.5"
               />
             </div>
+            <mat-error
+              *ngIf="
+                eventForm.get('event_end_date')?.invalid &&
+                (eventForm.get('event_end_date')?.dirty ||
+                  eventForm.get('event_end_date')?.touched)
+              "
+            >
+              <mat-error class="text-rose-500 text-xs"
+                >Event end date is <strong>required</strong></mat-error
+              >
+            </mat-error>
           </div>
 
           <!-- registration date -->
@@ -235,6 +294,17 @@
                 class="bg-gray-50 border border-dark-border text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-dark-border block w-full ps-10 p-2.5"
               />
             </div>
+            <mat-error
+              *ngIf="
+                eventForm.get('event_registration_start')?.invalid &&
+                (eventForm.get('event_registration_start')?.dirty ||
+                  eventForm.get('event_registration_start ')?.touched)
+              "
+            >
+              <mat-error class="text-rose-500 text-xs"
+                >Registration start date is <strong>required</strong></mat-error
+              >
+            </mat-error>
           </div>
 
           <div class="w-full relative col-span-1">
@@ -263,6 +333,17 @@
                 class="bg-gray-50 border border-dark-border text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-dark-border block w-full ps-10 p-2.5"
               />
             </div>
+            <mat-error
+              *ngIf="
+                eventForm.get('event_registration_end')?.invalid &&
+                (eventForm.get('event_registration_end')?.dirty ||
+                  eventForm.get('event_registration_end')?.touched)
+              "
+            >
+              <mat-error class="text-rose-500 text-xs"
+                >Registration end date is <strong>required</strong></mat-error
+              >
+            </mat-error>
           </div>
 
           <div class="sm:col-span-2">
@@ -274,6 +355,17 @@
               class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
               placeholder="Your description here"
             ></textarea>
+            <mat-error
+              *ngIf="
+                eventForm.get('event_description')?.invalid &&
+                (eventForm.get('event_description')?.dirty ||
+                  eventForm.get('event_description')?.touched)
+              "
+            >
+              <mat-error class="text-rose-500 text-xs"
+                >Event description is <strong>required</strong></mat-error
+              >
+            </mat-error>
           </div>
 
           <div class="sm:col-span-2 mb-2.5">
