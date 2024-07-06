@@ -3,6 +3,7 @@ import { ChartModule } from 'primeng/chart';
 import { DataAnalyticsService } from '../../../../../core/service/data-analytics.service';
 import { Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { scales, TooltipItem } from 'chart.js';
 
 interface Event {
   event_id: number;
@@ -35,10 +36,12 @@ export class ComparingEventsComponent implements OnInit, OnDestroy {
   }
 
   private setupPolling() {
-    this.refreshSubscription = timer(0, 60000)
+    this.refreshSubscription = timer(0, 30000)
       .pipe(switchMap(() => this.service.getAllEventAttendees()))
       .subscribe((res) => {
         const events: Event[] = res.payload;
+
+        console.log(events);
 
         const eventLabels: string[] = [];
         const attendeeCounts: number[] = [];
@@ -57,7 +60,7 @@ export class ComparingEventsComponent implements OnInit, OnDestroy {
           labels: eventLabels,
           datasets: [
             {
-              label: 'Number of Students per Events',
+              label: 'No. of registered students on each event',
               backgroundColor: '#db7c24',
               barThickness: 20,
               borderRadius: 15,
@@ -70,6 +73,7 @@ export class ComparingEventsComponent implements OnInit, OnDestroy {
           maintainAspectRatio: false,
           aspectRatio: 0.8,
           responsive: true,
+          indexAxis: 'y',
           plugins: {
             legend: {
               labels: {
@@ -79,11 +83,30 @@ export class ComparingEventsComponent implements OnInit, OnDestroy {
                 },
               },
             },
+            tooltip: {
+              callbacks: {
+                title: () => '',
+                label: (context: TooltipItem<'bar'>) => {
+                  const label = context.label || '';
+                  const value = (context.raw as number) || 0;
+                  return `No. of students registered on ${label} : ${value} `;
+                },
+              },
+            },
             title: {
               display: true,
               text: 'Overall attendees on each events Overview',
               font: {
                 size: 18,
+              },
+            },
+          },
+          scales: {
+            y: {
+              ticks: {
+                beginAtZero: true,
+                precision: 0,
+                stepSize: 1,
               },
             },
           },

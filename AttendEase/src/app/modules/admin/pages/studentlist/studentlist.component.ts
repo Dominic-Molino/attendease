@@ -82,7 +82,7 @@ export class StudentlistComponent implements OnInit, OnDestroy {
   }
 
   setupPolling(): void {
-    const pollingInterval = 60000; // 60 seconds
+    const pollingInterval = 10000; // 60 seconds
 
     this.subscription = timer(0, pollingInterval)
       .pipe(

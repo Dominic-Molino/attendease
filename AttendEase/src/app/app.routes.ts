@@ -57,6 +57,15 @@ export const routes: Routes = [
       },
 
       {
+        path: 'admin-event-list',
+        loadComponent: () =>
+          import('./modules/admin/components/approval/approval.component').then(
+            (c) => c.ApprovalComponent
+          ),
+        canActivate: [AuthenGuard],
+      },
+
+      {
         path: 'admin-attendees-list',
         loadComponent: () =>
           import(

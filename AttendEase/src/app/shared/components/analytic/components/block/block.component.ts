@@ -79,6 +79,8 @@ export class BlockComponent implements OnInit, OnDestroy {
   processChartData(payload: any[]) {
     const documentStyle = getComputedStyle(document.documentElement);
 
+    payload = payload.filter((item) => item.block !== null);
+
     const labels = payload.map((item) => item.block);
     const data = payload.map((item) => item.student_count);
 

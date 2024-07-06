@@ -14,7 +14,8 @@ import { Router } from '@angular/router';
   styleUrl: './approval.component.css',
 })
 export class ApprovalComponent implements OnInit {
-  events?: any[] = [];
+  events: any[] = [];
+  filteredEvents: any[] = [];
   loading: boolean = false;
 
   p: number = 1;
@@ -30,10 +31,29 @@ export class ApprovalComponent implements OnInit {
   loadEvents() {
     this.evService.getEvents().subscribe((res: any) => {
       this.events = res.payload;
+      console.log(this.events);
+      this.filteredEvents = [...this.events]; // Initialize filteredEvents with all events
     });
   }
 
   openPage(eventId: any) {
     this.router.navigate([`/admin/admin-approval/${eventId}`]);
+  }
+
+  searchEvents(event: Event) {
+    const searchTerm = (event.target as HTMLInputElement).value
+      .trim()
+      .toLowerCase();
+
+    if (!searchTerm) {
+      this.filteredEvents = [...this.events];
+    } else {
+      this.filteredEvents = this.events.filter(
+        (event) =>
+          event.event_name.toLowerCase().includes(searchTerm) ||
+          event.organizer_name.toLowerCase().includes(searchTerm) ||
+          event.organizer_organization.toLowerCase().includes(searchTerm)
+      );
+    }
   }
 }

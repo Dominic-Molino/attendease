@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ChartModule } from 'primeng/chart';
-import { EventService } from '../../../../core/service/event.service';
-import { ChartOptions, TooltipItem } from 'chart.js';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ChartOptions, TooltipItem } from 'chart.js';
+import { ChartModule } from 'primeng/chart';
+import { DataAnalyticsService } from '../../../../../core/service/data-analytics.service';
 
 @Component({
-  selector: 'app-ongoingreport',
+  selector: 'app-report',
   standalone: true,
   imports: [CommonModule, ChartModule, MatTooltipModule],
-  templateUrl: './ongoingreport.component.html',
-  styleUrl: './ongoingreport.component.css',
+  templateUrl: './report.component.html',
+  styleUrl: './report.component.css',
 })
-export class OngoingreportComponent implements OnInit {
+export class ReportComponent implements OnInit {
   currId: any;
   report: any[] = [];
   pastEvents: any[] = [];
@@ -25,38 +25,36 @@ export class OngoingreportComponent implements OnInit {
   activeDropdownOpen: boolean = false;
   pastDropdownOpen: boolean = false;
 
-  constructor(private service: EventService) {}
+  constructor(private service: DataAnalyticsService) {}
 
   ngOnInit(): void {
-    this.currId = this.service.getCurrentUserId();
+    this.loadDoneEvents();
+    this.loadOngoingReport();
     this.initializeChartOptions();
-    this.loadOngoingReport(this.currId);
-    this.loadDoneEvents(this.currId);
   }
 
-  loadOngoingReport(id: any) {
-    this.service.getOngoingReport(id).subscribe((res) => {
+  loadDoneEvents() {
+    this.service.getDoneEvents().subscribe((res) => {
+      this.pastEvents = res.payload;
+      console.log(`Past event variable:${this.pastEvents}`);
+      if (this.pastEvents.length > 0) {
+        this.reportDetail = this.pastEvents[0];
+      }
+    });
+  }
+
+  loadOngoingReport() {
+    this.service.getOngoingEvents().subscribe((res) => {
       this.report = res.payload;
-      console.log(this.report);
+      console.log(`Ongoing report :${this.report}`);
       if (this.report.length > 0) {
         this.selectedEvent = this.report[0];
       }
     });
   }
 
-  loadDoneEvents(id: any) {
-    this.service.getDoneEventsOfOrg(id).subscribe((res) => {
-      this.pastEvents = res.payload;
-      if (this.pastEvents.length > 0) {
-        this.reportDetail = this.pastEvents[0];
-      }
-      console.log('Past Events:', this.pastEvents);
-      console.log('Report Detail:', this.reportDetail);
-    });
-  }
-
   loadReportforDoneEvent(event_id: any) {
-    this.service.getReport(event_id).subscribe((res) => {
+    this.service.getAnalytics(event_id).subscribe((res) => {
       this.selectedPastEventReport = res.payload[0];
       console.log(`Load Report for Done Event:`, this.selectedPastEventReport);
     });
@@ -83,7 +81,6 @@ export class OngoingreportComponent implements OnInit {
     if (!this.isEventPast(event)) {
       this.selectedPastEventReport = null;
     } else {
-      // Load past event report if a past event is selected
       this.loadReportforDoneEvent(event.event_id);
     }
     this.toggleDropdown();
@@ -98,16 +95,16 @@ export class OngoingreportComponent implements OnInit {
     if (this.report.length > 0) {
       this.selectedEvent = this.report[0];
     }
-    this.toggleDropdown(); // Close dropdown after selecting event type
+    this.toggleDropdown();
   }
 
   isEventPast(event: any): boolean {
-    // Determine if the event is in the past events list
     return this.pastEvents.some(
       (pastEvent) => pastEvent.event_id === event.event_id
     );
   }
 
+  //chart
   initializeChartOptions() {
     this.chartOptions = {
       layout: {},
@@ -126,7 +123,6 @@ export class OngoingreportComponent implements OnInit {
           callbacks: {
             title: () => '',
             label: (context: TooltipItem<'bar'>) => {
-              // Specify the type for context
               const label = context.label || '';
               const value = (context.raw as number) || 0;
               return `${label} : ${value} `;
@@ -134,10 +130,9 @@ export class OngoingreportComponent implements OnInit {
           },
         },
       },
-
       elements: {
         arc: {
-          borderWidth: 0, // Remove border for a cleaner look
+          borderWidth: 0,
         },
       },
     };

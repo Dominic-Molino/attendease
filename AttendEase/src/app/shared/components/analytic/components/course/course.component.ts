@@ -25,6 +25,7 @@ export class CourseComponent implements OnInit, OnDestroy {
       .subscribe(
         (res) => {
           this.processChartData(res.payload);
+          console.log(res.payload);
         },
         (error) => {
           console.error('Error fetching block data:', error);
@@ -78,6 +79,8 @@ export class CourseComponent implements OnInit, OnDestroy {
 
   processChartData(payload: any[]) {
     const documentStyle = getComputedStyle(document.documentElement);
+
+    payload = payload.filter((item) => item.course !== null);
 
     const labels = payload.map((item) => item.course);
     const data = payload.map((item) => item.student_count);

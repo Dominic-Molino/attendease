@@ -35,7 +35,21 @@ export class DataAnalyticsService {
     return this.http.get(`${this.API_URL}totalAttendees`);
   }
 
-  getAnalytics(): Observable<any> {
-    return this.http.get(`${this.API_URL}analytics`);
+  getAnalytics(event_id = null): Observable<any> {
+    return this.http.get(`${this.API_URL}analytics/${event_id}`);
+  }
+
+  getDoneEvents(): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}getalldonevents`);
+  }
+
+  getOngoingEvents(event_id = null): Observable<any> {
+    if (event_id) {
+      return this.http.get<any>(
+        `${this.API_URL}getallongoingvents/${event_id}`
+      );
+    } else {
+      return this.http.get<any>(`${this.API_URL}getallongoingvents`);
+    }
   }
 }

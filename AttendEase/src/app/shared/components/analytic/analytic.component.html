@@ -13,51 +13,18 @@
         <app-cards></app-cards>
       </div>
 
-      @defer{
+      <app-report></app-report>
 
-      <div class="mx-auto h-full w-full self-center mb-3.5">
-        <p-carousel
-          [value]="slides2"
-          [numVisible]="1"
-          [numScroll]="1"
-          [circular]="true"
-        >
-          <ng-template pTemplate="item" let-slides2>
-            <div>
-              <ng-container [ngSwitch]="slides2">
-                <app-feedback-chart
-                  *ngSwitchCase="'feedback'"
-                ></app-feedback-chart>
-                <app-comparing-events
-                  class="mb-2"
-                  *ngSwitchCase="'attendees'"
-                ></app-comparing-events>
-              </ng-container>
-            </div>
-          </ng-template>
-        </p-carousel>
-      </div>
-      }@loading {
-      <div class="h-screen w-full flex justify-center bg-white">
-        <div class="flex flex-row gap-2">
-          <div
-            class="w-4 h-4 rounded-full bg-light-background animate-bounce"
-          ></div>
-          <div
-            class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.3s]"
-          ></div>
-          <div
-            class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.5s]"
-          ></div>
-        </div>
-      </div>
-      } @defer{
-      <div
-        class="flex flex-col md:flex-row gap-5 justify-between items-start w-full"
-      >
+      <div class="w-full grid grid-cols-2 gap-2.5">
+        <app-comparing-events class="mb-2"></app-comparing-events>
         <app-attendance
           class="h-full w-full md:w-1/2 self-center"
         ></app-attendance>
+      </div>
+
+      <div
+        class="flex flex-col md:flex-row gap-5 justify-between items-start w-full"
+      >
         <div class="mx-auto h-full w-full md:w-1/2 self-center">
           <p-carousel
             [value]="slides"
@@ -77,21 +44,21 @@
           </p-carousel>
         </div>
       </div>
-      }@loading {
-      <div class="h-screen w-full flex justify-center bg-white">
-        <div class="flex flex-row gap-2">
-          <div
-            class="w-4 h-4 rounded-full bg-light-background animate-bounce"
-          ></div>
-          <div
-            class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.3s]"
-          ></div>
-          <div
-            class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.5s]"
-          ></div>
-        </div>
-      </div>
-      }
     </div>
   </div>
 </main>
+
+<!-- 
+<div class="h-screen w-full flex justify-center bg-white">
+  <div class="flex flex-row gap-2">
+    <div
+      class="w-4 h-4 rounded-full bg-light-background animate-bounce"
+    ></div>
+    <div
+      class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.3s]"
+    ></div>
+    <div
+      class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.5s]"
+    ></div>
+  </div>
+</div> -->

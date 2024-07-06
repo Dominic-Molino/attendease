@@ -1,8 +1,60 @@
 <main class="!scroll-smooth w-full h-screen dark:bg-black">
   <div class="p-4 mt-16 sm:ml-64">
+    <div>
+      <p class="mt-5 mb-2 text-text text-2xl tracking-wide font-semibold">
+        Event List
+      </p>
+      <hr class="h-px mb-5 bg-dark-border border-0" />
+    </div>
+
+    <div class="flex w-full justify-end mb-3">
+      <div class="max-w-md flex-1">
+        <label
+          for="default-search"
+          class="mb-2 text-sm font-medium text-gray-900 sr-only"
+          >Search</label
+        >
+        <div class="relative">
+          <div
+            class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
+          >
+            <svg
+              class="w-4 h-4 text-gray-500"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+              />
+            </svg>
+          </div>
+          <input
+            type="search"
+            id="default-search"
+            class="block w-full p-4 ps-10 text-sm text-gray-900 border border-dark-border rounded-md bg-white focus:border-light-border focus:ring-0"
+            placeholder="Search..."
+            (input)="searchEvents($event)"
+            required
+          />
+          <button
+            type="submit"
+            class="text-white absolute end-2.5 bottom-2.5 bg-light-background hover:bg-light-foregroud focus:ring-0 font-medium rounded-md text-sm px-4 py-2"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div
-      *ngIf="events && events.length > 0"
-      class="relative overflow-x-auto shadow-md sm:rounded-lg"
+      *ngIf="filteredEvents && filteredEvents.length > 0; else placeholder"
+      class="relative overflow-x-auto shadow-md sm:rounded-lg border border-dark-border"
     >
       <table
         class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
@@ -21,6 +73,9 @@
               Organized By
             </th>
             <th scope="col" class="px-6 py-3 tracking-widest font-medium">
+              Organization
+            </th>
+            <th scope="col" class="px-6 py-3 tracking-widest font-medium">
               Status
             </th>
             <th scope="col" class="px-6 py-3 tracking-widest font-medium">
@@ -31,7 +86,7 @@
         <tbody>
           <tr
             *ngFor="
-              let event of events
+              let event of filteredEvents
                 | paginate : { currentPage: p, itemsPerPage: itemsPerPage }
             "
             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -43,11 +98,12 @@
               {{ event.event_name }}
             </th>
             <td class="px-6 py-4">{{ event.organizer_name }}</td>
+            <td class="px-6 py-4">{{ event.organizer_organization }}</td>
             <td class="px-6 py-4">{{ event.approval_status }}</td>
             <td class="px-6 py-4 text-center">
               <button
                 (click)="openPage(event.event_id)"
-                class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                class="font-medium text-light-background dark:text-light-foregroud hover:underline"
               >
                 View Event
               </button>
@@ -56,8 +112,16 @@
         </tbody>
       </table>
     </div>
+
+    <ng-template #placeholder>
+      <div class="tracking-widest mt-4 text-center">
+        <p class="text-center text-xl">(￣ ￣|||)</p>
+        <span class="text-gray-500 text-xl">no search results found...</span>
+      </div>
+    </ng-template>
+
     <div
-      *ngIf="events && events.length > 0"
+      *ngIf="events && filteredEvents.length > 0"
       class="flex justify-center items-center mt-auto p-5"
     >
       <pagination-controls

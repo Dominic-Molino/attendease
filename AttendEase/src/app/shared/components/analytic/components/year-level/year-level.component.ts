@@ -78,6 +78,8 @@ export class YearLevelComponent implements OnInit, OnDestroy {
   processChartData(payload: any[]) {
     const documentStyle = getComputedStyle(document.documentElement);
 
+    payload = payload.filter((item) => item.year_level !== null);
+
     const labels = payload.map((item) => item.year_level);
     const data = payload.map((item) => item.student_count);
 
