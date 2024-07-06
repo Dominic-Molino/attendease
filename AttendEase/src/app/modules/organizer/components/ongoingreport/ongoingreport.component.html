@@ -27,7 +27,7 @@
 
     <!-- Dropdown menu -->
     <div
-      class="hidden bg-white divide-y divide-gray-100 border border-dark-border rounded-lg shadow dark:bg-gray-700 absolute z-40 mt-10 right-3"
+      class="hidden bg-white divide-y divide-gray-100 border border-dark-border rounded-lg shadow dark:bg-gray-700 absolute z-40 mt-5 right-3"
       [class.hidden]="!dropdownOpen"
     >
       <!-- Active events submenu -->
@@ -61,11 +61,10 @@
         >
           <li
             *ngFor="let event of report"
-            class="block px-4 py-2 hover:bg-gray-300 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+            (click)="selectEvent(event)"
+            class="block px-4 py-2 text-sm font-medium rounded-md capitalize hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
           >
-            <a class="text-sm font-medium" (click)="selectEvent(event)">{{
-              event.event_name
-            }}</a>
+            {{ event.event_name }}
           </li>
         </ul>
       </div>
@@ -100,11 +99,10 @@
         >
           <li
             *ngFor="let event of pastEvents"
-            class="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
+            (click)="selectEvent(event)"
+            class="block px-4 py-2 text-sm font-medium rounded-md capitalize hover:bg-gray-100 cursor-pointer"
           >
-            <a class="text-sm font-medium" (click)="selectEvent(event)">{{
-              event.event_name
-            }}</a>
+            {{ event.event_name }}
           </li>
         </ul>
       </div>
@@ -116,7 +114,7 @@
     class="w-full flex items-center justify-between gap-2.5 border border-dark-border rounded-md p-3"
   >
     <div
-      *ngIf="!isEventPast(selectedEvent)"
+      *ngIf="selectedEvent && !isEventPast(selectedEvent)"
       class="w-full flex items-center justify-between gap-2.5"
     >
       <!-- 1st chart -->
@@ -507,58 +505,3 @@
     </ng-container>
   </div>
 </div>
-
-<!-- Event Details and Charts -->
-<!-- <div *ngIf="selectedEvent">
-  <div class="w-full flex flex-wrap">
-    <div class="w-full flex items-center gap-1.5 p-2 max-h-[500px] h-full">
-      <div class="w-full flex flex-col items-center gap-1.5">
-        <div class="w-full">
-          <div *ngIf="!isDataAvailable(selectedEvent)" class="text-center">
-            <p>(￣ ￣|||)</p>
-            <span class="text-gray-500">No data available...</span>
-          </div>
-
-          <div style="display: block; width: 50%; margin: auto">
-            <h4>Registration to Max Attendees</h4>
-            <p>
-              {{
-                getChartData(selectedEvent, "registrationToMaxAttendees")
-                  .message
-              }}
-            </p>
-            <p-chart
-              type="doughnut"
-              [data]="getChartData(selectedEvent, 'registrationToMaxAttendees')"
-              [options]="chartOptions"
-            ></p-chart>
-          </div>
-
-          <div style="display: block; width: 50%; margin: auto">
-            <h4>Course Registration</h4>
-            <p>
-              {{ getChartData(selectedEvent, "courseRegistration").message }}
-            </p>
-            <p-chart
-              type="doughnut"
-              [data]="getChartData(selectedEvent, 'courseRegistration')"
-              [options]="chartOptions"
-            ></p-chart>
-          </div>
-
-          <div style="display: block; width: 50%; margin: auto">
-            <h4>Year Level Registration</h4>
-            <p>
-              {{ getChartData(selectedEvent, "yearLevelRegistration").message }}
-            </p>
-            <p-chart
-              type="doughnut"
-              [data]="getChartData(selectedEvent, 'yearLevelRegistration')"
-              [options]="chartOptions"
-            ></p-chart>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->

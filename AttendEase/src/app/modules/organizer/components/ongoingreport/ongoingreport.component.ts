@@ -80,7 +80,10 @@ export class OngoingreportComponent implements OnInit {
 
   selectEvent(event: any) {
     this.selectedEvent = event;
-    if (this.isEventPast(event)) {
+    if (!this.isEventPast(event)) {
+      this.selectedPastEventReport = null;
+    } else {
+      // Load past event report if a past event is selected
       this.loadReportforDoneEvent(event.event_id);
     }
     this.toggleDropdown();
