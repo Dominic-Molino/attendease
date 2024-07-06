@@ -182,8 +182,29 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 break;
 
             case 'analytics':
-                echo json_encode($analytics->getApprovedDoneEventsWithStatus());
+                if (isset($request[1])) {
+                    echo json_encode($analytics->getApprovedDoneEventsWithStatus($request[1]));
+                } else {
+                    echo json_encode($analytics->getApprovedDoneEventsWithStatus());
+                }
                 break;
+
+            case 'getalldonevents':
+                if (isset($request[1])) {
+                    echo json_encode($analytics->getDoneEvents($request[1]));
+                } else {
+                    echo json_encode($analytics->getDoneEvents());
+                }
+                break;
+
+            case 'getallongoingvents':
+                if (isset($request[1])) {
+                    echo json_encode($analytics->getApprovedOngoingEventsWithStatus($request[1]));
+                } else {
+                    echo json_encode($analytics->getApprovedOngoingEventsWithStatus());
+                }
+                break;
+
 
                 #end of analytics
 

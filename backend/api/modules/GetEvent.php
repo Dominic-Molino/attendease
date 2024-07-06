@@ -62,7 +62,7 @@ class GetEvent extends GlobalMethods
         $columns = "e.event_id, e.event_name, e.event_description, e.event_location, 
                     e.event_start_date, e.event_end_date, e.event_registration_start, 
                     e.event_registration_end, e.event_type, e.max_attendees, e.categories, 
-                    e.organizer_name, e.created_at, e.target_participants, 
+                    e.organizer_name,e.organizer_organization, e.created_at, e.target_participants, 
                     e.participation_type, COALESCE(a.status, 'Pending') AS approval_status, 
                     a.notified_at, a.approved_by, a.approved_at";
 
@@ -267,6 +267,7 @@ class GetEvent extends GlobalMethods
         }
     }
 
+
     //all event of orgnizer
     public function getAllEventsByOrganizerId($organizer_user_id)
     {
@@ -292,7 +293,6 @@ class GetEvent extends GlobalMethods
             return $this->sendPayload(null, 'failed', 'Failed to fetch events.', 500);
         }
     }
-
 
     // for dashboard of the organizer
     public function get_total_registered_users_by_organizer($organizer_user_id)
@@ -507,6 +507,40 @@ class GetEvent extends GlobalMethods
         }
     }
 
+    public function getDoneEventsByOrganizer($organizer_user_id)
+    {
+        try {
+            // Define the columns you need
+            $columns = "e.event_id, e.event_name";
+
+            // Write the SQL query to get done events organized by organizer
+            $sql = "SELECT $columns 
+                FROM events e 
+                JOIN event_approval ea ON e.event_id = ea.event_id 
+                JOIN user u ON e.organizer_user_id = u.user_id
+                WHERE ea.status = 'Approved' 
+                AND e.event_end_date < NOW() 
+                AND u.user_id = :organizer_user_id"; // Filter for 'done' events and specific organizer
+
+            // Prepare the statement
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':organizer_user_id', $organizer_user_id, PDO::PARAM_INT);
+
+            // Execute the query
+            $stmt->execute();
+            $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Return the payload with the events data
+            return $this->sendPayload($events, 'success', "Successfully retrieved data.", 200);
+        } catch (PDOException $e) {
+            // Handle database error gracefully
+            return $this->sendPayload(null, 'error', $e->getMessage(), 500);
+        }
+    }
+
+
+
+    #admin
 
 
     // Function to get all approved and done events with status and student information
@@ -617,7 +651,6 @@ class GetEvent extends GlobalMethods
         }
     }
 
-
     // // Function to get attendance count for an event
     private function getAttendanceCount($event_id)
     {
@@ -692,37 +725,6 @@ class GetEvent extends GlobalMethods
             return [
                 'avg_overall_satisfaction' => null
             ];
-        }
-    }
-
-    public function getDoneEventsByOrganizer($organizer_user_id)
-    {
-        try {
-            // Define the columns you need
-            $columns = "e.event_id, e.event_name";
-
-            // Write the SQL query to get done events organized by organizer
-            $sql = "SELECT $columns 
-                FROM events e 
-                JOIN event_approval ea ON e.event_id = ea.event_id 
-                JOIN user u ON e.organizer_user_id = u.user_id
-                WHERE ea.status = 'Approved' 
-                AND e.event_end_date < NOW() 
-                AND u.user_id = :organizer_user_id"; // Filter for 'done' events and specific organizer
-
-            // Prepare the statement
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':organizer_user_id', $organizer_user_id, PDO::PARAM_INT);
-
-            // Execute the query
-            $stmt->execute();
-            $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            // Return the payload with the events data
-            return $this->sendPayload($events, 'success', "Successfully retrieved data.", 200);
-        } catch (PDOException $e) {
-            // Handle database error gracefully
-            return $this->sendPayload(null, 'error', $e->getMessage(), 500);
         }
     }
 }
