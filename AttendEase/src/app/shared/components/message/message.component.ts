@@ -5,6 +5,8 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { Message } from 'primeng/api';
 import { AuthserviceService } from '../../../core/service/authservice.service';
+import { RefreshsubService } from '../../../core/service/shared/refreshsub.service';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-message',
@@ -22,11 +24,15 @@ export class MessageComponent implements OnInit {
     sender_id: this.builder.control('', Validators.required),
     message: this.builder.control('', Validators.required),
   });
+
+  private pollingSubscription?: Subscription;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private builder: FormBuilder,
     private dialog: MatDialogRef<Message>,
-    private service: AuthserviceService
+    private service: AuthserviceService,
+    private refreshService: RefreshsubService
   ) {}
 
   ngOnInit(): void {
@@ -34,8 +40,27 @@ export class MessageComponent implements OnInit {
       .getMessageRequests(this.data.currentUser)
       .subscribe((res: any) => {
         this.messageRequests = res.payload;
+        this.loadConversation(this.data.currentUser, this.data.otherUser);
+        this.startPolling(); // Start polling messages after initial load
       });
-    this.loadConversation(this.data.currentUser, this.data.otherUser);
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
+  }
+
+  startPolling(): void {
+    // Polling interval, adjust as needed
+    const pollInterval = 5000; // 5 seconds
+
+    // Polling mechanism
+    this.pollingSubscription = interval(pollInterval).subscribe(() => {
+      if (this.conversation) {
+        this.loadMessages();
+      }
+    });
   }
 
   loadConversation(currentUser: number, otherUser: number) {
@@ -43,16 +68,18 @@ export class MessageComponent implements OnInit {
       .getConversation(currentUser, otherUser)
       .subscribe((res: any) => {
         this.conversation = res.payload[0];
-        this.loadMessages();
+        this.loadMessages(); // Load messages initially
       });
   }
 
   loadMessages() {
-    this.service
-      .getConversationMessages(this.conversation.id)
-      .subscribe((res: any) => {
-        this.messages = res.payload;
-      });
+    if (this.conversation) {
+      this.service
+        .getConversationMessages(this.conversation.id)
+        .subscribe((res: any) => {
+          this.messages = res.payload;
+        });
+    }
   }
 
   goToOtherConvo(otherUser: number) {
@@ -64,20 +91,23 @@ export class MessageComponent implements OnInit {
       conversation_id: this.conversation.id,
       sender_id: this.data.currentUser,
     });
+
     if (this.messageForm.valid) {
       this.service.sendMessage(this.messageForm.value).subscribe((res: any) => {
         Swal.fire({
           title: 'Message Sent!',
           icon: 'success',
         });
-        this.loadMessages();
+
+        // Clear message form and trigger immediate message load
         this.messageForm.patchValue({
           message: '',
         });
+        this.loadMessages();
       });
     } else {
       Swal.fire({
-        title: 'Atleast write something first!',
+        title: 'At least write something first!',
         icon: 'error',
       });
     }

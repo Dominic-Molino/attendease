@@ -3,7 +3,6 @@ import { CardsComponent } from './components/cards/cards.component';
 import { CourseComponent } from './components/course/course.component';
 import { YearLevelComponent } from './components/year-level/year-level.component';
 import { BlockComponent } from './components/block/block.component';
-import { AttendanceComponent } from './components/attendance/attendance.component';
 import { CarouselModule } from 'primeng/carousel';
 import { ComparingEventsComponent } from './components/comparing-events/comparing-events.component';
 import { FeedbackChartComponent } from './components/feedback-chart/feedback-chart.component';
@@ -20,7 +19,6 @@ import { ReportComponent } from './components/report/report.component';
     CardsComponent,
     YearLevelComponent,
     BlockComponent,
-    AttendanceComponent,
     CarouselModule,
     ComparingEventsComponent,
     FeedbackChartComponent,

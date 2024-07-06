@@ -26,6 +26,9 @@
   </div>
 
   <div
+    matTooltip="Click to see more details about events"
+    matTooltipClass="event-tooltip"
+    #tooltip="matTooltip"
     class="shadow-md border border-dark-border rounded-md w-full h-28 bg-white flex justify-center items-center p-4"
   >
     <div
@@ -81,3 +84,19 @@
     </div>
   </div>
 </div>
+<!-- <div class="relative">
+  <div
+    class="p-10 bg-white rounded-md shadow-md border border-dark-border"
+    *ngIf="tooltip.show"
+  >
+    <div class="flex flex-auto justify-center">
+      <p-chart
+        type="pie"
+        [data]="datas"
+        [options]="options"
+        width="250px"
+        [responsive]="false"
+      ></p-chart>
+    </div>
+  </div>
+</div> -->
