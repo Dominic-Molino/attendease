@@ -1,31 +1,499 @@
-<div
-  class="border border-dark-border rounded-md p-1.5.5"
-  *ngFor="let event of report"
->
-  <div class="">
-    <h3 class="text-center capitalize text-lg">
-      {{ event.event_name }}
-    </h3>
-    <div class="w-full flex flex-wrap">
-      <div class="w-full flex items-center gap-1.5 p-2">
+<div class="mt-7">
+  <div class="relative">
+    <button
+      id="dropdownActionButton"
+      (click)="toggleDropdown()"
+      class="inline-flex z-30 absolute right-4 -top-4 items-center text-white bg-light-background border focus:outline-none hover:bg-light-foregroud focus:ring-0 font-medium rounded-lg text-sm px-3 py-1.5"
+      type="button"
+    >
+      <span class="sr-only">Select Event</span>
+      Select Event
+      <svg
+        class="w-2.5 h-2.5 ms-2.5"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 10 6"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="m1 1 4 4 4-4"
+        />
+      </svg>
+    </button>
+
+    <!-- Dropdown menu -->
+    <div
+      class="hidden bg-white divide-y divide-gray-100 border border-dark-border rounded-lg shadow dark:bg-gray-700 absolute z-40 mt-10 right-3"
+      [class.hidden]="!dropdownOpen"
+    >
+      <!-- Active events submenu -->
+      <div>
+        <button
+          [class.active]="activeDropdownOpen"
+          class="inline-flex w-full z-30 relative right-0 items-center text-text font-medium text-sm px-3 py-1.5"
+          (click)="toggleActiveDropdown()"
+        >
+          Active Events
+          <svg
+            class="w-2.5 h-2.5 ms-2.5"
+            aria-hidden="true"
+            [class.animate]="activeDropdownOpen"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 4 4 4-4"
+            />
+          </svg>
+        </button>
+        <ul
+          class="absolute right-36 -top-0.5 bg-white border border-dark-border rounded-md divide-y divide-gray-300"
+          [class.hidden]="!activeDropdownOpen"
+        >
+          <li
+            *ngFor="let event of report"
+            class="block px-4 py-2 hover:bg-gray-300 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+          >
+            <a class="text-sm font-medium" (click)="selectEvent(event)">{{
+              event.event_name
+            }}</a>
+          </li>
+        </ul>
+      </div>
+      <!-- Past events submenu -->
+      <div class="relative">
+        <button
+          [class.active]="pastDropdownOpen"
+          class="inline-flex w-full z-30 relative right-0 items-center text-text font-medium text-sm px-3 py-1.5"
+          (click)="togglePastDropdown()"
+        >
+          Past Events
+          <svg
+            class="w-2.5 h-2.5 ms-6"
+            aria-hidden="true"
+            [class.animate]="pastDropdownOpen"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 4 4 4-4"
+            />
+          </svg>
+        </button>
+        <ul
+          class="absolute right-36 -top-0.5 bg-white border border-dark-border rounded-md divide-y divide-gray-300"
+          [class.hidden]="!pastDropdownOpen"
+        >
+          <li
+            *ngFor="let event of pastEvents"
+            class="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
+          >
+            <a class="text-sm font-medium" (click)="selectEvent(event)">{{
+              event.event_name
+            }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div
+    *ngIf="selectedEvent"
+    class="w-full flex items-center justify-between gap-2.5 border border-dark-border rounded-md p-3"
+  >
+    <div
+      *ngIf="!isEventPast(selectedEvent)"
+      class="w-full flex items-center justify-between gap-2.5"
+    >
+      <!-- 1st chart -->
+      <div class="w-1/3">
+        <div
+          class="max-w-sm w-full bg-white rounded-md shadow border border-dark-border p-4"
+        >
+          <div class="flex justify-between items-start w-full">
+            <div class="flex-col justify-center w-full items-center">
+              <div class="flex items-center mb-1">
+                <h5
+                  class="text-xl font-bold leading-none text-gray-900 dark:text-white me-1"
+                >
+                  Registered Students
+                </h5>
+                <svg
+                  data-popover-target="chart-info"
+                  data-popover-placement="bottom"
+                  class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer ms-1"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm0 16a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm1-5.034V12a1 1 0 0 1-2 0v-1.418a1 1 0 0 1 1.038-.999 1.436 1.436 0 0 0 1.488-1.441 1.501 1.501 0 1 0-3-.116.986.986 0 0 1-1.037.961 1 1 0 0 1-.96-1.037A3.5 3.5 0 1 1 11 11.466Z"
+                  />
+                </svg>
+                <div
+                  data-popover
+                  id="chart-info"
+                  role="tooltip"
+                  class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400"
+                >
+                  <div class="p-3 space-y-2">
+                    <p>
+                      {{
+                        getChartData(
+                          selectedEvent,
+                          "registrationToMaxAttendees"
+                        ).message
+                      }}
+                    </p>
+                  </div>
+                  <div data-popper-arrow></div>
+                </div>
+              </div>
+              <div class="w-full h-full">
+                <p-chart
+                  style="width: 175px; height: 175px"
+                  type="doughnut"
+                  [options]="chartOptions"
+                  [data]="
+                    getChartData(selectedEvent, 'registrationToMaxAttendees')
+                  "
+                ></p-chart>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 2nd 3rd -->
+      <div class="w-1/3">
+        <div
+          class="w-full bg-white rounded-md shadow border border-dark-border mb-2"
+        >
+          <div class="flex justify-between items-start w-full">
+            <div
+              class="relative left-7 -top-5"
+              style="width: 225px; height: 175px"
+            >
+              <p-chart
+                type="doughnut"
+                [data]="getChartData(selectedEvent, 'courseRegistration')"
+                [options]="chartOptions"
+              ></p-chart>
+            </div>
+          </div>
+        </div>
+        <div
+          class="w-full bg-white rounded-md shadow border border-dark-border"
+        >
+          <div class="flex-col justify-center w-full items-center">
+            <div
+              class="relative left-7 -top-5"
+              style="width: 225px; height: 175px"
+            >
+              <p-chart
+                type="doughnut"
+                [data]="getChartData(selectedEvent, 'yearLevelRegistration')"
+                [options]="chartOptions"
+              ></p-chart>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-2/3 flex-grow">
+        <div
+          class="w-full p-4 bg-white border border-dark-border rounded-md shadow sm:p-6 dark:bg-gray-800 dark:border-gray-700"
+        >
+          <h5
+            class="mb-3 text-sm font-semibold text-gray-900 md:text-xl dark:text-white"
+          >
+            Details
+          </h5>
+          <ul class="my-2">
+            <li>
+              <div
+                class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+              >
+                <span class="flex-1 ms-3 whitespace-nowrap"> Name</span>
+                <span
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded capitalize"
+                  >{{ selectedEvent.event_name }}</span
+                >
+              </div>
+            </li>
+
+            <li>
+              <div
+                class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+              >
+                <span class="flex-1 ms-3 whitespace-nowrap"> Status</span>
+                <span
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded capitalize"
+                  >{{ selectedEvent.event_status }}</span
+                >
+              </div>
+            </li>
+            <li>
+              <div
+                class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+              >
+                <span class="flex-1 ms-3 whitespace-nowrap"> Date</span>
+                <span
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                  >{{ selectedEvent.event_start_date | date : "longDate" }}
+                  -
+                  {{ selectedEvent.event_end_date | date : "longDate" }}</span
+                >
+              </div>
+            </li>
+            <li>
+              <div
+                class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+              >
+                <span class="flex-1 ms-3 whitespace-nowrap">Time</span>
+                <span
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                  >{{ selectedEvent.event_start_date | date : "shortTime" }}
+                  -
+                  {{ selectedEvent.event_end_date | date : "shortTime" }}</span
+                >
+              </div>
+            </li>
+            <li>
+              <div
+                class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+              >
+                <span class="flex-1 ms-3 whitespace-nowrap"
+                  >Max Participants</span
+                >
+                <span
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                  >{{ selectedEvent.max_attendees }}</span
+                >
+              </div>
+            </li>
+            <li>
+              <div
+                class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+              >
+                <span class="flex-1 ms-3 whitespace-nowrap"
+                  >Registered Participants</span
+                >
+                <span
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                  >{{ selectedEvent.registered_users }}</span
+                >
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="selectedPastEventReport">
+      <div class="w-full flex items-center gap-1.5">
         <div class="w-1/2">
-          <div class="w-full flex flex-col items-center gap-1.5">
-            <div class="w-full">
+          <div
+            class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 dark:bg-gray-800 dark:border-gray-700"
+          >
+            <h5
+              class="mb-3 text-sm font-semibold text-gray-900 md:text-xl dark:text-white"
+            >
+              Details
+            </h5>
+            <ul class="my-2">
+              <li>
+                <div
+                  class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                >
+                  <span class="flex-1 ms-3 whitespace-nowrap">Name</span>
+                  <span
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded capitalize"
+                  >
+                    {{ selectedPastEventReport.event_name }}
+                  </span>
+                </div>
+              </li>
+              <li>
+                <div
+                  class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                >
+                  <span class="flex-1 ms-3 whitespace-nowrap">Status</span>
+                  <span
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded capitalize"
+                  >
+                    {{ selectedPastEventReport.event_status }}
+                  </span>
+                </div>
+              </li>
+              <li>
+                <div
+                  class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                >
+                  <span class="flex-1 ms-3 whitespace-nowrap">Date</span>
+                  <span
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                  >
+                    {{
+                      selectedPastEventReport.event_start_date
+                        | date : "longDate"
+                    }}
+                    -
+                    {{
+                      selectedPastEventReport.event_end_date | date : "longDate"
+                    }}
+                  </span>
+                </div>
+              </li>
+              <li>
+                <div
+                  class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                >
+                  <span class="flex-1 ms-3 whitespace-nowrap">Time</span>
+                  <span
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                  >
+                    {{
+                      selectedPastEventReport.event_start_date
+                        | date : "shortTime"
+                    }}
+                    -
+                    {{
+                      selectedPastEventReport.event_end_date
+                        | date : "shortTime"
+                    }}
+                  </span>
+                </div>
+              </li>
+              <li>
+                <div
+                  class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                >
+                  <span class="flex-1 ms-3 whitespace-nowrap"
+                    >Max Participants</span
+                  >
+                  <span
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                  >
+                    {{ selectedPastEventReport.max_attendees }}
+                  </span>
+                </div>
+              </li>
+              <li>
+                <div
+                  class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                >
+                  <span class="flex-1 ms-3 whitespace-nowrap"
+                    >Registered Participants</span
+                  >
+                  <span
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                  >
+                    {{ selectedPastEventReport.registered_users }}
+                  </span>
+                </div>
+              </li>
+              <li>
+                <div
+                  class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                >
+                  <span class="flex-1 ms-3 whitespace-nowrap"
+                    >Present Participants</span
+                  >
+                  <span
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                  >
+                    {{ selectedPastEventReport.present_count }}
+                  </span>
+                </div>
+              </li>
+              <li>
+                <div
+                  class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                >
+                  <span class="flex-1 ms-3 whitespace-nowrap"
+                    >Attendance Submitted</span
+                  >
+                  <span
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                  >
+                    {{ selectedPastEventReport.attendance_count }}
+                  </span>
+                </div>
+              </li>
+              <li>
+                <div
+                  class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                >
+                  <span class="flex-1 ms-3 whitespace-nowrap"
+                    >Feedback Submitted</span
+                  >
+                  <span
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                  >
+                    {{ selectedPastEventReport.feedback_count }}
+                  </span>
+                </div>
+              </li>
+              <li>
+                <div
+                  class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+                >
+                  <span class="flex-1 ms-3 whitespace-nowrap"
+                    >Satisfaction Rating</span
+                  >
+                  <span
+                    *ngIf="selectedPastEventReport.average_feedback !== 0"
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                  >
+                    {{
+                      selectedPastEventReport.average_feedback | number : "1.1"
+                    }}
+                  </span>
+                  <span
+                    *ngIf="selectedPastEventReport.average_feedback === null"
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                  >
+                    0
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="w-1/2">
+          <div class="flex flex-col items-center gap-1.5">
+            <div>
               <p-chart
                 *ngIf="
-                  event.registered_users > 0 ||
-                  event.present_count > 0 ||
-                  event.feedback_count > 0
+                  selectedPastEventReport.registered_users > 0 ||
+                  selectedPastEventReport.present_count > 0 ||
+                  selectedPastEventReport.feedback_count > 0
                 "
                 type="doughnut"
-                [data]="getCombinedChartData(event)"
+                style="width: 500px; height: 500px"
+                [data]="getReportChart(selectedPastEventReport)"
                 [options]="chartOptions"
               ></p-chart>
               <div
                 *ngIf="
-                  event.registered_users === 0 &&
-                  event.present_count === 0 &&
-                  event.feedback_count === 0
+                  selectedPastEventReport.registered_users === 0 &&
+                  selectedPastEventReport.present_count === 0 &&
+                  selectedPastEventReport.feedback_count === 0
                 "
                 class="text-center"
               >
@@ -35,112 +503,62 @@
             </div>
           </div>
         </div>
-        <div class="w-1/2">
-          <div
-            class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 dark:bg-gray-800 dark:border-gray-700"
-          >
-            <h5
-              class="mb-3 text-smfont-semibold text-gray-900 md:text-xl dark:text-white"
-            >
-              Details
-            </h5>
+      </div>
+    </ng-container>
+  </div>
+</div>
 
-            <ul class="my-4">
-              <li>
-                <div
-                  class="flex items-center p-1.5 text-smfont-bold text-gray-900"
-                >
-                  <span class="flex-1 ms-3 whitespace-nowrap"
-                    >Event Status</span
-                  >
-                  <span
-                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded capitalize"
-                    >{{ event.event_status }}</span
-                  >
-                </div>
-              </li>
-              <li>
-                <div
-                  class="flex items-center p-1.5 text-smfont-bold text-gray-900"
-                >
-                  <span class="flex-1 ms-3 whitespace-nowrap">Event Date</span>
-                  <span
-                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
-                  >
-                    {{ event.event_start_date | date : "longDate" }}-
-                    {{ event.event_end_date | date : "longDate" }}</span
-                  >
-                </div>
-              </li>
+<!-- Event Details and Charts -->
+<!-- <div *ngIf="selectedEvent">
+  <div class="w-full flex flex-wrap">
+    <div class="w-full flex items-center gap-1.5 p-2 max-h-[500px] h-full">
+      <div class="w-full flex flex-col items-center gap-1.5">
+        <div class="w-full">
+          <div *ngIf="!isDataAvailable(selectedEvent)" class="text-center">
+            <p>(￣ ￣|||)</p>
+            <span class="text-gray-500">No data available...</span>
+          </div>
 
-              <li>
-                <div
-                  class="flex items-center p-1.5 text-smfont-bold text-gray-900"
-                >
-                  <span class="flex-1 ms-3 whitespace-nowrap"
-                    >Max Participants</span
-                  >
-                  <span
-                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
-                  >
-                    {{ event.max_attendees }}</span
-                  >
-                </div>
-              </li>
-              <li>
-                <div
-                  class="flex items-center p-1.5 text-smfont-bold text-gray-900"
-                >
-                  <span class="flex-1 ms-3 whitespace-nowrap"
-                    >Total Participants</span
-                  >
-                  <span
-                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
-                  >
-                    {{ event.registered_users }}</span
-                  >
-                </div>
-              </li>
-              <li>
-                <div
-                  class="flex items-center p-1.5 text-smfont-bold text-gray-900"
-                >
-                  <span class="flex-1 ms-3 whitespace-nowrap"
-                    >Student Course</span
-                  >
-                  <span
-                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
-                  >
-                    <ng-container
-                      *ngFor="let course of event.registered_by_course"
-                    >
-                      {{ course.course }}: {{ course.count }}<br />
-                    </ng-container>
-                  </span>
-                </div>
-              </li>
-              <li>
-                <div
-                  class="flex items-center p-1.5 text-smfont-bold text-gray-900"
-                >
-                  <span class="flex-1 ms-3 whitespace-nowrap">
-                    Student Year Level</span
-                  >
-                  <span
-                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
-                  >
-                    <ng-container
-                      *ngFor="let year_level of event.registered_by_year_level"
-                    >
-                      {{ year_level.year_level }}: {{ year_level.count }}<br />
-                    </ng-container>
-                  </span>
-                </div>
-              </li>
-            </ul>
+          <div style="display: block; width: 50%; margin: auto">
+            <h4>Registration to Max Attendees</h4>
+            <p>
+              {{
+                getChartData(selectedEvent, "registrationToMaxAttendees")
+                  .message
+              }}
+            </p>
+            <p-chart
+              type="doughnut"
+              [data]="getChartData(selectedEvent, 'registrationToMaxAttendees')"
+              [options]="chartOptions"
+            ></p-chart>
+          </div>
+
+          <div style="display: block; width: 50%; margin: auto">
+            <h4>Course Registration</h4>
+            <p>
+              {{ getChartData(selectedEvent, "courseRegistration").message }}
+            </p>
+            <p-chart
+              type="doughnut"
+              [data]="getChartData(selectedEvent, 'courseRegistration')"
+              [options]="chartOptions"
+            ></p-chart>
+          </div>
+
+          <div style="display: block; width: 50%; margin: auto">
+            <h4>Year Level Registration</h4>
+            <p>
+              {{ getChartData(selectedEvent, "yearLevelRegistration").message }}
+            </p>
+            <p-chart
+              type="doughnut"
+              [data]="getChartData(selectedEvent, 'yearLevelRegistration')"
+              [options]="chartOptions"
+            ></p-chart>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</div> -->

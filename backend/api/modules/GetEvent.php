@@ -431,53 +431,9 @@ class GetEvent extends GlobalMethods
                 $event['registered_by_year_level'] = $registeredByYearLevel;
             }
 
-            // Get total registered users by course and year level
-            $totalRegisteredByCourse = $this->getTotalRegisteredByCourse();
-            $totalRegisteredByYearLevel = $this->getTotalRegisteredByYearLevel();
-
-            // Add total counts to each event
-            foreach ($events as &$event) {
-                $event['total_registered_by_course'] = $totalRegisteredByCourse;
-                $event['total_registered_by_year_level'] = $totalRegisteredByYearLevel;
-            }
-
             return $this->sendPayload($events, 'success', "Successfully retrieved data.", 200);
         } catch (PDOException $e) {
             return $this->sendPayload(null, 'error', $e->getMessage(), 500);
-        }
-    }
-
-    // Function to get total registered users by course
-    private function getTotalRegisteredByCourse()
-    {
-        try {
-            $stmt = $this->pdo->prepare("
-        SELECT u.course, COUNT(*) as count
-        FROM user u
-        JOIN event_registration er ON u.user_id = er.user_id
-        GROUP BY u.course
-    ");
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            return [];
-        }
-    }
-
-    // Function to get total registered users by year level
-    private function getTotalRegisteredByYearLevel()
-    {
-        try {
-            $stmt = $this->pdo->prepare("
-        SELECT u.year_level, COUNT(*) as count
-        FROM user u
-        JOIN event_registration er ON u.user_id = er.user_id
-        GROUP BY u.year_level
-    ");
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            return [];
         }
     }
 
@@ -603,22 +559,37 @@ class GetEvent extends GlobalMethods
         }
     }
 
-    // Function to get student details for an event including course and year level
+    // Function to get student details for an event including course, year level, and attendance remarks
     private function getStudentDetails($event_id)
     {
         try {
             $stmt = $this->pdo->prepare("
                 SELECT 
-                    u.user_id, u.first_name, u.last_name, u.email, u.year_level, u.course, u.block
+                    u.user_id, u.first_name, u.last_name, u.email, u.year_level, u.course, u.block,
+                    COALESCE(a.remarks, 0) as attendance_remarks
                 FROM user u
                 JOIN event_registration er ON u.user_id = er.user_id
+                LEFT JOIN attendance a ON u.user_id = a.user_id AND a.event_id = er.event_id
                 WHERE er.event_id = :event_id
             ");
             $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Map remarks to attendance status
+            foreach ($result as &$student) {
+                if ($student['attendance_remarks'] == 1) {
+                    $student['attendance_status'] = 'present';
+                } else {
+                    $student['attendance_status'] = 'absent';
+                }
+                // Remove the raw remarks from the output if not needed separately
+                unset($student['attendance_remarks']);
+            }
+
             return $result;
         } catch (PDOException $e) {
+            // Handle database error gracefully
             return [];
         }
     }
@@ -721,6 +692,37 @@ class GetEvent extends GlobalMethods
             return [
                 'avg_overall_satisfaction' => null
             ];
+        }
+    }
+
+    public function getDoneEventsByOrganizer($organizer_user_id)
+    {
+        try {
+            // Define the columns you need
+            $columns = "e.event_id, e.event_name";
+
+            // Write the SQL query to get done events organized by organizer
+            $sql = "SELECT $columns 
+                FROM events e 
+                JOIN event_approval ea ON e.event_id = ea.event_id 
+                JOIN user u ON e.organizer_user_id = u.user_id
+                WHERE ea.status = 'Approved' 
+                AND e.event_end_date < NOW() 
+                AND u.user_id = :organizer_user_id"; // Filter for 'done' events and specific organizer
+
+            // Prepare the statement
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':organizer_user_id', $organizer_user_id, PDO::PARAM_INT);
+
+            // Execute the query
+            $stmt->execute();
+            $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Return the payload with the events data
+            return $this->sendPayload($events, 'success', "Successfully retrieved data.", 200);
+        } catch (PDOException $e) {
+            // Handle database error gracefully
+            return $this->sendPayload(null, 'error', $e->getMessage(), 500);
         }
     }
 }

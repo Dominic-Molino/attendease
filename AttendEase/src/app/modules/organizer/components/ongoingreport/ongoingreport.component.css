@@ -1,0 +1,12 @@
+.animate {
+  transition: transform 0.3s ease-in-out; /* Example transition property */
+}
+
+.active svg {
+  transform: rotate(90deg); /* Example transform */
+}
+
+.animate.reverse {
+  transition: transform 0.3s ease;
+  transform: rotate(0deg); /* Reversed transform */
+}

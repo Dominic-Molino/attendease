@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { EventService } from '../../../core/service/event.service';
 import { Event } from '../../../interfaces/EventInterface';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { AuthserviceService } from '../../../core/service/authservice.service';
 import { formatDistanceToNow, isBefore } from 'date-fns';
+import { interval, Subscription, switchMap } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -14,7 +15,7 @@ import { formatDistanceToNow, isBefore } from 'date-fns';
   styleUrls: ['./monitored-event.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class MonitoredEventComponent implements OnInit {
+export class MonitoredEventComponent implements OnInit, OnDestroy {
   events: Event[] = [];
   selectedEvent: Event | null = null;
   registeredUsers: any[] = [];
@@ -25,6 +26,10 @@ export class MonitoredEventComponent implements OnInit {
   currId: any;
   isDrawerVisible: boolean = false;
 
+  private pollingInterval = 1500;
+  private pollingSubscription: Subscription | undefined;
+  private lastFetchedData: { [eventId: number]: Event } = {};
+
   constructor(
     private eventService: EventService,
     private service: AuthserviceService
@@ -33,9 +38,40 @@ export class MonitoredEventComponent implements OnInit {
   ngOnInit(): void {
     this.currId = this.service.getCurrentUserId();
     this.loadData(this.currId);
+    this.startPolling(); // Start polling on component initialization
     if (this.events.length > 0) {
       this.selectedEvent = this.events[this.currentIndex];
       this.loadRegisteredUsers(this.selectedEvent.event_id);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.stopPolling(); // Stop polling when component is destroyed
+  }
+
+  private startPolling(): void {
+    this.pollingSubscription = interval(this.pollingInterval)
+      .pipe(
+        switchMap(() =>
+          this.eventService.getApprovedOrganizerEvents(this.currId)
+        )
+      )
+      .subscribe((res: any) => {
+        this.events = res.payload;
+
+        this.events.forEach((event) => {
+          this.loadRegisteredUsers(event.event_id);
+        });
+
+        if (this.events.length > 0) {
+          this.selectedEvent = this.events[this.currentIndex];
+        }
+      });
+  }
+
+  private stopPolling(): void {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
     }
   }
 

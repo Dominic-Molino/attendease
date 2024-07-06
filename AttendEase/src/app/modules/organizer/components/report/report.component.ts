@@ -13,6 +13,7 @@ import { CarouselModule } from 'primeng/carousel';
 import { AccordionModule } from 'primeng/accordion';
 import { ActivatedRoute } from '@angular/router';
 import th from '@mobiscroll/angular/dist/js/i18n/th';
+import { TooltipItem } from 'chart.js';
 
 @Component({
   selector: 'app-report',
@@ -46,7 +47,7 @@ export class ReportComponent implements OnInit {
   loadReport(eventId: number) {
     this.service.getReport(eventId).subscribe((reportDetails) => {
       this.reportDetail = reportDetails.payload[0];
-      console.log(this.reportDetail); // Check what is logged in the console
+      console.log(this.reportDetail);
       this.initializeChartOptions();
       this.chartData = this.getChartData(this.reportDetail);
     });
@@ -54,23 +55,30 @@ export class ReportComponent implements OnInit {
 
   initializeChartOptions() {
     this.chartOptions = {
-      indexAxis: 'x',
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
         legend: {
           position: 'bottom',
+          display: true,
+          font: {
+            family: 'Inter',
+            size: 14,
+          },
         },
-      },
-      scales: {
-        x: {
-          beginAtZero: true,
+        labels: {
+          color: '#333',
+          usePointStyle: true,
         },
-        y: {
-          beginAtZero: true,
-          max: 0,
-          ticks: {
-            stepSize: 1,
+        tooltip: {
+          callbacks: {
+            title: () => '',
+            label: (context: TooltipItem<'bar'>) => {
+              // Specify the type for context
+              const label = context.label || '';
+              const value = (context.raw as number) || 0;
+              return `${label} : ${value} `;
+            },
           },
         },
       },
@@ -83,25 +91,27 @@ export class ReportComponent implements OnInit {
     }
 
     const chartData = {
-      labels: ['Participants'],
+      labels: ['Present Students', 'No. of Registered Students'],
       datasets: [
         {
           label: 'Present Participants',
-          backgroundColor: '#c75519',
-          data: [event.present_count],
-        },
-        {
-          label: 'Total Participants',
-          backgroundColor: '#ff8a00',
-          data: [event.registered_users],
+          backgroundColor: ['#c75519', '#ff8a00'],
+          data: [event.present_count, event.registered_users],
         },
       ],
     };
 
-    this.chartOptions.scales.y.max = event.max_attendees;
-
     this.chartDataCache.set(event.event_id, chartData);
     return chartData;
+  }
+
+  isDrawerVisible: boolean = false;
+  toggleDrawer(): void {
+    this.isDrawerVisible = !this.isDrawerVisible;
+  }
+
+  closeDrawer(): void {
+    this.isDrawerVisible = false;
   }
 
   goBack() {

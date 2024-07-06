@@ -170,4 +170,8 @@ export class EventService {
   getOngoingReport(org_id: any): Observable<any> {
     return this.http.get<any>(`${this.API_URL}getongoingreports/${org_id}`);
   }
+
+  getDoneEventsOfOrg(org_id: any): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}getdoneeventsoforg/${org_id}`);
+  }
 }
