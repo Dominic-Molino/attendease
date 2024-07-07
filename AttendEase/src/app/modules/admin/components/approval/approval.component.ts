@@ -22,6 +22,8 @@ export class ApprovalComponent implements OnInit {
   itemsPerPage: number = 10;
   maxSize = 5;
 
+  sortDirection: 'asc' | 'desc' = 'asc'; // Track sorting direction
+
   constructor(private evService: EventService, private router: Router) {}
 
   ngOnInit(): void {
@@ -55,5 +57,19 @@ export class ApprovalComponent implements OnInit {
           event.organizer_organization.toLowerCase().includes(searchTerm)
       );
     }
+  }
+
+  sortEventsByStatus() {
+    const direction = this.sortDirection === 'asc' ? 1 : -1;
+    this.filteredEvents.sort((a, b) => {
+      if (a.approval_status > b.approval_status) {
+        return direction;
+      }
+      if (a.approval_status < b.approval_status) {
+        return -direction;
+      }
+      return 0;
+    });
+    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
   }
 }

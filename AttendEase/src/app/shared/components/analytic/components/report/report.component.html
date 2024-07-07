@@ -62,7 +62,7 @@
           <li
             *ngFor="let event of report"
             (click)="selectEvent(event)"
-            class="block px-4 py-2 text-sm font-medium rounded-md capitalize hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+            class="block px-4 py-2 text-sm font-medium capitalize hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
           >
             {{ event.event_name }}
           </li>
@@ -97,13 +97,23 @@
           class="absolute right-36 -top-0.5 bg-white border border-dark-border rounded-md divide-y divide-gray-300"
           [class.hidden]="!pastDropdownOpen"
         >
-          <li
-            *ngFor="let event of pastEvents"
-            (click)="selectEvent(event)"
-            class="block px-4 py-2 text-sm font-medium rounded-md capitalize hover:bg-gray-100 cursor-pointer"
-          >
-            {{ event.event_name }}
-          </li>
+          <ng-container *ngFor="let event of pastEvents">
+            <li
+              *ngIf="!event.viewAll; else viewAllButton"
+              (click)="selectEvent(event)"
+              class="block px-4 py-2 text-sm font-medium capitalize hover:bg-gray-100 cursor-pointer"
+            >
+              {{ event.event_name }}
+            </li>
+            <ng-template #viewAllButton>
+              <li
+                (click)="viewAll()"
+                class="block px-4 py-2 text-sm font-medium text-blue-600 hover:underline cursor-pointer"
+              >
+                View All
+              </li>
+            </ng-template>
+          </ng-container>
         </ul>
       </div>
     </div>
@@ -111,39 +121,53 @@
 
   <div
     *ngIf="selectedEvent"
-    class="w-full flex items-center justify-between gap-2.5 border border-dark-border rounded-md p-3"
+    class="w-full flex items-center justify-between gap-2.5 shadow-md border border-dark-border rounded-md p-3"
   >
     <div
       *ngIf="selectedEvent && !isEventPast(selectedEvent)"
-      class="w-full flex items-center justify-between gap-2.5"
+      class="w-full flex h-full items-center gap-2.5"
     >
-      <div class="w-1/3">
+      <div class="w-1/3 flex-col flex flex-grow">
         <div
           class="max-w-sm w-full bg-white rounded-md shadow border border-dark-border p-4"
         >
           <div class="flex justify-between items-start w-full">
             <div class="flex-col justify-center w-full items-center">
-              <div class="flex items-center mb-1">
+              <div class="flex items-center">
                 <h5
                   class="text-xl font-bold leading-none text-gray-900 dark:text-white"
                 >
                   Registered Students
                 </h5>
                 <svg
-                  [matTooltip]="
-                    getChartData(selectedEvent, 'registrationToMaxAttendees')
-                      .message
-                  "
                   class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer ms-1"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
                   viewBox="0 0 20 20"
+                  (click)="
+                    toggleTooltip(
+                      selectedEvent.event_id + 'registrationToMaxAttendees'
+                    )
+                  "
                 >
                   <path
                     d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm0 16a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm1-5.034V12a1 1 0 0 1-2 0v-1.418a1 1 0 0 1 1.038-.999 1.436 1.436 0 0 0 1.488-1.441 1.501 1.501 0 1 0-3-.116.986.986 0 0 1-1.037.961 1 1 0 0 1-.96-1.037A3.5 3.5 0 1 1 11 11.466Z"
                   />
                 </svg>
+
+                <app-tooltip
+                  [isVisible]="
+                    tooltipVisible[
+                      selectedEvent.event_id + 'registrationToMaxAttendees'
+                    ]
+                  "
+                  [tooltipContent]="
+                    getChartData(selectedEvent, 'registrationToMaxAttendees')
+                      .message
+                  "
+                  matTooltipClass="custom-tooltip"
+                ></app-tooltip>
               </div>
               <div class="w-full h-full">
                 <p-chart
@@ -173,21 +197,35 @@
                 >
                   Student Courses
                 </h5>
+
                 <svg
-                  [matTooltip]="
-                    getChartData(selectedEvent, 'courseRegistration').message
-                  "
-                  matTooltipPosition="right"
                   class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer ms-1"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
                   viewBox="0 0 20 20"
+                  (click)="
+                    toggleTooltip(
+                      selectedEvent.event_id + '_courseRegistration'
+                    )
+                  "
                 >
                   <path
                     d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm0 16a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm1-5.034V12a1 1 0 0 1-2 0v-1.418a1 1 0 0 1 1.038-.999 1.436 1.436 0 0 0 1.488-1.441 1.501 1.501 0 1 0-3-.116.986.986 0 0 1-1.037.961 1 1 0 0 1-.96-1.037A3.5 3.5 0 1 1 11 11.466Z"
                   />
                 </svg>
+
+                <app-tooltip
+                  [isVisible]="
+                    tooltipVisible[
+                      selectedEvent.event_id + '_courseRegistration'
+                    ]
+                  "
+                  [tooltipContent]="
+                    getChartData(selectedEvent, 'courseRegistration').message
+                  "
+                  matTooltipClass="custom-tooltip"
+                ></app-tooltip>
               </div>
               <div
                 class="relative left-7 -top-5"
@@ -216,20 +254,33 @@
                   Students Year Level
                 </h5>
                 <svg
-                  [matTooltip]="
-                    getChartData(selectedEvent, 'yearLevelRegistration').message
-                  "
-                  matTooltipPosition="right"
                   class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer ms-1"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
                   viewBox="0 0 20 20"
+                  (click)="
+                    toggleTooltip(
+                      selectedEvent.event_id + 'yearLevelRegistration'
+                    )
+                  "
                 >
                   <path
                     d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm0 16a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm1-5.034V12a1 1 0 0 1-2 0v-1.418a1 1 0 0 1 1.038-.999 1.436 1.436 0 0 0 1.488-1.441 1.501 1.501 0 1 0-3-.116.986.986 0 0 1-1.037.961 1 1 0 0 1-.96-1.037A3.5 3.5 0 1 1 11 11.466Z"
                   />
                 </svg>
+
+                <app-tooltip
+                  [isVisible]="
+                    tooltipVisible[
+                      selectedEvent.event_id + 'yearLevelRegistration'
+                    ]
+                  "
+                  [tooltipContent]="
+                    getChartData(selectedEvent, 'yearLevelRegistration').message
+                  "
+                  matTooltipClass="custom-tooltip"
+                ></app-tooltip>
               </div>
               <div
                 class="relative left-7 -top-5"
@@ -262,7 +313,7 @@
               >
                 <span class="flex-1 ms-3 whitespace-nowrap"> Name</span>
                 <span
-                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded capitalize"
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-sm font-medium text-gray-500 bg-gray-200 rounded capitalize"
                   >{{ selectedEvent.event_name }}</span
                 >
               </div>
@@ -274,7 +325,7 @@
               >
                 <span class="flex-1 ms-3 whitespace-nowrap"> Status</span>
                 <span
-                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded capitalize"
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-sm font-medium text-gray-500 bg-gray-200 rounded capitalize"
                   >{{ selectedEvent.event_status }}</span
                 >
               </div>
@@ -285,7 +336,7 @@
               >
                 <span class="flex-1 ms-3 whitespace-nowrap"> Date</span>
                 <span
-                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-sm font-medium text-gray-500 bg-gray-200 rounded"
                   >{{ selectedEvent.event_start_date | date : "longDate" }}
                   -
                   {{ selectedEvent.event_end_date | date : "longDate" }}</span
@@ -298,7 +349,7 @@
               >
                 <span class="flex-1 ms-3 whitespace-nowrap">Time</span>
                 <span
-                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-sm font-medium text-gray-500 bg-gray-200 rounded"
                   >{{ selectedEvent.event_start_date | date : "shortTime" }}
                   -
                   {{ selectedEvent.event_end_date | date : "shortTime" }}</span
@@ -313,7 +364,7 @@
                   >Max Participants</span
                 >
                 <span
-                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-sm font-medium text-gray-500 bg-gray-200 rounded"
                   >{{ selectedEvent.max_attendees }}</span
                 >
               </div>
@@ -326,7 +377,7 @@
                   >Registered Participants</span
                 >
                 <span
-                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-sm font-medium text-gray-500 bg-gray-200 rounded"
                   >{{ selectedEvent.registered_users }}</span
                 >
               </div>
@@ -354,7 +405,7 @@
                 >
                   <span class="flex-1 ms-3 whitespace-nowrap">Name</span>
                   <span
-                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded capitalize"
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-sm font-medium text-gray-500 bg-gray-200 rounded capitalize"
                   >
                     {{ selectedPastEventReport.event_name }}
                   </span>
@@ -366,7 +417,7 @@
                 >
                   <span class="flex-1 ms-3 whitespace-nowrap">Status</span>
                   <span
-                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded capitalize"
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-sm font-medium text-gray-500 bg-gray-200 rounded capitalize"
                   >
                     {{ selectedPastEventReport.event_status }}
                   </span>
@@ -378,7 +429,7 @@
                 >
                   <span class="flex-1 ms-3 whitespace-nowrap">Date</span>
                   <span
-                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-sm font-medium text-gray-500 bg-gray-200 rounded"
                   >
                     {{
                       selectedPastEventReport.event_start_date
@@ -397,7 +448,7 @@
                 >
                   <span class="flex-1 ms-3 whitespace-nowrap">Time</span>
                   <span
-                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-sm font-medium text-gray-500 bg-gray-200 rounded"
                   >
                     {{
                       selectedPastEventReport.event_start_date
@@ -419,7 +470,7 @@
                     >Max Participants</span
                   >
                   <span
-                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-sm font-medium text-gray-500 bg-gray-200 rounded"
                   >
                     {{ selectedPastEventReport.max_attendees }}
                   </span>
@@ -433,7 +484,7 @@
                     >Registered Participants</span
                   >
                   <span
-                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-sm font-medium text-gray-500 bg-gray-200 rounded"
                   >
                     {{ selectedPastEventReport.registered_users }}
                   </span>
@@ -447,7 +498,7 @@
                     >Present Participants</span
                   >
                   <span
-                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-sm font-medium text-gray-500 bg-gray-200 rounded"
                   >
                     {{ selectedPastEventReport.present_count }}
                   </span>
@@ -461,7 +512,7 @@
                     >Attendance Submitted</span
                   >
                   <span
-                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-sm font-medium text-gray-500 bg-gray-200 rounded"
                   >
                     {{ selectedPastEventReport.attendance_count }}
                   </span>
@@ -475,7 +526,7 @@
                     >Feedback Submitted</span
                   >
                   <span
-                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-sm font-medium text-gray-500 bg-gray-200 rounded"
                   >
                     {{ selectedPastEventReport.feedback_count }}
                   </span>
@@ -490,7 +541,7 @@
                   >
                   <span
                     *ngIf="selectedPastEventReport.average_feedback !== 0"
-                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-sm font-medium text-gray-500 bg-gray-200 rounded"
                   >
                     {{
                       selectedPastEventReport.average_feedback | number : "1.1"
@@ -498,7 +549,7 @@
                   </span>
                   <span
                     *ngIf="selectedPastEventReport.average_feedback === null"
-                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                    class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-sm font-medium text-gray-500 bg-gray-200 rounded"
                   >
                     0
                   </span>

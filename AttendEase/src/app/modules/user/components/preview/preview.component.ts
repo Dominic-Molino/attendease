@@ -13,7 +13,9 @@ import { Observable, of, Subscription, interval, timer } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Event } from '../../../../interfaces/EventInterface';
+import { MessageComponent } from '../../../../shared/components/message/message.component';
 
 export interface User {
   user_id: number;
@@ -35,6 +37,7 @@ export interface User {
     CommonModule,
     MatTooltipModule,
     RouterLink,
+    MessageComponent,
   ],
   templateUrl: './preview.component.html',
   styleUrls: ['./preview.component.css'],
@@ -58,7 +61,8 @@ export class PreviewComponent implements OnInit, OnDestroy {
     private sanitizer: DomSanitizer,
     private router: ActivatedRoute,
     private route: Router,
-    private location: Location
+    private location: Location,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -75,11 +79,21 @@ export class PreviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  openChat(organizerId: any) {
+    const openDia = this.dialog.open(MessageComponent, {
+      data: {
+        currentUser: this.userId,
+        otherUser: organizerId,
+      },
+      width: '50%',
+    });
+  }
+
   getStudentInfo(): void {
     this.userService.getStudentProfile(this.userId).subscribe(
       (response: any) => {
         if (response.payload && response.payload.length > 0) {
-          this.user = response.payload[0]; // Assuming payload contains user data
+          this.user = response.payload[0];
           console.log('User fetched:', this.user);
           this.checkEligibility();
         } else {

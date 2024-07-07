@@ -422,11 +422,25 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 }
                 break;
 
+            case 'updatetime':
+                $data = json_decode(file_get_contents('php://input'));
+
+                if (isset($data->event_id) && isset($data->submission_deadline)) {
+                    $event_id = $data->event_id;
+                    $submission_deadline = $data->submission_deadline;
+                    echo json_encode($post->updateTimeLimit($event_id, $submission_deadline));
+                } else {
+                    echo json_encode($post->sendPayload(null, 'failed', "Invalid parameters.", 400));
+                }
+
+                break;
 
                 #student module cases
             case 'edituser':
                 echo json_encode($postStudent->editUser($data, $request[1]));
                 break;
+
+
 
             case 'register':
                 echo json_encode($postStudent->registerUserForEvent($data->event_id, $data->user_id));

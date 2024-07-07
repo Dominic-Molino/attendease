@@ -25,7 +25,6 @@ export class CourseComponent implements OnInit, OnDestroy {
       .subscribe(
         (res) => {
           this.processChartData(res.payload);
-          console.log(res.payload);
         },
         (error) => {
           console.error('Error fetching block data:', error);

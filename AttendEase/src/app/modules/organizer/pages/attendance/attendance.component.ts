@@ -8,6 +8,7 @@ import { MarkattendanceeComponent } from '../../components/markattendancee/marka
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TimelimitComponent } from '../../../admin/components/timelimit/timelimit.component';
 
 interface Event {
   event_id: number;
@@ -38,9 +39,7 @@ export class AttendanceComponent implements OnInit {
   eventData: any;
   selectedEventId: any;
   eventList: Event[] = [];
-  maxChar = 100;
 
-  //paginate variables
   p: number = 1;
   itemsPerPage: number = 10;
   maxSize: number = 5;
@@ -112,5 +111,14 @@ export class AttendanceComponent implements OnInit {
     } else {
       return 'upcoming';
     }
+  }
+
+  openTimelimit(event: any) {
+    this.dialog.open(TimelimitComponent, {
+      data: {
+        event_id: event,
+      },
+      disableClose: true,
+    });
   }
 }

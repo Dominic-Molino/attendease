@@ -11,6 +11,23 @@
       <h1>{{ request.first_name }} {{ request.last_name }}</h1>
     </div>
 
+    <div
+      class="chat-header px-6 py-4 flex flex-row flex-none justify-between items-center shadow"
+    >
+      <div class="flex items-center" *ngFor="let request of messageRequests">
+        <div class="w-12 h-12 mr-4 relative flex flex-shrink-0">
+          <img
+            class="shadow-md rounded-full w-full h-full object-cover"
+            src="./../../../../assets/images/idea.png"
+            alt=""
+          />
+        </div>
+        <p class="font-bold text-sm">
+          {{ request.first_name }} {{ request.last_name }}
+        </p>
+      </div>
+    </div>
+
     <!-- message of bth user-->
     <div
       *ngFor="let message of messages"

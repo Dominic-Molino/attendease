@@ -52,7 +52,6 @@ export class AttendanceComponent {
 
   getUserEvents() {
     this.loading = true;
-
     this.eventService.getUserEvent().subscribe({
       next: (res: any) => {
         if (res && res.payload) {
@@ -70,7 +69,6 @@ export class AttendanceComponent {
 
           this.events.forEach((event) => {
             this.getUserAttendanceRemark(event.event_id);
-            console.log(event.event_id);
           });
 
           this.events.sort((a, b) => {
@@ -149,6 +147,16 @@ export class AttendanceComponent {
         document.body.classList.remove('cdk-global-scrollblock');
       });
     }
+  }
+
+  isSubmissionAvailable(deadline: any): boolean {
+    if (!deadline) {
+      return false; // No deadline set, submission not available
+    }
+
+    const currDate = new Date();
+    const submission_deadline = new Date(deadline);
+    return currDate > submission_deadline;
   }
 
   openEvaluation(eventState: any, eventId: number): void {

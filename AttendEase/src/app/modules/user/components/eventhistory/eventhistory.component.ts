@@ -35,6 +35,7 @@ export class EventhistoryComponent implements OnInit {
     return this.service.getUserEvent().pipe(
       map((res) => {
         if (res && res.payload) {
+          console.log(res.payload);
           const events = res.payload.map((event: any) => {
             const currentDate = new Date();
             const endDate = new Date(event.event_end_date);

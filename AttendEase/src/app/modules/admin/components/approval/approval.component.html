@@ -75,8 +75,14 @@
             <th scope="col" class="px-6 py-3 tracking-widest font-medium">
               Organization
             </th>
-            <th scope="col" class="px-6 py-3 tracking-widest font-medium">
+            <th
+              scope="col"
+              class="px-6 py-3 tracking-widest font-medium cursor-pointer"
+              (click)="sortEventsByStatus()"
+            >
               Status
+              <span *ngIf="sortDirection === 'asc'">&#9650;</span>
+              <span *ngIf="sortDirection === 'desc'">&#9660;</span>
             </th>
             <th scope="col" class="px-6 py-3 tracking-widest font-medium">
               <span class="sr-only">Edit</span>

@@ -63,6 +63,13 @@ export class EventService {
     return this.http.post(`${this.API_URL}editevent/${id}`, data);
   }
 
+  addDeadline(id: any, data: any) {
+    return this.http.post(`${this.API_URL}updatetime`, {
+      event_id: id,
+      ...data,
+    });
+  }
+
   getRegisteredUser(eventId: any = null): Observable<any> {
     if (eventId) {
       return this.http.get(`${this.API_URL}registeredUser/${eventId}`);

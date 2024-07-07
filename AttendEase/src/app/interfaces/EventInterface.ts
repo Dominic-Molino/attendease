@@ -27,4 +27,6 @@ export interface Event {
   rejection_message: string;
   approved_at: string;
   registered_user: number;
+  organizer_id: number;
+  attendance_submission_deadline: Date | string;
 }

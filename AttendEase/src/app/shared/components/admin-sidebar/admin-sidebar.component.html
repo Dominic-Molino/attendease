@@ -38,7 +38,6 @@
       </div>
       <div class="flex items-center">
         <div class="flex items-center ms-3">
-          <app-notification></app-notification>
           <div>
             <button
               type="button"
@@ -139,32 +138,7 @@
           <span class="flex-1 ms-3 text-base whitespace-nowrap">Dashboard</span>
         </a>
       </li>
-      <li>
-        <a
-          routerLink="admin-attendees-list"
-          [routerLinkActive]="'bg-dark-background text-white'"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="flex items-center p-2 rounded-lg hover:text-white font-semibold hover:bg-dark-foreground group"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            class="lucide lucide-table-properties"
-          >
-            <path d="M15 3v18" />
-            <rect width="18" height="18" x="3" y="3" rx="2" />
-            <path d="M21 9H3" />
-            <path d="M21 15H3" />
-          </svg>
-          <span class="flex-1 ms-3 text-base whitespace-nowrap"
-            >Student Lists</span
-          >
-        </a>
-      </li>
+
       <li>
         <a
           routerLink="admin-event-list"
@@ -193,13 +167,40 @@
             <path d="m16 20 2 2 4-4" />
           </svg>
           <span class="flex-1 ms-3 text-base whitespace-nowrap"
-            >Event Lists</span
+            >Event Approval</span
           >
         </a>
       </li>
       <li>
         <a
-          routerLink="admin-attendance"
+          routerLink="admin-past-event"
+          [routerLinkActive]="'bg-dark-background text-white'"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center p-2 rounded-lg hover:text-white font-semibold hover:bg-dark-foreground group"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-area-chart"
+          >
+            <path d="M3 3v18h18" />
+            <path d="M7 12v5h12V8l-5 5-4-4Z" />
+          </svg>
+          <span class="flex-1 ms-3 text-base whitespace-nowrap"
+            >Event Report</span
+          >
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="admin-attendees-list"
           [routerLinkActive]="'bg-dark-background text-white'"
           [routerLinkActiveOptions]="{ exact: true }"
           class="flex items-center p-2 rounded-lg hover:text-white font-semibold hover:bg-dark-foreground group"
@@ -221,6 +222,35 @@
             <path d="m16 19 2 2 4-4" />
           </svg>
 
+          <span class="flex-1 ms-3 text-base whitespace-nowrap"
+            >Student Lists</span
+          >
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="admin-attendance"
+          [routerLinkActive]="'bg-dark-background text-white'"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center p-2 rounded-lg hover:text-white font-semibold hover:bg-dark-foreground group"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-images"
+          >
+            <path d="M18 22H4a2 2 0 0 1-2-2V6" />
+            <path d="m22 13-1.296-1.296a2.41 2.41 0 0 0-3.408 0L11 18" />
+            <circle cx="12" cy="8" r="2" />
+            <rect width="16" height="16" x="6" y="2" rx="2" />
+          </svg>
           <span class="flex-1 ms-3 text-base whitespace-nowrap"
             >Attendance</span
           >
@@ -254,32 +284,3 @@
     </ul>
   </div>
 </aside>
-
-<div class="fixed z-50 right-10 bottom-10">
-  <button
-    (click)="openChat()"
-    class="fixed bottom-4 right-4 inline-flex items-center justify-center text-sm font-medium disabled:pointer-events-none disabled:opacity-50 border rounded-full w-14 h-14 bg-black hover:bg-gray-700 m-0 cursor-pointer border-gray-200 bg-none p-0 normal-case leading-5 hover:text-gray-900"
-    type="button"
-    aria-haspopup="dialog"
-    aria-expanded="false"
-    data-state="closed"
-  >
-    <svg
-      xmlns=" http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      class="text-white block border-gray-200 align-middle"
-    >
-      <path
-        d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"
-        class="border-gray-200"
-      ></path>
-    </svg>
-  </button>
-</div>

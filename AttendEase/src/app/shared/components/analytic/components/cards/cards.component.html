@@ -28,8 +28,10 @@
   <div
     matTooltip="Click to see more details about events"
     matTooltipClass="event-tooltip"
-    #tooltip="matTooltip"
-    class="shadow-md border border-dark-border rounded-md w-full h-28 bg-white flex justify-center items-center p-4"
+    [matTooltipDisabled]="showTooltip"
+    (mouseenter)="showTooltip = true"
+    (mouseleave)="showTooltip = false"
+    class="shadow-md relative border border-dark-border rounded-md w-full h-28 bg-white flex justify-center items-center p-4"
   >
     <div
       class="min-w-0 rounded-lg shadow-xs overflow-hidden bg-white dark:bg-gray-800 w-full"
@@ -51,6 +53,23 @@
           <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
             {{ eventCount }}
           </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute -right-20">
+      <div
+        class="px-10 max-w-sm w-full bg-white rounded-md shadow-md border border-dark-border"
+        *ngIf="showTooltip"
+      >
+        <div class="flex flex-auto justify-center">
+          <p-chart
+            type="pie"
+            [data]="datas"
+            [options]="options"
+            width="200px  "
+            [responsive]="false"
+          ></p-chart>
         </div>
       </div>
     </div>
@@ -84,19 +103,3 @@
     </div>
   </div>
 </div>
-<!-- <div class="relative">
-  <div
-    class="p-10 bg-white rounded-md shadow-md border border-dark-border"
-    *ngIf="tooltip.show"
-  >
-    <div class="flex flex-auto justify-center">
-      <p-chart
-        type="pie"
-        [data]="datas"
-        [options]="options"
-        width="250px"
-        [responsive]="false"
-      ></p-chart>
-    </div>
-  </div>
-</div> -->

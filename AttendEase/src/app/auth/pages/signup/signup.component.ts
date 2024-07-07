@@ -25,6 +25,9 @@ export class SignupComponent {
     first_name: this.builder.control('', Validators.required),
     last_name: this.builder.control('', Validators.required),
     email: this.builder.control('', Validators.compose([Validators.required])),
+    year_level: this.builder.control('', Validators.required),
+    course: this.builder.control('', Validators.required),
+    block: this.builder.control('', Validators.required),
     password: this.builder.control('', Validators.required),
   });
 

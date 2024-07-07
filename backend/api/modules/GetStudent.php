@@ -68,7 +68,7 @@ class GetStudentFunctions extends GlobalMethods
     {
         $columns = "
             events.event_id, event_name, event_description, event_location,
-            event_start_date, event_end_date, event_registration_start, event_registration_end, event_type, max_attendees, categories, organizer_name";
+            event_start_date, event_end_date, event_registration_start, event_registration_end, event_type, max_attendees, categories, organizer_user_id, organizer_name, attendance_submission_deadline";
 
         $sql = "
             SELECT 

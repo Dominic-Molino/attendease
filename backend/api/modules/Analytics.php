@@ -214,30 +214,31 @@ class Analytics extends GlobalMethods
 
 
     // Function to get all done events and return the event ID and name
-    public function getDoneEvents($organizer_user_id = null)
+    public function getDoneEvents($event_id = null)
     {
         try {
             // Define the columns you need
-            $columns = "e.event_id, e.event_name";
+            $columns = "e.event_id, e.event_name, u.user_id as organizer_id, u.first_name, u.last_name, u.organization as organizer_organization, organizer_name";
 
             // Write the base SQL query to get done events
             $sql = "SELECT $columns 
                 FROM events e 
                 JOIN event_approval ea ON e.event_id = ea.event_id 
+                JOIN user u ON e.organizer_user_id = u.user_id
                 WHERE ea.status = 'Approved' 
                 AND e.event_end_date < NOW()"; // Filter for 'done' events
 
-            // If organizer_user_id is provided, add the condition to filter by organizer
-            if ($organizer_user_id !== null) {
-                $sql .= " AND e.organizer_user_id = :organizer_user_id";
+            // If event_id is provided, add the condition to filter by event ID
+            if ($event_id !== null) {
+                $sql .= " AND e.event_id = :event_id";
             }
 
             // Prepare the statement
             $stmt = $this->pdo->prepare($sql);
 
-            // Bind the organizer_user_id parameter if it is provided
-            if ($organizer_user_id !== null) {
-                $stmt->bindParam(':organizer_user_id', $organizer_user_id, PDO::PARAM_INT);
+            // Bind the event_id parameter if it is provided
+            if ($event_id !== null) {
+                $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
             }
 
             // Execute the query
@@ -251,6 +252,7 @@ class Analytics extends GlobalMethods
             return $this->sendPayload(null, 'error', $e->getMessage(), 500);
         }
     }
+
 
 
     // Function to get all approved and done events with status and student information

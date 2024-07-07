@@ -47,6 +47,9 @@ class Post extends GlobalMethods
                 $data->first_name,
                 $data->last_name,
                 $data->email,
+                $data->year_level,
+                $data->course,
+                $data->block,
                 $data->password,
             )
         ) {
@@ -64,6 +67,9 @@ class Post extends GlobalMethods
         $first_name = $data->first_name;
         $last_name = $data->last_name;
         $email = $data->email;
+        $year_level = $data->year_level;
+        $course = $data->course;
+        $block = $data->block;
         $password = $data->password;
         $organization = isset($data->organization) ? $data->organization : null;
         $role_id = isset($data->role_id) ? $data->role_id : 3;
@@ -71,11 +77,11 @@ class Post extends GlobalMethods
 
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-        $sql = "INSERT INTO user (first_name, last_name, email, password, role_id, organization) 
-                VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO user (first_name, last_name, email, year_level, course, block, password, role_id, organization) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$first_name, $last_name, $email, $hashed_password,  $role_id, $organization]);
+            $stmt->execute([$first_name, $last_name, $email, $year_level, $course, $block, $hashed_password,  $role_id, $organization]);
 
             if ($stmt->rowCount() > 0) {
                 return $this->sendPayload(null, 'success', "User added successfully.", 200);
@@ -110,6 +116,30 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
+
+    public function updateTimeLimit($event_id, $submission_deadline)
+    {
+        $sql = "UPDATE events SET attendance_submission_deadline = ? WHERE event_id = ?";
+
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([
+                $submission_deadline, // first parameter
+                $event_id             // second parameter
+            ]);
+
+            if ($stmt->rowCount() > 0) {
+                return $this->sendPayload(null, 'success', "Updated time limit.", 200);
+            } else {
+                return $this->sendPayload(null, 'failed', "Failed to update time limit.", 500);
+            }
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+        }
+    }
+
+
 
     public function mark_attendance($event_id, $user_id)
     {

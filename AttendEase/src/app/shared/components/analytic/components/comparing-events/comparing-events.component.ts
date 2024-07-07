@@ -41,8 +41,6 @@ export class ComparingEventsComponent implements OnInit, OnDestroy {
       .subscribe((res) => {
         const events: Event[] = res.payload;
 
-        console.log(events);
-
         const eventLabels: string[] = [];
         const attendeeCounts: number[] = [];
         const maxLabelLength = 10;
@@ -102,7 +100,7 @@ export class ComparingEventsComponent implements OnInit, OnDestroy {
             },
           },
           scales: {
-            y: {
+            x: {
               ticks: {
                 beginAtZero: true,
                 precision: 0,

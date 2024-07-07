@@ -98,11 +98,10 @@ export class OngoingreportComponent implements OnInit {
     if (this.report.length > 0) {
       this.selectedEvent = this.report[0];
     }
-    this.toggleDropdown(); // Close dropdown after selecting event type
+    this.toggleDropdown();
   }
 
   isEventPast(event: any): boolean {
-    // Determine if the event is in the past events list
     return this.pastEvents.some(
       (pastEvent) => pastEvent.event_id === event.event_id
     );

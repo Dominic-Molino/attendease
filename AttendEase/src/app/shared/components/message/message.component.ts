@@ -41,7 +41,7 @@ export class MessageComponent implements OnInit {
       .subscribe((res: any) => {
         this.messageRequests = res.payload;
         this.loadConversation(this.data.currentUser, this.data.otherUser);
-        this.startPolling(); // Start polling messages after initial load
+        this.startPolling();
       });
   }
 
@@ -52,10 +52,8 @@ export class MessageComponent implements OnInit {
   }
 
   startPolling(): void {
-    // Polling interval, adjust as needed
-    const pollInterval = 5000; // 5 seconds
+    const pollInterval = 1000;
 
-    // Polling mechanism
     this.pollingSubscription = interval(pollInterval).subscribe(() => {
       if (this.conversation) {
         this.loadMessages();
@@ -68,7 +66,7 @@ export class MessageComponent implements OnInit {
       .getConversation(currentUser, otherUser)
       .subscribe((res: any) => {
         this.conversation = res.payload[0];
-        this.loadMessages(); // Load messages initially
+        this.loadMessages();
       });
   }
 
@@ -94,12 +92,7 @@ export class MessageComponent implements OnInit {
 
     if (this.messageForm.valid) {
       this.service.sendMessage(this.messageForm.value).subscribe((res: any) => {
-        Swal.fire({
-          title: 'Message Sent!',
-          icon: 'success',
-        });
-
-        // Clear message form and trigger immediate message load
+        this.refreshService.triggerRefresh();
         this.messageForm.patchValue({
           message: '',
         });

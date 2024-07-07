@@ -22,6 +22,18 @@
             >
               Event Name
             </th>
+            <th
+              scope="col"
+              class="px-6 py-3 tracking-widest text-center font-medium"
+            >
+              Date
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 tracking-widest text-center font-medium"
+            >
+              Time
+            </th>
             <th scope="col" class="px-6 py-3 tracking-widest font-medium">
               Status
             </th>
@@ -44,9 +56,17 @@
             <td class="font-semibold text-gray-900 text-center dark:text-white">
               {{ event.event_name }}
             </td>
-            <td class="font-semibold text-gray-900 dark:text-white">
+            <td class="font-semibold text-gray-900 text-center dark:text-white">
+              {{ event.event_start_date | date : "longDate" }} -
+              {{ event.event_end_date | date : "longDate" }}
+            </td>
+            <td class="font-semibold text-gray-900 text-center dark:text-white">
+              {{ event.event_start_date | date : "shortTime" }} -
+              {{ event.event_end_date | date : "shortTime" }}
+            </td>
+            <td class="font-semibold mx-auto text-gray-900 dark:text-white">
               <div
-                class="text-sm font-medium text-center bg-green-100 inline-flex items-center text-green-800 py-1 px-2 rounded-full"
+                class="text-sm font-medium text-center mx-auto bg-green-100 inline-flex items-center text-green-800 py-1 px-2 rounded-full"
                 *ngIf="event.status === 'done'"
               >
                 <span
@@ -74,23 +94,32 @@
               </div>
             </td>
             <td class="p-2">
-              <button
-                type="button"
-                matTooltip="Event is either done or ongoing."
-                matTooltipPosition="above"
-                [matTooltipDisabled]="
-                  !(event.status === 'upcoming' || event.status === 'ongoing')
-                "
-                (click)="viewEvent(event.event_id)"
-                [disabled]="event.status !== 'done'"
-                [ngClass]="{
-                  'opacity-50 cursor-not-allowed':
-                    event.status === 'upcoming' || event.status === 'ongoing'
-                }"
-                class="py-2.5 px-5 text-sm block mx-auto cursor-pointer text-white font-bold font-secondary rounded-md bg-light-background hover:bg-light-foregroud"
-              >
-                View Submissions
-              </button>
+              <div class="flex justify-end relative">
+                <button
+                  type="button"
+                  matTooltip="Event is either done or ongoing."
+                  matTooltipPosition="above"
+                  [matTooltipDisabled]="
+                    !(event.status === 'upcoming' || event.status === 'ongoing')
+                  "
+                  (click)="viewEvent(event.event_id)"
+                  [disabled]="event.status !== 'done'"
+                  [ngClass]="{
+                    'opacity-50 cursor-not-allowed':
+                      event.status === 'upcoming' || event.status === 'ongoing'
+                  }"
+                  class="py-2.5 px-5 text-sm block mx-auto cursor-pointer text-white font-bold font-secondary rounded-md bg-light-background hover:bg-light-foregroud"
+                >
+                  View Submissions
+                </button>
+                <button
+                  type="button"
+                  (click)="openTimelimit(event.event_id)"
+                  class="py-2.5 px-5 text-sm block mx-auto cursor-pointer text-white font-bold font-secondary rounded-md bg-light-background hover:bg-light-foregroud"
+                >
+                  Add Time Limit
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>

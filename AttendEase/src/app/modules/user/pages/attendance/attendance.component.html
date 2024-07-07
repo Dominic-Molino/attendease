@@ -59,6 +59,12 @@
               scope="col"
               class="px-6 py-3 text-center tracking-widest font-medium"
             >
+              Deadline
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 text-center tracking-widest font-medium"
+            >
               Attendance
             </th>
           </tr>
@@ -81,6 +87,7 @@
             <td class="px-6 py-4 text-center">
               {{ event.event_start_date | date }}
             </td>
+
             <div class="flex justify-center text-center">
               <td class="py-4 text-center">
                 <div
@@ -133,21 +140,49 @@
               </div>
             </td>
             <td>
+              <p
+                *ngIf="event.attendance_submission_deadline === null"
+                class="text-gray-500 text-center"
+              >
+                No Deadline
+              </p>
+              <p class="text-center">
+                {{
+                  event.attendance_submission_deadline
+                    | date : "MMM d, y, h:mm a"
+                }}
+              </p>
+            </td>
+            <td>
               <button
                 (click)="openFile(event.status, event.event_id)"
-                [disabled]="attendanceRemarks[event.event_id] !== -1"
+                [disabled]="
+                  attendanceRemarks[event.event_id] !== -1 ||
+                  isSubmissionAvailable(event.attendance_submission_deadline)
+                "
                 [ngClass]="{
                   'cursor-not-allowed bg-gray-300 text-gray-500 border-gray-300':
                     attendanceRemarks[event.event_id] !== -1 ||
-                    event.status === 'upcoming',
+                    event.status === 'ongoing' ||
+                    event.status === 'upcoming' ||
+                    isSubmissionAvailable(event.attendance_submission_deadline),
                   'bg-light-background hover:bg-light-foregroud text-white':
                     attendanceRemarks[event.event_id] === -1 &&
-                    event.status === 'done'
+                    event.status === 'done' && !isSubmissionAvailable(event.attendance_submission_deadline),
                 }"
                 class="block mx-auto px-4 py-2 text-sm font-semibold rounded-md focus:outline-none"
               >
                 Upload photo
               </button>
+
+              <p
+                *ngIf="
+                  isSubmissionAvailable(event.attendance_submission_deadline)
+                "
+                class="text-red-500 text-xs text-center"
+              >
+                Deadline has passed.
+              </p>
             </td>
           </tr>
         </tbody>

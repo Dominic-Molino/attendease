@@ -36,7 +36,7 @@ export class CardsComponent implements OnInit, OnDestroy {
   eventCount: number = 0;
   totalRegisteredUser: number = 0;
   showAttendance: boolean = false;
-  tooltip: { show: boolean } = { show: false };
+  showTooltip: boolean = false; // Control tooltip visibility
   datas: any = {}; // Initially empty
   options: any;
   private refreshSubscription: Subscription | undefined;
@@ -55,7 +55,7 @@ export class CardsComponent implements OnInit, OnDestroy {
       plugins: {
         legend: {
           title: {
-            position: 'bottom',
+            position: 'top',
             display: true,
             text: 'Event Status',
             padding: {
@@ -66,7 +66,7 @@ export class CardsComponent implements OnInit, OnDestroy {
               size: 14,
             },
           },
-          position: 'bottom',
+          position: 'right',
           labels: {
             color: '#333',
             usePointStyle: true,

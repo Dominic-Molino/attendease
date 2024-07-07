@@ -1,0 +1,7 @@
+.hover-bg {
+  transition: background-color 0.3s;
+}
+
+.hover-bg:hover {
+  background-color: #f5f5f5; /* Hover color */
+}

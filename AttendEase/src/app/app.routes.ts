@@ -75,6 +75,15 @@ export const routes: Routes = [
       },
 
       {
+        path: 'admin-past-event',
+        loadComponent: () =>
+          import(
+            './modules/admin/components/pastevents/pastevents.component'
+          ).then((e) => e.PasteventsComponent),
+        canActivate: [AuthenGuard],
+      },
+
+      {
         path: 'admin-attendance',
         loadComponent: () =>
           import(
@@ -82,6 +91,7 @@ export const routes: Routes = [
           ).then((c) => c.AttendanceComponent),
         canActivate: [AuthenGuard],
       },
+
       {
         path: 'admin-view-attendance/:eventId',
         loadComponent: () =>
@@ -253,6 +263,15 @@ export const routes: Routes = [
       },
 
       {
+        path: 'attendance-submissions',
+        loadComponent: () =>
+          import(
+            './modules/organizer/pages/attendance-page/attendance-page.component'
+          ).then((c) => c.AttendancePageComponent),
+        canActivate: [AuthenGuard],
+      },
+
+      {
         path: 'events-preview/:eventId',
         loadComponent: () =>
           import(
@@ -270,8 +289,6 @@ export const routes: Routes = [
         canActivate: [RoleGuard],
       },
 
-      // copy
-
       {
         path: 'org-per-feedback/:eventId',
         loadComponent: () =>
@@ -288,6 +305,15 @@ export const routes: Routes = [
             './shared/components/view-user-feedback/view-user-feedback.component'
           ).then((c) => c.ViewUserFeedbackComponent),
         canActivate: [RoleGuard],
+      },
+
+      {
+        path: 'organizer-view-attendance/:eventId',
+        loadComponent: () =>
+          import(
+            './modules/organizer/components/markattendancee/markattendancee.component'
+          ).then((c) => c.MarkattendanceeComponent),
+        canActivate: [AuthenGuard],
       },
     ],
   },

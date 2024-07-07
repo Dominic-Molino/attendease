@@ -108,7 +108,7 @@ export class UserFeedbackRateComponent implements OnInit, OnDestroy {
                 datasets: [
                   {
                     label: 'Number of Feedbacks',
-                    backgroundColor: '#04c464',
+                    backgroundColor: '#ff8a00',
                     barThickness: 20,
                     borderRadius: 15,
                     data: [

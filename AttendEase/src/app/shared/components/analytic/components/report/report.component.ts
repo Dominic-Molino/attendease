@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ChartOptions, TooltipItem } from 'chart.js';
 import { ChartModule } from 'primeng/chart';
 import { DataAnalyticsService } from '../../../../../core/service/data-analytics.service';
+import { TooltipComponent } from './component/tooltip/tooltip.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-report',
   standalone: true,
-  imports: [CommonModule, ChartModule, MatTooltipModule],
+  imports: [CommonModule, ChartModule, MatTooltipModule, TooltipComponent],
   templateUrl: './report.component.html',
   styleUrl: './report.component.css',
 })
@@ -24,8 +26,9 @@ export class ReportComponent implements OnInit {
   dropdownOpen: boolean = false;
   activeDropdownOpen: boolean = false;
   pastDropdownOpen: boolean = false;
+  tooltipVisible: { [key: string]: boolean } = {};
 
-  constructor(private service: DataAnalyticsService) {}
+  constructor(private service: DataAnalyticsService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadDoneEvents();
@@ -35,8 +38,11 @@ export class ReportComponent implements OnInit {
 
   loadDoneEvents() {
     this.service.getDoneEvents().subscribe((res) => {
-      this.pastEvents = res.payload;
-      console.log(`Past event variable:${this.pastEvents}`);
+      this.pastEvents = res.payload.slice(0, 5);
+      console.log(this.pastEvents);
+      if (res.payload.length > 5) {
+        this.pastEvents.push({ viewAll: true });
+      }
       if (this.pastEvents.length > 0) {
         this.reportDetail = this.pastEvents[0];
       }
@@ -46,7 +52,6 @@ export class ReportComponent implements OnInit {
   loadOngoingReport() {
     this.service.getOngoingEvents().subscribe((res) => {
       this.report = res.payload;
-      console.log(`Ongoing report :${this.report}`);
       if (this.report.length > 0) {
         this.selectedEvent = this.report[0];
       }
@@ -56,8 +61,17 @@ export class ReportComponent implements OnInit {
   loadReportforDoneEvent(event_id: any) {
     this.service.getAnalytics(event_id).subscribe((res) => {
       this.selectedPastEventReport = res.payload[0];
-      console.log(`Load Report for Done Event:`, this.selectedPastEventReport);
+      console.log(this.selectedPastEventReport);
     });
+  }
+
+  toggleTooltip(eventId: string) {
+    this.tooltipVisible[eventId] = !this.tooltipVisible[eventId];
+    for (const key in this.tooltipVisible) {
+      if (key !== eventId) {
+        this.tooltipVisible[key] = false;
+      }
+    }
   }
 
   toggleDropdown() {
@@ -122,7 +136,7 @@ export class ReportComponent implements OnInit {
         tooltip: {
           callbacks: {
             title: () => '',
-            label: (context: TooltipItem<'bar'>) => {
+            label: (context: TooltipItem<'pie'>) => {
               const label = context.label || '';
               const value = (context.raw as number) || 0;
               return `${label} : ${value} `;
@@ -154,7 +168,9 @@ export class ReportComponent implements OnInit {
         labels = ['Registered Users', 'Max Attendees'];
         data = [event.registered_users, event.max_attendees];
         backgroundColor = ['#73300a', '#c75519'];
-        message = `Out of ${event.max_attendees} potential attendees, ${event.registered_users} have registered.`;
+        const registeredUsersText =
+          event.registered_users === 1 ? 'student has' : 'students have';
+        message = `Out of ${event.max_attendees} potential attendees, ${event.registered_users} ${registeredUsersText} registered.`;
         break;
 
       case 'courseRegistration':
@@ -179,10 +195,14 @@ export class ReportComponent implements OnInit {
         const courses = event.registered_by_course
           .map(
             (item: { course: string; count: number }) =>
-              `${item.count} in ${item.course}`
+              `<li>${item.course}: ${item.count} ${
+                item.count === 1 ? 'student' : 'students'
+              }</li>`
           )
-          .join(', ');
-        message = `Out of ${event.max_attendees} potential attendees, ${event.registered_users} have registered. Courses: ${courses}.`;
+          .join('');
+        const registeredUsersTextCourse =
+          event.registered_users === 1 ? 'student has' : 'students have';
+        message = `Out of ${event.max_attendees} potential attendees, ${event.registered_users} ${registeredUsersTextCourse} registered.<br><br> Registered by courses:<ul>${courses}</ul>`;
         break;
 
       case 'yearLevelRegistration':
@@ -207,10 +227,14 @@ export class ReportComponent implements OnInit {
         const yearLevels = event.registered_by_year_level
           .map(
             (item: { year_level: string; count: number }) =>
-              `${item.count} in ${item.year_level}`
+              `<li>${item.year_level}: ${item.count} ${
+                item.count === 1 ? 'student' : 'students'
+              }</li>`
           )
-          .join(', ');
-        message = `Out of ${event.max_attendees} potential attendees, ${event.registered_users} have registered. Year Levels: ${yearLevels}.`;
+          .join('');
+        const registeredUsersTextYear =
+          event.registered_users === 1 ? 'student has' : 'students have';
+        message = `Out of ${event.max_attendees} potential attendees, ${event.registered_users} ${registeredUsersTextYear} registered.<br><br> Registered by year levels:<ul>${yearLevels}</ul>`;
         break;
     }
 
@@ -255,10 +279,6 @@ export class ReportComponent implements OnInit {
     return chartData;
   }
 
-  getRegistrationMessage(event: any): string {
-    return `Out of ${event.max_attendees} potential attendees, ${event.registered_users}  have registered.`;
-  }
-
   isDataAvailable(event: any): boolean {
     return (
       event.registered_users > 0 ||
@@ -270,5 +290,25 @@ export class ReportComponent implements OnInit {
 
   trackByEventId(index: number, event: any): number {
     return event.event_id;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+
+    // Check if the click is outside the tooltips and SVGs
+    const clickedOutside =
+      !target.closest('.tooltip-content') && !target.closest('svg');
+
+    if (clickedOutside) {
+      // Hide all tooltips
+      for (const key in this.tooltipVisible) {
+        this.tooltipVisible[key] = false;
+      }
+    }
+  }
+
+  viewAll() {
+    this.router.navigate(['admin/admin-past-event']);
   }
 }

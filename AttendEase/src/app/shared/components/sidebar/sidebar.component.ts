@@ -75,6 +75,7 @@ export class SidebarComponent implements OnInit {
     this.animationStopped = true;
   }
 
+  //for chat not implmented
   openChat() {
     const dialogConfig = new MatDialogConfig();
 

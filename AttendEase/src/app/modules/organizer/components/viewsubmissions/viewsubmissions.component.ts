@@ -16,6 +16,7 @@ import { Subscription, timer, switchMap } from 'rxjs';
 export class ViewsubmissionsComponent {
   datalist: any;
   imageUrl: string | null = null;
+  role_id: any;
   private refreshSubscription: Subscription | undefined;
 
   constructor(
@@ -25,8 +26,8 @@ export class ViewsubmissionsComponent {
   ) {}
 
   ngOnInit(): void {
+    this.role_id = this.service.getCurrentUserRole();
     this.loadData();
-
     this.refreshSubscription = timer(0, 60000)
       .pipe(
         switchMap(() =>
