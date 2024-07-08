@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { EventService } from '../../../../core/service/event.service';
@@ -9,6 +9,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TimelimitComponent } from '../../../admin/components/timelimit/timelimit.component';
+import { Subscription, interval, switchMap, catchError } from 'rxjs';
 
 interface Event {
   event_id: number;
@@ -35,7 +36,7 @@ interface Event {
     MatTooltipModule,
   ],
 })
-export class AttendanceComponent implements OnInit {
+export class AttendanceComponent implements OnInit, OnDestroy {
   eventData: any;
   selectedEventId: any;
   eventList: Event[] = [];
@@ -43,6 +44,8 @@ export class AttendanceComponent implements OnInit {
   p: number = 1;
   itemsPerPage: number = 10;
   maxSize: number = 5;
+
+  private updateSubscription?: Subscription;
 
   constructor(
     private service: EventService,
@@ -53,6 +56,13 @@ export class AttendanceComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadEvent();
+    this.startPolling();
+  }
+
+  ngOnDestroy(): void {
+    if (this.updateSubscription) {
+      this.updateSubscription.unsubscribe();
+    }
   }
 
   loadEvent() {
@@ -90,6 +100,51 @@ export class AttendanceComponent implements OnInit {
         return 0;
       });
     });
+  }
+
+  startPolling() {
+    this.updateSubscription = interval(5000) // Polling every 1 minute
+      .pipe(
+        switchMap(() => this.service.getAllEvents()),
+        catchError((error) => {
+          console.error('Error polling for events:', error);
+          return [];
+        })
+      )
+      .subscribe((result: any) => {
+        this.eventList = result.map((data: any): Event => {
+          const eventId = data.event_id;
+          const eventObject: Event = {
+            event_id: data.event_id,
+            event_name: data.event_name,
+            event_description: data.event_description,
+            event_location: data.event_location,
+            event_start_date: data.event_start_date,
+            event_end_date: data.event_end_date,
+            event_registration_start: data.event_registration_start,
+            event_registration_end: data.event_registration_end,
+            session: data.session,
+            status: this.getEventStatus(data),
+          };
+          return eventObject;
+        });
+
+        this.eventList.sort((a, b) => {
+          if (a.status === 'done' && b.status !== 'done') {
+            return -1;
+          }
+          if (a.status !== 'done' && b.status === 'done') {
+            return 1;
+          }
+          if (a.status === 'ongoing' && b.status === 'upcoming') {
+            return -1;
+          }
+          if (a.status === 'upcoming' && b.status === 'ongoing') {
+            return 1;
+          }
+          return 0;
+        });
+      });
   }
 
   viewEvent(eventId: any) {

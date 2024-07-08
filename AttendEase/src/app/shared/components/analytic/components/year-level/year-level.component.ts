@@ -20,7 +20,7 @@ export class YearLevelComponent implements OnInit, OnDestroy {
   constructor(private dataService: DataAnalyticsService) {}
 
   ngOnInit(): void {
-    this.refreshSubscription = timer(0, 60000)
+    this.refreshSubscription = timer(0, 3000)
       .pipe(switchMap(() => this.dataService.getYearLevel()))
       .subscribe(
         (res) => {

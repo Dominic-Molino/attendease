@@ -12,6 +12,50 @@ class PostStudentFunctions extends GlobalMethods
     }
     //post functions
 
+    public function add_profile_update_request($data)
+    {
+        // Check if required fields are set
+        if (!isset($data->user_id, $data->message)) {
+            return $this->sendPayload(null, 'failed', "Incomplete request data.", 400);
+        }
+
+        // Validate user_id
+        if (!is_int($data->user_id)) {
+            return $this->sendPayload(null, 'failed', "Invalid user ID.", 400);
+        }
+
+        $user_id = $data->user_id;
+        $message = $data->message;
+
+        // Check if the user exists
+        $sql = "SELECT COUNT(*) FROM user WHERE user_id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$user_id]);
+
+        if ($stmt->fetchColumn() == 0) {
+            return $this->sendPayload(null, 'failed', "User not found.", 404);
+        }
+
+        // Insert the profile update request
+        $sql = "INSERT INTO profile_update_requests (user_id, message, status, created_at) 
+                VALUES (?, ?, 'pending', NOW())";
+
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$user_id, $message]);
+
+            if ($stmt->rowCount() > 0) {
+                return $this->sendPayload(null, 'success', "Profile update request added successfully.", 200);
+            } else {
+                return $this->sendPayload(null, 'failed', "Failed to add profile update request.", 500);
+            }
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+        }
+    }
+
+
     //edit user profile 
     public function editUser($data, $user_id)
     {

@@ -59,7 +59,7 @@ class GetStudentFunctions extends GlobalMethods
 
     public function getStudentInformation($user_id = null)
     {
-        $columns = "user_id, first_name, last_name, year_level, block, course, email, role_id, organization";
+        $columns = "user_id, first_name, last_name, year_level, block, course, email, role_id, organization, permission";
         $condition = ($user_id !== null) ? "user_id = $user_id" : null;
         return $this->get_records('user', $condition, $columns);
     }

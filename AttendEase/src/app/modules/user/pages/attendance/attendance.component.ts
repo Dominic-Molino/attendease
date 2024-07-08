@@ -8,7 +8,15 @@ import Swal from 'sweetalert2';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { Observable, Subscription, catchError, finalize, map } from 'rxjs';
+import {
+  Observable,
+  Subscription,
+  catchError,
+  finalize,
+  interval,
+  map,
+  switchMap,
+} from 'rxjs';
 import { Event } from '../../../../interfaces/EventInterface';
 import { Router } from '@angular/router';
 
@@ -31,10 +39,12 @@ export class AttendanceComponent {
   attendanceRemarks: { [key: number]: number } = {};
   loading: boolean = false;
 
-  //pagination variables
+  // Pagination variables
   p: number = 1;
   itemsPerPage: number = 10;
   maxSize = 5;
+
+  private updateSubscription?: Subscription;
 
   constructor(
     private eventService: EventService,
@@ -46,58 +56,70 @@ export class AttendanceComponent {
   ngOnInit(): void {
     this.userId = this.service.getCurrentUserId();
     this.getUserEvents();
+    this.startPolling();
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    if (this.updateSubscription) {
+      this.updateSubscription.unsubscribe();
+    }
+  }
 
-  getUserEvents() {
+  getUserEvents(): void {
     this.loading = true;
-    this.eventService.getUserEvent().subscribe({
-      next: (res: any) => {
-        if (res && res.payload) {
-          this.events = res.payload.map((event: any) => ({
-            ...event,
-            event_start_date: new Date(event.event_start_date),
-            event_end_date: new Date(event.event_end_date),
-            event_registration_start: new Date(event.event_registration_start),
-            event_registration_end: new Date(event.event_registration_end),
-            categories: JSON.parse(event.categories),
-            status: this.getEventStatus(event),
-          }));
+    this.eventService
+      .getUserEvent()
+      .pipe(
+        map((res) => {
+          if (res && res.payload) {
+            this.events = res.payload.map((event: any) => ({
+              ...event,
+              event_start_date: new Date(event.event_start_date),
+              event_end_date: new Date(event.event_end_date),
+              event_registration_start: new Date(
+                event.event_registration_start
+              ),
+              event_registration_end: new Date(event.event_registration_end),
+              categories: JSON.parse(event.categories),
+              status: this.getEventStatus(event),
+            }));
 
-          console.log(this.events);
+            this.events.forEach((event) => {
+              this.getUserAttendanceRemark(event.event_id);
+            });
 
-          this.events.forEach((event) => {
-            this.getUserAttendanceRemark(event.event_id);
-          });
-
-          this.events.sort((a, b) => {
-            if (
-              a.status === 'done' &&
-              (b.status === 'ongoing' || b.status === 'upcoming')
-            ) {
-              return -1;
-            } else if (a.status === 'ongoing' && b.status === 'upcoming') {
-              return -1;
-            } else if (
-              a.status === 'upcoming' &&
-              (b.status === 'done' || b.status === 'ongoing')
-            ) {
-              return 1;
-            } else {
-              return 0;
-            }
-          });
-        } else {
-          console.error('Expected an array but got:', res);
-        }
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error fetching events:', err);
-        this.loading = false;
-      },
-    });
+            this.events.sort((a, b) => {
+              if (
+                a.status === 'done' &&
+                (b.status === 'ongoing' || b.status === 'upcoming')
+              ) {
+                return -1;
+              } else if (a.status === 'ongoing' && b.status === 'upcoming') {
+                return -1;
+              } else if (
+                a.status === 'upcoming' &&
+                (b.status === 'done' || b.status === 'ongoing')
+              ) {
+                return 1;
+              } else {
+                return 0;
+              }
+            });
+          } else {
+            console.error('Expected an array but got:', res);
+          }
+          this.loading = false;
+        }),
+        catchError((error) => {
+          console.error('Error fetching events:', error);
+          this.loading = false;
+          return [];
+        }),
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe();
   }
 
   getEventStatus(event: any): string {
@@ -133,10 +155,56 @@ export class AttendanceComponent {
     }
   }
 
-  openFile(eventState: string, event: number) {
+  startPolling(): void {
+    this.updateSubscription = interval(5000) // Poll every 1 minute
+      .pipe(
+        switchMap(() => this.eventService.getUserEvent()),
+        catchError((error) => {
+          console.error('Error polling for events:', error);
+          return [];
+        })
+      )
+      .subscribe((res) => {
+        if (res && res.payload) {
+          this.events = res.payload.map((event: any) => ({
+            ...event,
+            event_start_date: new Date(event.event_start_date),
+            event_end_date: new Date(event.event_end_date),
+            event_registration_start: new Date(event.event_registration_start),
+            event_registration_end: new Date(event.event_registration_end),
+            categories: JSON.parse(event.categories),
+            status: this.getEventStatus(event),
+          }));
+
+          this.events.forEach((event) => {
+            this.getUserAttendanceRemark(event.event_id);
+          });
+
+          this.events.sort((a, b) => {
+            if (
+              a.status === 'done' &&
+              (b.status === 'ongoing' || b.status === 'upcoming')
+            ) {
+              return -1;
+            } else if (a.status === 'ongoing' && b.status === 'upcoming') {
+              return -1;
+            } else if (
+              a.status === 'upcoming' &&
+              (b.status === 'done' || b.status === 'ongoing')
+            ) {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
+        }
+      });
+  }
+
+  openFile(eventState: string, eventId: number) {
     if (eventState === 'done') {
       const dialogRef = this.dialog.open(SubmitAttendanceComponent, {
-        data: { eventId: event },
+        data: { eventId: eventId },
         disableClose: true,
         width: '70%',
       });

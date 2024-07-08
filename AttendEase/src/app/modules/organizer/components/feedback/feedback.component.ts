@@ -4,6 +4,7 @@ import { AuthserviceService } from '../../../../core/service/authservice.service
 import { CommonModule } from '@angular/common';
 import { formatDistanceToNow } from 'date-fns';
 import { Router } from '@angular/router';
+import { interval, Subscription, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-feedback',
@@ -16,6 +17,8 @@ export class FeedbackComponent implements OnInit {
   currId: any;
   feedback: any[] = [];
   userMap: Map<number, any> = new Map();
+  private pollingInterval = 3000; // Polling interval in milliseconds
+  private pollingSubscription: Subscription | undefined;
 
   constructor(
     private service: EventService,
@@ -26,6 +29,39 @@ export class FeedbackComponent implements OnInit {
   ngOnInit(): void {
     this.currId = this.user.getCurrentUserId();
     this.loadFeedback(this.currId);
+    this.startPolling(); // Start polling on component initialization
+  }
+
+  ngOnDestroy(): void {
+    this.stopPolling(); // Stop polling when component is destroyed
+  }
+
+  private startPolling(): void {
+    this.pollingSubscription = interval(this.pollingInterval)
+      .pipe(
+        switchMap(() => this.service.getFeedbackEventOfOrgEvent(this.currId))
+      )
+      .subscribe((res) => {
+        const updatedFeedback: any[] = res.payload;
+
+        if (!this.areFeedbackEqual(this.feedback, updatedFeedback)) {
+          this.feedback = updatedFeedback;
+          this.feedback.sort((a, b) => {
+            return (
+              new Date(b.feedback_date).getTime() -
+              new Date(a.feedback_date).getTime()
+            );
+          });
+          this.loadUserDetails();
+        }
+        this.loadFeedback(this.currId);
+      });
+  }
+
+  private stopPolling(): void {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
   }
 
   loadFeedback(id: any) {
@@ -38,7 +74,6 @@ export class FeedbackComponent implements OnInit {
         );
       });
       this.loadUserDetails();
-      console.log(this.feedback);
     });
   }
 
@@ -72,5 +107,17 @@ export class FeedbackComponent implements OnInit {
 
   openFeedback(eventId: any, userId: any) {
     this.router.navigate([`organizer/org-user-feedback/${eventId}/${userId}`]);
+  }
+
+  private areFeedbackEqual(feedback1: any[], feedback2: any[]): boolean {
+    if (feedback1.length !== feedback2.length) {
+      return false;
+    }
+    for (let i = 0; i < feedback1.length; i++) {
+      if (feedback1[i].id !== feedback2[i].id) {
+        return false;
+      }
+    }
+    return true;
   }
 }

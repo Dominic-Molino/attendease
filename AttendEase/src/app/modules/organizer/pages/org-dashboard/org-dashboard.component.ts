@@ -38,41 +38,5 @@ export class OrgDashboardComponent implements OnInit {
 
   constructor(private service: EventService, private router: Router) {}
 
-  ngOnInit(): void {
-    this.currID = this.service.getCurrentUserId();
-    this.loadReport(this.currID);
-  }
-
-  loadReport(id: any) {
-    this.service.getApprovedOrganizerEvents(id).subscribe((res) => {
-      this.eventList = this.filterDoneEvents(res.payload);
-      console.log(this.eventList);
-    });
-  }
-
-  getEventState(event: any): string {
-    const currentDate = new Date();
-    const startDate = new Date(event.event_start_date);
-    const endDate = new Date(event.event_end_date);
-
-    if (endDate < currentDate) {
-      return 'done';
-    } else if (startDate <= currentDate && endDate >= currentDate) {
-      return 'ongoing';
-    } else {
-      return 'upcoming';
-    }
-  }
-
-  filterDoneEvents(events: any[]): any[] {
-    return events.filter((event) => this.getEventState(event) === 'done');
-  }
-
-  generateReport(event_id: number) {
-    console.log(event_id);
-    let routePrefix = 'organizer/event-report';
-    if (routePrefix) {
-      this.router.navigate([`${routePrefix}/${event_id}`]);
-    }
-  }
+  ngOnInit(): void {}
 }

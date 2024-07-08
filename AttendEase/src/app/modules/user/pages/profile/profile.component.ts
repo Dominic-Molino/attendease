@@ -5,11 +5,12 @@ import { CommonModule, TitleCasePipe } from '@angular/common';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
+import { RequestComponent } from '../../components/request/request.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, TitleCasePipe],
+  imports: [CommonModule, TitleCasePipe, RequestComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
 })
@@ -83,6 +84,12 @@ export class ProfileComponent implements OnInit {
         }
       );
     }
+  }
+
+  requestProfileUpdate() {
+    const modal = this.dialog.open(RequestComponent, {
+      width: '40%',
+    });
   }
 
   openEditInfo(): void {

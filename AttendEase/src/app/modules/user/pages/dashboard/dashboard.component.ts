@@ -1,8 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { EventService } from '../../../../core/service/event.service';
-import { Observable, catchError, map } from 'rxjs';
+import {
+  Observable,
+  Subscription,
+  catchError,
+  interval,
+  map,
+  of,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import { MobicalendarComponent } from '../../../../shared/components/mobicalendar/mobicalendar.component';
 import { UserEvents } from '../../../../interfaces/UserEvents';
 
@@ -13,20 +22,34 @@ import { UserEvents } from '../../../../interfaces/UserEvents';
   styleUrl: './dashboard.component.css',
   imports: [CommonModule, RouterLink, MobicalendarComponent],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   events$?: Observable<UserEvents[]>;
+  private pollingSubscription?: Subscription;
+  private pollingInterval = 10000; // Poll every 10 seconds
 
   constructor(private router: Router, private eventService: EventService) {}
 
   ngOnInit(): void {
-    this.events$ = this.getUserEvents();
+    this.startPolling();
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
+  }
+
+  startPolling(): void {
+    this.events$ = interval(this.pollingInterval).pipe(
+      startWith(0),
+      switchMap(() => this.getUserEvents())
+    );
   }
 
   getUserEvents(): Observable<UserEvents[]> {
     return this.eventService.getUserEvent().pipe(
       map((res) => {
         if (res && res.payload) {
-          console.log(res.payload);
           const events = res.payload.map((event: any) => {
             const currentDate = new Date();
             const endDate = new Date(event.event_end_date);
@@ -80,7 +103,8 @@ export class DashboardComponent implements OnInit {
       catchError((error) => {
         const errorMessage =
           error.error?.status?.message || 'An error occurred';
-        return [];
+        console.error(errorMessage);
+        return of([]); // Return empty array in case of error
       })
     );
   }

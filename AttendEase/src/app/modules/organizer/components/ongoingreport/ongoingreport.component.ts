@@ -37,7 +37,6 @@ export class OngoingreportComponent implements OnInit {
   loadOngoingReport(id: any) {
     this.service.getOngoingReport(id).subscribe((res) => {
       this.report = res.payload;
-      console.log(this.report);
       if (this.report.length > 0) {
         this.selectedEvent = this.report[0];
       }
@@ -50,15 +49,12 @@ export class OngoingreportComponent implements OnInit {
       if (this.pastEvents.length > 0) {
         this.reportDetail = this.pastEvents[0];
       }
-      console.log('Past Events:', this.pastEvents);
-      console.log('Report Detail:', this.reportDetail);
     });
   }
 
   loadReportforDoneEvent(event_id: any) {
     this.service.getReport(event_id).subscribe((res) => {
       this.selectedPastEventReport = res.payload[0];
-      console.log(`Load Report for Done Event:`, this.selectedPastEventReport);
     });
   }
 
@@ -83,7 +79,6 @@ export class OngoingreportComponent implements OnInit {
     if (!this.isEventPast(event)) {
       this.selectedPastEventReport = null;
     } else {
-      // Load past event report if a past event is selected
       this.loadReportforDoneEvent(event.event_id);
     }
     this.toggleDropdown();
@@ -98,10 +93,11 @@ export class OngoingreportComponent implements OnInit {
     if (this.report.length > 0) {
       this.selectedEvent = this.report[0];
     }
-    this.toggleDropdown();
+    this.toggleDropdown(); // Close dropdown after selecting event type
   }
 
   isEventPast(event: any): boolean {
+    // Determine if the event is in the past events list
     return this.pastEvents.some(
       (pastEvent) => pastEvent.event_id === event.event_id
     );

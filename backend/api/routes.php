@@ -390,6 +390,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($post->add_user($data));
                 break;
 
+            case 'postrequest':
+                echo json_encode($postStudent->add_profile_update_request($data));
+                break;
+
                 #admin module cases
             case 'edituserrole':
                 echo json_encode($post->edit_user_role($data, $request[1]));

@@ -15,7 +15,7 @@ import { EventService } from '../../../../core/service/event.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Subscription, of, switchMap } from 'rxjs';
+import { Subscription, interval, of, switchMap } from 'rxjs';
 import { Event } from '../../../../interfaces/EventInterface';
 
 @Component({
@@ -51,8 +51,9 @@ export class EventsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.fetchEvents();
-    this.subscribeToUserEvents();
+    this.fetchEvents(); // Initial fetch
+    this.subscribeToUserEvents(); // Subscribe to user events
+    this.startPolling(); // Start polling
   }
 
   ngOnDestroy(): void {
@@ -133,6 +134,13 @@ export class EventsComponent implements OnInit, OnDestroy {
         this.loading = false;
       },
     });
+  }
+
+  startPolling(): void {
+    this.updateSubscription = interval(5000) // Polling interval in milliseconds (1 minute in this example)
+      .subscribe(() => {
+        this.fetchEvents(); // Fetch events again
+      });
   }
 
   toggleDropdown() {

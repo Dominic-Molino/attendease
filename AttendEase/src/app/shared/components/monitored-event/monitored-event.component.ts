@@ -18,7 +18,6 @@ import { interval, Subscription, switchMap } from 'rxjs';
 export class MonitoredEventComponent implements OnInit, OnDestroy {
   events: Event[] = [];
   selectedEvent: Event | null = null;
-  registeredUsers: any[] = [];
   registeredUsersMap: { [eventId: number]: any[] } = {};
   groupedRegisteredUsersMap: { [eventId: number]: { [date: string]: any[] } } =
     {};
@@ -26,27 +25,23 @@ export class MonitoredEventComponent implements OnInit, OnDestroy {
   currId: any;
   isDrawerVisible: boolean = false;
 
-  private pollingInterval = 1500;
+  private pollingInterval = 5000; // Polling interval in milliseconds
   private pollingSubscription: Subscription | undefined;
-  private lastFetchedData: { [eventId: number]: Event } = {};
+  private lastFetchedEvents: Event[] = [];
 
   constructor(
     private eventService: EventService,
-    private service: AuthserviceService
+    private authService: AuthserviceService
   ) {}
 
   ngOnInit(): void {
-    this.currId = this.service.getCurrentUserId();
+    this.currId = this.authService.getCurrentUserId();
+    this.startPolling();
     this.loadData(this.currId);
-    this.startPolling(); // Start polling on component initialization
-    if (this.events.length > 0) {
-      this.selectedEvent = this.events[this.currentIndex];
-      this.loadRegisteredUsers(this.selectedEvent.event_id);
-    }
   }
 
   ngOnDestroy(): void {
-    this.stopPolling(); // Stop polling when component is destroyed
+    this.stopPolling();
   }
 
   private startPolling(): void {
@@ -57,14 +52,27 @@ export class MonitoredEventComponent implements OnInit, OnDestroy {
         )
       )
       .subscribe((res: any) => {
-        this.events = res.payload;
+        const updatedEvents: Event[] = res.payload;
 
-        this.events.forEach((event) => {
-          this.loadRegisteredUsers(event.event_id);
-        });
+        // Update events only if they have changed since last fetch
+        if (!this.areEventsEqual(this.lastFetchedEvents, updatedEvents)) {
+          this.events = updatedEvents;
+          this.lastFetchedEvents = [...updatedEvents];
 
-        if (this.events.length > 0) {
-          this.selectedEvent = this.events[this.currentIndex];
+          // Update selected event if it has changed
+          if (
+            !this.selectedEvent ||
+            !this.events.some(
+              (e) => e.event_id === this.selectedEvent!.event_id
+            )
+          ) {
+            this.selectedEvent = this.events[this.currentIndex] || null;
+          }
+
+          // Reload registered users for the selected event
+          if (this.selectedEvent) {
+            this.loadRegisteredUsers(this.selectedEvent.event_id);
+          }
         }
       });
   }
@@ -79,13 +87,11 @@ export class MonitoredEventComponent implements OnInit, OnDestroy {
     if (id) {
       this.eventService.getApprovedOrganizerEvents(id).subscribe((res: any) => {
         this.events = res.payload;
-
-        this.events.forEach((event) => {
-          this.loadRegisteredUsers(event.event_id);
-        });
+        this.lastFetchedEvents = [...this.events]; // Initialize last fetched events
 
         if (this.events.length > 0) {
           this.selectedEvent = this.events[this.currentIndex];
+          this.loadRegisteredUsers(this.selectedEvent.event_id);
         }
       });
     }
@@ -150,5 +156,17 @@ export class MonitoredEventComponent implements OnInit, OnDestroy {
 
   closeDrawer(): void {
     this.isDrawerVisible = false;
+  }
+
+  private areEventsEqual(events1: Event[], events2: Event[]): boolean {
+    if (events1.length !== events2.length) {
+      return false;
+    }
+    for (let i = 0; i < events1.length; i++) {
+      if (events1[i].event_id !== events2[i].event_id) {
+        return false;
+      }
+    }
+    return true;
   }
 }

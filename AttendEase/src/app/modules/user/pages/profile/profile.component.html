@@ -152,10 +152,17 @@
             </ul>
           </div>
         </div>
-        <div class="flex justify-start mt-4 md:mt-6">
+        <!-- <div class="flex justify-start mt-4 md:mt-6">
           <button
             (click)="openEditInfo()"
-            class="inline-flex items-center px-4 py-2 text-sm font-bold font-secondary text-center text-white bg-light-background rounded-md hover:bg-light-foregroud focus:outline-none"
+            [ngClass]="{
+              'text-white bg-light-background  hover:bg-light-foregroud':
+                studentProfile[0].permission === 1,
+              'cursor-not-allowed text-text bg-gray-300':
+                studentProfile[0].permission === 0
+            }"
+            [disabled]="studentProfile[0].permission === 0"
+            class="inline-flex items-center px-4 py-2 rounded-md text-sm font-bold font-secondary text-center focus:outline-none"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -182,9 +189,19 @@
               <path d="m16.9 15.2-.4-.9" />
             </svg>
             Edit Profile
-          </button>
-        </div>
+          </button> -->
       </div>
+      <!-- <div *ngIf="studentProfile[0].permission === 0">
+        <p class="text-rose-500 text-center text-sm">
+          You can't update your profile
+        </p>
+        <p
+          class="mx-auto cursor-pointer hover:underline text-center text-sm"
+          (click)="requestProfileUpdate()"
+        >
+          Request for update?
+        </p>
+      </div> -->
     </div>
   </div>
 </main>

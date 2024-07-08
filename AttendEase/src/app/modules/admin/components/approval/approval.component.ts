@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
+import { Subscription, interval, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-approval',
@@ -24,16 +25,44 @@ export class ApprovalComponent implements OnInit {
 
   sortDirection: 'asc' | 'desc' = 'asc'; // Track sorting direction
 
+  private pollingInterval = 10000; // Polling interval in milliseconds
+  private pollingSubscription: Subscription | undefined;
+
   constructor(private evService: EventService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadEvents();
+    this.startPolling(); // Start polling on component initialization
+  }
+
+  ngOnDestroy(): void {
+    this.stopPolling(); // Stop polling when component is destroyed
+  }
+
+  private startPolling(): void {
+    this.pollingSubscription = interval(this.pollingInterval)
+      .pipe(switchMap(() => this.evService.getEvents()))
+      .subscribe((res: any) => {
+        const updatedEvents = res.payload;
+
+        // Check if events data has changed
+        if (!this.areEventsEqual(this.events, updatedEvents)) {
+          this.events = updatedEvents;
+          this.filteredEvents = [...this.events]; // Update filtered events as well if needed
+          console.log('Events updated via polling:', this.events);
+        }
+      });
+  }
+
+  private stopPolling(): void {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
   }
 
   loadEvents() {
     this.evService.getEvents().subscribe((res: any) => {
       this.events = res.payload;
-      console.log(this.events);
       this.filteredEvents = [...this.events]; // Initialize filteredEvents with all events
     });
   }
@@ -54,7 +83,8 @@ export class ApprovalComponent implements OnInit {
         (event) =>
           event.event_name.toLowerCase().includes(searchTerm) ||
           event.organizer_name.toLowerCase().includes(searchTerm) ||
-          event.organizer_organization.toLowerCase().includes(searchTerm)
+          event.organizer_organization.toLowerCase().includes(searchTerm) ||
+          event.approval_status.toLowerCase().includes(searchTerm)
       );
     }
   }
@@ -71,5 +101,17 @@ export class ApprovalComponent implements OnInit {
       return 0;
     });
     this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+  }
+
+  private areEventsEqual(events1: any[], events2: any[]): boolean {
+    if (events1.length !== events2.length) {
+      return false;
+    }
+    for (let i = 0; i < events1.length; i++) {
+      if (events1[i].event_id !== events2[i].event_id) {
+        return false;
+      }
+    }
+    return true;
   }
 }

@@ -19,24 +19,8 @@
       <hr class="h-px mb-6 bg-dark-border border-0" />
     </div>
 
-    @if(loading){
-    <div class="h-screen w-full flex justify-center bg-white">
-      <div class="flex flex-row gap-2">
-        <div
-          class="w-4 h-4 rounded-full bg-light-background animate-bounce"
-        ></div>
-        <div
-          class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.3s]"
-        ></div>
-        <div
-          class="w-4 h-4 rounded-full bg-light-background animate-bounce [animation-delay:-.5s]"
-        ></div>
-      </div>
-    </div>
-    }@else if(!loading && filteredEventList.length > 0){
-
+    @if(filteredEventList.length > 0){
     <div class="container">
-      @defer{
       <h5
         class="flex self-start mb-2 text-lg font-bold tracking-tight text-text"
       >
@@ -312,7 +296,6 @@
           </ng-container>
         </div>
       </section>
-      }
       <div
         *ngIf="filteredEventList.length > 0"
         class="flex justify-center items-center mt-auto p-5"
