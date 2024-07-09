@@ -157,6 +157,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($analytics->get_attendees_total($request[1]));
                 break;
 
+
             case 'totalAttendees':
                 echo json_encode($analytics->get_all_attendee_counts());
                 break;
@@ -202,6 +203,14 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     echo json_encode($analytics->getApprovedOngoingEventsWithStatus($request[1]));
                 } else {
                     echo json_encode($analytics->getApprovedOngoingEventsWithStatus());
+                }
+                break;
+
+            case 'getallupcomingevents':
+                if (isset($request[1])) {
+                    echo json_encode($analytics->getApprovedUpcomingEventsWithStatus($request[1]));
+                } else {
+                    echo json_encode($analytics->getApprovedUpcomingEventsWithStatus());
                 }
                 break;
 
@@ -315,14 +324,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 }
                 break;
 
-                #dashboard
-            case 'getregistereduser':
-                if (isset($request[1])) {
-                    echo json_encode($getEvents->get_total_registered_users_by_organizer($request[1]));
-                } else {
-                    echo 'no event id';
-                }
-                break;
 
             case 'getdatadashboard':
                 if (isset($request[1])) {
@@ -356,6 +357,14 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 }
                 break;
 
+            case 'getupcomingreports':
+                if (isset($request[1])) {
+                    echo json_encode($getEvents->getApprovedUpcomingEventsWithStatus($request[1]));
+                } else {
+                    echo 'no event id';
+                }
+                break;
+
             case 'getdoneeventsoforg':
                 if (isset($request[1])) {
                     echo json_encode($getEvents->getDoneEventsByOrganizer($request[1]));
@@ -363,6 +372,11 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     echo 'no event id';
                 }
                 break;
+
+            case 'getlogs':
+                echo json_encode($getStudent->getActivityLogs());
+                break;
+
 
             default:
                 echo "This is forbidden";

@@ -130,4 +130,34 @@ class GetStudentFunctions extends GlobalMethods
             return array("avatar" => null);
         }
     }
+
+
+    public function getActivityLogs($userId = null)
+    {
+        $sql = "SELECT log_id, user_id, event_id, activity_type, details, MIN(created_at) as created_at
+                FROM activity_log";
+
+        if ($userId !== null) {
+            $sql .= " WHERE user_id = :userId";
+        }
+
+        $sql .= " GROUP BY user_id, event_id, activity_type, details
+                  ORDER BY created_at DESC";
+
+        try {
+            $stmt = $this->pdo->prepare($sql);
+
+            if ($userId !== null) {
+                $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+            }
+
+            $stmt->execute();
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $this->sendPayload($data, 'success', "getActivityLogs", 200);
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', "Database error.", 500);
+        }
+    }
 }

@@ -185,8 +185,6 @@ class GetEvent extends GlobalMethods
         }
     }
 
-
-
     //returns the event id
     public function getEventById($eventId)
     {
@@ -295,49 +293,15 @@ class GetEvent extends GlobalMethods
     }
 
     // for dashboard of the organizer
-    public function get_total_registered_users_by_organizer($organizer_user_id)
-    {
-        try {
-            $sql = "SELECT COUNT(DISTINCT er.user_id) AS total_users, 
-                           u.user_id, u.first_name, u.last_name, u.year_level, u.course, u.block, u.email
-                    FROM event_registration er
-                    JOIN events e ON er.event_id = e.event_id
-                    JOIN user u ON er.user_id = u.user_id
-                    WHERE e.organizer_user_id = :organizer_user_id
-                    GROUP BY u.user_id";
-
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':organizer_user_id', $organizer_user_id, PDO::PARAM_INT);
-            $stmt->execute();
-
-            $usersData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            if ($usersData) {
-                $totalUsers = count($usersData);
-                return $this->sendPayload(['total_users' => $totalUsers, 'users' => $usersData], 'success', "Successfully retrieved total number of registered users for the organizer.", 200);
-            } else {
-                return $this->sendPayload(null, 'failed', "Failed to retrieve total number of registered users for the organizer.", 404);
-            }
-        } catch (PDOException $e) {
-            return $this->sendPayload(null, 'error', $e->getMessage(), 500);
-        }
-    }
-
     public function getDashboardDataByOrganizerId($organizer_user_id)
     {
-        // SQL query to get the counts of approved and pending events
         $eventCountsSql = "SELECT 
                                SUM(CASE WHEN ea.status = 'Approved' THEN 1 ELSE 0 END) AS approved_events,
-                               SUM(CASE WHEN ea.status = 'Pending' THEN 1 ELSE 0 END) AS pending_events
+                               SUM(CASE WHEN ea.status = 'Pending' THEN 1 ELSE 0 END) AS pending_events,
+                               SUM(CASE WHEN ea.status = 'Rejected' THEN 1 ELSE 0 END) AS rejected_events
                            FROM events e
                            LEFT JOIN event_approval ea ON e.event_id = ea.event_id
                            WHERE e.organizer_user_id = :organizer_user_id";
-
-        // SQL query to get the total number of registered students
-        $registeredStudentsSql = "SELECT COUNT(DISTINCT er.user_id) AS total_registered_students
-                                  FROM event_registration er
-                                  JOIN events e ON er.event_id = e.event_id
-                                  WHERE e.organizer_user_id = :organizer_user_id";
 
         try {
             // Fetch event counts
@@ -345,16 +309,11 @@ class GetEvent extends GlobalMethods
             $stmt->execute([':organizer_user_id' => $organizer_user_id]);
             $eventCounts = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Fetch total registered students
-            $stmt = $this->pdo->prepare($registeredStudentsSql);
-            $stmt->execute([':organizer_user_id' => $organizer_user_id]);
-            $registeredStudents = $stmt->fetch(PDO::FETCH_ASSOC);
-
             // Prepare payload
             $payload = [
                 'approved_events' => $eventCounts['approved_events'] ?? 0,
                 'pending_events' => $eventCounts['pending_events'] ?? 0,
-                'total_registered_students' => $registeredStudents['total_registered_students'] ?? 0
+                'rejected_events' => $eventCounts['rejected_events'] ?? 0
             ];
 
             // Return the payload using the sendPayload method from GlobalMethods
@@ -388,6 +347,51 @@ class GetEvent extends GlobalMethods
             } else {
                 return $this->sendPayload(null, 'failed', "No feedback found for the organizer's events.", 404);
             }
+        } catch (PDOException $e) {
+            return $this->sendPayload(null, 'error', $e->getMessage(), 500);
+        }
+    }
+
+    public function getApprovedUpcomingEventsWithStatus($organizer_user_id)
+    {
+        try {
+            $stmt = $this->pdo->prepare("
+        SELECT 
+            e.event_id, e.event_name, e.event_start_date, e.event_end_date, e.event_registration_start, e.event_registration_end ,e.max_attendees, event_location,
+            CASE 
+                WHEN e.event_start_date > NOW() THEN 'upcoming'
+                END AS event_status
+            FROM events e
+            JOIN event_approval ea ON e.event_id = ea.event_id
+            WHERE ea.status = 'Approved' 
+            AND e.event_start_date > NOW()
+            AND e.organizer_user_id = :organizer_user_id
+    ");
+            $stmt->bindParam(':organizer_user_id', $organizer_user_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($events as &$event) {
+                // Get registered count for the event
+                $event_id = $event['event_id'];
+
+                // Get registered count for the event
+                $event['registered_users'] = $this->getOngoingRegisteredCount($event_id);
+
+                // Get student details for the event
+                $event['student_details'] = $this->getOngoingStudentDetails($event_id);
+
+                // Get registered count by course
+                $event['registered_by_course'] = $this->getRegisteredCountByCourse($event_id);
+
+                // Get registered count by year level
+                $event['registered_by_year_level'] = $this->getRegisteredCountByYearLevel($event_id);
+
+                // Get daily registration counts
+                $event['daily_registrations'] = $this->getDailyRegistrations($event_id);
+            }
+
+            return $this->sendPayload($events, 'success', "Successfully retrieved data.", 200);
         } catch (PDOException $e) {
             return $this->sendPayload(null, 'error', $e->getMessage(), 500);
         }
@@ -507,42 +511,55 @@ class GetEvent extends GlobalMethods
         }
     }
 
+    private function getDailyRegistrations($event_id)
+    {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT DATE(registration_date) as registration_date, COUNT(*) as count
+                FROM event_registration
+                WHERE event_id = :event_id
+                GROUP BY DATE(registration_date)
+                ORDER BY registration_date ASC
+            ");
+            $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+
+
     public function getDoneEventsByOrganizer($organizer_user_id)
     {
         try {
-            // Define the columns you need
             $columns = "e.event_id, e.event_name";
 
-            // Write the SQL query to get done events organized by organizer
             $sql = "SELECT $columns 
                 FROM events e 
                 JOIN event_approval ea ON e.event_id = ea.event_id 
                 JOIN user u ON e.organizer_user_id = u.user_id
                 WHERE ea.status = 'Approved' 
                 AND e.event_end_date < NOW() 
-                AND u.user_id = :organizer_user_id"; // Filter for 'done' events and specific organizer
+                AND u.user_id = :organizer_user_id";
 
-            // Prepare the statement
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindParam(':organizer_user_id', $organizer_user_id, PDO::PARAM_INT);
 
-            // Execute the query
             $stmt->execute();
             $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            // Return the payload with the events data
             return $this->sendPayload($events, 'success', "Successfully retrieved data.", 200);
         } catch (PDOException $e) {
-            // Handle database error gracefully
             return $this->sendPayload(null, 'error', $e->getMessage(), 500);
         }
     }
 
 
 
+
+
     #admin
-
-
     // Function to get all approved and done events with status and student information
     public function getApprovedDoneEventsWithStatus($event_id)
     {

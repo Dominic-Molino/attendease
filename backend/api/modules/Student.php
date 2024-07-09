@@ -91,6 +91,9 @@ class PostStudentFunctions extends GlobalMethods
     {
         try {
 
+            error_log("Registering user: $user_id for event: $event_id");
+
+
             // $userExists = $this->checkUserExists($user_id);
             // $eventExists = $this->checkEventExists($event_id);
 
@@ -169,6 +172,9 @@ class PostStudentFunctions extends GlobalMethods
             $stmt->execute([$event_id, $user_id]);
 
             if ($stmt->rowCount() != 0) {
+                error_log("Logging activity for user: $user_id for event: $event_id");
+
+                $this->logActivity($user_id, $event_id, 'register', 'User registered for event');
                 return $this->sendPayload(null, 'success', "User registered for event successfully.", 200);
             } else {
                 return $this->sendPayload(null, 'failed', "Failed to register user for event.", 500);
@@ -178,6 +184,55 @@ class PostStudentFunctions extends GlobalMethods
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
+
+
+    public function unregisterFromEvent($event_id, $user_id)
+    {
+        $query = "SELECT COUNT(*) as count FROM event_registration WHERE user_id = :userId AND event_id = :eventId";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([':userId' => $user_id, ':eventId' => $event_id]);
+        $count = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+        if ($count == 0) {
+            return;
+        }
+
+        $sql = "DELETE FROM event_registration WHERE event_id = ? AND user_id = ?";
+
+        try {
+            error_log("Unregistering user: $user_id from event: $event_id");
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$event_id, $user_id]);
+
+            if ($stmt->rowCount() > 0) {
+                error_log("Logging activity for user: $user_id from event: $event_id");
+                $this->logActivity($user_id, $event_id, 'unregister', 'User unregistered from event');
+                return $this->sendPayload(null, 'success', "User unregistered from event successfully.", 200);
+            } else {
+                return $this->sendPayload(null, 'failed', "You're not registered to this event!.", 404);
+            }
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+        }
+    }
+
+    function logActivity($userId, $eventId, $activityType, $details)
+    {
+        // Check if the log entry already exists
+        $query = "SELECT COUNT(*) as count FROM activity_log WHERE user_id = :userId AND event_id = :eventId AND activity_type = :activityType AND details = :details";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([':userId' => $userId, ':eventId' => $eventId, ':activityType' => $activityType, ':details' => $details]);
+        $count = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+        if ($count == 0) {
+            // Insert the log entry only if it doesn't exist
+            $query = "INSERT INTO activity_log (user_id, event_id, activity_type, details, created_at) VALUES (:userId, :eventId, :activityType, :details, NOW())";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute([':userId' => $userId, ':eventId' => $eventId, ':activityType' => $activityType, ':details' => $details]);
+        }
+    }
+
 
     private function checkUserExists($user_id)
     {
@@ -266,23 +321,6 @@ class PostStudentFunctions extends GlobalMethods
         }
     }
 
-    public function unregisterFromEvent($event_id, $user_id)
-    {
-        $sql = "DELETE FROM event_registration WHERE Event_Id = ? AND User_Id = ?";
-        try {
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$event_id, $user_id]);
-
-            if ($stmt->rowCount() > 0) {
-                return $this->sendPayload(null, 'success', "User unregistered from event successfully.", 200);
-            } else {
-                return $this->sendPayload(null, 'failed', "You're not registered to this event!.", 404);
-            }
-        } catch (PDOException $e) {
-            error_log("Database error: " . $e->getMessage());
-            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
-        }
-    }
 
 
     public function updateStudentImage($user_id)
