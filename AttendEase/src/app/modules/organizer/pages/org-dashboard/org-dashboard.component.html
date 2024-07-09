@@ -1,9 +1,6 @@
 <main class="!scroll-smooth w-full h-screen">
-  <div class="p-4 mt-16 sm:ml-64">
-    <div class="relative w-full">
-      <p class="mt-5 mb-2 text-text text-2xl tracking-wide font-semibold">
-        Dashboard
-      </p>
+  <div class="p-4 mt-16">
+    <!-- <div class="relative w-full">
       <button
         (click)="op.toggle($event)"
         class="absolute -top-6 right-1 inline-flex items-center text-white bg-light-background hover:bg-light-foregroud focus:outline-none focus:ring-0 font-medium rounded-md text-sm px-5 py-2.5 me-2 mt-5 mb-2"
@@ -31,17 +28,21 @@
         <app-organizer-calendar class="w-50%"></app-organizer-calendar>
       </p-overlayPanel>
       <hr class="h-px mb-5 bg-dark-border border-0" />
-    </div>
-    <div class="w-full">
-      <app-cards></app-cards>
-      <div class="w-full relative">
-        <app-ongoingreport></app-ongoingreport>
-      </div>
-
-      <div class="w-full grid grid-cols-2 gap-5 mt-5">
-        <app-monitored-event></app-monitored-event>
-        <app-feedback></app-feedback>
-      </div>
+    </div> -->
+    <div>
+      <app-upcoming-report></app-upcoming-report>
     </div>
   </div>
 </main>
+
+<!-- <div class="w-full">
+  <app-cards></app-cards>
+</div> -->
+
+<!-- <div class="w-full grid grid-cols-2 gap-5 mt-5">
+  <app-monitored-event></app-monitored-event tored-event>
+  <app-feedback></app-feedback>
+</div> -->
+<!-- <div class="w-full relative">
+  <app-ongoingreport></app-ongoingreport>
+</div> -->

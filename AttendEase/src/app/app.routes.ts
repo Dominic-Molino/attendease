@@ -245,20 +245,20 @@ export const routes: Routes = [
       },
 
       {
-        path: 'event-report/:eventId',
-        loadComponent: () =>
-          import('./modules/organizer/components/report/report.component').then(
-            (c) => c.ReportComponent
-          ),
-        canActivate: [AuthenGuard],
-      },
-
-      {
         path: 'events',
         loadComponent: () =>
           import(
             './modules/organizer/pages/org-event/org-event.component'
           ).then((c) => c.OrgEventComponent),
+        canActivate: [AuthenGuard],
+      },
+
+      {
+        path: 'events-report',
+        loadComponent: () =>
+          import(
+            './modules/organizer/pages/report-page/report-page.component'
+          ).then((c) => c.ReportPageComponent),
         canActivate: [AuthenGuard],
       },
 

@@ -5,13 +5,13 @@ import { CardsComponent } from '../../components/cards/cards.component';
 import { MonitoredEventComponent } from '../../../../shared/components/monitored-event/monitored-event.component';
 import { OrganizerCalendarComponent } from '../../../../shared/components/organizer-calendar/organizer-calendar.component';
 import { FeedbackComponent } from '../../components/feedback/feedback.component';
-import { ReportComponent } from '../../components/report/report.component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ButtonModule } from 'primeng/button';
 import { SidebarModule } from 'primeng/sidebar';
 import { OngoingreportComponent } from '../../components/ongoingreport/ongoingreport.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { UpcomingReportComponent } from '../../components/upcoming-report/upcoming-report.component';
 
 @Component({
   selector: 'app-org-dashboard',
@@ -28,6 +28,7 @@ import { Router } from '@angular/router';
     ButtonModule,
     SidebarModule,
     OngoingreportComponent,
+    UpcomingReportComponent,
     MatDialogModule,
   ],
   encapsulation: ViewEncapsulation.None,

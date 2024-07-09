@@ -24,13 +24,13 @@ export class OrganizerCalendarComponent implements OnInit {
   currId: any;
   @ViewChild('eventcalendar') eventcalendar: any;
 
-  view = 'month';
-  calView: MbscEventcalendarView = {
-    agenda: { type: 'day' },
-  };
-
   eventSettings: MbscEventcalendarOptions = {
-    theme: 'material',
+    view: {
+      calendar: {
+        type: 'month',
+      },
+    },
+    theme: 'windows',
     themeVariant: 'light',
     eventOverlap: true,
     data: this.event,

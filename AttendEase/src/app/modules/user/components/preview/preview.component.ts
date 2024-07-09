@@ -52,6 +52,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
   userEvents: Event[] = [];
   user?: User;
   canRegister = false;
+  isUnregistering = false;
 
   private refreshSubscription: Subscription | undefined;
 
@@ -251,6 +252,9 @@ export class PreviewComponent implements OnInit, OnDestroy {
   }
 
   unregister(eventId: number) {
+    if (this.isUnregistering) return;
+    this.isUnregistering = true;
+
     Swal.fire({
       title: 'Unregister from this event?',
       icon: 'question',
