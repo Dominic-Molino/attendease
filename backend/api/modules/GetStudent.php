@@ -131,24 +131,39 @@ class GetStudentFunctions extends GlobalMethods
         }
     }
 
-
-    public function getActivityLogs($userId = null)
+    public function getActivityLogs($organizerId = null)
     {
-        $sql = "SELECT log_id, user_id, event_id, activity_type, details, MIN(created_at) as created_at
-                FROM activity_log";
+        $sql = "SELECT 
+                    activity_log.log_id, 
+                    activity_log.user_id, 
+                    CONCAT(user.first_name, ' ', user.last_name) AS student_name,
+                    activity_log.event_id, 
+                    events.event_name,
+                    activity_log.activity_type, 
+                    activity_log.details, 
+                    MIN(activity_log.created_at) AS created_at
+                FROM activity_log
+                INNER JOIN events ON activity_log.event_id = events.event_id
+                INNER JOIN user ON activity_log.user_id = user.user_id";
 
-        if ($userId !== null) {
-            $sql .= " WHERE user_id = :userId";
+        if ($organizerId !== null) {
+            $sql .= " WHERE events.organizer_user_id = :organizerId";
         }
 
-        $sql .= " GROUP BY user_id, event_id, activity_type, details
+        $sql .= " GROUP BY 
+                    activity_log.user_id, 
+                    activity_log.event_id, 
+                    activity_log.activity_type, 
+                    activity_log.details, 
+                    student_name, 
+                    events.event_name
                   ORDER BY created_at DESC";
 
         try {
             $stmt = $this->pdo->prepare($sql);
 
-            if ($userId !== null) {
-                $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+            if ($organizerId !== null) {
+                $stmt->bindParam(':organizerId', $organizerId, PDO::PARAM_INT);
             }
 
             $stmt->execute();

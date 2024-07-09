@@ -374,7 +374,11 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 break;
 
             case 'getlogs':
-                echo json_encode($getStudent->getActivityLogs());
+                if (isset($request[1])) {
+                    echo json_encode($getStudent->getActivityLogs($request[1]));
+                } else {
+                    echo json_encode($getStudent->getActivityLogs());
+                }
                 break;
 
 

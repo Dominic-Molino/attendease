@@ -1,48 +1,10 @@
-<main class="!scroll-smooth w-full h-screen">
-  <div class="p-4 mt-16">
-    <!-- <div class="relative w-full">
-      <button
-        (click)="op.toggle($event)"
-        class="absolute -top-6 right-1 inline-flex items-center text-white bg-light-background hover:bg-light-foregroud focus:outline-none focus:ring-0 font-medium rounded-md text-sm px-5 py-2.5 me-2 mt-5 mb-2"
-      >
-        <svg
-          class="w-5 h-5 text-white me-1"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1.1"
-            d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
-          />
-        </svg>
-        Agenda
-      </button>
-      <p-overlayPanel #op styleClass="w-30rem">
-        <app-organizer-calendar class="w-50%"></app-organizer-calendar>
-      </p-overlayPanel>
-      <hr class="h-px mb-5 bg-dark-border border-0" />
-    </div> -->
-    <div>
-      <app-upcoming-report></app-upcoming-report>
+<main class="!scroll-smooth w-full max-h-screen h-screen">
+  <div class="p-4 mt-16 h-screen">
+    <div class="w-full">
+      <app-cards></app-cards>
+    </div>
+    <div class="h-screen">
+      <app-organizer-analytics></app-organizer-analytics>
     </div>
   </div>
 </main>
-
-<!-- <div class="w-full">
-  <app-cards></app-cards>
-</div> -->
-
-<!-- <div class="w-full grid grid-cols-2 gap-5 mt-5">
-  <app-monitored-event></app-monitored-event tored-event>
-  <app-feedback></app-feedback>
-</div> -->
-<!-- <div class="w-full relative">
-  <app-ongoingreport></app-ongoingreport>
-</div> -->

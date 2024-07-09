@@ -52,4 +52,8 @@ export class DataAnalyticsService {
       return this.http.get<any>(`${this.API_URL}getallongoingvents`);
     }
   }
+
+  getActivityLogs(org_id: any): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}getlogs/${org_id}`);
+  }
 }

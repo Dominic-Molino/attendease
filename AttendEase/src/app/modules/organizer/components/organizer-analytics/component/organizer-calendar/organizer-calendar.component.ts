@@ -8,7 +8,7 @@ import {
   MbscEventcalendarView,
 } from '@mobiscroll/angular';
 import { CommonModule } from '@angular/common';
-import { EventService } from '../../../core/service/event.service';
+import { EventService } from '../../../../../../core/service/event.service';
 
 @Component({
   selector: 'app-organizer-calendar',

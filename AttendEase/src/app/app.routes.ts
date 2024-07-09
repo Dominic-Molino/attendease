@@ -284,7 +284,7 @@ export const routes: Routes = [
         path: 'org-feedback-list',
         loadComponent: () =>
           import(
-            './modules/organizer/components/feedback-page/feedback-page.component'
+            './modules/organizer/pages/feedback-page/feedback-page.component'
           ).then((c) => c.FeedbackPageComponent),
         canActivate: [RoleGuard],
       },

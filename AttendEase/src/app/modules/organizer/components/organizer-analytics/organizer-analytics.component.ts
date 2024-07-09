@@ -5,21 +5,25 @@ import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import 'chartjs-adapter-date-fns';
-import { OrganizerCalendarComponent } from '../../../../shared/components/organizer-calendar/organizer-calendar.component';
+import { ActivitylogsComponent } from './component/activitylogs/activitylogs.component';
+import { OngoingreportComponent } from '../ongoingreport/ongoingreport.component';
+import { OrganizerCalendarComponent } from './component/organizer-calendar/organizer-calendar.component';
 
 @Component({
-  selector: 'app-upcoming-report',
+  selector: 'app-organizer-analytics',
   standalone: true,
   imports: [
     CommonModule,
     ChartModule,
     MatTooltipModule,
+    ActivitylogsComponent,
+    OngoingreportComponent,
     OrganizerCalendarComponent,
   ],
-  templateUrl: './upcoming-report.component.html',
-  styleUrl: './upcoming-report.component.css',
+  templateUrl: './organizer-analytics.component.html',
+  styleUrl: './organizer-analytics.component.css',
 })
-export class UpcomingReportComponent implements OnInit {
+export class OrganizerAnalyticsComponent {
   currId: any;
   events: any[] = [];
   report: any[] = [];

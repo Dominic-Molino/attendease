@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { EventService } from '../../../../core/service/event.service';
-import { AuthserviceService } from '../../../../core/service/authservice.service';
+import { EventService } from '../../../../../../core/service/event.service';
+import { AuthserviceService } from '../../../../../../core/service/authservice.service';
 
 @Component({
   selector: 'app-cards',
