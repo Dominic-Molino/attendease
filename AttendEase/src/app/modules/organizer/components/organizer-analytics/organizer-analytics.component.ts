@@ -6,8 +6,8 @@ import { ChartModule } from 'primeng/chart';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import 'chartjs-adapter-date-fns';
 import { ActivitylogsComponent } from './component/activitylogs/activitylogs.component';
-import { OngoingreportComponent } from '../ongoingreport/ongoingreport.component';
 import { OrganizerCalendarComponent } from './component/organizer-calendar/organizer-calendar.component';
+import { OngoingReportComponent } from './component/ongoing-report/ongoing-report.component';
 
 @Component({
   selector: 'app-organizer-analytics',
@@ -17,8 +17,8 @@ import { OrganizerCalendarComponent } from './component/organizer-calendar/organ
     ChartModule,
     MatTooltipModule,
     ActivitylogsComponent,
-    OngoingreportComponent,
     OrganizerCalendarComponent,
+    OngoingReportComponent,
   ],
   templateUrl: './organizer-analytics.component.html',
   styleUrl: './organizer-analytics.component.css',

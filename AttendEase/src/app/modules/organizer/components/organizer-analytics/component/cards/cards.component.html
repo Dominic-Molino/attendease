@@ -1,4 +1,4 @@
-<div class="grid md:grid-cols-3 w-[calc(100%-320px)] gap-3">
+<div class="grid md:grid-cols-4 w-[calc(100%-320px)] gap-3">
   <div
     class="shadow-md rounded-md w-full h-28 border border-dark-border bg-white flex justify-center items-center p-4"
   >
@@ -7,10 +7,25 @@
         <div
           class="p-1 rounded-full bg-white border border-light-border text-dark-background mr-4"
         >
-          <svg fill="#db7c24" viewBox="0 0 20 20" class="w-5 h-5">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#df7e30"
+            stroke-width="1"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-calendar-check-2"
+          >
+            <path d="M8 2v4" />
+            <path d="M16 2v4" />
             <path
-              d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
-            ></path>
+              d="M21 14V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8"
+            />
+            <path d="M3 10h18" />
+            <path d="m16 20 2 2 4-4" />
           </svg>
         </div>
         <div>
@@ -19,6 +34,47 @@
           </p>
           <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
             {{ data?.approved_events }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="shadow-md rounded-md w-full h-28 border border-dark-border bg-white flex justify-center items-center p-4"
+  >
+    <div class="min-w-0 rounded-lg shadow-xs overflow-hidden bg-white w-full">
+      <div class="p-2 flex items-center">
+        <div
+          class="p-1 rounded-full bg-white border border-light-border text-dark-background mr-4"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#df7e30"
+            stroke-width="1"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-calendar-check-2"
+          >
+            <path d="M8 2v4" />
+            <path d="M16 2v4" />
+            <path
+              d="M21 14V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8"
+            />
+            <path d="M3 10h18" />
+            <path d="m16 20 2 2 4-4" />
+          </svg>
+        </div>
+        <div>
+          <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+            Done Events
+          </p>
+          <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+            {{ data?.done_events }}
           </p>
         </div>
       </div>
@@ -35,10 +91,26 @@
         <div
           class="p-1 rounded-full bg-white border border-light-border text-dark-background mr-4"
         >
-          <svg fill="#db7c24" viewBox="0 0 20 20" class="w-5 h-5">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#df7e30"
+            stroke-width="1"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-calendar-clock"
+          >
             <path
-              d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
-            ></path>
+              d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"
+            />
+            <path d="M16 2v4" />
+            <path d="M8 2v4" />
+            <path d="M3 10h5" />
+            <path d="M17.5 17.5 16 16.3V14" />
+            <circle cx="16" cy="16" r="6" />
           </svg>
         </div>
         <div>
@@ -63,10 +135,21 @@
         <div
           class="p-1 rounded-full bg-white border border-light-border text-dark-background mr-4"
         >
-          <svg fill="#db7c24" viewBox="0 0 20 20" class="w-5 h-5">
-            <path
-              d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
-            ></path>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#df7e30"
+            stroke-width="1"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-user-round-check"
+          >
+            <path d="M2 21a8 8 0 0 1 13.292-6" />
+            <circle cx="10" cy="8" r="5" />
+            <path d="m16 19 2 2 4-4" />
           </svg>
         </div>
         <div>
@@ -74,7 +157,7 @@
             Total Registered Students
           </p>
           <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-            {{ data?.total_registered_students }}
+            {{ data?.total_registered_users }}
           </p>
         </div>
       </div>

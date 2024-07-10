@@ -91,21 +91,6 @@ class PostStudentFunctions extends GlobalMethods
     {
         try {
 
-            error_log("Registering user: $user_id for event: $event_id");
-
-
-            // $userExists = $this->checkUserExists($user_id);
-            // $eventExists = $this->checkEventExists($event_id);
-
-            // if (!$userExists) {
-            //     return $this->sendPayload(null, 'failed', "User does not exist.", 400);
-            // }
-
-            // if (!$eventExists) {
-            //     return $this->sendPayload(null, 'failed', "Event does not exist.", 400);
-            // }
-
-
             // Check if the user is already registered for the event
             $sql = "SELECT COUNT(*) AS count FROM event_registration WHERE event_id = ? AND user_id = ?";
             $stmt = $this->pdo->prepare($sql);
@@ -172,9 +157,6 @@ class PostStudentFunctions extends GlobalMethods
             $stmt->execute([$event_id, $user_id]);
 
             if ($stmt->rowCount() != 0) {
-                error_log("Logging activity for user: $user_id for event: $event_id");
-
-                $this->logActivity($user_id, $event_id, 'register', 'User registered for event');
                 return $this->sendPayload(null, 'success', "User registered for event successfully.", 200);
             } else {
                 return $this->sendPayload(null, 'failed', "Failed to register user for event.", 500);
@@ -205,8 +187,6 @@ class PostStudentFunctions extends GlobalMethods
             $stmt->execute([$event_id, $user_id]);
 
             if ($stmt->rowCount() > 0) {
-                error_log("Logging activity for user: $user_id from event: $event_id");
-                $this->logActivity($user_id, $event_id, 'unregister', 'User unregistered from event');
                 return $this->sendPayload(null, 'success', "User unregistered from event successfully.", 200);
             } else {
                 return $this->sendPayload(null, 'failed', "You're not registered to this event!.", 404);
@@ -232,26 +212,6 @@ class PostStudentFunctions extends GlobalMethods
             $stmt->execute([':userId' => $userId, ':eventId' => $eventId, ':activityType' => $activityType, ':details' => $details]);
         }
     }
-
-
-    private function checkUserExists($user_id)
-    {
-        $sql = "SELECT COUNT(*) AS count FROM user WHERE user_id = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$user_id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row['count'] > 0;
-    }
-
-    private function checkEventExists($event_id)
-    {
-        $sql = "SELECT COUNT(*) AS count FROM events WHERE event_id = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$event_id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row['count'] > 0;
-    }
-
 
     //post evaluation 
     public function addEventFeedback($event_id, $user_id, $data)

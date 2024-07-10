@@ -6,12 +6,10 @@
         class="mb-1 text-xs font-medium leading-none text-orange-500 dark:text-gray-500"
         >{{ log.created_at | date : "MMM dd, yyyy: hh:mm a" }}
       </time>
-      <h3
-        class="text-base capitalize font-medium text-gray-900 dark:text-white"
-      >
+      <h3 class="text-sm capitalize font-medium text-gray-900 dark:text-white">
         {{ log.student_name }}
       </h3>
-      <p class="mb-4 text-sm font-normal text-gray-500 dark:text-gray-400">
+      <p class="mb-4 text-xs font-normal text-gray-700 dark:text-gray-400">
         {{ replaceEventName(log.details, log.event_name) }}
       </p>
     </li>

@@ -36,8 +36,8 @@ export class CardsComponent implements OnInit, OnDestroy {
   eventCount: number = 0;
   totalRegisteredUser: number = 0;
   showAttendance: boolean = false;
-  showTooltip: boolean = false; // Control tooltip visibility
-  datas: any = {}; // Initially empty
+  showTooltip: boolean = false;
+  datas: any = {};
   options: any;
   private refreshSubscription: Subscription | undefined;
 

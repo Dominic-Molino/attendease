@@ -298,10 +298,26 @@ class GetEvent extends GlobalMethods
         $eventCountsSql = "SELECT 
                                SUM(CASE WHEN ea.status = 'Approved' THEN 1 ELSE 0 END) AS approved_events,
                                SUM(CASE WHEN ea.status = 'Pending' THEN 1 ELSE 0 END) AS pending_events,
-                               SUM(CASE WHEN ea.status = 'Rejected' THEN 1 ELSE 0 END) AS rejected_events
+                               SUM(CASE WHEN ea.status = 'Rejected' THEN 1 ELSE 0 END) AS rejected_events,
+                               CASE 
+                                WHEN e.event_end_date < NOW() THEN 'done'
+                                ELSE 'ongoing'
+                                END AS event_status
                            FROM events e
                            LEFT JOIN event_approval ea ON e.event_id = ea.event_id
                            WHERE e.organizer_user_id = :organizer_user_id";
+
+        $registeredUsersSql = "SELECT 
+            COUNT(er.user_id) AS total_registered_users
+            FROM events e
+            JOIN event_registration er ON e.event_id = er.event_id
+            WHERE e.organizer_user_id = :organizer_user_id";
+
+        $eventStatusSql = "SELECT 
+            SUM(CASE WHEN e.event_end_date < NOW() THEN 1 ELSE 0 END) AS done_events
+            FROM events e
+            WHERE e.organizer_user_id = :organizer_user_id";
+
 
         try {
             // Fetch event counts
@@ -309,11 +325,21 @@ class GetEvent extends GlobalMethods
             $stmt->execute([':organizer_user_id' => $organizer_user_id]);
             $eventCounts = $stmt->fetch(PDO::FETCH_ASSOC);
 
+            $stmt = $this->pdo->prepare($registeredUsersSql);
+            $stmt->execute([':organizer_user_id' => $organizer_user_id]);
+            $registeredUsers = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $stmt = $this->pdo->prepare($eventStatusSql);
+            $stmt->execute([':organizer_user_id' => $organizer_user_id]);
+            $eventStatus = $stmt->fetch(PDO::FETCH_ASSOC);
+
             // Prepare payload
             $payload = [
                 'approved_events' => $eventCounts['approved_events'] ?? 0,
                 'pending_events' => $eventCounts['pending_events'] ?? 0,
-                'rejected_events' => $eventCounts['rejected_events'] ?? 0
+                'rejected_events' => $eventCounts['rejected_events'] ?? 0,
+                'total_registered_users' => $registeredUsers['total_registered_users'] ?? 0,
+                'done_events' => $eventStatus['done_events'] ?? 0,
             ];
 
             // Return the payload using the sendPayload method from GlobalMethods
@@ -430,6 +456,9 @@ class GetEvent extends GlobalMethods
                 $registeredByCourse = $this->getRegisteredCountByCourse($event['event_id']);
                 $event['registered_by_course'] = $registeredByCourse;
 
+                $registeredByBlock = $this->getRegisteredCountByBlock($event['event_id']);
+                $event['registered_by_block'] = $registeredByBlock;
+
                 // Get registered count by year level
                 $registeredByYearLevel = $this->getRegisteredCountByYearLevel($event['event_id']);
                 $event['registered_by_year_level'] = $registeredByYearLevel;
@@ -484,6 +513,24 @@ class GetEvent extends GlobalMethods
         JOIN event_registration er ON u.user_id = er.user_id
         WHERE er.event_id = :event_id
         GROUP BY u.course
+        ");
+            $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+
+    private function getRegisteredCountByBlock($event_id)
+    {
+        try {
+            $stmt = $this->pdo->prepare("
+        SELECT u.block, COUNT(*) as count
+        FROM user u
+        JOIN event_registration er ON u.user_id = er.user_id
+        WHERE er.event_id = :event_id
+        GROUP BY u.block
         ");
             $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
             $stmt->execute();
