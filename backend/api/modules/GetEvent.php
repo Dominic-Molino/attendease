@@ -318,7 +318,6 @@ class GetEvent extends GlobalMethods
             FROM events e
             WHERE e.organizer_user_id = :organizer_user_id";
 
-
         try {
             // Fetch event counts
             $stmt = $this->pdo->prepare($eventCountsSql);
@@ -603,11 +602,7 @@ class GetEvent extends GlobalMethods
     }
 
 
-
-
-
-    #admin
-    // Function to get all approved and done events with status and student information
+    // report
     public function getApprovedDoneEventsWithStatus($event_id)
     {
         try {
@@ -628,27 +623,34 @@ class GetEvent extends GlobalMethods
             $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($events as &$event) {
-                // Get registered count for the event
                 $registeredCount = $this->getRegisteredCount($event['event_id']);
                 $event['registered_users'] = $registeredCount;
 
-                // Get student details for the event
                 $event['student_details'] = $this->getStudentDetails($event['event_id']);
 
-                // Calculate number of students who submitted both attendance and feedback
                 $presentCount = $this->getPresentCount($event['event_id']);
                 $event['present_count'] = $presentCount;
 
-                // Calculate attendance and feedback counts individually
                 $feedbackCount = $this->getFeedbackCount($event['event_id']);
                 $event['feedback_count'] = $feedbackCount;
 
                 $attendance_count = $this->getAttendanceCount($event['event_id']);
                 $event['attendance_count'] = $attendance_count;
 
-                // Calculate average feedback scores
                 $averageFeedback = $this->getAverageFeedback($event['event_id']);
                 $event['average_feedback'] = $averageFeedback['avg_overall_satisfaction'];
+
+                $detailedFeedback = $this->getDetailedFeedback($event['event_id']);
+                $event = array_merge($event, $detailedFeedback);
+
+                $registeredByCourse = $this->getRegisteredCountByCourse($event['event_id']);
+                $event['registered_by_course'] = $registeredByCourse;
+
+                $registeredByBlock = $this->getRegisteredCountByBlock($event['event_id']);
+                $event['registered_by_block'] = $registeredByBlock;
+
+                $registeredByYearLevel = $this->getRegisteredCountByYearLevel($event['event_id']);
+                $event['registered_by_year_level'] = $registeredByYearLevel;
             }
 
             return $this->sendPayload($events, 'success', "Successfully retrieved data.", 200);
@@ -788,6 +790,35 @@ class GetEvent extends GlobalMethods
         } catch (PDOException $e) {
             return [
                 'avg_overall_satisfaction' => null
+            ];
+        }
+    }
+
+    // Function to get detailed feedback scores for an event
+    private function getDetailedFeedback($event_id)
+    {
+        try {
+            $stmt = $this->pdo->prepare("
+            SELECT 
+                AVG(overall_satisfaction) AS avg_overall_satisfaction,
+                AVG(content_quality) AS avg_content_quality,
+                AVG(speaker_effectiveness) AS avg_speaker_effectiveness,
+                AVG(venue_rating) AS avg_venue_rating,
+                AVG(logistics_rating) AS avg_logistics_rating
+            FROM feedback
+            WHERE event_id = :event_id
+        ");
+            $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result;
+        } catch (PDOException $e) {
+            return [
+                'avg_overall_satisfaction' => null,
+                'avg_content_quality' => null,
+                'avg_speaker_effectiveness' => null,
+                'avg_venue_rating' => null,
+                'avg_logistics_rating' => null
             ];
         }
     }

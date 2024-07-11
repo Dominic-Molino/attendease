@@ -307,13 +307,9 @@ class Analytics extends GlobalMethods
         try {
             $stmt = $this->pdo->prepare("
             SELECT COUNT(*) as present_count
-            FROM (
-                SELECT DISTINCT a.user_id
-                FROM attendance a
-                JOIN feedback f ON a.event_id = f.event_id AND a.user_id = f.user_id
-                WHERE a.event_id = :event_id
-                  AND a.remarks = 1
-            ) AS present_users
+            FROM attendance a
+            WHERE a.event_id = :event_id
+              AND a.remarks = 1
         ");
             $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
             $stmt->execute();
@@ -323,7 +319,6 @@ class Analytics extends GlobalMethods
             return 0;
         }
     }
-
     // Function to get attendance count for an event
     private function getAttendanceCount($event_id)
     {

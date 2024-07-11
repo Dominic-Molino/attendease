@@ -61,7 +61,7 @@ export class PasteventsComponent implements OnInit {
               fname: user.first_name,
               lname: user.last_name,
               organization: user.organization,
-              events: [], // Initialize events as an empty array
+              events: [],
             })
           );
 
@@ -129,6 +129,7 @@ export class PasteventsComponent implements OnInit {
       this.showDropdown = false;
     }
   }
+
   selectOrganizer(organizer: Organizer) {
     this.selectedOrganizer = organizer;
     this.pastEvents = organizer.events;
@@ -259,9 +260,5 @@ export class PasteventsComponent implements OnInit {
       (event.registered_by_year_level &&
         event.registered_by_year_level.length > 0)
     );
-  }
-
-  trackByEventId(index: number, event: any): number {
-    return event.event_id;
   }
 }

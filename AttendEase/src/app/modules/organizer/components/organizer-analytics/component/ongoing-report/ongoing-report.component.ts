@@ -235,8 +235,4 @@ export class OngoingReportComponent implements OnInit {
         event.registered_by_year_level.length > 0)
     );
   }
-
-  trackByEventId(index: number, event: any): number {
-    return event.event_id;
-  }
 }

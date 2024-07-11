@@ -259,6 +259,15 @@ export const routes: Routes = [
           import(
             './modules/organizer/pages/report-page/report-page.component'
           ).then((c) => c.ReportPageComponent),
+        children: [
+          {
+            path: 'report/:id',
+            loadComponent: () =>
+              import(
+                './modules/organizer/components/report/report.component'
+              ).then((e) => e.ReportComponent),
+          },
+        ],
         canActivate: [AuthenGuard],
       },
 

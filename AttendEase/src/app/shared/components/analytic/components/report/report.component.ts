@@ -288,20 +288,14 @@ export class ReportComponent implements OnInit {
     );
   }
 
-  trackByEventId(index: number, event: any): number {
-    return event.event_id;
-  }
-
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
 
-    // Check if the click is outside the tooltips and SVGs
     const clickedOutside =
       !target.closest('.tooltip-content') && !target.closest('svg');
 
     if (clickedOutside) {
-      // Hide all tooltips
       for (const key in this.tooltipVisible) {
         this.tooltipVisible[key] = false;
       }
