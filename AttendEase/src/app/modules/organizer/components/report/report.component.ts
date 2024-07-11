@@ -24,6 +24,7 @@ interface Feedback {
 export class ReportComponent implements OnInit {
   eventId: any;
   reportDetail: any[] = [];
+  feedbackData: Feedback[] = [];
   chartOptions: any;
   chartDataCache: Map<string, any> = new Map();
   tooltipVisible: { [key: string]: boolean } = {};
@@ -57,9 +58,11 @@ export class ReportComponent implements OnInit {
 
   loadFeedback(id: any) {
     this.feedback.getEventFeedback(id).subscribe((res) => {
-      const feedback: Feedback[] = res.payload;
-      const satisfactionDistribution =
-        this.calculateSatisfactionDistribution(feedback);
+      this.feedbackData = res.payload;
+      console.log(this.feedbackData);
+      const satisfactionDistribution = this.calculateSatisfactionDistribution(
+        this.feedbackData
+      );
       this.barChartData = {
         labels: [
           'Very Dissatisfied',
@@ -376,15 +379,6 @@ export class ReportComponent implements OnInit {
 
   getRegistrationMessage(event: any): string {
     return `Out of ${event.max_attendees} potential attendees, ${event.registered_users}  have registered.`;
-  }
-
-  isDataAvailable(event: any): boolean {
-    return (
-      event.registered_users > 0 ||
-      (event.registered_by_course && event.registered_by_course.length > 0) ||
-      (event.registered_by_year_level &&
-        event.registered_by_year_level.length > 0)
-    );
   }
 
   toggleTooltip(eventId: string) {

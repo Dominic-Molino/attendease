@@ -41,6 +41,23 @@
         </ul>
       </div>
     </aside>
+    <div class="p-1 sm:ml-[215px]" *ngIf="showReportMessage">
+      <div class="flex w-full items-center justify-center">
+        <div class="flex flex-col justify-center items-center mt-24 m-auto">
+          <div
+            class="flex justify-center items-center flex-col relative top-24"
+          >
+            <div class="tracking-widest mt-4 text-center">
+              <p class="text-center text-xl">(￣ ￣|||)</p>
+              <span class="text-gray-500 text-xl"
+                >You must pick a event in order to see the report ...</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <router-outlet></router-outlet>
   </div>
 </main>
