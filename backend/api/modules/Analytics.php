@@ -11,6 +11,104 @@ class Analytics extends GlobalMethods
         $this->pdo = $pdo;
     }
 
+
+    public function getAllApprovedEvents($event_id = null)
+    {
+        try {
+            $sql = "
+            SELECT 
+                e.event_id, e.event_name, e.event_start_date, e.event_end_date, e.max_attendees,
+                (SELECT COUNT(er.user_id) 
+                 FROM event_registration er 
+                 WHERE er.event_id = e.event_id) AS total_registered_users,
+                CASE 
+                    WHEN e.event_end_date < NOW() THEN 'done'
+                    ELSE 'ongoing'
+                END AS event_status
+            FROM events e
+            JOIN event_approval ea ON e.event_id = ea.event_id
+            WHERE ea.status = 'Approved'";
+
+            if ($event_id !== null) {
+                $sql .= " AND e.event_id = :event_id";
+            }
+
+            $stmt = $this->pdo->prepare($sql);
+
+            if ($event_id !== null) {
+                $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
+            }
+
+            $stmt->execute();
+            $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $this->sendPayload($events, 'success', "Successfully retrieved data.", 200);
+        } catch (PDOException $e) {
+            return $this->sendPayload(null, 'error', $e->getMessage(), 500);
+        }
+    }
+
+
+    // cards
+    public function getDashboardData()
+    {
+        $eventCountsSql = "SELECT 
+                               SUM(CASE WHEN ea.status = 'Approved' THEN 1 ELSE 0 END) AS approved_events,
+                               SUM(CASE WHEN ea.status = 'Pending' THEN 1 ELSE 0 END) AS pending_events,
+                               SUM(CASE WHEN ea.status = 'Rejected' THEN 1 ELSE 0 END) AS rejected_events
+                           FROM events e
+                           LEFT JOIN event_approval ea ON e.event_id = ea.event_id";
+
+        $registeredUsersSql = "SELECT 
+            COUNT(er.user_id) AS total_registered_users
+            FROM events e
+            JOIN event_registration er ON e.event_id = er.event_id";
+
+        $eventStatusSql = "SELECT 
+            SUM(CASE WHEN e.event_end_date < NOW() THEN 1 ELSE 0 END) AS done_events
+            FROM events e";
+
+        $totalEventsSql = "SELECT 
+            COUNT(*) AS total_events
+            FROM events e";
+
+        try {
+            // Fetch event counts
+            $stmt = $this->pdo->prepare($eventCountsSql);
+            $stmt->execute();
+            $eventCounts = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $stmt = $this->pdo->prepare($registeredUsersSql);
+            $stmt->execute();
+            $registeredUsers = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $stmt = $this->pdo->prepare($eventStatusSql);
+            $stmt->execute();
+            $eventStatus = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $stmt = $this->pdo->prepare($totalEventsSql);
+            $stmt->execute();
+            $totalEvents = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Prepare payload
+            $payload = [
+                'approved_events' => $eventCounts['approved_events'] ?? 0,
+                'pending_events' => $eventCounts['pending_events'] ?? 0,
+                'rejected_events' => $eventCounts['rejected_events'] ?? 0,
+                'total_registered_users' => $registeredUsers['total_registered_users'] ?? 0,
+                'done_events' => $eventStatus['done_events'] ?? 0,
+                'total_events' => $totalEvents['total_events'] ?? 0,
+            ];
+
+            // Return the payload using the sendPayload method from GlobalMethods
+            return $this->sendPayload($payload, 'success', 'Dashboard data fetched successfully.', 200);
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', 'Failed to fetch dashboard data.', 500);
+        }
+    }
+
+
     public function get_attendees_total($event_id)
     {
         try {
@@ -31,7 +129,6 @@ class Analytics extends GlobalMethods
         }
     }
 
-    // cards
     public function get_registered_users_by_course()
     {
         $sql = "SELECT u.course, COUNT(u.user_id) AS student_count 
@@ -114,40 +211,19 @@ class Analytics extends GlobalMethods
         }
     }
 
-    public function getTotalAttendanceInAllPastEvents()
-    {
-        try {
-            // Fetch all past events
-            $sql = "SELECT event_id, event_name FROM events WHERE event_end_date < CURDATE()";
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute();
-            $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            // Fetch total attendance for each event
-            foreach ($events as &$event) {
-                $eventId = $event['event_id'];
-                $sql = "SELECT COUNT(*) AS total_attendance FROM attendance WHERE event_id = ?";
-                $stmt = $this->pdo->prepare($sql);
-                $stmt->execute([$eventId]);
-                $totalAttendance = $stmt->fetchColumn();
-                $event['total_attendance'] = $totalAttendance;
-            }
-
-            // Return the events with their total attendance
-            return $this->sendPayload($events, 'success', "Total attendance in all past events retrieved successfully.", 200);
-        } catch (PDOException $e) {
-            return $this->sendPayload(null, 'error', $e->getMessage(), 500);
-        }
-    }
 
     public function get_all_attendee_counts()
     {
-        $sql = "SELECT e.event_id, e.event_name, COUNT(er.registration_id) AS total_attendees
-            FROM events e
-            INNER JOIN event_registration er ON e.event_id = er.event_id
-            INNER JOIN event_approval ea ON e.event_id = ea.event_id AND ea.status = 'Approved'
-            GROUP BY e.event_id, e.event_name
-            ORDER BY e.event_name";
+        $sql =  "SELECT 
+                e.event_id, 
+                e.event_name, 
+                COUNT(er.user_id) AS total_registered_users
+                FROM events e
+                INNER JOIN event_approval ea ON e.event_id = ea.event_id AND ea.status = 'Approved'
+                LEFT JOIN event_registration er ON e.event_id = er.event_id
+                WHERE ea.status = 'Approved'
+                GROUP BY e.event_id, e.event_name
+                ORDER BY e.event_name";
 
         try {
             $stmt = $this->pdo->prepare($sql);

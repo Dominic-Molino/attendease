@@ -2,7 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { initFlowbite } from 'flowbite';
-import { OrgSidebarComponent } from '../../shared/components/org-sidebar/org-sidebar.component';
+import { OrgSidebarComponent } from './components/org-sidebar/org-sidebar.component';
 
 @Component({
   selector: 'app-organizer',

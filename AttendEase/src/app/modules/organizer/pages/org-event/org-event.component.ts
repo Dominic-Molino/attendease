@@ -25,7 +25,7 @@ import {
 } from 'rxjs';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { UpdateimageComponent } from '../../components/updateimage/updateimage.component';
-import { MobicalendarComponent } from '../../../../shared/components/mobicalendar/mobicalendar.component';
+import { MobicalendarComponent } from '../../../user/components/mobicalendar/mobicalendar.component';
 import { MatTooltip, MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Event } from '../../../../interfaces/EventInterface';

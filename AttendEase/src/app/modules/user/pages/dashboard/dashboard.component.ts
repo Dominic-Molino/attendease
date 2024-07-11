@@ -12,7 +12,7 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { MobicalendarComponent } from '../../../../shared/components/mobicalendar/mobicalendar.component';
+import { MobicalendarComponent } from '../../components/mobicalendar/mobicalendar.component';
 import { UserEvents } from '../../../../interfaces/UserEvents';
 
 @Component({

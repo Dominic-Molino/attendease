@@ -174,12 +174,16 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($analytics->get_registered_users_by_block($request[0]));
                 break;
 
-            case 'getpasteventsattendance':
-                echo json_encode($analytics->getTotalAttendanceInAllPastEvents($request[0]));
-                break;
-
             case 'getAllRegisteredUser':
                 echo json_encode($analytics->get_total_registered_users($request[0]));
+                break;
+
+            case 'getdashboarddata':
+                echo json_encode($analytics->getDashboardData());
+                break;
+
+            case 'getallapproveaevents':
+                echo json_encode($analytics->getAllApprovedEvents());
                 break;
 
             case 'analytics':

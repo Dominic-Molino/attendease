@@ -151,15 +151,7 @@ class Get extends GlobalMethods
     }
 
 
-    // analytics?
 
-    public function get_event_feedback($event_id = null)
-    {
-        $columns = "feedback_id, event_id, user_id, overall_satisfaction, content_quality, speaker_effectiveness,
-            venue_rating, logistics_rating, improvement_suggestions, additional_comments, feedback_date, remarks";
-        $condition = ($event_id !== null) ? "event_id = $event_id" : null;
-        return $this->get_records('feedback', $condition, $columns);
-    }
 
     public function get_user_feedback($user_id = null)
     {

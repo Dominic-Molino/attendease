@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import 'chartjs-adapter-date-fns';
-import { ActivitylogsComponent } from './component/activitylogs/activitylogs.component';
+import { ActivitylogsComponent } from '../../../../shared/components/activitylogs/activitylogs.component';
 import { OrganizerCalendarComponent } from './component/organizer-calendar/organizer-calendar.component';
 import { OngoingReportComponent } from './component/ongoing-report/ongoing-report.component';
 

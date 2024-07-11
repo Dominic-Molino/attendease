@@ -59,7 +59,7 @@ export const routes: Routes = [
       {
         path: 'admin-event-list',
         loadComponent: () =>
-          import('./modules/admin/components/approval/approval.component').then(
+          import('./modules/admin/pages/approval/approval.component').then(
             (c) => c.ApprovalComponent
           ),
         canActivate: [AuthenGuard],
@@ -86,9 +86,9 @@ export const routes: Routes = [
       {
         path: 'admin-attendance',
         loadComponent: () =>
-          import(
-            './modules/organizer/pages/attendance/attendance.component'
-          ).then((c) => c.AttendanceComponent),
+          import('./modules/admin/pages/attendance/attendance.component').then(
+            (c) => c.AttendanceComponent
+          ),
         canActivate: [AuthenGuard],
       },
 

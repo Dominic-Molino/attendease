@@ -19,10 +19,6 @@ export class DataAnalyticsService {
     return this.http.get(`${this.API_URL}getAllRegisteredUser`);
   }
 
-  getPastAttendance(): Observable<any> {
-    return this.http.get(`${this.API_URL}getpasteventsattendance`);
-  }
-
   getBlock(): Observable<any> {
     return this.http.get(`${this.API_URL}getblockcount`);
   }
@@ -39,8 +35,16 @@ export class DataAnalyticsService {
     return this.http.get(`${this.API_URL}analytics/${event_id}`);
   }
 
+  getDashboardData(): Observable<any> {
+    return this.http.get(`${this.API_URL}getdashboarddata`);
+  }
+
   getDoneEvents(): Observable<any> {
     return this.http.get<any>(`${this.API_URL}getalldonevents`);
+  }
+
+  getAllEvents(): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}getallapproveaevents`);
   }
 
   getOngoingEvents(event_id = null): Observable<any> {
@@ -53,7 +57,11 @@ export class DataAnalyticsService {
     }
   }
 
-  getActivityLogs(org_id: any): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}getlogs/${org_id}`);
+  getActivityLogs(org_id: any = null): Observable<any> {
+    if (org_id) {
+      return this.http.get<any>(`${this.API_URL}getlogs/${org_id}`);
+    } else {
+      return this.http.get<any>(`${this.API_URL}getlogs`);
+    }
   }
 }

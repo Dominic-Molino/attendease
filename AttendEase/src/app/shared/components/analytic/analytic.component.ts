@@ -1,13 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CardsComponent } from './components/cards/cards.component';
-import { CourseComponent } from './components/course/course.component';
-import { YearLevelComponent } from './components/year-level/year-level.component';
-import { BlockComponent } from './components/block/block.component';
 import { CarouselModule } from 'primeng/carousel';
 import { ComparingEventsComponent } from './components/comparing-events/comparing-events.component';
-import { FeedbackChartComponent } from './components/feedback-chart/feedback-chart.component';
 import { UserFeedbackRateComponent } from '../user-feedback-rate/user-feedback-rate.component';
 import { ReportComponent } from './components/report/report.component';
+import { BlockComponent } from '../../../modules/admin/components/admin-analytics/components/block/block.component';
 
 @Component({
   selector: 'app-analytic',
@@ -15,13 +12,8 @@ import { ReportComponent } from './components/report/report.component';
   templateUrl: './analytic.component.html',
   styleUrl: './analytic.component.css',
   imports: [
-    CourseComponent,
     CardsComponent,
-    YearLevelComponent,
-    BlockComponent,
     CarouselModule,
-    ComparingEventsComponent,
-    FeedbackChartComponent,
     UserFeedbackRateComponent,
     ReportComponent,
   ],

@@ -14,30 +14,6 @@
       </div>
 
       <app-report></app-report>
-
-      <div class="w-full flex items-center my-3 gap-2.5 r">
-        <app-comparing-events
-          class="mb-2 shadow-md w-full"
-        ></app-comparing-events>
-        <div class="mx-auto h-full w-[40%]">
-          <p-carousel
-            [value]="slides"
-            [numVisible]="1"
-            [numScroll]="1"
-            [circular]="true"
-          >
-            <ng-template pTemplate="item" let-slide>
-              <div class="w-full">
-                <ng-container [ngSwitch]="slide">
-                  <app-course *ngSwitchCase="'course'"></app-course>
-                  <app-year-level *ngSwitchCase="'year-level'"></app-year-level>
-                  <app-block *ngSwitchCase="'block'"></app-block>
-                </ng-container>
-              </div>
-            </ng-template>
-          </p-carousel>
-        </div>
-      </div>
     </div>
   </div>
 </main>

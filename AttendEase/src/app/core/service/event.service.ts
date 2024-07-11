@@ -2,9 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, map, throwError } from 'rxjs';
-import { TotalAttendeesResponse } from '../total_attendees';
 import { Event } from '../../interfaces/EventInterface';
-import { UserEvents } from '../../interfaces/UserEvents';
 
 @Injectable({
   providedIn: 'root',
@@ -106,12 +104,6 @@ export class EventService {
 
   unregisterForEvent(eventId: number, userId: any) {
     return this.http.delete(`${this.API_URL}unregister/${eventId}/${userId}`);
-  }
-
-  getTotal(eventId: number): Observable<TotalAttendeesResponse> {
-    return this.http.get<TotalAttendeesResponse>(
-      `${this.API_URL}total/${eventId}`
-    );
   }
 
   uploadEvent(eventId: number, file: File): Observable<any> {

@@ -8,7 +8,7 @@ import { scales, TooltipItem } from 'chart.js';
 interface Event {
   event_id: number;
   event_name: string;
-  total_attendees: number;
+  total_registered_users: number;
 }
 
 @Component({
@@ -40,6 +40,7 @@ export class ComparingEventsComponent implements OnInit, OnDestroy {
       .pipe(switchMap(() => this.service.getAllEventAttendees()))
       .subscribe((res) => {
         const events: Event[] = res.payload;
+        console.log(events);
 
         const eventLabels: string[] = [];
         const attendeeCounts: number[] = [];
@@ -51,7 +52,7 @@ export class ComparingEventsComponent implements OnInit, OnDestroy {
             slicedEventName +
               (event.event_name.length > maxLabelLength ? '...' : '')
           );
-          attendeeCounts.push(event.total_attendees);
+          attendeeCounts.push(event.total_registered_users);
         }
 
         this.data = {

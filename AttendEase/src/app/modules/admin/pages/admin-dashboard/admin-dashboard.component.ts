@@ -5,14 +5,22 @@ import { CommonModule } from '@angular/common';
 import { UpdateroleComponent } from '../../components/updaterole/updaterole.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AnalyticComponent } from '../../../../shared/components/analytic/analytic.component';
-import { ApprovalComponent } from '../../components/approval/approval.component';
+import { ApprovalComponent } from '../approval/approval.component';
+import { AdminAnalyticsComponent } from '../../components/admin-analytics/admin-analytics.component';
+import { CardsComponent } from '../../components/admin-analytics/components/cards/cards.component';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css',
-  imports: [CommonModule, AnalyticComponent, ApprovalComponent],
+  imports: [
+    CommonModule,
+    AnalyticComponent,
+    ApprovalComponent,
+    AdminAnalyticsComponent,
+    CardsComponent,
+  ],
 })
 export class AdminDashboardComponent implements OnInit {
   constructor(
