@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MonitoredEventComponent } from './monitored-event.component';
+import { OrglistSidebarComponent } from './orglist-sidebar.component';
 
-describe('MonitoredEventComponent', () => {
-  let component: MonitoredEventComponent;
-  let fixture: ComponentFixture<MonitoredEventComponent>;
+describe('OrglistSidebarComponent', () => {
+  let component: OrglistSidebarComponent;
+  let fixture: ComponentFixture<OrglistSidebarComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MonitoredEventComponent]
+      imports: [OrglistSidebarComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(MonitoredEventComponent);
+    fixture = TestBed.createComponent(OrglistSidebarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

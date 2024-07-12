@@ -37,8 +37,6 @@ export class ReportPageComponent implements OnInit {
       .subscribe(() => {
         this.showReportMessage = this.shouldShowMessage(this.router.url);
       });
-
-    // Initial check to handle the case when the component is loaded directly at a specific route
     this.showReportMessage = this.shouldShowMessage(this.router.url);
   }
 
@@ -53,7 +51,6 @@ export class ReportPageComponent implements OnInit {
   }
 
   private shouldShowMessage(url: string): boolean {
-    // Show the message only if the URL is exactly '/organizer/events-report'
     return url === '/organizer/events-report';
   }
 }

@@ -1,16 +1,10 @@
 @if(data){
-<div class="p-10 bg-white rounded-md shadow-md border border-dark-border">
+<div class="bg-white max-w-md">
   <h1 class="text-lg font-medium text-center text-wrap mb-2 font-primary">
     STUDENT BLOCK OVERVIEW
   </h1>
   <div class="flex flex-auto justify-center">
-    <p-chart
-      type="pie"
-      [data]="data"
-      [options]="basicOptions"
-      width="250px"
-      [responsive]="false"
-    />
+    <p-chart type="pie" [data]="data" [options]="basicOptions" />
   </div>
 </div>
 }@else {

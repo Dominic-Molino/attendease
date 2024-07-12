@@ -75,11 +75,20 @@ export const routes: Routes = [
       },
 
       {
-        path: 'admin-past-event',
+        path: 'admin-event-report',
         loadComponent: () =>
           import(
-            './modules/admin/components/pastevents/pastevents.component'
-          ).then((e) => e.PasteventsComponent),
+            './modules/admin/pages/event-report-page/event-report-page.component'
+          ).then((e) => e.EventReportPageComponent),
+        children: [
+          {
+            path: 'report/:id',
+            loadComponent: () =>
+              import('./modules/admin/components/report/report.component').then(
+                (e) => e.ReportComponent
+              ),
+          },
+        ],
         canActivate: [AuthenGuard],
       },
 
@@ -96,7 +105,7 @@ export const routes: Routes = [
         path: 'admin-view-attendance/:eventId',
         loadComponent: () =>
           import(
-            './modules/organizer/components/markattendancee/markattendancee.component'
+            './modules/admin/components/markattendancee/markattendancee.component'
           ).then((c) => c.MarkattendanceeComponent),
         canActivate: [AuthenGuard],
       },
@@ -104,9 +113,9 @@ export const routes: Routes = [
       {
         path: 'admin-feedback-list',
         loadComponent: () =>
-          import('./shared/components/event-list/event-list.component').then(
-            (c) => c.EventListComponent
-          ),
+          import(
+            './modules/admin/pages/feedback-page/feedback-page.component'
+          ).then((c) => c.FeedbackPageComponent),
         canActivate: [RoleGuard],
       },
 
@@ -320,7 +329,7 @@ export const routes: Routes = [
         path: 'organizer-view-attendance/:eventId',
         loadComponent: () =>
           import(
-            './modules/organizer/components/markattendancee/markattendancee.component'
+            './modules/admin/components/markattendancee/markattendancee.component'
           ).then((c) => c.MarkattendanceeComponent),
         canActivate: [AuthenGuard],
       },

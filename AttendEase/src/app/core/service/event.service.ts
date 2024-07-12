@@ -119,10 +119,6 @@ export class EventService {
     });
   }
 
-  getEventAttendeesTotal(event_id: number): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}total/${event_id}`);
-  }
-
   approveEvent(event_id: number, admin_id: number): Observable<any> {
     return this.http.post(`${this.API_URL}approveevent`, {
       event_id,

@@ -1,0 +1,78 @@
+<main class="!scroll-smooth w-full h-screen">
+  <div class="mt-16 p-4 h-screen">
+    <aside
+      class="fixed top-0 left-0 z-40 w-56 h-screen transition-transform -translate-x-full sm:translate-x-0"
+    >
+      <div
+        class="h-full mt-16 px-3 py-4 overflow-y-auto bg-white border-r border-dark-border dark:bg-gray-800"
+      >
+        <h5 class="text-base font-medium mb-2 text-gray-900 dark:text-white">
+          Organizers List
+        </h5>
+        <ul class="space-y-2 font-medium">
+          <li
+            *ngFor="let organizer of organizers"
+            (click)="toggleDropdown(organizer)"
+          >
+            <p
+              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-user"
+              >
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              <span class="ms-3 capitalize"
+                >{{ organizer.fname }} {{ organizer.lname }}</span
+              >
+            </p>
+            <div class="bg-white" *ngIf="organizer.dropdownOpen">
+              <ul class="p-3 space-y-1 text-sm text-gray-700">
+                <li *ngFor="let event of organizer.events">
+                  <button
+                    (click)="
+                      openEventReport(event.event_id); $event.stopPropagation()
+                    "
+                    class="block w-full text-left p-2 hover:rounded hover:bg-gray-100 border-b border-dark-border py-2 text-sm font-medium capitalize cursor-pointer"
+                  >
+                    {{ event.event_name }}
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="p-1 sm:ml-[215px]" *ngIf="showReportMessage">
+      <div class="flex w-full items-center justify-center">
+        <div class="flex flex-col justify-center items-center mt-24 m-auto">
+          <div
+            class="flex justify-center items-center flex-col relative top-24"
+          >
+            <div class="tracking-widest mt-4 text-center">
+              <p class="text-center text-xl">(￣ ￣|||)</p>
+              <span class="text-gray-500 text-xl"
+                >You must pick a organizer in order to see the event and its
+                report ...</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <router-outlet></router-outlet>
+  </div>
+</main>

@@ -1,16 +1,94 @@
 <main class="!scroll-smooth w-full h-screen">
-  <div class="p-4 mt-16 h-screen">
+  <div class="p-4 mt-16">
     <div>
       <p class="mt-5 mb-2 text-text text-2xl tracking-wide font-semibold">
         Feedback
       </p>
       <hr class="h-px mb-5 bg-dark-border border-0" />
     </div>
-
+    @if(loading){
+    <div class="h-screen w-full flex justify-center bg-white">
+      <div class="flex flex-row gap-2">
+        <div class="w-4 h-4 bg-light-background animate-bounce"></div>
+        <div
+          class="w-4 h-4 bg-light-background animate-bounce [animation-delay:-.3s]"
+        ></div>
+        <div
+          class="w-4 h-4 bg-light-background animate-bounce [animation-delay:-.5s]"
+        ></div>
+      </div>
+    </div>
+    } @else if (!loading && eventList && eventList.length > 0) {
+    <div class="dropdown flex flex-1 justify-end w-full col-span-2">
+      <button
+        class="text-white bg-light-background hover:bg-light-foregroud hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center p-2 items-center relative z-10 overflow-hidden inline-flex"
+        (click)="toggleDropdown()"
+      >
+        Filter Events
+        <svg
+          class="w-6 h-6 text-white"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1"
+            d="m19 9-7 7-7-7"
+          />
+        </svg>
+      </button>
+      <ul
+        class="dropdown-menu flex flex-col absolute border border-dark-border right-5 mt-12 py-2 w-36 bg-white rounded-md shadow-xl z-20 divide-y-0"
+        *ngIf="isDropdownOpen"
+      >
+        <li
+          class="dropdown-item hover:bg-dark-primary w-full p-1.5 flex justify-center"
+          (click)="applyFilter('all')"
+        >
+          <span
+            class="flex cursor-pointer items-center text-sm font-medium text-gray-900 me-3"
+            >All Events
+          </span>
+        </li>
+        <li
+          class="dropdown-item hover:bg-dark-primary w-full p-1.5 flex justify-center"
+          (click)="applyFilter('upcoming')"
+        >
+          <span
+            class="flex cursor-pointer items-center text-sm font-medium text-gray-900 me-3"
+            >Upcoming
+          </span>
+        </li>
+        <li
+          class="dropdown-item hover:bg-dark-primary w-full p-1.5 flex justify-center"
+          (click)="applyFilter('ongoing')"
+        >
+          <span
+            class="flex cursor-pointer items-center text-sm font-medium text-gray-900 me-3"
+            >Ongoing
+          </span>
+        </li>
+        <li
+          class="dropdown-item hover:bg-dark-primary w-full p-1.5 flex justify-center"
+          (click)="applyFilter('done')"
+        >
+          <span
+            class="flex cursor-pointer items-center font-medium text-sm text-gray-900 me-3"
+            >Done
+          </span>
+        </li>
+      </ul>
+    </div>
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mt-5">
       <div
         *ngFor="
-          let event of eventList
+          let event of filteredEventList
             | paginate : { itemsPerPage: itemsPerPage, currentPage: p }
         "
         class="relative max-w-sm p-6 bg-white container border border-dark-border rounded-md shadow flex flex-col justify-between"
@@ -21,7 +99,7 @@
             *ngIf="event.status === 'done'"
           >
             <span
-              class="flex w-2.5 h-2.5 bg-green-500 text-center me-1.5 flex-shrink-0 rounded-full"
+              class="flex w-2.5 h-2.5 bg-light-foregroud text-center me-1.5 flex-shrink-0 rounded-full"
             ></span>
             Done
           </div>
@@ -52,10 +130,12 @@
         </div>
 
         <p class="mb-3 font-normal text-gray-700 text-justify">
-          {{ event.event_description }}
+          {{
+            truncateDescription(event.event_description, maxDescriptionLength)
+          }}
         </p>
         <p class="mb-3 font-normal text-sm text-gray-700">
-          Date: {{ event.event_start_date }}
+          Date: {{ event.event_start_date | date : "longDate" }}
         </p>
         <div class="mt-auto">
           <button
@@ -66,7 +146,7 @@
             [ngClass]="{
               'cursor-not-allowed bg-gray-300 text-gray-500 border-gray-300':
                 event.status === 'upcoming' || event.status === 'ongoing',
-              'bg-light-background hover:bg-light-foregroud text-white cursor-pointer':
+              'bg-light-background hover:bg-light-foregroud text-white':
                 event.status === 'done'
             }"
             class="inline-flex relative items-center px-3 py-2 text-sm font-semibold text-center rounded-md focus:ring-0 focus:outline-none"
@@ -99,7 +179,8 @@
         class="pagination"
       ></pagination-controls>
     </div>
-    <section *ngIf="eventList.length == 0">
+    }@else {
+    <section>
       <div class="py-4 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
         <div class="max-w-screen-sm text-center mx-auto">
           <svg
@@ -200,5 +281,8 @@
         </div>
       </div>
     </section>
+    }
   </div>
 </main>
+
+<router-outlet></router-outlet>

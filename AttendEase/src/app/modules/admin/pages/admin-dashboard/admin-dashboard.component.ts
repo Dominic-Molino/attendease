@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UpdateroleComponent } from '../../components/updaterole/updaterole.component';
 import { MatDialog } from '@angular/material/dialog';
-import { AnalyticComponent } from '../../../../shared/components/analytic/analytic.component';
 import { ApprovalComponent } from '../approval/approval.component';
 import { AdminAnalyticsComponent } from '../../components/admin-analytics/admin-analytics.component';
 import { CardsComponent } from '../../components/admin-analytics/components/cards/cards.component';
@@ -16,7 +15,6 @@ import { CardsComponent } from '../../components/admin-analytics/components/card
   styleUrl: './admin-dashboard.component.css',
   imports: [
     CommonModule,
-    AnalyticComponent,
     ApprovalComponent,
     AdminAnalyticsComponent,
     CardsComponent,

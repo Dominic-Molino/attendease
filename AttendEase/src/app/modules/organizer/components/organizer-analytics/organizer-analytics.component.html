@@ -1,54 +1,53 @@
 <div class="relative w-full h-screen">
   <div class="relative">
-    <button
-      (click)="toggleDropdown()"
-      class="inline-flex z-30 my-1.5 relative items-center text-white bg-light-background border focus:outline-none hover:bg-light-foregroud focus:ring-0 font-medium rounded-md text-sm px-3 py-1.5"
-      type="button"
-    >
-      <span class="sr-only">Select Event</span>
-      Select Event
-      <svg
-        class="w-2.5 h-2.5 ms-2.5"
-        aria-hidden="true"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 10 6"
-      >
-        <path
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="m1 1 4 4 4-4"
-        />
-      </svg>
-    </button>
-
-    <!-- Dropdown menu -->
     <div
-      class="hidden bg-white divide-y divide-gray-100 border border-dark-border rounded-lg shadow dark:bg-gray-700 absolute z-40 left-0"
-      [class.hidden]="!dropdownOpen"
-    >
-      <ul
-        class="absolute left-0 -top-0.5 bg-white border border-dark-border rounded-md divide-y divide-gray-300"
-      >
-        <li
-          *ngFor="let event of report"
-          (click)="selectEvent(event)"
-          class="block px-4 py-2 text-sm font-medium capitalize hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
-        >
-          {{ event.event_name }}
-        </li>
-      </ul>
-    </div>
-
-    <div
-      class="flex max-h-[400px] h-[400px] w-[calc(100%-320px)] gap-2 mb-2"
+      class="flex max-h-[400px] h-[400px] w-[calc(100%-320px)] gap-2 my-2"
       *ngIf="selectedEvent"
     >
       <div
-        class="w-2/3 h-full border border-dark-border bg-white rounded-md shadow-md p-4"
+        class="w-2/3 h-full border border-dark-border relative bg-white rounded-md shadow-md p-4"
       >
+        <button
+          (click)="toggleDropdown()"
+          class="inline-flex z-30 my-1.5 absolute right-3 top-0 items-center text-white bg-light-background border focus:outline-none hover:bg-light-foregroud focus:ring-0 font-medium rounded-md text-sm px-3 py-1.5"
+          type="button"
+        >
+          <span class="sr-only">Select Event</span>
+          Select Event
+          <svg
+            class="w-2.5 h-2.5 ms-2.5"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 4 4 4-4"
+            />
+          </svg>
+        </button>
+
+        <!-- Dropdown menu -->
+        <div
+          class="hidden bg-white divide-y divide-gray-100 border border-dark-border rounded-lg shadow dark:bg-gray-700 absolute z-40 right-[295px] top-2"
+          [class.hidden]="!dropdownOpen"
+        >
+          <ul
+            class="absolute left-0 -top-0.5 bg-white border border-dark-border rounded-md divide-y divide-gray-300"
+          >
+            <li
+              *ngFor="let event of report"
+              (click)="selectEvent(event)"
+              class="block px-4 py-2 text-sm font-medium capitalize hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+            >
+              {{ event.event_name }}
+            </li>
+          </ul>
+        </div>
         <div class="w-full h-full">
           <p-chart
             type="line"

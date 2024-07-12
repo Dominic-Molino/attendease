@@ -4,7 +4,7 @@ import { AuthserviceService } from '../../../../core/service/authservice.service
 import { CommonModule, Location } from '@angular/common';
 import { EventService } from '../../../../core/service/event.service';
 import Swal from 'sweetalert2';
-import { switchMap, of, Observable } from 'rxjs';
+import { switchMap, of, Observable, map } from 'rxjs';
 import { Event } from '../../../../interfaces/EventInterface';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
@@ -20,7 +20,6 @@ export class ApprovalPageComponent implements OnInit {
   userId = this.service.getCurrentUserId();
   eventWithStatus?: any;
   isRegistered = false;
-  eventImage$: Observable<SafeResourceUrl | undefined> | undefined;
   eventId: any;
 
   constructor(
@@ -38,12 +37,33 @@ export class ApprovalPageComponent implements OnInit {
     });
   }
 
-  fetchEventDetails(eventId: number): void {
-    if (eventId) {
-      this.evService.getEvents(eventId).subscribe((res: any) => {
-        this.events = res.payload;
-      });
-    }
+  fetchEventDetails(eventId: any) {
+    this.evService.getEventById(eventId).subscribe({
+      next: (result: any) => {
+        if (result && Array.isArray(result)) {
+          this.events = result.map((event) => ({
+            ...event,
+            event_start_date: new Date(event.event_start_date),
+            event_end_date: new Date(event.event_end_date),
+            event_registration_start: new Date(event.event_registration_start),
+            event_registration_end: new Date(event.event_registration_end),
+            categories: JSON.parse(event.categories),
+            target_participants: JSON.parse(event.target_participants),
+            event_image$: this.getEventImage(event.event_id),
+          }));
+        }
+        console.log(this.events);
+      },
+    });
+  }
+
+  getEventImage(eventId: number): Observable<SafeResourceUrl> {
+    return this.evService.getEventImage(eventId).pipe(
+      map((blob: Blob) => {
+        const url = URL.createObjectURL(blob);
+        return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      })
+    );
   }
 
   approveEvent(): void {

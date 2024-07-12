@@ -1,5 +1,5 @@
 <main class="w-full">
-  <div class="p-4 mt-16 sm:ml-64">
+  <div class="p-4 mt-16">
     <button class="-ms-2" (click)="closePage()">
       <svg
         class="w-7 h-7 text-gray-800"
@@ -33,26 +33,35 @@
               class="mb-3 flex flex-col items-center md:flex-row w-full gap-3"
             >
               <div
-                class="rounded-md max-h-[304px] md:w-1/2 w-full flex-shrink-0"
+                class="rounded-md max-h-[304px] md:w-1/2 w-full flex-shrink-0 relative"
               >
                 <img
-                  *ngIf="eventImage$ | async"
-                  [src]="eventImage$ | async"
+                  *ngIf="event.event_image$ | async; else placeholder"
+                  [src]="event.event_image$ | async"
                   alt="fetch images"
                   loading="lazy"
                   class="rounded-md object-cover max-h-[304px] h-full object-center w-full flex-grow border border-dark-border"
                 />
+                <ng-template #placeholder>
+                  <div>
+                    <img
+                      src="./../../../../../assets/images/event_placeholder.jpg"
+                      alt=""
+                      class="rounded-md object-cover max-h-[304px] h-full object-center w-full flex-grow border border-dark-border"
+                    />
+                  </div>
+                </ng-template>
               </div>
               <div class="md:w-1/2 w-full flex flex-col">
                 <h1 class="text-ellipsis text-text text-4xl font-bold">
                   {{ event?.event_name }}
                 </h1>
                 <span
-                  class="text-light-text text-xs font-semibold relative top-0"
+                  class="text-light-text text-sm font-semibold relative top-0"
                   >by: {{ event?.organizer_name }}</span
                 >
                 <p
-                  class="leading-normal text-sm flex-grow text-justify overflow-hidden whitespace-pre-line text-ellipsis text-text"
+                  class="leading-normal text-base flex-grow text-justify overflow-hidden whitespace-pre-line text-ellipsis text-text"
                 >
                   {{ event?.event_description }}
                 </p>
@@ -269,7 +278,7 @@
             >
               <button
                 (click)="approveEvent()"
-                class="bg-light-background hover:bg-light-foregroud focus:ring-0 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5"
+                class="bg-light-background text-white hover:bg-light-foregroud focus:ring-0 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5"
               >
                 Approve Event
               </button>

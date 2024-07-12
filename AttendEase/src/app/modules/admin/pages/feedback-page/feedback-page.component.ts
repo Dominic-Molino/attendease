@@ -1,14 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { EventService } from '../../../core/service/event.service';
-import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
-import { AuthserviceService } from '../../../core/service/authservice.service';
-import { catchError, finalize, map } from 'rxjs/operators';
+import { Subscription, map, catchError, of, finalize } from 'rxjs';
 import Swal from 'sweetalert2';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { FeedbackListComponent } from '../feedback-list/feedback-list.component';
-import { of, Subscription } from 'rxjs';
+import { AuthserviceService } from '../../../../core/service/authservice.service';
+import { EventService } from '../../../../core/service/event.service';
+import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { FeedbackListComponent } from '../../../../shared/components/feedback-list/feedback-list.component';
 
 interface Event {
   event_id: number;
@@ -20,7 +19,7 @@ interface Event {
 }
 
 @Component({
-  selector: 'app-event-list',
+  selector: 'app-feedback-page',
   standalone: true,
   imports: [
     CommonModule,
@@ -30,10 +29,10 @@ interface Event {
     NgxPaginationModule,
     MatTooltipModule,
   ],
-  templateUrl: './event-list.component.html',
-  styleUrls: ['./event-list.component.css'],
+  templateUrl: './feedback-page.component.html',
+  styleUrl: './feedback-page.component.css',
 })
-export class EventListComponent implements OnInit, OnDestroy {
+export class FeedbackPageComponent implements OnInit, OnDestroy {
   eventList: Event[] = [];
   maxDescriptionLength: number = 100;
   currentUser: any;

@@ -153,11 +153,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 #end of events
 
                 # anylytics
-            case 'total':
-                echo json_encode($analytics->get_attendees_total($request[1]));
-                break;
-
-
             case 'totalAttendees':
                 echo json_encode($analytics->get_all_attendee_counts());
                 break;
@@ -186,14 +181,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($analytics->getAllApprovedEvents());
                 break;
 
-            case 'analytics':
-                if (isset($request[1])) {
-                    echo json_encode($analytics->getApprovedDoneEventsWithStatus($request[1]));
-                } else {
-                    echo json_encode($analytics->getApprovedDoneEventsWithStatus());
-                }
-                break;
-
             case 'getalldonevents':
                 if (isset($request[1])) {
                     echo json_encode($analytics->getDoneEvents($request[1]));
@@ -218,8 +205,8 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 }
                 break;
 
-
                 #end of analytics
+
 
                 #admin module
 

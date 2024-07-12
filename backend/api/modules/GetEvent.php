@@ -88,11 +88,9 @@ class GetEvent extends GlobalMethods
         }
     }
 
-
     // gets all approved event
     public function getEvents($event_id = null)
     {
-        // Specify the columns you need
         $columns = "e.event_id, e.event_name, e.event_description, e.event_location, 
                 e.event_start_date, e.event_end_date, e.event_registration_start, 
                 e.event_registration_end, e.event_type, e.max_attendees, e.categories, 
@@ -100,33 +98,23 @@ class GetEvent extends GlobalMethods
                 u.user_id as organizer_id, u.first_name as first_name, 
                 u.last_name as last_name, u.organization as organizer_organization";
 
-        // Define the condition based on event_id
         $condition = ($event_id !== null) ? "e.event_id = $event_id" : "ea.status = 'Approved'";
 
-        // Write the SQL query
         $sql = "SELECT $columns 
             FROM events e 
             JOIN event_approval ea ON e.event_id = ea.event_id 
             JOIN user u ON e.organizer_user_id = u.user_id
             WHERE $condition";
 
-        // Log the SQL query for debugging
-        error_log("SQL Query: " . $sql);
-
-        // Execute the query
         $events = $this->executeQuery($sql);
 
-        // Check if the query was successful
         if ($events['code'] == 200) {
-            // Get the current date
             $currentDate = new DateTime();
 
-            // Loop through the events to determine their status
             foreach ($events['data'] as &$event) {
                 $startDate = new DateTime($event['event_start_date']);
                 $endDate = new DateTime($event['event_end_date']);
 
-                // Determine the event status based on the current date
                 if ($currentDate < $startDate) {
                     $event['status'] = 'upcoming';
                 } elseif ($currentDate >= $startDate && $currentDate <= $endDate) {
@@ -136,7 +124,6 @@ class GetEvent extends GlobalMethods
                 }
             }
 
-            // Return the payload with the events data
             return $this->sendPayload($events['data'], 'success', "Successfully retrieved data.", 200);
         }
 
@@ -146,8 +133,6 @@ class GetEvent extends GlobalMethods
         // Return a failed payload if the query was not successful
         return $this->sendPayload(null, 'failed', "Failed to retrieve data.", $events['code']);
     }
-
-
 
     public function getRegisteredUsersForApprovedEvents($event_id = null)
     {
@@ -264,7 +249,6 @@ class GetEvent extends GlobalMethods
             return $this->sendPayload(null, 'failed', 'Failed to fetch approved events.', 500);
         }
     }
-
 
     //all event of orgnizer
     public function getAllEventsByOrganizerId($organizer_user_id)
@@ -397,22 +381,16 @@ class GetEvent extends GlobalMethods
             $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($events as &$event) {
-                // Get registered count for the event
                 $event_id = $event['event_id'];
 
-                // Get registered count for the event
                 $event['registered_users'] = $this->getOngoingRegisteredCount($event_id);
 
-                // Get student details for the event
                 $event['student_details'] = $this->getOngoingStudentDetails($event_id);
 
-                // Get registered count by course
                 $event['registered_by_course'] = $this->getRegisteredCountByCourse($event_id);
 
-                // Get registered count by year level
                 $event['registered_by_year_level'] = $this->getRegisteredCountByYearLevel($event_id);
 
-                // Get daily registration counts
                 $event['daily_registrations'] = $this->getDailyRegistrations($event_id);
             }
 
@@ -444,23 +422,17 @@ class GetEvent extends GlobalMethods
             $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($events as &$event) {
-                // Get registered count for the event
-                $registeredCount = $this->getOngoingRegisteredCount($event['event_id']);
-                $event['registered_users'] = $registeredCount;
+                $event_id = $event['event_id'];
 
-                // Get student details for the event
-                $event['student_details'] = $this->getOngoingStudentDetails($event['event_id']);
+                $event['registered_users'] = $this->getOngoingRegisteredCount($event_id);
 
-                // Get registered count by course
-                $registeredByCourse = $this->getRegisteredCountByCourse($event['event_id']);
-                $event['registered_by_course'] = $registeredByCourse;
+                $event['student_details'] = $this->getOngoingStudentDetails($event_id);
 
-                $registeredByBlock = $this->getRegisteredCountByBlock($event['event_id']);
-                $event['registered_by_block'] = $registeredByBlock;
+                $event['registered_by_course'] = $this->getRegisteredCountByCourse($event_id);
 
-                // Get registered count by year level
-                $registeredByYearLevel = $this->getRegisteredCountByYearLevel($event['event_id']);
-                $event['registered_by_year_level'] = $registeredByYearLevel;
+                $event['registered_by_year_level'] = $this->getRegisteredCountByYearLevel($event_id);
+
+                $event['registered_by_block'] = $this->getRegisteredCountByBlock($event_id);
             }
 
             return $this->sendPayload($events, 'success', "Successfully retrieved data.", 200);
@@ -469,7 +441,6 @@ class GetEvent extends GlobalMethods
         }
     }
 
-    // Existing functions for reference
     private function getOngoingRegisteredCount($event_id)
     {
         try {
@@ -575,7 +546,6 @@ class GetEvent extends GlobalMethods
         }
     }
 
-
     public function getDoneEventsByOrganizer($organizer_user_id)
     {
         try {
@@ -601,8 +571,7 @@ class GetEvent extends GlobalMethods
         }
     }
 
-
-    // report
+    // past event report
     public function getApprovedDoneEventsWithStatus($event_id)
     {
         try {

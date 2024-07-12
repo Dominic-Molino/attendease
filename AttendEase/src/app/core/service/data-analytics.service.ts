@@ -31,10 +31,6 @@ export class DataAnalyticsService {
     return this.http.get(`${this.API_URL}totalAttendees`);
   }
 
-  getAnalytics(event_id = null): Observable<any> {
-    return this.http.get(`${this.API_URL}analytics/${event_id}`);
-  }
-
   getDashboardData(): Observable<any> {
     return this.http.get(`${this.API_URL}getdashboarddata`);
   }
@@ -54,6 +50,16 @@ export class DataAnalyticsService {
       );
     } else {
       return this.http.get<any>(`${this.API_URL}getallongoingvents`);
+    }
+  }
+
+  getUpcomingEvents(event_id = null): Observable<any> {
+    if (event_id) {
+      return this.http.get<any>(
+        `${this.API_URL}getallupcomingevents/${event_id}`
+      );
+    } else {
+      return this.http.get<any>(`${this.API_URL}getallupcomingevents`);
     }
   }
 

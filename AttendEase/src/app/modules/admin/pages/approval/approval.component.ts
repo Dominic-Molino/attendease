@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EventService } from '../../../../core/service/event.service';
-import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
-import { AuthserviceService } from '../../../../core/service/authservice.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
 import { Subscription, interval, switchMap } from 'rxjs';
@@ -23,20 +21,18 @@ export class ApprovalComponent implements OnInit {
   itemsPerPage: number = 10;
   maxSize = 5;
 
-  sortDirection: 'asc' | 'desc' = 'asc'; // Track sorting direction
-
-  private pollingInterval = 10000; // Polling interval in milliseconds
+  private pollingInterval = 10000;
   private pollingSubscription: Subscription | undefined;
 
   constructor(private evService: EventService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadEvents();
-    this.startPolling(); // Start polling on component initialization
+    this.startPolling();
   }
 
   ngOnDestroy(): void {
-    this.stopPolling(); // Stop polling when component is destroyed
+    this.stopPolling();
   }
 
   private startPolling(): void {
@@ -45,11 +41,9 @@ export class ApprovalComponent implements OnInit {
       .subscribe((res: any) => {
         const updatedEvents = res.payload;
 
-        // Check if events data has changed
         if (!this.areEventsEqual(this.events, updatedEvents)) {
           this.events = updatedEvents;
-          this.filteredEvents = [...this.events]; // Update filtered events as well if needed
-          console.log('Events updated via polling:', this.events);
+          this.filteredEvents = [...this.events];
         }
       });
   }
@@ -63,7 +57,8 @@ export class ApprovalComponent implements OnInit {
   loadEvents() {
     this.evService.getEvents().subscribe((res: any) => {
       this.events = res.payload;
-      this.filteredEvents = [...this.events]; // Initialize filteredEvents with all events
+      console.log(this.events);
+      this.filteredEvents = [...this.events];
     });
   }
 
@@ -87,20 +82,6 @@ export class ApprovalComponent implements OnInit {
           event.approval_status.toLowerCase().includes(searchTerm)
       );
     }
-  }
-
-  sortEventsByStatus() {
-    const direction = this.sortDirection === 'asc' ? 1 : -1;
-    this.filteredEvents.sort((a, b) => {
-      if (a.approval_status > b.approval_status) {
-        return direction;
-      }
-      if (a.approval_status < b.approval_status) {
-        return -direction;
-      }
-      return 0;
-    });
-    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
   }
 
   private areEventsEqual(events1: any[], events2: any[]): boolean {

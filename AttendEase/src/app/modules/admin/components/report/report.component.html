@@ -1,0 +1,797 @@
+<div class="p-1 sm:ml-[215px] bg-white">
+  <div *ngIf="reportDetail && reportDetail.length > 0">
+    <div class="w-full flex items-center gap-1.5">
+      <div class="w-1/3">
+        <div
+          class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 dark:bg-gray-800 dark:border-gray-700"
+        >
+          <h5
+            class="mb-3 text-sm font-semibold text-gray-900 md:text-xl dark:text-white"
+          >
+            Details
+          </h5>
+          <ul class="my-2">
+            <li>
+              <div
+                class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+              >
+                <span class="flex-1 ms-3 whitespace-nowrap">Name</span>
+                <span
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded capitalize"
+                >
+                  {{ reportDetail[0].event_name }}
+                </span>
+              </div>
+            </li>
+            <li>
+              <div
+                class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+              >
+                <span class="flex-1 ms-3 whitespace-nowrap">Status</span>
+                <span
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded capitalize"
+                >
+                  {{ reportDetail[0].event_status }}
+                </span>
+              </div>
+            </li>
+            <li>
+              <div
+                class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+              >
+                <span class="flex-1 ms-3 whitespace-nowrap">Date</span>
+                <span
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                >
+                  {{ reportDetail[0].event_start_date | date : "longDate" }}
+                  -
+                  {{ reportDetail[0].event_end_date | date : "longDate" }}
+                </span>
+              </div>
+            </li>
+            <li>
+              <div
+                class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+              >
+                <span class="flex-1 ms-3 whitespace-nowrap">Time</span>
+                <span
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                >
+                  {{ reportDetail[0].event_start_date | date : "shortTime" }}
+                  -
+                  {{ reportDetail[0].event_end_date | date : "shortTime" }}
+                </span>
+              </div>
+            </li>
+            <li>
+              <div
+                class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+              >
+                <span class="flex-1 ms-3 whitespace-nowrap"
+                  >Max Participants</span
+                >
+                <span
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                >
+                  {{ reportDetail[0].max_attendees }}
+                </span>
+              </div>
+            </li>
+            <li>
+              <div
+                class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+              >
+                <span class="flex-1 ms-3 whitespace-nowrap"
+                  >Registered Participants</span
+                >
+                <span
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                >
+                  {{ reportDetail[0].registered_users }}
+                </span>
+              </div>
+            </li>
+            <li>
+              <div
+                class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+              >
+                <span class="flex-1 ms-3 whitespace-nowrap"
+                  >Present Participants</span
+                >
+                <span
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                >
+                  {{ reportDetail[0].present_count }}
+                </span>
+              </div>
+            </li>
+            <li>
+              <div
+                class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+              >
+                <span class="flex-1 ms-3 whitespace-nowrap"
+                  >Attendance Submitted</span
+                >
+                <span
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                >
+                  {{ reportDetail[0].attendance_count }}
+                </span>
+              </div>
+            </li>
+            <li>
+              <div
+                class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+              >
+                <span class="flex-1 ms-3 whitespace-nowrap"
+                  >Feedback Submitted</span
+                >
+                <span
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                >
+                  {{ reportDetail[0].feedback_count }}
+                </span>
+              </div>
+            </li>
+            <li>
+              <div
+                class="flex items-center p-1.5 text-sm font-bold text-gray-900"
+              >
+                <span class="flex-1 ms-3 whitespace-nowrap"
+                  >Satisfaction Rating</span
+                >
+                <span
+                  *ngIf="reportDetail[0].average_feedback !== 0"
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                >
+                  {{ reportDetail[0].average_feedback | number : "1.1" }}
+                </span>
+                <span
+                  *ngIf="reportDetail[0].average_feedback === null"
+                  class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded"
+                >
+                  0
+                </span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- charts -->
+      <div class="w-2/3">
+        <div class="w-full">
+          <div
+            class="w-full flex items-center justify-between gap-2.5 rounded-md p-3"
+          >
+            <div
+              class="w-full grid grid-cols-2 grid-rows-2 gap-2.5 max-h-[400px]"
+            >
+              <!-- registered_users -->
+              <div
+                class="w-full h-[187px] bg-white rounded-md shadow border border-dark-border mb-2 p-4"
+              >
+                <div class="flex justify-between items-start w-full">
+                  <div class="flex justify-center w-full items-center relative">
+                    <div
+                      class="flex w-full items-center mb-1 absolute top-1 left-2 z-30"
+                    >
+                      <h5
+                        class="text-sm font-bold leading-none text-gray-900 dark:text-white"
+                      >
+                        Registered Students
+                      </h5>
+                      <svg
+                        (click)="
+                          toggleTooltip(
+                            reportDetail[0].event_id +
+                              'registrationToMaxAttendees'
+                          )
+                        "
+                        matTooltipPosition="right"
+                        class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer ms-1 animate-pulse"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm0 16a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm1-5.034V12a1 1 0 0 1-2 0v-1.418a1 1 0 0 1 1.038-.999 1.436 1.436 0 0 0 1.488-1.441 1.501 1.501 0 1 0-3-.116.986.986 0 0 1-1.037.961 1 1 0 0 1-.96-1.037A3.5 3.5 0 1 1 11 11.466Z"
+                        />
+                      </svg>
+                      <app-tooltip
+                        [isVisible]="
+                          tooltipVisible[
+                            reportDetail[0].event_id +
+                              'registrationToMaxAttendees'
+                          ]
+                        "
+                        [tooltipContent]="
+                          getChartData(
+                            reportDetail[0],
+                            'registrationToMaxAttendees'
+                          ).message
+                        "
+                        matTooltipClass="custom-tooltip"
+                      ></app-tooltip>
+                    </div>
+
+                    <div
+                      class="absolute top-7"
+                      *ngIf="reportDetail[0].registered_users === 0"
+                    >
+                      <div class="tracking-widest mt-4 text-center">
+                        <p
+                          class="text-center text-xl animate-bounce text-orange-400"
+                        >
+                          (￣ ￣|||)
+                        </p>
+                        <span class="text-gray-500 text-xl"
+                          >No data available ...</span
+                        >
+                      </div>
+                    </div>
+
+                    <div
+                      *ngIf="reportDetail[0].registered_users !== 0"
+                      style="width: 200px; height: 200px"
+                      class="relative"
+                    >
+                      <p-chart
+                        type="doughnut"
+                        [options]="chartOptions"
+                        [data]="
+                          getChartData(
+                            reportDetail[0],
+                            'registrationToMaxAttendees'
+                          )
+                        "
+                      ></p-chart>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- courseRegistration -->
+              <div
+                class="w-full h-[187px] bg-white rounded-md shadow border border-dark-border mb-2 p-4"
+              >
+                <div class="flex justify-between items-start w-full">
+                  <div class="flex justify-center w-full items-center relative">
+                    <div
+                      class="flex w-full items-center mb-1 absolute top-1 left-2 z-30"
+                    >
+                      <h5
+                        class="text-sm font-bold leading-none text-gray-900 dark:text-white"
+                      >
+                        Student Courses
+                      </h5>
+                      <svg
+                        (click)="
+                          toggleTooltip(
+                            reportDetail[0].event_id + 'courseRegistration'
+                          )
+                        "
+                        matTooltipPosition="right"
+                        class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer ms-1 animate-pulse"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm0 16a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm1-5.034V12a1 1 0 0 1-2 0v-1.418a1 1 0 0 1 1.038-.999 1.436 1.436 0 0 0 1.488-1.441 1.501 1.501 0 1 0-3-.116.986.986 0 0 1-1.037.961 1 1 0 0 1-.96-1.037A3.5 3.5 0 1 1 11 11.466Z"
+                        />
+                      </svg>
+                      <app-tooltip
+                        [isVisible]="
+                          tooltipVisible[
+                            reportDetail[0].event_id + 'courseRegistration'
+                          ]
+                        "
+                        [tooltipContent]="
+                          getChartData(reportDetail[0], 'courseRegistration')
+                            .message
+                        "
+                        matTooltipClass="custom-tooltip"
+                      ></app-tooltip>
+                    </div>
+
+                    <div
+                      class="absolute top-7"
+                      *ngIf="reportDetail[0].registered_by_course.length === 0"
+                    >
+                      <div class="tracking-widest mt-4 text-center">
+                        <p
+                          class="text-center text-xl animate-bounce text-orange-400"
+                        >
+                          (￣ ￣|||)
+                        </p>
+                        <span class="text-gray-500 text-xl"
+                          >No data available ...</span
+                        >
+                      </div>
+                    </div>
+
+                    <div
+                      style="width: 200px; height: 200px"
+                      *ngIf="reportDetail[0].registered_by_course.length !== 0"
+                    >
+                      <p-chart
+                        type="doughnut"
+                        [data]="
+                          getChartData(reportDetail[0], 'courseRegistration')
+                        "
+                        [options]="chartOptions"
+                      ></p-chart>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- yearLevelRegistration -->
+              <div
+                class="w-full rounded-md shadow border border-dark-border mb-2 p-4"
+              >
+                <div class="flex justify-between items-start w-full">
+                  <div class="flex justify-center w-full items-center relative">
+                    <div
+                      class="flex w-full items-center mb-1 absolute top-1 left-2 z-30"
+                    >
+                      <h5
+                        class="text-sm font-bold leading-none text-gray-900 dark:text-white"
+                      >
+                        Student Year Level
+                      </h5>
+                      <svg
+                        (click)="
+                          toggleTooltip(
+                            reportDetail[0].event_id + 'yearLevelRegistration'
+                          )
+                        "
+                        matTooltipPosition="right"
+                        class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer ms-1 animate-pulse"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm0 16a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm1-5.034V12a1 1 0 0 1-2 0v-1.418a1 1 0 0 1 1.038-.999 1.436 1.436 0 0 0 1.488-1.441 1.501 1.501 0 1 0-3-.116.986.986 0 0 1-1.037.961 1 1 0 0 1-.96-1.037A3.5 3.5 0 1 1 11 11.466Z"
+                        />
+                      </svg>
+                      <app-tooltip
+                        [isVisible]="
+                          tooltipVisible[
+                            reportDetail[0].event_id + 'yearLevelRegistration'
+                          ]
+                        "
+                        [tooltipContent]="
+                          getChartData(reportDetail[0], 'yearLevelRegistration')
+                            .message
+                        "
+                        matTooltipClass="custom-tooltip"
+                      ></app-tooltip>
+                    </div>
+
+                    <div
+                      class="absolute top-7"
+                      *ngIf="
+                        reportDetail[0].registered_by_year_level.length === 0
+                      "
+                    >
+                      <div class="tracking-widest mt-4 text-center">
+                        <p
+                          class="text-center text-xl animate-bounce text-orange-400"
+                        >
+                          (￣ ￣|||)
+                        </p>
+                        <span class="text-gray-500 text-xl"
+                          >No data available ...</span
+                        >
+                      </div>
+                    </div>
+
+                    <div
+                      style="width: 200px; height: 200px"
+                      *ngIf="
+                        reportDetail[0].registered_by_year_level.length !== 0
+                      "
+                    >
+                      <p-chart
+                        type="doughnut"
+                        [data]="
+                          getChartData(reportDetail[0], 'yearLevelRegistration')
+                        "
+                        [options]="chartOptions"
+                      ></p-chart>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- blockRegistration -->
+              <div
+                class="w-full rounded-md shadow border border-dark-border mb-2 p-4"
+              >
+                <div class="flex justify-between items-start w-full">
+                  <div class="flex justify-center w-full items-center relative">
+                    <div
+                      class="flex w-full items-center mb-1 absolute top-1 left-2 z-30"
+                    >
+                      <h5
+                        class="text-sm font-bold leading-none text-gray-900 dark:text-white"
+                      >
+                        Student Blocks
+                      </h5>
+                      <svg
+                        (click)="
+                          toggleTooltip(
+                            reportDetail[0].event_id + 'blockRegistration'
+                          )
+                        "
+                        matTooltipPosition="right"
+                        class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer ms-1 animate-pulse"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm0 16a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm1-5.034V12a1 1 0 0 1-2 0v-1.418a1 1 0 0 1 1.038-.999 1.436 1.436 0 0 0 1.488-1.441 1.501 1.501 0 1 0-3-.116.986.986 0 0 1-1.037.961 1 1 0 0 1-.96-1.037A3.5 3.5 0 1 1 11 11.466Z"
+                        />
+                      </svg>
+                      <app-tooltip
+                        [isVisible]="
+                          tooltipVisible[
+                            reportDetail[0].event_id + 'blockRegistration'
+                          ]
+                        "
+                        [tooltipContent]="
+                          getChartData(reportDetail[0], 'blockRegistration')
+                            .message
+                        "
+                        matTooltipClass="custom-tooltip"
+                      ></app-tooltip>
+                    </div>
+
+                    <div
+                      class="absolute top-7"
+                      *ngIf="reportDetail[0].registered_by_block.length === 0"
+                    >
+                      <div class="tracking-widest mt-4 text-center">
+                        <p
+                          class="text-center text-xl animate-bounce text-orange-400"
+                        >
+                          (￣ ￣|||)
+                        </p>
+                        <span class="text-gray-500 text-xl"
+                          >No data available ...</span
+                        >
+                      </div>
+                    </div>
+
+                    <div
+                      style="width: 200px; height: 200px"
+                      *ngIf="reportDetail[0].registered_by_block.length !== 0"
+                    >
+                      <p-chart
+                        type="doughnut"
+                        [data]="
+                          getChartData(reportDetail[0], 'blockRegistration')
+                        "
+                        [options]="chartOptions"
+                      ></p-chart>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="w-full flex max-sm:flex-col gap-3 my-3">
+        <div class="w-2/3">
+          <div
+            class="w-full flex items-center justify-between gap-2.5 rounded-md p-3"
+          >
+            <div class="w-full grid grid-cols-2 gap-2.5 max-h-[400px]">
+              <!-- present and absent chart -->
+              <div
+                class="w-full h-[187px] bg-white rounded-md shadow border border-dark-border mb-2 p-4"
+              >
+                <div class="flex justify-between items-start w-full">
+                  <div class="flex justify-center w-full items-center relative">
+                    <div
+                      class="flex w-full items-center mb-1 absolute top-1 left-2 z-30"
+                    >
+                      <h5
+                        class="text-sm font-bold leading-none text-gray-900 dark:text-white"
+                      >
+                        Present & Absent Students
+                      </h5>
+                      <svg
+                        (click)="
+                          toggleTooltip(
+                            reportDetail[0].event_id + 'presentStudents'
+                          )
+                        "
+                        matTooltipPosition="right"
+                        class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer ms-1 animate-pulse"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm0 16a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm1-5.034V12a1 1 0 0 1-2 0v-1.418a1 1 0 0 1 1.038-.999 1.436 1.436 0 0 0 1.488-1.441 1.501 1.501 0 1 0-3-.116.986.986 0 0 1-1.037.961 1 1 0 0 1-.96-1.037A3.5 3.5 0 1 1 11 11.466Z"
+                        />
+                      </svg>
+                      <app-tooltip
+                        [isVisible]="
+                          tooltipVisible[
+                            reportDetail[0].event_id + 'presentStudents'
+                          ]
+                        "
+                        [tooltipContent]="
+                          getChartData(reportDetail[0], 'presentStudents')
+                            .message
+                        "
+                        matTooltipClass="custom-tooltip"
+                      ></app-tooltip>
+                    </div>
+
+                    <div
+                      class="absolute top-7"
+                      *ngIf="!hasAttendanceData(reportDetail[0])"
+                    >
+                      <div class="tracking-widest mt-4 text-center">
+                        <p
+                          class="text-center text-xl animate-bounce text-orange-400"
+                        >
+                          (￣ ￣|||)
+                        </p>
+                        <span class="text-gray-500 text-xl"
+                          >No data available ...</span
+                        >
+                      </div>
+                    </div>
+
+                    <div
+                      style="width: 200px; height: 200px"
+                      *ngIf="hasAttendanceData(reportDetail[0])"
+                    >
+                      <p-chart
+                        type="doughnut"
+                        [options]="chartOptions"
+                        [data]="
+                          getChartData(reportDetail[0], 'presentStudents')
+                        "
+                      ></p-chart>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- student submission -->
+              <div
+                class="w-full h-[187px] bg-white rounded-md shadow border border-dark-border mb-2 p-4"
+              >
+                <div class="flex justify-between items-start w-full">
+                  <div class="flex justify-center w-full items-center relative">
+                    <div
+                      class="flex w-full items-center mb-1 absolute top-1 left-2 z-30"
+                    >
+                      <h5
+                        class="text-sm font-bold leading-none text-gray-900 dark:text-white"
+                      >
+                        Students Submissions
+                      </h5>
+                      <svg
+                        (click)="
+                          toggleTooltip(
+                            reportDetail[0].event_id + 'feedbackAttendance'
+                          )
+                        "
+                        matTooltipPosition="right"
+                        class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer ms-1 animate-pulse"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm0 16a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm1-5.034V12a1 1 0 0 1-2 0v-1.418a1 1 0 0 1 1.038-.999 1.436 1.436 0 0 0 1.488-1.441 1.501 1.501 0 1 0-3-.116.986.986 0 0 1-1.037.961 1 1 0 0 1-.96-1.037A3.5 3.5 0 1 1 11 11.466Z"
+                        />
+                      </svg>
+                      <app-tooltip
+                        [isVisible]="
+                          tooltipVisible[
+                            reportDetail[0].event_id + 'feedbackAttendance'
+                          ]
+                        "
+                        [tooltipContent]="
+                          getChartData(reportDetail[0], 'feedbackAttendance')
+                            .message
+                        "
+                        matTooltipClass="custom-tooltip"
+                      ></app-tooltip>
+                    </div>
+
+                    <div
+                      class="absolute top-7"
+                      *ngIf="
+                        reportDetail[0].feedback_count === 0 ||
+                        reportDetail[0].attendance_count === 0
+                      "
+                    >
+                      <div class="tracking-widest mt-4 text-center">
+                        <p
+                          class="text-center text-xl animate-bounce text-orange-400"
+                        >
+                          (￣ ￣|||)
+                        </p>
+                        <span class="text-gray-500 text-xl"
+                          >No data available ...</span
+                        >
+                      </div>
+                    </div>
+
+                    <div
+                      style="width: 200px; height: 200px"
+                      *ngIf="
+                        reportDetail[0].feedback_count !== 0 ||
+                        reportDetail[0].attendance_count !== 0
+                      "
+                    >
+                      <p-chart
+                        type="doughnut"
+                        [options]="chartOptions"
+                        [data]="
+                          getChartData(reportDetail[0], 'feedbackAttendance')
+                        "
+                      ></p-chart>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- overall satifaction of student chart -->
+              <div
+                class="w-full bg-white rounded-md col-span-2 min-h-[187px] shadow border border-dark-border mb-2 p-4 relative"
+              >
+                <div
+                  class="absolute top-14 left-72"
+                  *ngIf="feedbackData.length === 0"
+                >
+                  <div class="tracking-widest mt-4 text-center">
+                    <p
+                      class="text-center text-xl animate-bounce text-orange-400"
+                    >
+                      (￣ ￣|||)
+                    </p>
+                    <span class="text-gray-500 text-xl"
+                      >No data available ...</span
+                    >
+                  </div>
+                </div>
+                <div class="flex justify-between items-start w-full">
+                  <div class="flex justify-center w-full items-center relative">
+                    <div class="w-full" *ngIf="feedbackData.length !== 0">
+                      <p-chart
+                        type="bar"
+                        [options]="barChartOption"
+                        [data]="barChartData"
+                      ></p-chart>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="w-full col-span-2">
+                <p-accordion>
+                  <p-accordionTab header="Report Summary">
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                      sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                      ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                      Duis aute irure dolor in reprehenderit in voluptate velit
+                      esse cillum dolore eu fugiat nulla pariatur. Excepteur
+                      sint occaecat cupidatat non proident, sunt in culpa qui
+                      officia deserunt mollit anim id est laborum.
+                    </p>
+                  </p-accordionTab>
+                </p-accordion>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- registered student list         -->
+        <div
+          class="w-1/3 border border-dark-border shadow-md p-4 rounded-md relative"
+        >
+          <h5
+            class="text-base font-semibold mb-2 text-gray-500 uppercase dark:text-gray-400"
+          >
+            Students List
+          </h5>
+          <div
+            class="absolute top-40 left-28"
+            *ngIf="reportDetail[0].student_details.length === 0"
+          >
+            <div class="tracking-widest mt-4 text-center">
+              <p class="text-center text-xl animate-bounce text-orange-400">
+                (￣ ￣|||)
+              </p>
+              <span class="text-gray-500 text-xl">No data available ...</span>
+            </div>
+          </div>
+          <ul
+            role="list"
+            class="divide-y divide-gray-100 px-3"
+            *ngIf="reportDetail[0].student_details.length !== 0"
+          >
+            <li
+              class="flex justify-between gap-x-6 py-5"
+              *ngFor="let student of reportDetail[0].student_details"
+            >
+              <div class="flex min-w-0 gap-x-4">
+                <div
+                  class="h-12 w-12 flex-none flex justify-center items-center rounded-full bg-gray-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-circle-user"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <circle cx="12" cy="10" r="3" />
+                    <path
+                      d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"
+                    />
+                  </svg>
+                </div>
+                <div class="min-w-0 flex-auto">
+                  <p
+                    class="text-sm font-semibold leading-6 capitalize text-gray-900"
+                  >
+                    {{ student.first_name }}
+                    {{ student.last_name }}
+                  </p>
+                  <p class="mt-1 truncate text-xs leading-5 text-gray-500">
+                    {{ student.email }}
+                  </p>
+                  <p class="mt-1 truncate text-xs leading-5 text-gray-500">
+                    {{ student.course }} {{ student.year_level }} |
+                    {{ student.block }}
+                  </p>
+                </div>
+              </div>
+              <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
+                <p class="text-sm leading-6 text-gray-900">
+                  @if(student.attendance_status === 'present'){
+                  <span class="text-green-600 capitalize">{{
+                    student.attendance_status
+                  }}</span>
+
+                  }@else {
+                  <span class="text-red-600 capitalize">{{
+                    student.attendance_status
+                  }}</span>
+                  }
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

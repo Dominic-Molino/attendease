@@ -1,5 +1,5 @@
 <main class="!scroll-smooth w-full h-screen absolute z-30 bg-white">
-  <div class="p-4 mt-16 sm:ml-64 bg-white">
+  <div class="p-4 mt-16 bg-white">
     <div>
       <button class="-ms-2" (click)="goBack()">
         <svg
@@ -82,7 +82,10 @@
                   <div
                     class="inline-flex items-center me-5 text-sm font-semibold text-gray-900 dark:text-white"
                   >
-                    <button (click)="viewUserFeedback(feed.user_id)">
+                    <button
+                      class="underline text-light-text"
+                      (click)="viewUserFeedback(feed.user_id)"
+                    >
                       View Evaluation
                     </button>
                   </div>

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
-import { DataAnalyticsService } from '../../../../../core/service/data-analytics.service';
+import { DataAnalyticsService } from '../../../../../../core/service/data-analytics.service';
 import { Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { scales, TooltipItem } from 'chart.js';
@@ -36,7 +36,7 @@ export class ComparingEventsComponent implements OnInit, OnDestroy {
   }
 
   private setupPolling() {
-    this.refreshSubscription = timer(0, 3000)
+    this.refreshSubscription = timer(0, 300000)
       .pipe(switchMap(() => this.service.getAllEventAttendees()))
       .subscribe((res) => {
         const events: Event[] = res.payload;

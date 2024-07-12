@@ -4,10 +4,9 @@ import { AuthserviceService } from '../../../../core/service/authservice.service
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule, Location } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ViewsubmissionsComponent } from '../viewsubmissions/viewsubmissions.component';
-import { finalize, zip } from 'rxjs';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ViewsubmissionsComponent } from '../viewsubmissions/viewsubmissions.component';
 
 interface User {
   user_id: number;

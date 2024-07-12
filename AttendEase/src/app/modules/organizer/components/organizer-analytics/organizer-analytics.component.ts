@@ -145,7 +145,6 @@ export class OrganizerAnalyticsComponent {
   prepareLineChartData(event: any) {
     const dailyRegistrations = event.daily_registrations || [];
 
-    // Ensure the registration start date is included
     const registrationStartDate: any = new Date(event.event_registration_start)
       .toISOString()
       .split('T')[0];
@@ -161,7 +160,6 @@ export class OrganizerAnalyticsComponent {
       });
     }
 
-    // Sort the data by date to ensure correct order
     dailyRegistrations.sort(
       (a: { registration_date: string }, b: { registration_date: string }) =>
         new Date(a.registration_date).getTime() -

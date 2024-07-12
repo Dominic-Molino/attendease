@@ -36,8 +36,6 @@ export class OngoingReportComponent implements OnInit {
       if (this.report.length > 0) {
         this.selectedEvent = this.report[0];
       }
-
-      console.log(this.report);
     });
   }
 
@@ -112,87 +110,94 @@ export class OngoingReportComponent implements OnInit {
         break;
 
       case 'courseRegistration':
-        const coursesData = event.registered_by_course.map(
-          (item: { count: number }) => item.count
-        );
-        const coursesDataLabel = event.registered_by_course.map(
-          (item: { course: string }) => `Course: ${item.course}`
-        );
-        labels = [...coursesDataLabel];
-        data = [...coursesData];
-        backgroundColor = [
-          '#73300a',
-          '#c75519',
-          '#ff8a00',
-          '#f6aa54',
-          '#3e2723',
-          '#5d4037',
-          '#795548',
-          '#8d6e63',
-        ];
-        const courses = event.registered_by_course
-          .map(
-            (item: { course: string; count: number }) =>
-              `${item.count} in ${item.course}`
-          )
-          .join(', ');
-        message = `Out of ${event.max_attendees} potential attendees, ${event.registered_users} have registered. Courses: ${courses}.`;
+        if (event.registered_by_course) {
+          const coursesData = event.registered_by_course.map(
+            (item: { count: number }) => item.count
+          );
+          const coursesDataLabel = event.registered_by_course.map(
+            (item: { course: string }) => `Course: ${item.course}`
+          );
+          labels = [...coursesDataLabel];
+          data = [...coursesData];
+          backgroundColor = [
+            '#73300a',
+            '#c75519',
+            '#ff8a00',
+            '#f6aa54',
+            '#3e2723',
+            '#5d4037',
+            '#795548',
+            '#8d6e63',
+          ];
+          const courses = event.registered_by_course
+            .map(
+              (item: { course: string; count: number }) =>
+                `${item.count} in ${item.course}`
+            )
+            .join(', ');
+          message = `Out of ${event.max_attendees} potential attendees, ${event.registered_users} have registered. Courses: ${courses}.`;
+        }
+
         break;
 
       case 'yearLevelRegistration':
-        const yearLevelsData = event.registered_by_year_level.map(
-          (item: { count: number }) => item.count
-        );
-        const yearLevelsDataLabel = event.registered_by_year_level.map(
-          (item: { year_level: string }) => `${item.year_level}`
-        );
-        labels = [...yearLevelsDataLabel];
-        data = [...yearLevelsData];
-        backgroundColor = [
-          '#73300a',
-          '#c75519',
-          '#ff8a00',
-          '#f6aa54',
-          '#3e2723',
-          '#5d4037',
-          '#795548',
-          '#8d6e63',
-        ];
-        const yearLevels = event.registered_by_year_level
-          .map(
-            (item: { year_level: string; count: number }) =>
-              `${item.count} in ${item.year_level}`
-          )
-          .join(', ');
-        message = `Out of ${event.max_attendees} potential attendees, ${event.registered_users} have registered. Year Levels: ${yearLevels}.`;
+        if (event.registered_by_year_level) {
+          const yearLevelsData = event.registered_by_year_level.map(
+            (item: { count: number }) => item.count
+          );
+          const yearLevelsDataLabel = event.registered_by_year_level.map(
+            (item: { year_level: string }) => `${item.year_level}`
+          );
+          labels = [...yearLevelsDataLabel];
+          data = [...yearLevelsData];
+          backgroundColor = [
+            '#73300a',
+            '#c75519',
+            '#ff8a00',
+            '#f6aa54',
+            '#3e2723',
+            '#5d4037',
+            '#795548',
+            '#8d6e63',
+          ];
+          const yearLevels = event.registered_by_year_level
+            .map(
+              (item: { year_level: string; count: number }) =>
+                `${item.count} in ${item.year_level}`
+            )
+            .join(', ');
+          message = `Out of ${event.max_attendees} potential attendees, ${event.registered_users} have registered. Year Levels: ${yearLevels}.`;
+        }
         break;
 
       case 'blockRegistration':
-        const blocksData = event.registered_by_block.map(
-          (item: { count: number }) => item.count
-        );
-        const blocksDataLabel = event.registered_by_block.map(
-          (item: { block: string }) => `Block: ${item.block}`
-        );
-        labels = [...blocksDataLabel];
-        data = [...blocksData];
-        backgroundColor = [
-          '#73300a',
-          '#c75519',
-          '#ff8a00',
-          '#f6aa54',
-          '#3e2723',
-          '#5d4037',
-          '#795548',
-          '#8d6e63',
-        ];
-        const blocks = event.registered_by_block
-          .map(
-            (item: { block: string; count: number }) =>
-              `${item.count} in ${item.block}`
-          )
-          .join(', ');
-        message = `Out of ${event.max_attendees} potential attendees, ${event.registered_users} have registered. blocks: ${blocks}.`;
+        if (event.registered_by_block) {
+          const blocksData = event.registered_by_block.map(
+            (item: { count: number }) => item.count
+          );
+          const blocksDataLabel = event.registered_by_block.map(
+            (item: { block: string }) => `Block: ${item.block}`
+          );
+          labels = [...blocksDataLabel];
+          data = [...blocksData];
+          backgroundColor = [
+            '#73300a',
+            '#c75519',
+            '#ff8a00',
+            '#f6aa54',
+            '#3e2723',
+            '#5d4037',
+            '#795548',
+            '#8d6e63',
+          ];
+          const blocks = event.registered_by_block
+            .map(
+              (item: { block: string; count: number }) =>
+                `${item.count} in ${item.block}`
+            )
+            .join(', ');
+          message = `Out of ${event.max_attendees} potential attendees, ${event.registered_users} have registered. blocks: ${blocks}.`;
+        }
         break;
     }
 
@@ -225,14 +230,5 @@ export class OngoingReportComponent implements OnInit {
 
   getRegistrationMessage(event: any): string {
     return `Out of ${event.max_attendees} potential attendees, ${event.registered_users}  have registered.`;
-  }
-
-  isDataAvailable(event: any): boolean {
-    return (
-      event.registered_users > 0 ||
-      (event.registered_by_course && event.registered_by_course.length > 0) ||
-      (event.registered_by_year_level &&
-        event.registered_by_year_level.length > 0)
-    );
   }
 }
