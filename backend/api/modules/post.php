@@ -47,9 +47,6 @@ class Post extends GlobalMethods
                 $data->first_name,
                 $data->last_name,
                 $data->email,
-                $data->year_level,
-                $data->course,
-                $data->block,
                 $data->password,
             )
         ) {

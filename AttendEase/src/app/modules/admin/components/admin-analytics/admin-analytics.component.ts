@@ -13,6 +13,7 @@ import { ChartOptions } from 'chart.js';
 import { ChartModule } from 'primeng/chart';
 import { EventService } from '../../../../core/service/event.service';
 import 'chartjs-adapter-date-fns';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-admin-analytics',
@@ -28,6 +29,7 @@ import 'chartjs-adapter-date-fns';
     BlockComponent,
     ComparingEventsComponent,
     OngoingReportComponent,
+    MatTooltipModule,
   ],
   templateUrl: './admin-analytics.component.html',
   styleUrl: './admin-analytics.component.css',

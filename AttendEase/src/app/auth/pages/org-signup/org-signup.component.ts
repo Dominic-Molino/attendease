@@ -30,11 +30,17 @@ export class OrgSignupComponent implements OnInit {
       Validators.compose([Validators.required])
     ),
     password: this.builder.control('', Validators.required),
+    course: this.builder.control(''),
+    year_level: this.builder.control(''),
+    block: this.builder.control(''),
     role_id: this.builder.control(''),
   });
 
   ngOnInit(): void {
     this.registerForm.patchValue({
+      course: null,
+      block: null,
+      year_level: null,
       role_id: '2',
     });
   }
