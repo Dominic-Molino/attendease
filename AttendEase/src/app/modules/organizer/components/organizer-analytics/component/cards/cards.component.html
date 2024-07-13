@@ -1,4 +1,4 @@
-<div class="grid md:grid-cols-4 w-[calc(100%-320px)] gap-3">
+<div class="grid md:grid-cols-5 w-[calc(100%-320px)] gap-3">
   <div
     class="shadow-md rounded-md w-full h-28 border border-dark-border bg-white flex justify-center items-center p-4"
   >
@@ -119,6 +119,50 @@
           </p>
           <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
             {{ data?.pending_events }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="shadow-md border border-dark-border rounded-md w-full h-28 bg-white flex justify-center items-center p-4"
+  >
+    <div
+      class="min-w-0 rounded-lg shadow-xs overflow-hidden bg-white dark:bg-gray-800 w-full"
+    >
+      <div class="p-2 flex items-center">
+        <div
+          class="p-1 rounded-full bg-white border border-light-border text-dark-background mr-4"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#df7e30"
+            stroke-width="1"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-calendar-off"
+          >
+            <path
+              d="M4.2 4.2A2 2 0 0 0 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 1.82-1.18"
+            />
+            <path d="M21 15.5V6a2 2 0 0 0-2-2H9.5" />
+            <path d="M16 2v4" />
+            <path d="M3 10h7" />
+            <path d="M21 10h-5.5" />
+            <path d="m2 2 20 20" />
+          </svg>
+        </div>
+        <div>
+          <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+            Total Cancelled Events
+          </p>
+          <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+            {{ data?.cancelled_events }}
           </p>
         </div>
       </div>

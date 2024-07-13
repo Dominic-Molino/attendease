@@ -19,7 +19,8 @@ export class ApprovalPageComponent implements OnInit {
   events: Event[] = [];
   userId = this.service.getCurrentUserId();
   eventWithStatus?: any;
-  isRegistered = false;
+  isRejected = false;
+  isApproved = false;
   eventId: any;
 
   constructor(
@@ -52,7 +53,6 @@ export class ApprovalPageComponent implements OnInit {
             event_image$: this.getEventImage(event.event_id),
           }));
         }
-        console.log(this.events);
       },
     });
   }
@@ -97,6 +97,7 @@ export class ApprovalPageComponent implements OnInit {
                   icon: 'success',
                   title: 'Event Approved',
                 });
+                this.location.back();
               });
           }
         }
@@ -138,6 +139,7 @@ export class ApprovalPageComponent implements OnInit {
                   icon: 'success',
                   title: 'Event Rejected',
                 });
+                this.location.back();
               });
           }
         }

@@ -140,7 +140,7 @@ export class OrgEventComponent implements OnInit {
   }
 
   startPolling() {
-    this.updateSubscription = interval(500000) // Polling every 1 minute
+    this.updateSubscription = interval(500000)
       .pipe(
         switchMap(() => this.service.getAllOrganizerEvents(this.currId)),
         catchError((error) => {
@@ -320,6 +320,8 @@ export class OrgEventComponent implements OnInit {
     console.log(event_id);
     const page = this.dialog.open(EventCancellationComponent, {
       data: { id: event_id },
+      width: '40%',
+      disableClose: true,
     });
   }
 }

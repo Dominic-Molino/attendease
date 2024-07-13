@@ -29,4 +29,5 @@ export interface Event {
   registered_user: number;
   organizer_id: number;
   attendance_submission_deadline: Date | string;
+  is_cancelled: number;
 }

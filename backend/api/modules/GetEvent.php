@@ -96,9 +96,9 @@ class GetEvent extends GlobalMethods
                 e.event_registration_end, e.event_type, e.max_attendees, e.categories, 
                 e.target_participants, e.participation_type, 
                 u.user_id as organizer_id, u.first_name as first_name, 
-                u.last_name as last_name, u.organization as organizer_organization";
+                u.last_name as last_name, u.organization as organizer_organization, is_cancelled";
 
-        $condition = ($event_id !== null) ? "e.event_id = $event_id" : "ea.status = 'Approved'";
+        $condition = ($event_id !== null) ? "e.event_id = :event_id" : "ea.status = 'Approved' AND e.is_cancelled = 0";
 
         $sql = "SELECT $columns 
             FROM events e 
@@ -106,12 +106,23 @@ class GetEvent extends GlobalMethods
             JOIN user u ON e.organizer_user_id = u.user_id
             WHERE $condition";
 
-        $events = $this->executeQuery($sql);
+        try {
+            $stmt = $this->pdo->prepare($sql);
 
-        if ($events['code'] == 200) {
+            if ($event_id !== null) {
+                $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
+            }
+
+            $stmt->execute();
+            $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (empty($events)) {
+                return $this->sendPayload(null, 'failed', "No events found.", 404);
+            }
+
             $currentDate = new DateTime();
 
-            foreach ($events['data'] as &$event) {
+            foreach ($events as &$event) {
                 $startDate = new DateTime($event['event_start_date']);
                 $endDate = new DateTime($event['event_end_date']);
 
@@ -124,16 +135,14 @@ class GetEvent extends GlobalMethods
                 }
             }
 
-            return $this->sendPayload($events['data'], 'success', "Successfully retrieved data.", 200);
+            return $this->sendPayload($events, 'success', "Successfully retrieved data.", 200);
+        } catch (PDOException $e) {
+            error_log("Query failed with error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', "Failed to retrieve data.", 500);
         }
-
-        // Log the error if the query failed
-        error_log("Query failed with code: " . $events['code']);
-
-        // Return a failed payload if the query was not successful
-        return $this->sendPayload(null, 'failed', "Failed to retrieve data.", $events['code']);
     }
 
+    //get the registered students 
     public function getRegisteredUsersForApprovedEvents($event_id = null)
     {
         try {
@@ -235,7 +244,9 @@ class GetEvent extends GlobalMethods
                 INNER JOIN event_approval ea ON e.event_id = ea.event_id
                 LEFT JOIN user u ON e.organizer_user_id = u.user_id
                 WHERE e.organizer_user_id = :organizer_user_id
-                  AND ea.status = 'Approved'";
+                AND ea.status = 'Approved'
+                AND e.is_cancelled = 0
+                ";
 
         try {
             $stmt = $this->pdo->prepare($sql);
@@ -256,7 +267,7 @@ class GetEvent extends GlobalMethods
         $sql = "SELECT e.event_id, e.event_name, e.event_description, e.event_location, 
                    e.event_start_date, e.event_end_date, e.event_registration_start, e.event_registration_end,
                    e.event_type, e.max_attendees, e.categories, e.organizer_user_id, e.organizer_organization,
-                   e.organizer_name, e.created_at, e.target_participants, e.participation_type,
+                   e.organizer_name, e.created_at, e.target_participants, e.participation_type, e.is_cancelled,
                    ea.status AS approval_status, ea.rejection_message, ea.approved_at
             FROM events e
             LEFT JOIN event_approval ea ON e.event_id = ea.event_id
@@ -280,9 +291,10 @@ class GetEvent extends GlobalMethods
     public function getDashboardDataByOrganizerId($organizer_user_id)
     {
         $eventCountsSql = "SELECT 
-                               SUM(CASE WHEN ea.status = 'Approved' THEN 1 ELSE 0 END) AS approved_events,
-                               SUM(CASE WHEN ea.status = 'Pending' THEN 1 ELSE 0 END) AS pending_events,
-                               SUM(CASE WHEN ea.status = 'Rejected' THEN 1 ELSE 0 END) AS rejected_events,
+                                SUM(CASE WHEN ea.status = 'Approved' THEN 1 ELSE 0 END) AS approved_events,
+                                SUM(CASE WHEN ea.status = 'Pending' THEN 1 ELSE 0 END) AS pending_events,
+                                SUM(CASE WHEN ea.status = 'Rejected' THEN 1 ELSE 0 END) AS rejected_events,
+                                SUM(CASE WHEN e.is_cancelled = 1 THEN 1 ELSE 0 END) cancelled_events,
                                CASE 
                                 WHEN e.event_end_date < NOW() THEN 'done'
                                 ELSE 'ongoing'
@@ -303,7 +315,6 @@ class GetEvent extends GlobalMethods
             WHERE e.organizer_user_id = :organizer_user_id";
 
         try {
-            // Fetch event counts
             $stmt = $this->pdo->prepare($eventCountsSql);
             $stmt->execute([':organizer_user_id' => $organizer_user_id]);
             $eventCounts = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -316,16 +327,16 @@ class GetEvent extends GlobalMethods
             $stmt->execute([':organizer_user_id' => $organizer_user_id]);
             $eventStatus = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Prepare payload
+            // Prepare 
             $payload = [
                 'approved_events' => $eventCounts['approved_events'] ?? 0,
                 'pending_events' => $eventCounts['pending_events'] ?? 0,
                 'rejected_events' => $eventCounts['rejected_events'] ?? 0,
+                'cancelled_events' => $eventCounts['cancelled_events'] ?? 0,
                 'total_registered_users' => $registeredUsers['total_registered_users'] ?? 0,
                 'done_events' => $eventStatus['done_events'] ?? 0,
             ];
 
-            // Return the payload using the sendPayload method from GlobalMethods
             return $this->sendPayload($payload, 'success', 'Dashboard data fetched successfully.', 200);
         } catch (PDOException $e) {
             error_log("Database error: " . $e->getMessage());
@@ -375,6 +386,7 @@ class GetEvent extends GlobalMethods
             WHERE ea.status = 'Approved' 
             AND e.event_start_date > NOW()
             AND e.organizer_user_id = :organizer_user_id
+            AND e.is_cancelled = 0
     ");
             $stmt->bindParam(':organizer_user_id', $organizer_user_id, PDO::PARAM_INT);
             $stmt->execute();
@@ -413,9 +425,10 @@ class GetEvent extends GlobalMethods
         FROM events e
         JOIN event_approval ea ON e.event_id = ea.event_id
         WHERE ea.status = 'Approved' 
-          AND e.event_end_date >= NOW()
-          AND e.event_start_date <= NOW()
-          AND e.organizer_user_id = :organizer_user_id
+        AND e.event_end_date >= NOW()
+        AND e.event_start_date <= NOW()
+        AND e.organizer_user_id = :organizer_user_id
+        AND e.is_cancelled = 0
     ");
             $stmt->bindParam(':organizer_user_id', $organizer_user_id, PDO::PARAM_INT);
             $stmt->execute();
@@ -557,7 +570,8 @@ class GetEvent extends GlobalMethods
                 JOIN user u ON e.organizer_user_id = u.user_id
                 WHERE ea.status = 'Approved' 
                 AND e.event_end_date < NOW() 
-                AND u.user_id = :organizer_user_id";
+                AND u.user_id = :organizer_user_id
+                AND e.is_cancelled = 0";
 
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindParam(':organizer_user_id', $organizer_user_id, PDO::PARAM_INT);
@@ -585,7 +599,8 @@ class GetEvent extends GlobalMethods
             FROM events e
             JOIN event_approval ea ON e.event_id = ea.event_id
             WHERE ea.status = 'Approved' 
-              AND e.event_id = :event_id
+            AND e.event_id = :event_id
+            AND e.is_cancelled = 0
         ");
             $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
             $stmt->execute();

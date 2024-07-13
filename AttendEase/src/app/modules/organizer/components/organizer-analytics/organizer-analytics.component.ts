@@ -56,6 +56,7 @@ export class OrganizerAnalyticsComponent {
   loadAllEvent(id: any) {
     this.service.getApprovedOrganizerEvents(id).subscribe((res) => {
       this.events = res.payload;
+      console.log(`EVENT LIST:${this.events}`);
 
       if (this.events.length > 0) {
         this.events.forEach((event) => {

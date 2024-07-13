@@ -1,7 +1,7 @@
 <div
   class="overflow-y-auto overflow-x-hidden justify-center items-center w-full md:inset-0 h-modal md:h-full"
 >
-  <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+  <div class="relative w-full max-w-2xl h-full md:h-auto">
     <div
       class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5"
     >
@@ -13,6 +13,7 @@
         </h3>
         <button
           type="button"
+          (click)="closeDialog()"
           class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
           data-modal-toggle="defaultModal"
         >
@@ -38,31 +39,43 @@
           <div class="sm:col-span-2">
             <label
               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >Reason ...</label
-            >
+              >Dear students,
+            </label>
+            <label
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >The event has been cancelled due to the following reason:
+            </label>
+
             <textarea
               formControlName="cancellation_reason"
               rows="4"
-              class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-              placeholder="Write product description here"
+              class="block p-2.5 w-full text-sm min-h-60 text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
+              placeholder="Type here ..."
             ></textarea>
+            <label
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >We apologize for any inconvenience caused.
+            </label>
           </div>
         </div>
         <button
           type="submit"
-          class="text-text inline-flex items-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+          class="text-white inline-flex items-center bg-light-background hover:bg-light-foregroud focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
         >
           <svg
-            class="mr-1 -ml-1 w-6 h-6"
-            fill="currentColor"
-            viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-ban me-1 -ml-1"
           >
-            <path
-              fill-rule="evenodd"
-              d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-              clip-rule="evenodd"
-            ></path>
+            <circle cx="12" cy="12" r="10" />
+            <path d="m4.9 4.9 14.2 14.2" />
           </svg>
           Cancel Event
         </button>

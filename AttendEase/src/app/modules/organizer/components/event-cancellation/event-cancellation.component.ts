@@ -32,26 +32,37 @@ export class EventCancellationComponent implements OnInit {
   }
 
   cancelEvent() {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.service
-          .cancelEvent(this.data.id, this.cancelForm.value.cancellation_reason!)
-          .subscribe((res) => {
-            console.log(res);
+    if (this.cancelForm.valid) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.service
+            .cancelEvent(
+              this.data.id,
+              this.cancelForm.value.cancellation_reason!
+            )
+            .subscribe((res) => {
+              console.log(res);
+            });
+          Swal.fire({
+            text: 'Event has been cancelled.',
+            icon: 'success',
           });
-        Swal.fire({
-          text: 'Event has been cancelled.',
-          icon: 'success',
-        });
-      }
-    });
+        }
+      });
+    } else {
+      Swal.fire('', 'Please write a message.', 'info');
+    }
+  }
+
+  closeDialog() {
+    this.dialogRef.close();
   }
 }

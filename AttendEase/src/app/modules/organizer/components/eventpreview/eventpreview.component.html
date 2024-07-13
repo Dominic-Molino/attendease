@@ -1,5 +1,5 @@
 <main class="w-full">
-  <div class="p-4 mt-16 sm:ml-64">
+  <div class="p-4 mt-16">
     <button class="-ms-2" (click)="closePage()">
       <svg
         class="w-7 h-7 text-gray-800 dark:text-white"
@@ -369,9 +369,19 @@
             >
               <button
                 (click)="openDialog(event.event_id)"
+                [disabled]="event.status === 'done' || event.is_cancelled === 1"
+                [ngClass]="{
+                  'cursor-not-allowed bg-gray-400 text-gray-200':
+                    event.status == 'done' ||
+                    event.status == 'ongoing' ||
+                    !(event.is_cancelled === 0),
+
+                  'text-white bg-light-background border border-light-border hover:bg-light-foregroud':
+                    event.status == 'upcoming' && event.is_cancelled !== 1
+                }"
                 type="button"
                 aria-expanded="false"
-                class="inline-flex py-2 px-5 items-center justify-center text-white bg-light-background border border-light-border hover:bg-light-foregroud rounded-md focus:outline-none shadow-md"
+                class="inline-flex py-2 px-5 items-center justify-center rounded-md focus:outline-none shadow-md"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

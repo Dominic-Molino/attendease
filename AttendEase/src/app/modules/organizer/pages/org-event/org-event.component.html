@@ -20,7 +20,7 @@
     @if(eventList && eventList.length ){
 
     <div class="w-full h-full flex gap-2.5 items-center">
-      <div class="max-w-[65%] w-full self-start">
+      <div class="w-full self-start">
         <div class="relative w-full overflow-x-auto border border-dark-border">
           <table
             class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
@@ -41,6 +41,9 @@
                 </th>
                 <th scope="col" class="px-6 py-3 tracking-widest font-medium">
                   Status
+                </th>
+                <th scope="col" class="px-6 py-3 tracking-widest font-medium">
+                  Cancellation Status
                 </th>
                 <th
                   scope="col"
@@ -64,7 +67,8 @@
                   {{ event.event_name }}
                 </th>
                 <td class="px-6 py-1.5 text-gray-700">
-                  {{ event.event_start_date | date }}
+                  {{ event.event_start_date | date : "shortDate" }} -
+                  {{ event.event_end_date | date : "shortDate" }}
                 </td>
                 <td class="px-6 py-1.5 text-gray-700">
                   {{ event.event_start_date | date : "hh:mm a" }} -
@@ -73,16 +77,35 @@
                 <td class="px-6 py-1.5 text-gray-700 capitalize">
                   {{ getEventState(event) }}
                 </td>
+                <td class="px-6 py-1.5 text-gray-700 text-center capitalize">
+                  <span *ngIf="event.is_cancelled === 1">Cancelled</span>
+                  <span *ngIf="event.is_cancelled === 0">Active</span>
+                </td>
 
                 <td class="px-6 py-1.5 text-gray-700">
                   <div
                     class="flex items-center justify-end relative gap-1.5 mt-2.5"
                   >
                     <button
+                      [disabled]="
+                        getEventState(event) == 'done' ||
+                        getEventState(event) == 'ongoing' ||
+                        !(event.is_cancelled === 0)
+                      "
+                      [ngClass]="{
+                        'cursor-not-allowed bg-gray-400 text-gray-200':
+                          getEventState(event) == 'done' ||
+                          getEventState(event) == 'ongoing' ||
+                          !(event.is_cancelled === 0),
+
+                        'text-white bg-light-background border border-light-border hover:bg-light-foregroud':
+                          getEventState(event) == 'upcoming' &&
+                          event.is_cancelled !== 1
+                      }"
                       (click)="cancelEvent(event.event_id)"
                       type="button"
                       aria-expanded="false"
-                      class="flex items-center justify-center text-white bg-light-background border border-light-border hover:bg-light-foregroud rounded-md w-10 h-10 focus:outline-none shadow-md"
+                      class="flex items-center justify-center rounded-md w-10 h-10 shadow-md"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
