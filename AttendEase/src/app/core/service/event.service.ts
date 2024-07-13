@@ -138,6 +138,12 @@ export class EventService {
     });
   }
 
+  cancelEvent(event_id: number, cancellation_reason: string): Observable<any> {
+    return this.http.post(`${this.API_URL}cancelevent/${event_id}`, {
+      cancellation_reason,
+    });
+  }
+
   //org
   getApprovedOrganizerEvents(org_id: any): Observable<any> {
     return this.http.get<any>(

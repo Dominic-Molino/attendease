@@ -453,8 +453,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($postStudent->editUser($data, $request[1]));
                 break;
 
-
-
             case 'register':
                 echo json_encode($postStudent->registerUserForEvent($data->event_id, $data->user_id));
                 break;
@@ -498,6 +496,11 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
             case 'sendmessage':
                 echo json_encode($post->sendMessage($data));
+                break;
+
+            case 'cancelevent':
+                $cancellation_reason = $data->cancellation_reason ?? '';
+                echo json_encode($postEvents->cancelEvent($request[1], $cancellation_reason));
                 break;
 
             default:

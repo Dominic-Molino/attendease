@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Global.php';
+require __DIR__ . "/../src/PhpMailer.php";
 
 class Events extends  GlobalMethods
 {
@@ -264,5 +265,82 @@ class Events extends  GlobalMethods
             $code = 400;
         }
         return $this->sendPayload(null, "failed", $errmsg, $code);
+    }
+
+    public function cancelEvent($event_id, $cancellation_reason)
+    {
+        $insertCancellationSql = "INSERT INTO event_cancellations (event_id, cancelled_at, cancellation_reason) VALUES (?, NOW(), ?)";
+        $updateEventSql = "UPDATE events SET is_cancelled = 1 WHERE event_id = ?";
+
+        $fetchRegisteredUsersSql = "SELECT u.email
+        FROM event_registration AS er
+        JOIN user AS u ON er.user_id = u.user_id
+        WHERE er.event_id = ?";
+
+        $mail = initializeMailer();
+
+        try {
+            $stmt = $this->pdo->prepare($insertCancellationSql);
+            $stmt->execute([$event_id, $cancellation_reason]);
+
+            $stmt = $this->pdo->prepare($updateEventSql);
+            $stmt->execute([$event_id]);
+
+            $stmt = $this->pdo->prepare($fetchRegisteredUsersSql);
+            $stmt->execute([$event_id]);
+            $registeredUsers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $organizerDetails = $this->getOrganizerDetails();
+            if ($organizerDetails) {
+                $organizer_email = $organizerDetails['email'];
+                $organizer_name = $organizerDetails['first_name'] . ' ' . $organizerDetails['last_name'];
+
+                foreach ($registeredUsers as $user) {
+                    $to = $user['email'];
+                    $subject = "Event Cancellation Notification";
+                    $message = "Dear User,<br>The event has been cancelled due to the following reason:<br>$cancellation_reason<br>We apologize for any inconvenience caused.";
+
+                    $mail->setFrom($organizer_email, $organizer_name);
+                    $mail->addAddress($to);
+                    $mail->Subject = $subject;
+                    $mail->Body = nl2br($message);
+
+                    if ($mail->send()) {
+                        echo 'Email sent successfully to ' . $to . '<br>';
+                    } else {
+                        error_log('Mailer Error: ' . $mail->ErrorInfo);
+                    }
+
+                    $mail->clearAddresses();
+                    $mail->clearAttachments();
+                }
+            } else {
+                $this->pdo->rollBack();
+                return $this->sendPayload(null, 'failed', "Failed to fetch organizer details.", 500);
+            }
+
+            if ($stmt->rowCount() > 0) {
+                return $this->sendPayload(null, 'success', "Event cancelled successfully.", 200);
+            } else {
+                return $this->sendPayload(null, 'failed', "Failed to cancel event.", 500);
+            }
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+        }
+    }
+
+    public function getOrganizerDetails($role_id = 2)
+    {
+        $sql = "SELECT email, first_name, last_name FROM user WHERE role_id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$role_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            return $result;
+        } else {
+            return null;
+        }
     }
 }

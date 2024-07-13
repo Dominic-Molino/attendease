@@ -35,6 +35,7 @@ import { CarouselModule } from 'primeng/carousel';
 import { Router } from '@angular/router';
 import { formatDistanceToNow } from 'date-fns';
 import { MessagepopComponent } from '../../components/messagepop/messagepop.component';
+import { EventCancellationComponent } from '../../components/event-cancellation/event-cancellation.component';
 
 @Component({
   selector: 'app-org-event',
@@ -139,7 +140,7 @@ export class OrgEventComponent implements OnInit {
   }
 
   startPolling() {
-    this.updateSubscription = interval(5000) // Polling every 1 minute
+    this.updateSubscription = interval(500000) // Polling every 1 minute
       .pipe(
         switchMap(() => this.service.getAllOrganizerEvents(this.currId)),
         catchError((error) => {
@@ -313,5 +314,12 @@ export class OrgEventComponent implements OnInit {
         }
       });
     }
+  }
+
+  cancelEvent(event_id: any) {
+    console.log(event_id);
+    const page = this.dialog.open(EventCancellationComponent, {
+      data: { id: event_id },
+    });
   }
 }
