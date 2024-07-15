@@ -19,20 +19,16 @@
       <hr class="h-px mb-6 bg-dark-border border-0" />
     </div>
 
-    @if(eventList.length > 0 ){
     <div class="container">
       <h5
+        *ngIf="filteredEventList.length > 0"
         class="flex self-start mb-2 text-lg font-bold tracking-tight text-text"
       >
         Latest Event
       </h5>
 
-      <section class="flex items-center flex-col">
-        <ng-container
-          *ngIf="
-            filteredEventList.length > 0 && !isUserRegisteredForLatestEvent()
-          "
-        >
+      <section class="flex items-center flex-col" *ngIf="eventList.length > 0">
+        <ng-container *ngIf="filteredEventList.length > 0 && latestEvent">
           <div
             class="rounded-md shadow-md border border-dark-border container bg-white hover:bg-dark-muted"
           >
@@ -82,15 +78,15 @@
                 <ng-template #placeholder>
                   <div
                     class="image-container avatar-placeholder h-80 rounded-md"
-                  ></div
-                ></ng-template>
+                  ></div>
+                </ng-template>
               </div>
               <div class="p-5 w-full lg:w-1/2 pr-3">
                 <div class="mb-3">
                   <h1
                     class="overflow-hidden text-ellipsis text-text text-2xl md:text-4xl font-medium mt-3"
                   >
-                    {{ latestEvent?.event_name }}
+                    {{ latestEvent.event_name }}
                   </h1>
                   <div class="flex items-center">
                     <svg
@@ -112,11 +108,11 @@
                     </svg>
                     <span class="ms-1 text-[13px] text-text"
                       >Registration:
-                      {{ latestEvent?.event_registration_start | date }}
+                      {{ latestEvent.event_registration_start | date }}
                     </span>
                     <span class="ms-1 text-text"> - </span>
                     <span class="ms-2 text-[13px] text-text">
-                      {{ latestEvent?.event_registration_end | date }}</span
+                      {{ latestEvent.event_registration_end | date }}</span
                     >
                   </div>
                 </div>
@@ -124,12 +120,12 @@
                 <p
                   class="leading-tight text-base overflow-hidden whitespace-pre-line text-ellipsis text-dark-text"
                 >
-                  {{ latestEvent?.event_description }}
+                  {{ latestEvent.event_description }}
                 </p>
                 <p class="flex items-center mt-5">
                   <span class="text-sm font-medium text-gray-500">
                     Registered Users:
-                    {{ registeredUsers[latestEvent?.event_id!] || 0 }}
+                    {{ registeredUsers[latestEvent.event_id!] || 0 }}
                   </span>
                 </p>
 
@@ -163,6 +159,7 @@
 
         <!-- grid cards -->
         <h5
+          *ngIf="filteredEventList.length > 0"
           class="flex self-start mt-4 mb-2 text-lg font-bold tracking-tight text-text"
         >
           Other Events
@@ -308,8 +305,7 @@
         ></pagination-controls>
       </div>
     </div>
-    }@else {
-    <section>
+    <section *ngIf="filteredEventList.length === 0">
       <div class="py-4 px-4 mx-auto x-w-screen-xl lg:py-16 lg:px-6ma">
         <div class="max-w-screen-sm text-center mx-auto">
           <h1 class="text-gray-500 text-6xl block">(￣ ￣|||)</h1>
@@ -320,6 +316,5 @@
         </div>
       </div>
     </section>
-    }
   </div>
 </main>

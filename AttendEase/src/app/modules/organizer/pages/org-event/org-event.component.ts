@@ -14,15 +14,7 @@ import { EventService } from '../../../../core/service/event.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
 import { initFlowbite } from 'flowbite';
-import {
-  Observable,
-  Subscription,
-  catchError,
-  interval,
-  map,
-  of,
-  switchMap,
-} from 'rxjs';
+import { Subscription, catchError, interval, map, of, switchMap } from 'rxjs';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { UpdateimageComponent } from '../../components/updateimage/updateimage.component';
 import { MobicalendarComponent } from '../../../user/components/mobicalendar/mobicalendar.component';
@@ -76,8 +68,6 @@ export class OrgEventComponent implements OnInit {
   responsiveOptions: any[] | undefined;
   maxSize = 5;
 
-  private updateSubscription?: Subscription;
-
   constructor(
     private service: EventService,
     private user: AuthserviceService,
@@ -92,7 +82,6 @@ export class OrgEventComponent implements OnInit {
     console.log(this.currId);
     if (isPlatformBrowser(this.platformId)) initFlowbite();
     this.loadEvent();
-    this.startPolling();
 
     this.responsiveOptions = [
       {
@@ -113,12 +102,6 @@ export class OrgEventComponent implements OnInit {
     ];
   }
 
-  ngOnDestroy(): void {
-    if (this.updateSubscription) {
-      this.updateSubscription.unsubscribe();
-    }
-  }
-
   loadEvent() {
     this.service.getAllOrganizerEvents(this.currId).subscribe(
       (response: any) => {
@@ -137,30 +120,6 @@ export class OrgEventComponent implements OnInit {
         console.error('Error loading events:', error);
       }
     );
-  }
-
-  startPolling() {
-    this.updateSubscription = interval(500000)
-      .pipe(
-        switchMap(() => this.service.getAllOrganizerEvents(this.currId)),
-        catchError((error) => {
-          console.error('Error polling for events:', error);
-          return of(null);
-        })
-      )
-      .subscribe((response: any) => {
-        if (response && response.payload) {
-          this.eventList = response.payload.map((event: any) => {
-            if (event.target_participants) {
-              event.target_participants = JSON.parse(event.target_participants);
-            }
-            return event;
-          });
-
-          this.filterEventsByApprovalStatus();
-          console.log('Events updated via polling:', this.eventList);
-        }
-      });
   }
 
   filterEventsByApprovalStatus() {

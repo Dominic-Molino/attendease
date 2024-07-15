@@ -2,16 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { EventService } from '../../../../core/service/event.service';
-import {
-  Observable,
-  Subscription,
-  catchError,
-  interval,
-  map,
-  of,
-  startWith,
-  switchMap,
-} from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 import { MobicalendarComponent } from '../../components/mobicalendar/mobicalendar.component';
 import { UserEvents } from '../../../../interfaces/UserEvents';
 
@@ -22,28 +13,13 @@ import { UserEvents } from '../../../../interfaces/UserEvents';
   styleUrl: './dashboard.component.css',
   imports: [CommonModule, RouterLink, MobicalendarComponent],
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class DashboardComponent implements OnInit {
   events$?: Observable<UserEvents[]>;
-  private pollingSubscription?: Subscription;
-  private pollingInterval = 10000; // Poll every 10 seconds
 
   constructor(private router: Router, private eventService: EventService) {}
 
   ngOnInit(): void {
-    this.startPolling();
-  }
-
-  ngOnDestroy(): void {
-    if (this.pollingSubscription) {
-      this.pollingSubscription.unsubscribe();
-    }
-  }
-
-  startPolling(): void {
-    this.events$ = interval(this.pollingInterval).pipe(
-      startWith(0),
-      switchMap(() => this.getUserEvents())
-    );
+    this.events$ = this.getUserEvents();
   }
 
   getUserEvents(): Observable<UserEvents[]> {
@@ -104,7 +80,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         const errorMessage =
           error.error?.status?.message || 'An error occurred';
         console.error(errorMessage);
-        return of([]); // Return empty array in case of error
+        return of([]);
       })
     );
   }

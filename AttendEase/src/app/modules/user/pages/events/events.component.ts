@@ -9,13 +9,12 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { AuthserviceService } from '../../../../core/service/authservice.service';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { EventService } from '../../../../core/service/event.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Subscription, interval, of, switchMap } from 'rxjs';
+import { of, switchMap } from 'rxjs';
 import { Event } from '../../../../interfaces/EventInterface';
 
 @Component({
@@ -27,8 +26,6 @@ import { Event } from '../../../../interfaces/EventInterface';
   styleUrls: ['./events.component.css'],
 })
 export class EventsComponent implements OnInit {
-  @Output() viewEventClicked = new EventEmitter();
-
   latestEvent?: Event;
   filteredEventList: any[] = [];
   eventList: Event[] = [];
@@ -54,7 +51,7 @@ export class EventsComponent implements OnInit {
   }
 
   subscribeToUserEvents(): void {
-    this.eventService.getUserEvent().subscribe((res) => {
+    const sub = this.eventService.getUserEvent().subscribe((res) => {
       console.log(res.payload);
       this.registeredEvents = res.payload;
       this.filterRegisteredEvents();
@@ -64,9 +61,9 @@ export class EventsComponent implements OnInit {
 
   fetchEvents(): void {
     this.loading = true;
-    this.eventService.getAllEvents().subscribe({
+    const sub = this.eventService.getAllEvents().subscribe({
       next: (result: any) => {
-        console.log(result); // Ensure this logs the correct event data
+        console.log(result);
         if (result && Array.isArray(result)) {
           this.eventList = result.map((event) => ({
             ...event,
@@ -119,18 +116,20 @@ export class EventsComponent implements OnInit {
     });
   }
 
-  toggleDropdown() {
+  toggleDropdown(): void {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
-  fetchRegisteredUser(eventId: number) {
-    this.eventService.getRegisteredUser(eventId).subscribe((res: any) => {
-      console.log(
-        `Registered users for event ${eventId}: ${res.payload.length}`
-      );
-      this.registeredUsers[eventId] = res.payload.length;
-      this.cdr.markForCheck();
-    });
+  fetchRegisteredUser(eventId: number): void {
+    const sub = this.eventService
+      .getRegisteredUser(eventId)
+      .subscribe((res: any) => {
+        console.log(
+          `Registered users for event ${eventId}: ${res.payload.length}`
+        );
+        this.registeredUsers[eventId] = res.payload.length;
+        this.cdr.markForCheck();
+      });
   }
 
   filterRegisteredEvents(): void {
@@ -145,8 +144,10 @@ export class EventsComponent implements OnInit {
     this.cdr.markForCheck();
 
     console.log(
-      `filteredEventList: ${this.filteredEventList}, latestEvent :${this.latestEvent}`
+      'Filtered Event List:',
+      JSON.stringify(this.filteredEventList, null, 2)
     );
+    console.log('Latest Event:', JSON.stringify(this.latestEvent, null, 2));
   }
 
   isUserRegisteredForLatestEvent(): boolean {
@@ -162,7 +163,7 @@ export class EventsComponent implements OnInit {
     this.router.navigate(['student/registeredeventhistory']);
   }
 
-  openPreview(eventId: number) {
+  openPreview(eventId: number): void {
     let routePrefix = '/student/preview';
     if (routePrefix) {
       this.router.navigate([`${routePrefix}/${eventId}`]);

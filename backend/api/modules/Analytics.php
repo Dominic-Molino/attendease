@@ -27,14 +27,12 @@ class Analytics extends GlobalMethods
           AND e.event_end_date >= NOW()
           AND e.event_start_date <= NOW()";
 
-            // Add condition for event_id if provided
             if ($event_id !== null) {
                 $sql .= " AND e.event_id = :event_id";
             }
 
             $stmt = $this->pdo->prepare($sql);
 
-            // Bind the event_id parameter if provided
             if ($event_id !== null) {
                 $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
             }
@@ -110,7 +108,6 @@ class Analytics extends GlobalMethods
     }
 
 
-    // Existing functions for reference
     private function getOngoingRegisteredCount($event_id)
     {
         try {
@@ -252,7 +249,6 @@ class Analytics extends GlobalMethods
         }
     }
 
-    // cards
     public function getDashboardData()
     {
         $eventCountsSql = "SELECT 
@@ -276,7 +272,6 @@ class Analytics extends GlobalMethods
             FROM events e";
 
         try {
-            // Fetch event counts
             $stmt = $this->pdo->prepare($eventCountsSql);
             $stmt->execute();
             $eventCounts = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -293,7 +288,6 @@ class Analytics extends GlobalMethods
             $stmt->execute();
             $totalEvents = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Prepare payload
             $payload = [
                 'approved_events' => $eventCounts['approved_events'] ?? 0,
                 'pending_events' => $eventCounts['pending_events'] ?? 0,
@@ -303,7 +297,6 @@ class Analytics extends GlobalMethods
                 'total_events' => $totalEvents['total_events'] ?? 0,
             ];
 
-            // Return the payload using the sendPayload method from GlobalMethods
             return $this->sendPayload($payload, 'success', 'Dashboard data fetched successfully.', 200);
         } catch (PDOException $e) {
             error_log("Database error: " . $e->getMessage());
@@ -318,7 +311,6 @@ class Analytics extends GlobalMethods
                 GROUP BY u.course 
                 ORDER BY u.course";
 
-        // Prepare and execute the query
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
 
@@ -358,7 +350,6 @@ class Analytics extends GlobalMethods
                 GROUP BY u.year_level 
                 ORDER BY u.year_level";
 
-        // Prepare and execute the query
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
 
@@ -379,7 +370,6 @@ class Analytics extends GlobalMethods
                 GROUP BY u.block 
                 ORDER BY u.block";
 
-        // Prepare and execute the query
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
 
@@ -424,38 +414,30 @@ class Analytics extends GlobalMethods
     public function getDoneEvents($event_id = null)
     {
         try {
-            // Define the columns you need
             $columns = "e.event_id, e.event_name, u.user_id as organizer_id, u.first_name, u.last_name, u.organization as organizer_organization, organizer_name";
 
-            // Write the base SQL query to get done events
+
             $sql = "SELECT $columns 
                 FROM events e 
                 JOIN event_approval ea ON e.event_id = ea.event_id 
                 JOIN user u ON e.organizer_user_id = u.user_id
                 WHERE ea.status = 'Approved' 
-                AND e.event_end_date < NOW()"; // Filter for 'done' events
-
-            // If event_id is provided, add the condition to filter by event ID
+                AND e.event_end_date < NOW()";
             if ($event_id !== null) {
                 $sql .= " AND e.event_id = :event_id";
             }
 
-            // Prepare the statement
             $stmt = $this->pdo->prepare($sql);
 
-            // Bind the event_id parameter if it is provided
             if ($event_id !== null) {
                 $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
             }
 
-            // Execute the query
             $stmt->execute();
             $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            // Return the payload with the events data
             return $this->sendPayload($events, 'success', "Successfully retrieved data.", 200);
         } catch (PDOException $e) {
-            // Handle database error gracefully
             return $this->sendPayload(null, 'error', $e->getMessage(), 500);
         }
     }

@@ -37,7 +37,6 @@ class GetStudentFunctions extends GlobalMethods
             if ($statement) {
                 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($result as $record) {
-                    // Handle BLOB data
                     if (isset($record['file_data'])) {
 
                         $record['file_data'] = base64_encode($record['file_data']);
@@ -102,11 +101,9 @@ class GetStudentFunctions extends GlobalMethods
     {
         $fileInfo = $this->getImageData($user_id);
 
-        // Check if file info exists
         if ($fileInfo) {
             $fileData = $fileInfo['avatar'];
 
-            // Set headers for file download
             header('Content-Type: image/png');
             header('Cache-Control: no-cache, no-store, must-revalidate');
             echo $fileData;

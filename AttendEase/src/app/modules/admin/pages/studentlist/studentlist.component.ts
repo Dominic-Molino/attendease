@@ -138,7 +138,7 @@ export class StudentlistComponent implements OnInit {
       if (result.isConfirmed) {
         this.service.activateAccount(id).subscribe((res) => {});
         Swal.fire({
-          title: 'Deleted!',
+          title: 'Activated!',
           text: 'Organizer account has been activated.',
           icon: 'success',
         });

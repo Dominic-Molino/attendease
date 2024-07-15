@@ -1,4 +1,10 @@
 [
+    BEGIN
+    IF NEW.is_cancelled = 1 THEN
+        DELETE FROM event_registration WHERE event_id = NEW.event_id;
+    END IF;
+END
+    
     {
         "first_name": "Alice",
         "last_name": "Johnson",

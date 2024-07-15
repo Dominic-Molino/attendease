@@ -25,7 +25,6 @@ class GetEvent extends GlobalMethods
         return $this->sendPayload(null, 'failed', "Failed to retrieve data.", $result['code']);
     }
 
-    //nageexecute ng query
     private function executeQuery($sql)
     {
         $data = array();
@@ -87,7 +86,6 @@ class GetEvent extends GlobalMethods
         }
     }
 
-    // gets all approved event
     public function getEvents($event_id = null)
     {
         $columns = "e.event_id, e.event_name, e.event_description, e.event_location, 
@@ -141,7 +139,6 @@ class GetEvent extends GlobalMethods
         }
     }
 
-    //get the registered students 
     public function getRegisteredUsersForApprovedEvents($event_id = null)
     {
         try {
@@ -173,12 +170,10 @@ class GetEvent extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "No users registered for approved events.", 404);
             }
         } catch (PDOException $e) {
-            // Handle database errors
             return $this->sendPayload(null, 'error', "Database error: " . $e->getMessage(), 500);
         }
     }
 
-    //returns the event id
     public function getEventById($eventId)
     {
         try {
@@ -200,7 +195,6 @@ class GetEvent extends GlobalMethods
         }
     }
 
-    //gets image of evnet
     public function getEventImage($event_id)
     {
         $fileInfo = $this->geteventImg($event_id);
@@ -232,7 +226,6 @@ class GetEvent extends GlobalMethods
         }
     }
 
-    //approved event
     public function getApprovedEventsByOrganizerId($organizer_user_id)
     {
         $sql = "SELECT e.event_id, e.event_name, e.event_description, e.event_location, 
@@ -252,7 +245,6 @@ class GetEvent extends GlobalMethods
             $stmt->execute([':organizer_user_id' => $organizer_user_id]);
             $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            // Return the payload using the sendPayload method from GlobalMethods
             return $this->sendPayload($events, 'success', 'Approved events fetched successfully.', 200);
         } catch (PDOException $e) {
             error_log("Database error: " . $e->getMessage());
@@ -260,7 +252,6 @@ class GetEvent extends GlobalMethods
         }
     }
 
-    //all event of orgnizer
     public function getAllEventsByOrganizerId($organizer_user_id)
     {
         $sql = "SELECT e.event_id, e.event_name, e.event_description, e.event_location, 
@@ -278,7 +269,6 @@ class GetEvent extends GlobalMethods
             $stmt->execute([':organizer_user_id' => $organizer_user_id]);
             $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            // Return the payload using the sendPayload method from GlobalMethods
             return $this->sendPayload($events, 'success', 'All events fetched successfully.', 200);
         } catch (PDOException $e) {
             error_log("Database error: " . $e->getMessage());
@@ -286,7 +276,6 @@ class GetEvent extends GlobalMethods
         }
     }
 
-    // for dashboard of the organizer
     public function getDashboardDataByOrganizerId($organizer_user_id)
     {
         $eventCountsSql = "SELECT 
@@ -326,7 +315,6 @@ class GetEvent extends GlobalMethods
             $stmt->execute([':organizer_user_id' => $organizer_user_id]);
             $eventStatus = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Prepare 
             $payload = [
                 'approved_events' => $eventCounts['approved_events'] ?? 0,
                 'pending_events' => $eventCounts['pending_events'] ?? 0,
@@ -584,7 +572,6 @@ class GetEvent extends GlobalMethods
         }
     }
 
-    // past event report
     public function getApprovedDoneEventsWithStatus($event_id)
     {
         try {
@@ -642,7 +629,6 @@ class GetEvent extends GlobalMethods
         }
     }
 
-    // Function to get student details for an event including course, year level, and attendance remarks
     private function getStudentDetails($event_id)
     {
         try {
@@ -659,25 +645,21 @@ class GetEvent extends GlobalMethods
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            // Map remarks to attendance status
             foreach ($result as &$student) {
                 if ($student['attendance_remarks'] == 1) {
                     $student['attendance_status'] = 'present';
                 } else {
                     $student['attendance_status'] = 'absent';
                 }
-                // Remove the raw remarks from the output if not needed separately
                 unset($student['attendance_remarks']);
             }
 
             return $result;
         } catch (PDOException $e) {
-            // Handle database error gracefully
             return [];
         }
     }
 
-    // Function to get present count for an event (students who submitted attendance and feedback)
     private function getPresentCount($event_id)
     {
         try {
@@ -700,7 +682,6 @@ class GetEvent extends GlobalMethods
         }
     }
 
-    // // Function to get attendance count for an event
     private function getAttendanceCount($event_id)
     {
         try {
@@ -718,7 +699,6 @@ class GetEvent extends GlobalMethods
         }
     }
 
-    // Function to get feedback count for an event
     private function getFeedbackCount($event_id)
     {
         try {
@@ -736,7 +716,6 @@ class GetEvent extends GlobalMethods
         }
     }
 
-    // Function to get registered count for an event
     private function getRegisteredCount($event_id)
     {
         try {
@@ -754,7 +733,6 @@ class GetEvent extends GlobalMethods
         }
     }
 
-    // Function to get average feedback scores for an event
     private function getAverageFeedback($event_id)
     {
         try {
@@ -777,7 +755,6 @@ class GetEvent extends GlobalMethods
         }
     }
 
-    // Function to get detailed feedback scores for an event
     private function getDetailedFeedback($event_id)
     {
         try {

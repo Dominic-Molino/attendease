@@ -459,12 +459,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 } else {
                     echo json_encode($post->sendPayload(null, 'failed', "Invalid parameters.", 400));
                 }
+                break;
 
             case 'editorganizer':
                 echo json_encode($post->editOrganizer($data, $request[1]));
-                break;
-
-
                 break;
 
                 #student module cases

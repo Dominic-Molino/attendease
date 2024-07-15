@@ -25,7 +25,6 @@ class Get extends GlobalMethods
         return $this->sendPayload(null, 'failed', "Failed to retrieve data.", $result['code']);
     }
 
-    //nageexecute ng query
     private function executeQuery($sql)
     {
         $data = array();
@@ -37,7 +36,6 @@ class Get extends GlobalMethods
             if ($statement) {
                 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($result as $record) {
-                    // Handle BLOB data
                     if (isset($record['file_data'])) {
 
                         $record['file_data'] = base64_encode($record['file_data']);

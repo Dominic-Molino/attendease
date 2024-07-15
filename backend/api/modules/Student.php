@@ -10,16 +10,13 @@ class PostStudentFunctions extends GlobalMethods
     {
         $this->pdo = $pdo;
     }
-    //post functions
 
     public function add_profile_update_request($data)
     {
-        // Check if required fields are set
         if (!isset($data->user_id, $data->message)) {
             return $this->sendPayload(null, 'failed', "Incomplete request data.", 400);
         }
 
-        // Validate user_id
         if (!is_int($data->user_id)) {
             return $this->sendPayload(null, 'failed', "Invalid user ID.", 400);
         }
@@ -27,7 +24,6 @@ class PostStudentFunctions extends GlobalMethods
         $user_id = $data->user_id;
         $message = $data->message;
 
-        // Check if the user exists
         $sql = "SELECT COUNT(*) FROM user WHERE user_id = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$user_id]);
@@ -36,7 +32,6 @@ class PostStudentFunctions extends GlobalMethods
             return $this->sendPayload(null, 'failed', "User not found.", 404);
         }
 
-        // Insert the profile update request
         $sql = "INSERT INTO profile_update_requests (user_id, message, status, created_at) 
                 VALUES (?, ?, 'pending', NOW())";
 
@@ -56,7 +51,6 @@ class PostStudentFunctions extends GlobalMethods
     }
 
 
-    //edit user profile 
     public function editUser($data, $user_id)
     {
         $sql = "UPDATE user 
@@ -86,12 +80,9 @@ class PostStudentFunctions extends GlobalMethods
     }
 
 
-    //register for event
     public function registerUserForEvent($event_id, $user_id)
     {
         try {
-
-            // Check if the user is already registered for the event
             $sql = "SELECT COUNT(*) AS count FROM event_registration WHERE event_id = ? AND user_id = ?";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id, $user_id]);
@@ -101,7 +92,6 @@ class PostStudentFunctions extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "User is already registered for this event.", 400);
             }
 
-            // Check if the event registration dates are valid
             $sql = "SELECT event_registration_start, event_registration_end FROM events WHERE event_id = ?";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id]);
@@ -119,7 +109,6 @@ class PostStudentFunctions extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "Event registration has ended.", 400);
             }
 
-            // Check if the event has reached maximum attendees
             $sql = "SELECT COUNT(*) AS count FROM event_registration WHERE event_id = ?";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id]);
@@ -134,7 +123,6 @@ class PostStudentFunctions extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "Event has reached maximum attendees.", 400);
             }
 
-            // Check if there is conflicting start dates within your registered events
             $sql = "SELECT er.*, e.event_name
             FROM event_registration er
             JOIN events e ON er.event_id = e.event_id
@@ -151,7 +139,6 @@ class PostStudentFunctions extends GlobalMethods
                 return $this->sendPayload($result, 'failed', "You have an existing registered event that has a conflicting start date with this event.", 409);
             }
 
-            // Register the user for the event
             $sql = "INSERT INTO event_registration (event_id, user_id) VALUES (?, ?)";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$event_id, $user_id]);
@@ -199,21 +186,18 @@ class PostStudentFunctions extends GlobalMethods
 
     function logActivity($userId, $eventId, $activityType, $details)
     {
-        // Check if the log entry already exists
         $query = "SELECT COUNT(*) as count FROM activity_log WHERE user_id = :userId AND event_id = :eventId AND activity_type = :activityType AND details = :details";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute([':userId' => $userId, ':eventId' => $eventId, ':activityType' => $activityType, ':details' => $details]);
         $count = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
 
         if ($count == 0) {
-            // Insert the log entry only if it doesn't exist
             $query = "INSERT INTO activity_log (user_id, event_id, activity_type, details, created_at) VALUES (:userId, :eventId, :activityType, :details, NOW())";
             $stmt = $this->pdo->prepare($query);
             $stmt->execute([':userId' => $userId, ':eventId' => $eventId, ':activityType' => $activityType, ':details' => $details]);
         }
     }
 
-    //post evaluation 
     public function addEventFeedback($event_id, $user_id, $data)
     {
         if (!isset($data->overall_satisfaction) || !isset($data->content_quality) || !isset($data->speaker_effectiveness) || !isset($data->venue_rating) || !isset($data->logistics_rating) || !isset($data->satisfied) || !isset($data->joined) || !isset($data->learned) || !isset($data->future) || !isset($data->liked) || !isset($data->attend) || !isset($data->recommend)) {
@@ -236,7 +220,6 @@ class PostStudentFunctions extends GlobalMethods
         $additional_comments = $data->additional_comments ?? '';
         $remarks = 'Feedback submitted';
 
-        // Check if the event has ended
         $sql = "SELECT event_end_date FROM events WHERE event_id = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id]);
@@ -246,7 +229,6 @@ class PostStudentFunctions extends GlobalMethods
             return $this->sendPayload(null, 'failed', "Feedback submission is only allowed after the event has ended.", 400);
         }
 
-        // Check if the user is registered for the event
         $sql = "SELECT COUNT(*) AS count FROM event_registration WHERE event_id = ? AND user_id = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$event_id, $user_id]);
@@ -306,7 +288,6 @@ class PostStudentFunctions extends GlobalMethods
 
     public function uploadStudentAttendanceImage($event_id, $user_id)
     {
-        // Check if user has already submitted an image for this event
         $sql_check = "SELECT COUNT(*) AS count FROM attendance WHERE event_id = ? AND user_id = ?";
         try {
             $stmt_check = $this->pdo->prepare($sql_check);
@@ -317,7 +298,6 @@ class PostStudentFunctions extends GlobalMethods
                 return $this->sendPayload(null, 'failed', "You have already submitted an image for this event.", 400);
             }
 
-            // Proceed with uploading the attendance image
             $fileData = file_get_contents($_FILES["file"]["tmp_name"]);
 
             $sql_insert = "INSERT INTO attendance (event_id, user_id, image) VALUES (?, ?, ?)";

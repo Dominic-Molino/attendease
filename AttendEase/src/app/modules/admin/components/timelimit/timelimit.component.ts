@@ -52,16 +52,15 @@ export class TimelimitComponent implements OnInit {
         event_id: this.event_id,
         submission_deadline: new Date(
           this.form.value.submission_deadline
-        ).toISOString(), // Ensure date is in ISO format
+        ).toISOString(),
       };
       this.service.addDeadline(this.event_id, formData).subscribe(
         (res) => {
           Swal.fire('Successfully added deadline', '', 'success');
-          this.dialogRef.close(); // Close dialog after successful submission
+          this.dialogRef.close();
         },
         (error) => {
           console.error('Error adding deadline:', error);
-          // Handle error, e.g., show error message using Swal
           Swal.fire({
             icon: 'error',
             title: 'Error',
