@@ -19,7 +19,7 @@
       <hr class="h-px mb-6 bg-dark-border border-0" />
     </div>
 
-    @if(filteredEventList.length > 0){
+    @if(eventList.length > 0 ){
     <div class="container">
       <h5
         class="flex self-start mb-2 text-lg font-bold tracking-tight text-text"
@@ -29,7 +29,9 @@
 
       <section class="flex items-center flex-col">
         <ng-container
-          *ngIf="filteredEventList && !isUserRegisteredForLatestEvent()"
+          *ngIf="
+            filteredEventList.length > 0 && !isUserRegisteredForLatestEvent()
+          "
         >
           <div
             class="rounded-md shadow-md border border-dark-border container bg-white hover:bg-dark-muted"
@@ -122,16 +124,15 @@
                 <p
                   class="leading-tight text-base overflow-hidden whitespace-pre-line text-ellipsis text-dark-text"
                 >
-                  {{
-                    truncateDescription(latestEvent!.event_description, maxChar)
-                  }}
+                  {{ latestEvent?.event_description }}
                 </p>
                 <p class="flex items-center mt-5">
                   <span class="text-sm font-medium text-gray-500">
                     Registered Users:
-                    {{ registeredUsers[latestEvent!.event_id] || 0 }}
+                    {{ registeredUsers[latestEvent?.event_id!] || 0 }}
                   </span>
                 </p>
+
                 <p class="" *ngIf="latestEvent?.participation_type === 'open'">
                   <span class="text-sm font-medium text-gray-500"
                     >Open for All</span
@@ -264,7 +265,7 @@
                 <p class="flex items-center mt-5">
                   <span class="text-sm font-medium text-gray-500">
                     Registered Users:
-                    {{ registeredUsers[event!.event_id] || 0 }}
+                    {{ registeredUsers[event?.event_id] || 0 }}
                   </span>
                 </p>
 
@@ -285,7 +286,7 @@
 
                 <div class="flex mt-auto justify-start mb-4 items-center">
                   <button
-                    (click)="openPreview(event.event_id)"
+                    (click)="openPreview(event?.event_id)"
                     class="bg-light-background hover:bg-light-foregroud text-white text-sm font-semibold shadow-sm rounded-md py-2 px-6 relative -bottom-3.5 mb-4"
                   >
                     Read More
@@ -322,62 +323,3 @@
     }
   </div>
 </main>
-<!-- 
-
-<div class="dropdown flex flex-1 justify-end w-full col-span-2">
-  <button
-    class="text-white bg-light-background hover:bg-light-foregroud hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center p-2 items-center relative z-10 overflow-hidden inline-flex"
-    (click)="toggleDropdown()"
-  >
-    Filter Events
-    <svg
-      class="w-6 h-6 text-white"
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="1"
-        d="m19 9-7 7-7-7"
-      />
-    </svg>
-  </button>
-  <ul
-    class="dropdown-menu flex flex-col absolute border border-dark-border right-5 mt-12 py-2 w-36 bg-white rounded-md shadow-xl z-20 divide-y-0"
-    *ngIf="isDropdownOpen"
-  >
-    <li
-      class="dropdown-item hover:bg-dark-primary w-full p-1.5 flex justify-center"
-      (click)="resetFilter()"
-    >
-      <span
-        class="flex cursor-pointer items-center text-sm font-medium text-gray-900 me-3"
-        >All Events
-      </span>
-    </li>
-    <li
-      class="dropdown-item hover:bg-dark-primary w-full p-1.5 flex justify-center"
-      (click)="filterEvents('open')"
-    >
-      <span
-        class="flex cursor-pointer items-center text-sm font-medium text-gray-900 me-3"
-        >Open for all
-      </span>
-    </li>
-    <li
-      class="dropdown-item hover:bg-dark-primary w-full p-1.5 flex justify-center"
-      (click)="filterEvents('selected')"
-    >
-      <span
-        class="flex cursor-pointer items-center text-sm font-medium text-gray-900 me-3"
-        >Not for all
-      </span>
-    </li>
-  </ul>
-</div> -->

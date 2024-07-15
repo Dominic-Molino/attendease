@@ -36,7 +36,6 @@ export class FeedbackPageComponent implements OnInit, OnDestroy {
   eventList: Event[] = [];
   maxDescriptionLength: number = 100;
   currentUser: any;
-  loading = false;
   currentFilter: string = 'all';
   filteredEventList: any[] = [];
   isDropdownOpen: boolean = false;
@@ -64,7 +63,6 @@ export class FeedbackPageComponent implements OnInit, OnDestroy {
   }
 
   loadEvents(): void {
-    this.loading = true;
     this.eventService
       .getAllEvents()
       .pipe(
@@ -86,11 +84,7 @@ export class FeedbackPageComponent implements OnInit, OnDestroy {
         catchError((error) => {
           const errorMessage =
             error.error?.status?.message || 'An error occurred';
-          Swal.fire('', errorMessage, 'warning');
           return of([]);
-        }),
-        finalize(() => {
-          this.loading = false;
         })
       )
       .subscribe((events) => {

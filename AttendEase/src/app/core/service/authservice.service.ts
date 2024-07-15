@@ -34,7 +34,6 @@ export class AuthserviceService {
     return this.http.post<any>(`${this.API_URL}edituserrole/${id}`, inputdata);
   }
 
-  // auth
   registerStudent(data: any): Observable<any> {
     return this.http.post(`${this.API_URL}adduser`, data);
   }
@@ -43,9 +42,8 @@ export class AuthserviceService {
     return this.http.post(`${this.API_URL}login`, data);
   }
 
-  isUserLoggedIn(): boolean {
-    const token = sessionStorage.getItem('token');
-    return !this.helper.isTokenExpired(token);
+  activateAccount(id: any, data = null): Observable<any> {
+    return this.http.post(`${this.API_URL}accountactivation/${id}`, data);
   }
 
   getCurrentUserId(): number | null {
@@ -209,5 +207,13 @@ export class AuthserviceService {
 
   getMessageRequests(currentUser: number) {
     return this.http.get(`${this.API_URL}getMessageRequests/${currentUser}`);
+  }
+
+  checkOrganizer(id: any): Observable<any> {
+    return this.http.get(`${this.API_URL}checkorganizer/${id}`);
+  }
+
+  updateOrganizer(data: any, id: any): Observable<any> {
+    return this.http.post(`${this.API_URL}editorganizer/${id}`, data);
   }
 }

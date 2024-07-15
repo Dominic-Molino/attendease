@@ -57,8 +57,9 @@
                   {{ event?.event_name }}
                 </h1>
                 <span
-                  class="text-light-text text-sm font-semibold relative top-0"
-                  >by: {{ event?.organizer_name }}</span
+                  class="text-light-text text-xs font-semibold relative top-1"
+                  >by: {{ event?.first_name }} {{ event?.last_name }} |
+                  {{ event.organizer_organization | uppercase }}</span
                 >
                 <p
                   class="leading-normal text-base flex-grow text-justify overflow-hidden whitespace-pre-line text-ellipsis text-text"

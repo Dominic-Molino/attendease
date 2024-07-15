@@ -14,6 +14,7 @@ import { AuthserviceService } from '../../../core/service/authservice.service';
 })
 export class OrgSignupComponent implements OnInit {
   emailInvalid: boolean = false;
+  step: number = 1;
 
   constructor(
     private builder: FormBuilder,
@@ -25,10 +26,6 @@ export class OrgSignupComponent implements OnInit {
     first_name: this.builder.control('', Validators.required),
     last_name: this.builder.control('', Validators.required),
     email: this.builder.control('', Validators.compose([Validators.required])),
-    organization: this.builder.control(
-      '',
-      Validators.compose([Validators.required])
-    ),
     password: this.builder.control('', Validators.required),
     course: this.builder.control(''),
     year_level: this.builder.control(''),
@@ -64,6 +61,11 @@ export class OrgSignupComponent implements OnInit {
             icon: 'success',
             title: 'Registered in successfully',
           });
+          Swal.fire(
+            'Information',
+            "We'll send you an email after your account has been activated.",
+            'info'
+          );
           this.router.navigate(['login']);
         },
         (error) => {

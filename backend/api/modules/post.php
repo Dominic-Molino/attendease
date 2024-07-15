@@ -1,5 +1,6 @@
 <?php
 require_once 'Global.php';
+require __DIR__ . "/../../vendor/autoload.php";
 
 class Post extends GlobalMethods
 {
@@ -12,32 +13,48 @@ class Post extends GlobalMethods
     public function login($data, $user)
     {
         if ($user !== false && isset($user['password'])) {
-            // Verify the password
             if (!password_verify($data['password'], $user['password'])) {
                 return $this->sendPayload(null, "failed", "Invalid Credentials.", 401);
             }
 
-            // Generate JWT token
             $JwtController = new Jwt($_ENV["SECRET_KEY"]);
-            $token = $JwtController->encode([
+            $tokenData = [
                 "user_id" => $user['user_id'],
                 "email" => $user['email'],
                 "role_id" => $user['role_id'],
-            ]);
+            ];
 
-            // Respond with the generated token
+            if ($user['role_id'] == 2) {
+                $organizer = $this->getOrganizerByEmail($user['email']);
+
+                if ($organizer && isset($organizer['is_active']) && $organizer['is_active'] == 1) {
+                    $tokenData['is_active'] = $organizer['is_active'];
+                } else {
+                    return $this->sendPayload(null, "failed", "Organizer account not activated.", 403);
+                }
+            }
+
+            $token = $JwtController->encode($tokenData);
+
             http_response_code(200);
             echo json_encode(["token" => $token]);
         } else {
-            // Check if user was found or not
             if ($user === false) {
                 return $this->sendPayload(null, "failed", "User not found.", 404);
             } else {
-                // This block handles cases where $user['password'] is not set or other unexpected scenarios
                 return $this->sendPayload(null, "failed", "Invalid credentials or user data.", 401);
             }
         }
     }
+
+    private function getOrganizerByEmail($email)
+    {
+        $sql = "SELECT * FROM user WHERE email = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
 
     public function add_user($data)
     {
@@ -68,19 +85,19 @@ class Post extends GlobalMethods
         $course = $data->course;
         $block = $data->block;
         $password = $data->password;
-        $organization = isset($data->organization) ? $data->organization : null;
         $role_id = isset($data->role_id) ? $data->role_id : 3;
 
 
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-        $sql = "INSERT INTO user (first_name, last_name, email, year_level, course, block, password, role_id, organization) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO user (first_name, last_name, email, year_level, course, block, password, role_id ) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$first_name, $last_name, $email, $year_level, $course, $block, $hashed_password,  $role_id, $organization]);
+            $stmt->execute([$first_name, $last_name, $email, $year_level, $course, $block, $hashed_password,  $role_id]);
 
             if ($stmt->rowCount() > 0) {
+
                 return $this->sendPayload(null, 'success', "User added successfully.", 200);
             } else {
                 return $this->sendPayload(null, 'failed', "Failed to add user.", 500);
@@ -90,6 +107,75 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
+
+    public function activate_organizer_account($user_id)
+    {
+        $updateSql = "UPDATE user SET is_active = 1 WHERE user_id = ?";
+        $getEmailSql = "SELECT email FROM user WHERE user_id = ?";
+        $mail = initializeMailer();
+
+        try {
+            $stmt = $this->pdo->prepare($updateSql);
+            $stmt->execute([$user_id]);
+
+            $stmtGetEmail = $this->pdo->prepare($getEmailSql);
+            $stmtGetEmail->execute([$user_id]);
+            $organizerEmail = $stmtGetEmail->fetchColumn();
+
+            if ($stmt->rowCount() > 0) {
+                $mail->setFrom('attendeaseadmin@gmail.com', 'Attendease Admin');
+                $mail->addAddress($organizerEmail);
+                $mail->Subject = 'Organizer Account Activation';
+
+                $mail->Body =
+                    $mail->Body = <<<END
+                Your organizer account has been successfully activated. You can now log in.
+                 <a href="http://localhost:4200/login">Login</a> here.
+                END;
+
+
+                if ($mail->send()) {
+                    return $this->sendPayload(null, 'success', "Organizer account successfully activated. Activation email sent.", 200);
+                } else {
+                    error_log('Failed to send activation email: ' . $mail->ErrorInfo);
+                    return $this->sendPayload(null, 'failed', "Organizer account activated, but failed to send activation email.", 200);
+                }
+            } else {
+                return $this->sendPayload(null, 'failed', "Failed to activate account.", 500);
+            }
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+        }
+    }
+
+    public function editOrganizer($data, $user_id)
+    {
+        if (!isset($data->organization)) {
+            return $this->sendPayload(null, 'failed', "Organization data not provided.", 400);
+        }
+
+        $sql = "UPDATE user 
+                SET organization = ?, is_complete = CASE WHEN organization IS NOT NULL AND organization <> '' THEN 1 ELSE is_complete END
+                WHERE user_id = ?";
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([
+                $data->organization,
+                $user_id
+            ]);
+
+            if ($stmt->rowCount() > 0) {
+                return $this->sendPayload(null, 'success', "Organizer updated successfully.", 200);
+            } else {
+                return $this->sendPayload(null, 'failed', "Failed to update organizer.", 500);
+            }
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+        }
+    }
+
 
     public function edit_user_role($data, $user_id)
     {
@@ -121,8 +207,8 @@ class Post extends GlobalMethods
         try {
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
-                $submission_deadline, // first parameter
-                $event_id             // second parameter
+                $submission_deadline,
+                $event_id
             ]);
 
             if ($stmt->rowCount() > 0) {
@@ -135,8 +221,6 @@ class Post extends GlobalMethods
             return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
         }
     }
-
-
 
     public function mark_attendance($event_id, $user_id)
     {

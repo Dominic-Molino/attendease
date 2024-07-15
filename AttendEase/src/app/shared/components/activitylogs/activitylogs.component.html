@@ -1,5 +1,8 @@
 @if(currRole === 2){
-<div class="border max-w-md border-dark-border shadow-md p-5 rounded-md">
+<div
+  class="border max-w-md border-dark-border shadow-md p-5 rounded-md"
+  *ngIf="actLogsOrg.length > 0"
+>
   <header class="font-bold text-lg mb-1.5 tracking-wide">Activity Logs</header>
   <ol class="relative w-full h-[400px] overflow-y-scroll divide-y">
     <li class="mb-3.5 w-full" *ngFor="let log of actLogsOrg">
@@ -17,8 +20,28 @@
   </ol>
 </div>
 
+<div
+  class="border max-w-md border-dark-border shadow-md p-5 rounded-md"
+  *ngIf="actLogsOrg.length === 0"
+>
+  <header class="font-bold text-lg mb-1.5 tracking-wide">Activity Logs</header>
+  <section>
+    <div class="py-4 px-4 mx-auto">
+      <div class="text-center mx-auto">
+        <div class="tracking-widest mt-4 text-center">
+          <p class="text-center text-xl">(￣ ￣|||)</p>
+          <span class="text-gray-500 text-xl">No Activity so far...</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
 }@else {
-<div class="border max-w-md border-dark-border shadow-md p-5 rounded-md">
+<div
+  class="border max-w-md border-dark-border shadow-md p-5 rounded-md"
+  *ngIf="actLogsAdmin.length > 0"
+>
   <header class="font-bold text-lg mb-1.5 tracking-wide">Activity Logs</header>
   <ol class="relative w-full h-[400px] overflow-y-scroll divide-y">
     <li class="mb-3.5 w-full" *ngFor="let log of actLogsAdmin">
@@ -35,4 +58,22 @@
     </li>
   </ol>
 </div>
+
+<div
+  class="border max-w-md border-dark-border shadow-md p-5 rounded-md"
+  *ngIf="actLogsAdmin.length === 0"
+>
+  <header class="font-bold text-lg mb-1.5 tracking-wide">Activity Logs</header>
+  <section>
+    <div class="py-4 px-4 mx-auto">
+      <div class="text-center mx-auto">
+        <div class="tracking-widest mt-4 text-center">
+          <p class="text-center text-xl">(￣ ￣|||)</p>
+          <span class="text-gray-500 text-xl">No Activity so far...</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
 }

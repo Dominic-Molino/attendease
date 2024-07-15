@@ -372,6 +372,14 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 }
                 break;
 
+            case 'checkorganizer':
+                if (isset($request[1])) {
+                    echo json_encode($get->checkOrganizer($request[1]));
+                } else {
+                    echo 'no organizer id';
+                }
+                break;
+
 
             default:
                 echo "This is forbidden";
@@ -379,6 +387,8 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 break;
         }
         break;
+
+
     case 'POST':
         $data = json_decode(file_get_contents("php://input"));
         switch ($request[0]) {
@@ -397,6 +407,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
             case 'adduser':
                 echo json_encode($post->add_user($data));
+                break;
+
+            case 'accountactivation':
+                echo json_encode($post->activate_organizer_account($request[1]));
                 break;
 
             case 'postrequest':
@@ -445,6 +459,11 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 } else {
                     echo json_encode($post->sendPayload(null, 'failed', "Invalid parameters.", 400));
                 }
+
+            case 'editorganizer':
+                echo json_encode($post->editOrganizer($data, $request[1]));
+                break;
+
 
                 break;
 

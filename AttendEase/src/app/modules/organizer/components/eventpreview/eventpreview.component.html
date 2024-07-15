@@ -22,6 +22,7 @@
 
     <section class="bg-white w-full relative">
       <div
+        *ngIf="events && events.length > 0"
         class="max-w-full bg-white border border-dark-border rounded-md overflow-hidden"
       >
         <div *ngFor="let event of events" class="absolute -top-3 right-0">
@@ -369,7 +370,11 @@
             >
               <button
                 (click)="openDialog(event.event_id)"
-                [disabled]="event.status === 'done' || event.is_cancelled === 1"
+                [disabled]="
+                  event.status === 'done' ||
+                  event.is_cancelled === 1 ||
+                  event.status == 'ongoing'
+                "
                 [ngClass]="{
                   'cursor-not-allowed bg-gray-400 text-gray-200':
                     event.status == 'done' ||

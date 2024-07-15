@@ -4,6 +4,7 @@ import { DataAnalyticsService } from '../../../../../../core/service/data-analyt
 import { Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { scales, TooltipItem } from 'chart.js';
+import { CommonModule } from '@angular/common';
 
 interface Event {
   event_id: number;
@@ -14,11 +15,12 @@ interface Event {
 @Component({
   selector: 'app-comparing-events',
   standalone: true,
-  imports: [ChartModule],
+  imports: [ChartModule, CommonModule],
   templateUrl: './comparing-events.component.html',
   styleUrls: ['./comparing-events.component.css'],
 })
 export class ComparingEventsComponent implements OnInit, OnDestroy {
+  events: Event[] = [];
   data: any;
   options: any;
   private refreshSubscription: Subscription | undefined;
@@ -39,14 +41,14 @@ export class ComparingEventsComponent implements OnInit, OnDestroy {
     this.refreshSubscription = timer(0, 300000)
       .pipe(switchMap(() => this.service.getAllEventAttendees()))
       .subscribe((res) => {
-        const events: Event[] = res.payload;
-        console.log(events);
+        this.events = res.payload;
+        console.log(this.events);
 
         const eventLabels: string[] = [];
         const attendeeCounts: number[] = [];
         const maxLabelLength = 10;
 
-        for (const event of events) {
+        for (const event of this.events) {
           const slicedEventName = event.event_name.slice(0, maxLabelLength);
           eventLabels.push(
             slicedEventName +

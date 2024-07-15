@@ -69,6 +69,27 @@ class Get extends GlobalMethods
         }
     }
 
+    public function checkOrganizer($user_id)
+    {
+        $columns = "is_complete";
+        $sqlStr = "SELECT $columns FROM user WHERE user_id = :user_id";
+
+        try {
+            $statement = $this->pdo->prepare($sqlStr);
+            $statement->execute([':user_id' => $user_id]);
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+            if ($result) {
+                return $this->sendPayload($result, 'success', "User found.", 200);
+            } else {
+                return $this->sendPayload(null, 'failed', "User not found.", 404);
+            }
+        } catch (\PDOException $e) {
+            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+        }
+    }
+
+
     public function get_roles($id = null)
     {
         $condition = $id ? "role_id=$id" : null;

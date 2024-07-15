@@ -26,10 +26,10 @@ import { Event } from '../../../../interfaces/EventInterface';
   templateUrl: './events.component.html',
   styleUrls: ['./events.component.css'],
 })
-export class EventsComponent implements OnInit, OnDestroy {
+export class EventsComponent implements OnInit {
   @Output() viewEventClicked = new EventEmitter();
 
-  latestEvent: Event | undefined;
+  latestEvent?: Event;
   filteredEventList: any[] = [];
   eventList: Event[] = [];
   registeredEvents: Event[] = [];
@@ -41,8 +41,6 @@ export class EventsComponent implements OnInit, OnDestroy {
   registeredUsers: { [eventId: number]: number } = {};
   isDropdownOpen: boolean = false;
 
-  private updateSubscription?: Subscription;
-
   constructor(
     private sanitizer: DomSanitizer,
     private eventService: EventService,
@@ -51,15 +49,8 @@ export class EventsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.fetchEvents(); // Initial fetch
-    this.subscribeToUserEvents(); // Subscribe to user events
-    this.startPolling(); // Start polling
-  }
-
-  ngOnDestroy(): void {
-    if (this.updateSubscription) {
-      this.updateSubscription.unsubscribe();
-    }
+    this.fetchEvents();
+    this.subscribeToUserEvents();
   }
 
   subscribeToUserEvents(): void {
@@ -75,16 +66,17 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.eventService.getAllEvents().subscribe({
       next: (result: any) => {
-        console.log(result);
+        console.log(result); // Ensure this logs the correct event data
         if (result && Array.isArray(result)) {
           this.eventList = result.map((event) => ({
             ...event,
+            event_description: event.event_description,
             event_start_date: new Date(event.event_start_date),
             event_end_date: new Date(event.event_end_date),
             event_registration_start: new Date(event.event_registration_start),
             event_registration_end: new Date(event.event_registration_end),
-            categories: JSON.parse(event.categories),
-            target_participants: JSON.parse(event.target_participants),
+            categories: JSON.parse(event.categories || '[]'),
+            target_participants: JSON.parse(event.target_participants || '[]'),
             event_image$: this.eventService.getEventImage(event.event_id).pipe(
               switchMap((imageResult) => {
                 if (imageResult.size > 0) {
@@ -97,9 +89,9 @@ export class EventsComponent implements OnInit, OnDestroy {
             ),
           }));
 
-          this.eventList.forEach((ev: any) => {
-            this.fetchRegisteredUser(ev.event_id);
-            console.log(ev.target_participants);
+          this.eventList.forEach((event: any) => {
+            this.fetchRegisteredUser(event.event_id);
+            console.log(event.target_participants);
           });
 
           const currentDate = new Date();
@@ -109,16 +101,7 @@ export class EventsComponent implements OnInit, OnDestroy {
               event.event_registration_end >= currentDate
           );
 
-          this.filteredEventList = this.eventList.filter(
-            (event) =>
-              !this.registeredEvents.some(
-                (re) => re.event_id === event.event_id
-              )
-          );
-          this.latestEvent =
-            this.filteredEventList.length > 0
-              ? this.filteredEventList[0]
-              : undefined;
+          this.filterRegisteredEvents();
 
           this.cdr.markForCheck();
 
@@ -134,13 +117,6 @@ export class EventsComponent implements OnInit, OnDestroy {
         this.loading = false;
       },
     });
-  }
-
-  startPolling(): void {
-    this.updateSubscription = interval(5000) // Polling interval in milliseconds (1 minute in this example)
-      .subscribe(() => {
-        this.fetchEvents(); // Fetch events again
-      });
   }
 
   toggleDropdown() {
@@ -162,14 +138,20 @@ export class EventsComponent implements OnInit, OnDestroy {
       (event) =>
         !this.registeredEvents.some((re) => re.event_id === event.event_id)
     );
+
     this.latestEvent =
-      this.filteredEventList.length > 0 ? this.filteredEventList[0] : undefined;
+      this.filteredEventList.length > 0 ? this.filteredEventList[0] : null;
+
     this.cdr.markForCheck();
+
+    console.log(
+      `filteredEventList: ${this.filteredEventList}, latestEvent :${this.latestEvent}`
+    );
   }
 
   isUserRegisteredForLatestEvent(): boolean {
-    return (
-      !!this.latestEvent &&
+    return !(
+      this.latestEvent &&
       this.registeredEvents.some(
         (re) => re.event_id === this.latestEvent?.event_id
       )
@@ -210,25 +192,4 @@ export class EventsComponent implements OnInit, OnDestroy {
       })
       .join(' | ');
   }
-
-  // filterEvents(participationType: string): void {
-  //   if (participationType === 'open') {
-  //     this.filteredEventList = this.eventList.filter(
-  //       (event) => event.participation_type === 'open'
-  //     );
-  //   } else if (participationType === 'selected') {
-  //     this.filteredEventList = this.eventList.filter(
-  //       (event) => event.participation_type === 'selected'
-  //     );
-  //   }
-  //   // Optionally, you can update latestEvent if filtered list changes
-  //   this.latestEvent =
-  //     this.filteredEventList.length > 0 ? this.filteredEventList[0] : undefined;
-  // }
-
-  // resetFilter(): void {
-  //   this.filteredEventList = [...this.eventList];
-  //   this.latestEvent =
-  //     this.filteredEventList.length > 0 ? this.filteredEventList[0] : undefined;
-  // }
 }

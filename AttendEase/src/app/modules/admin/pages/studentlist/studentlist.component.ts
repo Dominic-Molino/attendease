@@ -5,20 +5,6 @@ import { UpdateroleComponent } from '../../components/updaterole/updaterole.comp
 import { CommonModule, TitleCasePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { EventService } from '../../../../core/service/event.service';
-import { forkJoin, of, throwError, Subscription, timer, concat } from 'rxjs';
-import {
-  catchError,
-  delay,
-  map,
-  mergeMap,
-  retry,
-  retryWhen,
-  scan,
-  switchMap,
-  take,
-  tap,
-} from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
 interface User {
@@ -31,6 +17,7 @@ interface User {
   year_level: string;
   role_id: number;
   eventCount?: number;
+  is_active: number;
 }
 
 @Component({
@@ -45,20 +32,17 @@ interface User {
     NgxPaginationModule,
   ],
 })
-export class StudentlistComponent implements OnInit, OnDestroy {
+export class StudentlistComponent implements OnInit {
   datalist: User[] = [];
   filteredList: User[] = [];
   searchValue = '';
   p: number = 1;
   itemsPerPage: number = 10;
   totalRecords: number = 0;
-  maxSize = 5;
-  private subscription?: Subscription;
-  private usersWithoutEvents: Set<number> = new Set(); // Cache for users with no events
+  selectedView: 'students' | 'organizers' = 'students';
 
   constructor(
     private service: AuthserviceService,
-    private eventService: EventService,
     private dialog: MatDialog,
     private form: FormBuilder
   ) {}
@@ -72,89 +56,6 @@ export class StudentlistComponent implements OnInit, OnDestroy {
     this.searchForm.get('searchValue')!.valueChanges.subscribe((value) => {
       this.filterData(value);
     });
-    this.setupPolling();
-  }
-
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
-  setupPolling(): void {
-    const pollingInterval = 10000; // 60 seconds
-
-    this.subscription = timer(0, pollingInterval)
-      .pipe(
-        switchMap(() =>
-          this.service.getUsers().pipe(
-            map((res: any) =>
-              res.payload.map(
-                (user: any): User => ({
-                  user_id: user.user_id,
-                  first_name: user.first_name,
-                  last_name: user.last_name,
-                  email: user.email,
-                  block: user.block,
-                  course: user.course,
-                  year_level: user.year_level,
-                  role_id: user.role_id,
-                })
-              )
-            ),
-            tap((datalist) => (this.datalist = datalist)),
-            mergeMap((datalist) => {
-              const userObservables = datalist
-                .filter(
-                  (user: { user_id: number }) =>
-                    !this.usersWithoutEvents.has(user.user_id)
-                ) // Filter out users without events
-                .map((user: { user_id: number; eventCount: number }) =>
-                  this.eventService.getUsersEvent(user.user_id).pipe(
-                    tap((eventRes: any) => {
-                      user.eventCount = eventRes.payload
-                        ? eventRes.payload.length
-                        : 0;
-                      if (!eventRes.payload) {
-                        this.usersWithoutEvents.add(user.user_id);
-                      }
-                    }),
-                    catchError((error) => {
-                      if (error.status === 404) {
-                        user.eventCount = 0;
-                        this.usersWithoutEvents.add(user.user_id);
-                        return of(null);
-                      }
-                      return throwError(error);
-                    })
-                  )
-                );
-              return forkJoin(userObservables);
-            }),
-            map(() => {
-              this.filterData(this.searchForm.get('searchValue')!.value);
-            }),
-            retryWhen((errors) =>
-              errors.pipe(
-                scan((retryCount, error) => {
-                  if (retryCount >= 2) {
-                    throw error;
-                  }
-                  return retryCount + 1;
-                }, 0),
-                delay(5000)
-              )
-            )
-          )
-        ),
-        catchError((error) => {
-          const errorMessage =
-            error.error?.status?.message || 'An error occurred';
-          Swal.fire('', errorMessage, 'warning');
-          return of(null);
-        })
-      )
-      .subscribe();
   }
 
   loadData() {
@@ -169,45 +70,26 @@ export class StudentlistComponent implements OnInit, OnDestroy {
           course: user.course,
           year_level: user.year_level,
           role_id: user.role_id,
+          is_active: user.is_active,
         })
       );
 
-      const userObservables = this.datalist
-        .filter((user) => !this.usersWithoutEvents.has(user.user_id)) // Filter out users without events
-        .map((user) =>
-          this.eventService.getUsersEvent(user.user_id).pipe(
-            tap((eventRes: any) => {
-              user.eventCount = eventRes.payload ? eventRes.payload.length : 0;
-              if (!eventRes.payload) {
-                this.usersWithoutEvents.add(user.user_id); // Cache users without events
-              }
-            }),
-            catchError((error) => {
-              if (error.status === 404) {
-                user.eventCount = 0;
-                this.usersWithoutEvents.add(user.user_id); // Cache users without events
-                return of(null);
-              }
-              return throwError(error);
-            })
-          )
-        );
-
-      forkJoin(userObservables).subscribe(() => {
-        this.filterData(this.searchForm.get('searchValue')!.value);
-      });
+      console.log('Loaded datalist:', this.datalist);
+      this.filterData(this.searchForm.get('searchValue')!.value);
     });
   }
 
   filterData(searchValue: string) {
-    if (!searchValue) {
-      this.filteredList = this.datalist;
-    } else {
+    this.filteredList = this.datalist;
+
+    if (searchValue) {
       searchValue = searchValue.toLowerCase();
-      this.filteredList = this.datalist.filter((data) => {
+      this.filteredList = this.filteredList.filter((data) => {
         return (
           (data.first_name &&
             data.first_name.toLowerCase().includes(searchValue)) ||
+          (data.last_name &&
+            data.last_name.toLowerCase().includes(searchValue)) ||
           (data.course && data.course.toLowerCase().includes(searchValue)) ||
           (data.year_level &&
             data.year_level.toLowerCase().includes(searchValue)) ||
@@ -215,6 +97,19 @@ export class StudentlistComponent implements OnInit, OnDestroy {
         );
       });
     }
+
+    if (this.selectedView === 'organizers') {
+      this.filteredList = this.filteredList.filter(
+        (user) => user.role_id === 2
+      );
+    } else if (this.selectedView === 'students') {
+      this.filteredList = this.filteredList.filter(
+        (user) => user.role_id === 3
+      );
+    }
+
+    console.log('Filtered list:', this.filteredList);
+
     this.totalRecords = this.filteredList.length;
     this.p = 1;
   }
@@ -228,5 +123,32 @@ export class StudentlistComponent implements OnInit, OnDestroy {
     popup.afterClosed().subscribe(() => {
       this.loadData();
     });
+  }
+
+  activateAccount(id: number) {
+    Swal.fire({
+      title: 'Activate this account?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.service.activateAccount(id).subscribe((res) => {});
+        Swal.fire({
+          title: 'Deleted!',
+          text: 'Organizer account has been activated.',
+          icon: 'success',
+        });
+        this.loadData();
+      }
+    });
+  }
+
+  selectView(view: 'students' | 'organizers') {
+    this.selectedView = view;
+    this.filterData(this.searchForm.get('searchValue')!.value);
   }
 }

@@ -9,6 +9,7 @@
 
       <div
         class="relative overflow-x-auto shadow-md rounded-md border-dark-border border"
+        *ngIf="eventList.length > 0"
       >
         <table class="w-full text-sm text-left rtl:text-right text-gray-50">
           <thead
@@ -123,7 +124,10 @@
           </tbody>
         </table>
       </div>
-      <div class="flex justify-center items-center mt-2.5 p-5">
+      <div
+        *ngIf="eventList.length > 0"
+        class="flex justify-center items-center mt-2.5 p-5"
+      >
         <pagination-controls
           (pageChange)="p = $event"
           [maxSize]="maxSize"
@@ -131,6 +135,18 @@
           class="pagination"
         ></pagination-controls>
       </div>
+
+      <section *ngIf="eventList.length == 0">
+        <div class="py-4 px-4 mx-auto x-w-screen-xl lg:py-16 lg:px-6ma">
+          <div class="max-w-screen-sm text-center mx-auto">
+            <h1 class="text-gray-500 text-6xl block">(￣ ￣|||)</h1>
+            <h1 class="text-gray-500 text-6xl block">No Events Found</h1>
+            <p class="text-gray-500 text-xl">
+              It looks like there are no events scheduled at the moment.
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </main>

@@ -1,4 +1,7 @@
-<div class="w-full border border-dark-border p-2 rounded-md">
+<div
+  class="w-full border border-dark-border p-2 rounded-md"
+  *ngIf="report.length > 0"
+>
   <div class="flex w-full justify-between items-center">
     <div *ngIf="selectedEvent" class="relative">
       <button
@@ -373,5 +376,25 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<div *ngIf="report.length === 0">
+  <div class="w-full border border-dark-border p-2 rounded-md">
+    <section>
+      <div class="py-4 px-4 mx-auto max-w-screen-xl lg:px-6">
+        <div class="max-w-screen-sm text-center mx-auto">
+          <div class="tracking-widest mt-4 text-center">
+            <p class="text-center text-xl">(￣ ￣|||)</p>
+            <span class="text-gray-500 text-xl"
+              >No Ongoing Events Found...</span
+            >
+            <p class="text-gray-500 text-xl">
+              It looks like there are no ongoing events scheduled at the moment.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </div>

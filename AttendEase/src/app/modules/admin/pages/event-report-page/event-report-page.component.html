@@ -38,6 +38,11 @@
             </p>
             <div class="bg-white" *ngIf="organizer.dropdownOpen">
               <ul class="p-3 space-y-1 text-sm text-gray-700">
+                <li *ngIf="organizer.events?.length === 0">
+                  <span class="text-gray-500 text-xs"
+                    >No Ongoing Events Found...</span
+                  >
+                </li>
                 <li *ngFor="let event of organizer.events">
                   <button
                     (click)="

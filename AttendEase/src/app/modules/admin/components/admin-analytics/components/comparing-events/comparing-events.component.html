@@ -1,3 +1,25 @@
-<div class="p-5 bg-white rounded-md shadow-md border border-dark-border">
-  <p-chart type="bar" [data]="data" [options]="options"></p-chart>
+<div *ngIf="events.length > 0">
+  <div class="p-5 bg-white rounded-md shadow-md border border-dark-border">
+    <p-chart type="bar" [data]="data" [options]="options"></p-chart>
+  </div>
+</div>
+
+<div *ngIf="events.length === 0">
+  <div class="w-full border border-dark-border p-2 rounded-md">
+    <section>
+      <div class="py-4 px-4 mx-auto max-w-screen-xl lg:px-6">
+        <div class="max-w-screen-sm text-center mx-auto">
+          <div class="tracking-widest mt-4 text-center">
+            <p class="text-center text-xl">(￣ ￣|||)</p>
+            <span class="text-gray-500 text-xl"
+              >No Ongoing Events Found...</span
+            >
+            <p class="text-gray-500 text-xl">
+              It looks like there are no ongoing events scheduled at the moment.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 </div>

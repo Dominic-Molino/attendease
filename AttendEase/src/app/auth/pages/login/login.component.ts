@@ -97,6 +97,13 @@ export class LoginComponent implements OnInit {
               icon: 'error',
             });
           }
+          if (error.status == 403) {
+            Swal.fire({
+              title: '',
+              text: 'Organizer account is not activated',
+              icon: 'error',
+            });
+          }
         }
       );
     } else {

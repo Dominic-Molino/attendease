@@ -37,7 +37,6 @@ class GetEvent extends GlobalMethods
             if ($statement) {
                 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($result as $record) {
-                    // Handle BLOB data
                     if (isset($record['file_data'])) {
 
                         $record['file_data'] = base64_encode($record['file_data']);
