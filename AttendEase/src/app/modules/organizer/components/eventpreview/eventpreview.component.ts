@@ -8,6 +8,7 @@ import { CommonModule, Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { EditEventComponent } from '../edit-event/edit-event.component';
 import { UpdateimageComponent } from '../updateimage/updateimage.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-eventpreview',
@@ -120,6 +121,39 @@ export class EventpreviewComponent implements OnInit {
 
     modal.afterClosed().subscribe((response) => {
       this.fetchEventDetails(eventId);
+    });
+  }
+
+  endEvent(eventId: number) {
+    Swal.fire({
+      title: 'Are you sure you want to end this event?',
+      text: 'This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, end it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.service.endEvent(eventId).subscribe(
+          (response) => {
+            Swal.fire({
+              title: 'Event Ended!',
+              text: 'The event has been successfully ended.',
+              icon: 'success',
+            });
+            this.fetchEventDetails(eventId);
+          },
+          (error) => {
+            console.error('Error ending the event:', error);
+            Swal.fire({
+              title: 'Error!',
+              text: 'An error occurred while ending the event.',
+              icon: 'error',
+            });
+          }
+        );
+      }
     });
   }
 }

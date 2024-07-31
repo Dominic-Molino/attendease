@@ -14,7 +14,13 @@ import { MessageComponent } from '../../../../shared/components/message/message.
 @Component({
   selector: 'app-admin-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterLinkActive, RouterOutlet, RouterLink],
+  imports: [
+    CommonModule,
+    RouterLinkActive,
+    RouterOutlet,
+    RouterLink,
+    MessageComponent,
+  ],
   templateUrl: './admin-sidebar.component.html',
   styleUrl: './admin-sidebar.component.css',
 })

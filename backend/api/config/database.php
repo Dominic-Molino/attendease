@@ -9,7 +9,7 @@ set_time_limit(1000);
 
 //define constants for server credentials/configuration
 define("SERVER", "localhost");
-define("DATABASE", "attendease_t");
+define("DATABASE", "attendease");
 define("USER", "root");
 define("PASSWORD", "");
 define("DRIVER", "mysql");

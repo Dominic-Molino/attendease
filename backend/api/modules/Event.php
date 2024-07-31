@@ -236,6 +236,36 @@ class Events extends  GlobalMethods
         }
     }
 
+    public function endEvent($event_id)
+    {
+        // Check if the event exists
+        $verifyEventSql = "SELECT event_id FROM events WHERE event_id = ?";
+        $stmt = $this->pdo->prepare($verifyEventSql);
+        $stmt->execute([$event_id]);
+
+        if ($stmt->rowCount() == 0) {
+            return $this->sendPayload(null, 'failed', "Event does not exist.", 400);
+        }
+
+        // Update the event to end it
+        $updateEventSql = "UPDATE events SET event_end_date = NOW(), event_start_date = NOW() WHERE event_id = ?";
+
+        try {
+            $stmt = $this->pdo->prepare($updateEventSql);
+            $stmt->execute([$event_id]);
+
+            if ($stmt->rowCount() > 0) {
+                return $this->sendPayload(null, 'success', "Event ended successfully.", 200);
+            } else {
+                return $this->sendPayload(null, 'failed', "Failed to update event status.", 500);
+            }
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+        }
+    }
+
+
     public function uploadEvent($event_id)
     {
         $fileData = file_get_contents($_FILES["file"]["tmp_name"]);

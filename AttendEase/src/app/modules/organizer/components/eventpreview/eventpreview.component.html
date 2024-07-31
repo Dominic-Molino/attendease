@@ -366,8 +366,45 @@
             </div>
             <!-- Footer Section -->
             <div
-              class="flex items-center justify-end relative p-4 md:p-5 border-t border-gray-200 rounded-b"
+              class="flex items-center gap-2.5 justify-end relative p-4 md:p-5 border-t border-gray-200 rounded-b"
             >
+              <button
+                (click)="endEvent(event.event_id)"
+                [disabled]="
+                  event.status === 'done' ||
+                  event.is_cancelled === 1 ||
+                  event.status == 'ongoing'
+                "
+                [ngClass]="{
+                  'cursor-not-allowed bg-gray-400 text-gray-200':
+                    event.status == 'done' ||
+                    event.status == 'ongoing' ||
+                    !(event.is_cancelled === 0),
+
+                  'text-white bg-light-background border border-light-border hover:bg-light-foregroud':
+                    event.status == 'upcoming' && event.is_cancelled !== 1
+                }"
+                type="button"
+                aria-expanded="false"
+                class="inline-flex py-2 px-5 items-center justify-center rounded-md focus:outline-none shadow-md"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-pencil me-1"
+                >
+                  <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                  <path d="m15 5 4 4" />
+                </svg>
+                Edit Event
+              </button>
               <button
                 (click)="openDialog(event.event_id)"
                 [disabled]="
@@ -401,8 +438,9 @@
                   class="lucide lucide-pencil me-1"
                 >
                   <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                  <path d="m15 5 4 4" /></svg
-                >Edit Event
+                  <path d="m15 5 4 4" />
+                </svg>
+                Edit Event
               </button>
             </div>
           </div>

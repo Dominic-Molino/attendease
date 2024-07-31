@@ -150,4 +150,27 @@ export class ApprovalPageComponent implements OnInit {
   closePage() {
     this.location.back();
   }
+
+  getFormattedTargetParticipants(participants: any[]): string {
+    if (!Array.isArray(participants)) {
+      console.error('Invalid participants data:', participants);
+      return '';
+    }
+
+    const groupedParticipants: { [key: string]: string[] } = {};
+
+    participants.forEach((participant) => {
+      if (!groupedParticipants[participant.department]) {
+        groupedParticipants[participant.department] = [];
+      }
+      groupedParticipants[participant.department].push(participant.year_levels);
+    });
+
+    return Object.keys(groupedParticipants)
+      .map((department) => {
+        const years = groupedParticipants[department].join(', ');
+        return `${department} - ${years}`;
+      })
+      .join(' | ');
+  }
 }

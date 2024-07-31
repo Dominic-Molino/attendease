@@ -143,6 +143,10 @@ export class EventService {
     });
   }
 
+  endEvent(event_id: number): Observable<any> {
+    return this.http.delete(`${this.API_URL}endevent/${event_id}`);
+  }
+
   //org
   getApprovedOrganizerEvents(org_id: any): Observable<any> {
     return this.http.get<any>(
