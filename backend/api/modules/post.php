@@ -203,8 +203,8 @@ class Post extends GlobalMethods
     public function updateTimeLimit($event_id, $submission_deadline)
     {
         $sql = "UPDATE events SET attendance_submission_deadline = ? WHERE event_id = ?";
-
         try {
+            $submission_deadline = date('Y-m-d H:i:s', strtotime($submission_deadline));
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
                 $submission_deadline,

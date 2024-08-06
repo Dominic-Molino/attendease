@@ -130,6 +130,7 @@ export class EditEventComponent implements OnInit {
         organizer_organization: this.eventVal.organizer_organization,
         organizer_name: `${this.eventVal.first_name} ${this.eventVal.last_name}`,
       });
+      console.log(this.eventVal.event_type);
     }
   }
 

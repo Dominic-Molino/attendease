@@ -15,6 +15,7 @@ import {
 } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { EventService } from '../../../../core/service/event.service';
+import th from '@mobiscroll/angular/dist/js/i18n/th';
 
 @Component({
   selector: 'app-timelimit',
@@ -26,6 +27,7 @@ import { EventService } from '../../../../core/service/event.service';
 export class TimelimitComponent implements OnInit {
   form: any;
   event_id: any;
+  eventStartDate: Date | undefined;
 
   constructor(
     private dialogRef: MatDialogRef<TimelimitComponent>,
@@ -36,10 +38,12 @@ export class TimelimitComponent implements OnInit {
 
   ngOnInit(): void {
     this.event_id = this.data.event_id;
+    this.eventStartDate = new Date(this.data.event_start_date);
+    console.log(this.data);
     this.form = this.builder.group({
       event_id: [this.event_id],
       submission_deadline: [
-        '',
+        null,
         [Validators.required, this.futureDateValidator()],
       ],
     });
@@ -50,9 +54,7 @@ export class TimelimitComponent implements OnInit {
     if (this.form.valid) {
       const formData = {
         event_id: this.event_id,
-        submission_deadline: new Date(
-          this.form.value.submission_deadline
-        ).toISOString(),
+        submission_deadline: this.form.value.submission_deadline,
       };
       this.service.addDeadline(this.event_id, formData).subscribe(
         (res) => {
@@ -73,27 +75,30 @@ export class TimelimitComponent implements OnInit {
 
   futureDateValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
+      if (!this.eventStartDate) {
+        return null;
+      }
+
       const currentDate = new Date();
       currentDate.setHours(0, 0, 0, 0);
 
       const selectedDate = new Date(control.value);
       selectedDate.setHours(0, 0, 0, 0);
 
-      if (control.value && selectedDate < currentDate) {
+      if (
+        control.value &&
+        (selectedDate < currentDate || selectedDate > this.eventStartDate)
+      ) {
         Swal.fire({
           icon: 'warning',
           title: 'Invalid Date',
-          text: "You've enter a past date!",
+          text: 'Submission deadline must be after the event start date!',
         }).then(() => {
           control.reset();
         });
-        return { pastDate: true };
+        return { invalidDate: true };
       }
       return null;
     };
-  }
-
-  closeDialog() {
-    this.dialogRef.close();
   }
 }

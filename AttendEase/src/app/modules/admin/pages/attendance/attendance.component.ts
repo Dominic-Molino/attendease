@@ -167,12 +167,12 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     }
   }
 
-  openTimelimit(event: any) {
+  openTimelimit(event: any, event_start_date: any) {
     this.dialog.open(TimelimitComponent, {
       data: {
         event_id: event,
+        start_date: event_start_date,
       },
-      disableClose: true,
     });
   }
 }

@@ -111,7 +111,9 @@
                 </button>
                 <button
                   type="button"
-                  (click)="openTimelimit(event.event_id)"
+                  (click)="
+                    openTimelimit(event.event_id, event.event_start_date)
+                  "
                   class="py-2.5 px-5 text-sm block mx-auto cursor-pointer text-white font-bold font-secondary rounded-md bg-light-background hover:bg-light-foregroud"
                 >
                   Add deadline

@@ -66,19 +66,19 @@
 
           <div class="w-full">
             <label
-              for="category"
+              for="event_type-type"
               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >Event Type</label
             >
             <select
-              id="category"
+              id="event_type-type"
               formControlName="event_type"
               class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
             >
               <option value="" disabled selected>Select Event Type</option>
-              <option>Physical</option>
-              <option>Online</option>
-              <option>Hybrid(Physical or Online)</option>
+              <option value="physical">Physical</option>
+              <option value="online">Online</option>
+              <option value="Hybrid">Hybrid(Physical or Online)</option>
             </select>
           </div>
           <div class="w-full col-span-2 grid grid-cols-3 gap-2.5">

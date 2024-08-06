@@ -282,5 +282,9 @@ export class OrgEventComponent implements OnInit {
       width: '40%',
       disableClose: true,
     });
+
+    page.afterClosed().subscribe((res) => {
+      this.loadEvent();
+    });
   }
 }

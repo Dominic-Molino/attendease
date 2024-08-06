@@ -226,6 +226,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
                 icon: 'success',
                 title: 'Successfully registered',
               });
+              this.fetchEventDetails(this.eventId);
             },
             (error) => {
               if (error.status === 409) {

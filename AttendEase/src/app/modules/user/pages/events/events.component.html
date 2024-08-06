@@ -120,7 +120,9 @@
                 <p
                   class="leading-tight text-base overflow-hidden whitespace-pre-line text-ellipsis text-dark-text"
                 >
-                  {{ latestEvent.event_description }}
+                  {{
+                    truncateDescription(latestEvent.event_description, maxChar)
+                  }}
                 </p>
                 <p class="flex items-center mt-5">
                   <span class="text-sm font-medium text-gray-500">

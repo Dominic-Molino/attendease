@@ -23,7 +23,7 @@ import { OngoingReportComponent } from './component/ongoing-report/ongoing-repor
   templateUrl: './organizer-analytics.component.html',
   styleUrl: './organizer-analytics.component.css',
 })
-export class OrganizerAnalyticsComponent {
+export class OrganizerAnalyticsComponent implements OnInit {
   currId: any;
   events: any[] = [];
   report: any[] = [];
@@ -48,6 +48,9 @@ export class OrganizerAnalyticsComponent {
       this.report = res.payload;
       if (this.report.length > 0) {
         this.selectedEvent = this.report[0];
+        this.report.forEach((event) => {
+          this.getRegisteredUser(event.event_id, event);
+        });
         this.prepareLineChartData(this.selectedEvent);
       }
     });
@@ -56,8 +59,6 @@ export class OrganizerAnalyticsComponent {
   loadAllEvent(id: any) {
     this.service.getApprovedOrganizerEvents(id).subscribe((res) => {
       this.events = res.payload;
-      console.log(`EVENT LIST:${this.events}`);
-
       if (this.events.length > 0) {
         this.events.forEach((event) => {
           this.getRegisteredUser(event.event_id, event);
@@ -145,6 +146,7 @@ export class OrganizerAnalyticsComponent {
 
   prepareLineChartData(event: any) {
     const dailyRegistrations = event.daily_registrations || [];
+    console.log('Preparing chart data for event:', event); // Debug log
 
     const registrationStartDate: any = new Date(event.event_registration_start)
       .toISOString()
@@ -207,7 +209,6 @@ export class OrganizerAnalyticsComponent {
   selectEvent(event: any) {
     this.selectedEvent = event;
     this.prepareLineChartData(event);
-    console.log(event);
     this.toggleDropdown();
   }
 }
