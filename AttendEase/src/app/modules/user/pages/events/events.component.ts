@@ -52,7 +52,6 @@ export class EventsComponent implements OnInit {
 
   subscribeToUserEvents(): void {
     const sub = this.eventService.getUserEvent().subscribe((res) => {
-      console.log(res.payload);
       this.registeredEvents = res.payload;
       this.filterRegisteredEvents();
       this.cdr.markForCheck();
@@ -63,7 +62,6 @@ export class EventsComponent implements OnInit {
     this.loading = true;
     const sub = this.eventService.getAllEvents().subscribe({
       next: (result: any) => {
-        console.log(result);
         if (result && Array.isArray(result)) {
           this.eventList = result.map((event) => ({
             ...event,
@@ -88,7 +86,6 @@ export class EventsComponent implements OnInit {
 
           this.eventList.forEach((event: any) => {
             this.fetchRegisteredUser(event.event_id);
-            console.log(event.target_participants);
           });
 
           const currentDate = new Date();
@@ -124,9 +121,6 @@ export class EventsComponent implements OnInit {
     const sub = this.eventService
       .getRegisteredUser(eventId)
       .subscribe((res: any) => {
-        console.log(
-          `Registered users for event ${eventId}: ${res.payload.length}`
-        );
         this.registeredUsers[eventId] = res.payload.length;
         this.cdr.markForCheck();
       });
@@ -141,13 +135,8 @@ export class EventsComponent implements OnInit {
     this.latestEvent =
       this.filteredEventList.length > 0 ? this.filteredEventList[0] : null;
 
+    console.log(this.filteredEventList);
     this.cdr.markForCheck();
-
-    console.log(
-      'Filtered Event List:',
-      JSON.stringify(this.filteredEventList, null, 2)
-    );
-    console.log('Latest Event:', JSON.stringify(this.latestEvent, null, 2));
   }
 
   isUserRegisteredForLatestEvent(): boolean {

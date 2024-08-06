@@ -88,10 +88,6 @@ export class ApprovalPageComponent implements OnInit {
                   showConfirmButton: false,
                   timer: 1500,
                   timerProgressBar: true,
-                  didOpen: (toast) => {
-                    toast.onmouseenter = Swal.stopTimer;
-                    toast.onmouseleave = Swal.resumeTimer;
-                  },
                 });
                 Toast.fire({
                   icon: 'success',
@@ -130,10 +126,6 @@ export class ApprovalPageComponent implements OnInit {
                   showConfirmButton: false,
                   timer: 1500,
                   timerProgressBar: true,
-                  didOpen: (toast) => {
-                    toast.onmouseenter = Swal.stopTimer;
-                    toast.onmouseleave = Swal.resumeTimer;
-                  },
                 });
                 Toast.fire({
                   icon: 'success',
