@@ -60,7 +60,7 @@ class GetEvent extends GlobalMethods
         $columns = "e.event_id, e.event_name, e.event_description, e.event_location, 
                     e.event_start_date, e.event_end_date, e.event_registration_start, 
                     e.event_registration_end, e.event_type, e.max_attendees, e.categories, 
-                    e.organizer_name,e.organizer_organization, e.created_at, e.target_participants, 
+                    e.organizer_name,e.organizer_organization, e.created_at, e.target_participants, e.event_link,
                     e.participation_type, COALESCE(a.status, 'Pending') AS approval_status, 
                     a.notified_at, a.approved_by, a.approved_at";
 
@@ -91,7 +91,7 @@ class GetEvent extends GlobalMethods
         $columns = "e.event_id, e.event_name, e.event_description, e.event_location, 
                 e.event_start_date, e.event_end_date, e.event_registration_start, 
                 e.event_registration_end, e.event_type, e.max_attendees, e.categories, 
-                e.target_participants, e.participation_type, 
+                e.target_participants, e.participation_type, e.event_link,
                 u.user_id as organizer_id, u.first_name as first_name, 
                 u.last_name as last_name, u.organization as organizer_organization, is_cancelled";
 

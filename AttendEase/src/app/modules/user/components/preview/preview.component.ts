@@ -52,6 +52,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
   userEvents: Event[] = [];
   user?: User;
   canRegister = false;
+  canUnregister = true;
   isUnregistering = false;
 
   private refreshSubscription: Subscription | undefined;
@@ -131,12 +132,12 @@ export class PreviewComponent implements OnInit, OnDestroy {
             ),
           }));
         }
-        console.log(this.events);
         this.checkEligibility();
+        this.checkUnregistrationAllowed();
+        this.checkUserRegistration();
+        this.getStudentInfo();
       },
     });
-    this.checkUserRegistration();
-    this.getStudentInfo();
   }
 
   checkEligibility(): void {
@@ -250,6 +251,16 @@ export class PreviewComponent implements OnInit, OnDestroy {
 
   unregister(eventId: number) {
     if (this.isUnregistering) return;
+
+    if (!this.canUnregister) {
+      Swal.fire(
+        'Unregistration Closed',
+        'You can no longer unregister as the registration period is almost over.',
+        'warning'
+      );
+      return;
+    }
+
     this.isUnregistering = true;
 
     Swal.fire({
@@ -286,6 +297,23 @@ export class PreviewComponent implements OnInit, OnDestroy {
         );
       }
     });
+  }
+
+  checkUnregistrationAllowed() {
+    if (this.events.length > 0) {
+      const currentTime = new Date();
+      const registrationEndTime = new Date(
+        this.events[0].event_registration_end
+      );
+
+      const MINUTES_BEFORE_END = 5;
+      const timeDifference =
+        registrationEndTime.getTime() - currentTime.getTime();
+      const minutesBeforeEnd = timeDifference / (1000 * 60);
+
+      this.canUnregister = minutesBeforeEnd > MINUTES_BEFORE_END;
+      console.log('Can unregister:', this.canUnregister);
+    }
   }
 
   closePage() {

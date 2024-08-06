@@ -29,6 +29,8 @@ import { TagInputModule } from 'ngx-chips';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { AuthserviceService } from '../../../../core/service/authservice.service';
+import { Observable, map, catchError, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -85,7 +87,8 @@ export class AddEventComponent implements OnInit {
     private builder: FormBuilder,
     private eventService: EventService,
     private dialogRef: MatDialogRef<AddEventComponent>,
-    private service: AuthserviceService
+    private service: AuthserviceService,
+    private http: HttpClient
   ) {
     this.minDate = new Date();
     this.eventForm = this.builder.group({
@@ -108,6 +111,7 @@ export class AddEventComponent implements OnInit {
       event_type: ['', Validators.required],
       max_attendees: ['', [Validators.required, positiveNumberValidator]],
       categories: [''],
+      event_link: [''],
       organizer_user_id: [''],
       organizer_name: ['', Validators.required],
       organizer_organization: ['', Validators.required],
@@ -131,6 +135,9 @@ export class AddEventComponent implements OnInit {
         organizer_name: `${this.profile.first_name} ${this.profile.last_name}`,
         organizer_organization: this.profile.organization,
       });
+    });
+    this.eventForm.get('event_type')?.valueChanges.subscribe((value) => {
+      this.updateValidation(value);
     });
   }
 
@@ -284,7 +291,124 @@ export class AddEventComponent implements OnInit {
     };
   }
 
+  get eventType() {
+    return this.eventForm.get('event_type');
+  }
+
+  get eventLink() {
+    return this.eventForm.get('event_link');
+  }
+
+  private updateValidation(eventType: string) {
+    const eventLinkControl = this.eventForm.get('event_link');
+
+    if (eventType === 'online' || eventType === 'hybrid') {
+      eventLinkControl?.setValidators([Validators.required]);
+    } else {
+      eventLinkControl?.clearValidators();
+    }
+
+    eventLinkControl?.updateValueAndValidity();
+  }
+
+  isUrlReachable(url: string): Observable<boolean> {
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(() => true),
+      catchError(() => of(false))
+    );
+  }
+
   closeDialog() {
     this.dialogRef.close();
   }
+
+  // isValidUrl(url: string): boolean {
+  //   const urlPattern = new RegExp(
+  //     '^(https?:\\/\\/)' + // protocol
+  //       '((([a-z0-9]\\w{0,61}[a-z0-9]?)\\.?)+[a-z]{2,6}|' + // domain name
+  //       '((\\d{1,3}\\.){3}\\d{1,3})|' + // OR ipv4
+  //       '\\[?[a-fA-F0-9]*:[a-fA-F0-9:]+\\]?)' + // OR ipv6
+  //       '(\\:\\d+)?' + // port
+  //       '(\\/[-a-z0-9%_\\+.~#]*)*' + // path
+  //       '(\\?[;&a-z0-9%_\\+=~#-]*)?' + // query string
+  //       '(\\#[-a-z0-9_]*)?$',
+  //     'i'
+  //   ); // fragment locator
+
+  //   return urlPattern.test(url);
+  // }
+
+  // addEvent() {
+  //   if (this.eventForm.valid) {
+  //     const formData = this.eventForm.value;
+
+  //     // Validate URL if the event type is 'online' or 'hybrid'
+  //     const eventLink = formData.event_link;
+  //     if (
+  //       (formData.event_type === 'online' ||
+  //         formData.event_type === 'hybrid') &&
+  //       eventLink
+  //     ) {
+  //       if (!this.isValidUrl(eventLink)) {
+  //         Swal.fire('Invalid URL', 'The URL format is not valid.', 'warning');
+  //         return;
+  //       }
+
+  //       this.isUrlReachable(eventLink).subscribe((isReachable) => {
+  //         if (!isReachable) {
+  //           Swal.fire('Invalid URL', 'The URL is not reachable.', 'warning');
+  //           return;
+  //         }
+
+  //         this.submitEvent(formData);
+  //       });
+  //     } else {
+  //       this.submitEvent(formData);
+  //     }
+  //   } else {
+  //     Swal.fire('Incomplete Form', 'Please fill in all fields', 'warning');
+  //   }
+  // }
+
+  // private submitEvent(formData: any) {
+  //   formData.organizer_user_id = this.currId;
+  //   formData.organizer_name = `${this.profile.first_name} ${this.profile.last_name}`;
+  //   formData.organizer_organization = this.profile.organization;
+
+  //   const targetParticipants: any = {};
+  //   for (const dept of this.departments) {
+  //     const selectedYearLevels = this.getTargetParticipantsArray(dept).value;
+  //     if (selectedYearLevels.length > 0) {
+  //       targetParticipants[dept] = selectedYearLevels;
+  //     }
+  //   }
+
+  //   formData.target_participants = targetParticipants;
+  //   console.log(formData);
+
+  //   if (this.file) {
+  //     formData.file = this.file;
+  //   }
+
+  //   this.eventService.addEvent(formData).subscribe(
+  //     (res) => {
+  //       const eventId = res.payload.event_id;
+  //       if (this.file) {
+  //         this.eventService.uploadEvent(eventId, this.file).subscribe(
+  //           (uploadRes) => {
+  //             this.handleSuccessResponse();
+  //           },
+  //           (error) => {
+  //             Swal.fire('Warning', `${error.error.status.message}`, 'warning');
+  //           }
+  //         );
+  //       } else {
+  //         this.handleSuccessResponse();
+  //       }
+  //     },
+  //     (error) => {
+  //       Swal.fire('Warning', `${error.error.status.message}`, 'warning');
+  //     }
+  //   );
+  // }
 }

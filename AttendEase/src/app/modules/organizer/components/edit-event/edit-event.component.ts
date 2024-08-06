@@ -76,6 +76,7 @@ export class EditEventComponent implements OnInit {
       categories: [
         this.eventVal.categories ? JSON.parse(this.eventVal.categories) : [],
       ],
+      event_link: [this.eventVal.event_link],
       participation_type: [
         this.eventVal.participation_type,
         Validators.required,
@@ -123,6 +124,7 @@ export class EditEventComponent implements OnInit {
         categories: this.eventVal.categories
           ? JSON.parse(this.eventVal.categories)
           : null,
+        event_link: this.eventVal.event_link,
         participation_type: this.eventVal.participation_type,
         target_participants: this.eventVal.target_participants
           ? JSON.parse(this.eventVal.target_participants)
@@ -221,5 +223,25 @@ export class EditEventComponent implements OnInit {
   isCheckboxChecked(department: string, year: string): boolean {
     const formArray = this.getTargetParticipantsArray(department);
     return formArray.controls.some((control) => control.value === year);
+  }
+
+  get eventType() {
+    return this.eventForm.get('event_type');
+  }
+
+  get eventLink() {
+    return this.eventForm.get('event_link');
+  }
+
+  private updateValidation(eventType: string) {
+    const eventLinkControl = this.eventForm.get('event_link');
+
+    if (eventType === 'online' || eventType === 'hybrid') {
+      eventLinkControl?.setValidators([Validators.required]);
+    } else {
+      eventLinkControl?.clearValidators();
+    }
+
+    eventLinkControl?.updateValueAndValidity();
   }
 }

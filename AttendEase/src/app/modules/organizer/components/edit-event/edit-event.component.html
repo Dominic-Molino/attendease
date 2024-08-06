@@ -78,9 +78,40 @@
               <option value="" disabled selected>Select Event Type</option>
               <option value="physical">Physical</option>
               <option value="online">Online</option>
-              <option value="Hybrid">Hybrid(Physical or Online)</option>
+              <option value="hybrid">Hybrid(Physical or Online)</option>
             </select>
           </div>
+
+          <div
+            class="w-full"
+            *ngIf="
+              eventType?.value === 'online' || eventType?.value === 'hybrid'
+            "
+          >
+            <label
+              for="event_link"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Event Link</label
+            >
+            <input
+              type="text"
+              name="event_link"
+              id="event_link"
+              formControlName="event_link"
+              class="bg-white border-dark-border text-gray-900 shadow-sm text-sm rounded-md focus:ring-0 focus:border-light-border block w-full p-2.5"
+              placeholder="Event Link"
+            />
+            <mat-error
+              *ngIf="
+                eventLink?.invalid && (eventLink?.dirty || eventLink?.touched)
+              "
+            >
+              <mat-error class="text-rose-500 text-xs"
+                >Event link is <strong>required</strong></mat-error
+              >
+            </mat-error>
+          </div>
+
           <div class="w-full col-span-2 grid grid-cols-3 gap-2.5">
             <div class="w-full">
               <label

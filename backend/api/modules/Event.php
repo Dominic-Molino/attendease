@@ -87,8 +87,8 @@ class Events extends  GlobalMethods
             }
 
             $sql_insert = "INSERT INTO events (event_name, event_description, event_location, event_start_date, event_end_date, 
-                            event_registration_start, event_registration_end, event_type, max_attendees, categories, organizer_user_id, organizer_organization,organizer_name, target_participants, participation_type)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+                            event_registration_start, event_registration_end, event_type, max_attendees, categories, organizer_user_id, organizer_organization,organizer_name, event_link, target_participants, participation_type)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             $stmt_insert = $this->pdo->prepare($sql_insert);
             $stmt_insert->execute([
@@ -105,6 +105,7 @@ class Events extends  GlobalMethods
                 $organizer_user_id,
                 $organizer_organization,
                 $organizer_name,
+                $data->event_link ?? null,
                 !empty($target_participants) ? json_encode($target_participants) : null,
                 $data->participation_type ?? 'open',
             ]);
@@ -140,6 +141,7 @@ class Events extends  GlobalMethods
         $max_attendees = isset($data->max_attendees) ? (int)$data->max_attendees : null;
         $categories = isset($data->categories) ? json_encode($data->categories) : null;
         $organizer_name = $data->organizer_name ?? '';
+        $event_link = $data->event_link ?? '';
         $participation_type = htmlspecialchars($data->participation_type ?? 'open', ENT_QUOTES, 'UTF-8');
 
         if ($max_attendees !== null && $max_attendees <= 0) {
@@ -149,11 +151,17 @@ class Events extends  GlobalMethods
         if ($event_start_date >= $event_end_date) {
             return $this->sendPayload(null, 'failed', "Event start date must be before event end date.", 400);
         }
+
         if ($event_registration_start && $event_registration_end && $event_registration_start >= $event_registration_end) {
             return $this->sendPayload(null, 'failed', "Registration start date must be before registration end date.", 400);
         }
+
         if ($event_registration_start && $event_start_date && $event_registration_start >= $event_start_date) {
             return $this->sendPayload(null, 'failed', "Registration start date must be before start of the event.", 400);
+        }
+
+        if ($event_registration_end && $event_start_date && $event_registration_end >= $event_start_date) {
+            return $this->sendPayload(null, 'failed', "Registration end date must be before start of the event.", 400);
         }
 
         $target_participants = [];
@@ -171,7 +179,7 @@ class Events extends  GlobalMethods
         $sql = "UPDATE events SET event_name = :event_name, event_description = :event_description, event_location = :event_location,
             event_start_date = :event_start_date, event_end_date = :event_end_date, event_registration_start = :event_registration_start,
             event_registration_end = :event_registration_end, event_type = :event_type, max_attendees = :max_attendees, categories = :categories,
-            organizer_name = :organizer_name, target_participants = :target_participants, participation_type = :participation_type
+            organizer_name = :organizer_name,event_link = :event_link, target_participants = :target_participants, participation_type = :participation_type
             WHERE event_id = :event_id";
 
         try {
@@ -188,6 +196,7 @@ class Events extends  GlobalMethods
                 ':max_attendees' => $max_attendees,
                 ':categories' => $categories,
                 ':organizer_name' => htmlspecialchars($organizer_name, ENT_QUOTES, 'UTF-8'),
+                ':event_link' => $event_link,
                 ':target_participants' => json_encode($target_participants),
                 ':participation_type' => $participation_type,
                 ':event_id' => $event_id

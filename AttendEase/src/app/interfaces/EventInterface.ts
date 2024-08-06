@@ -24,6 +24,7 @@ export interface Event {
   first_name: string;
   last_name: string;
   organizer_organization: string;
+  event_link: string;
   rejection_message: string;
   approved_at: string;
   registered_user: number;

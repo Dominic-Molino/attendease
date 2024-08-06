@@ -33,6 +33,7 @@
     "date-fns": "^3.6.0",
     "flowbite": "^2.3.0",
     "flowbite-datepicker": "^1.2.7",
+    "jspdf": "^2.5.1",
     "ngx-chips": "^3.0.0",
     "ngx-pagination": "^6.0.3",
     "primeicons": "^7.0.0",

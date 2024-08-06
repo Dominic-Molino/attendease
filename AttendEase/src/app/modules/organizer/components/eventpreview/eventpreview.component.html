@@ -272,6 +272,41 @@
                     class="absolute flex items-center justify-center w-6 h-6 bg-light-background rounded-full -start-3"
                   >
                     <svg
+                      class="w-4 h-4 text-white"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1"
+                        d="M13.213 9.787a3.391 3.391 0 0 0-4.795 0l-3.425 3.426a3.39 3.39 0 0 0 4.795 4.794l.321-.304m-.321-4.49a3.39 3.39 0 0 0 4.795 0l3.424-3.426a3.39 3.39 0 0 0-4.794-4.795l-1.028.961"
+                      />
+                    </svg>
+                  </span>
+                  <p
+                    class="mb-1 text-sm ms-1 capitalize font-normal leading-none text-text dark:text-gray-500"
+                  >
+                    Event Link:
+                  </p>
+                  <a
+                    href="{{ event.event_link }}"
+                    target="_blank"
+                    class="text-sm ms-1 capitalize font-semibold text-gray-900 hover:underline"
+                  >
+                    {{ event?.event_link }}
+                  </a>
+                </li>
+                <li class="mb-5 ms-4">
+                  <span
+                    class="absolute flex items-center justify-center w-6 h-6 bg-light-background rounded-full -start-3"
+                  >
+                    <svg
                       class="w-[16px] h-[16px] text-white"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
@@ -369,43 +404,6 @@
               class="flex items-center gap-2.5 justify-end relative p-4 md:p-5 border-t border-gray-200 rounded-b"
             >
               <button
-                (click)="endEvent(event.event_id)"
-                [disabled]="
-                  event.status === 'done' ||
-                  event.is_cancelled === 1 ||
-                  event.status == 'ongoing'
-                "
-                [ngClass]="{
-                  'cursor-not-allowed bg-gray-400 text-gray-200':
-                    event.status == 'done' ||
-                    event.status == 'ongoing' ||
-                    !(event.is_cancelled === 0),
-
-                  'text-white bg-light-background border border-light-border hover:bg-light-foregroud':
-                    event.status == 'upcoming' && event.is_cancelled !== 1
-                }"
-                type="button"
-                aria-expanded="false"
-                class="inline-flex py-2 px-5 items-center justify-center rounded-md focus:outline-none shadow-md"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="lucide lucide-x"
-                >
-                  <path d="M18 6 6 18" />
-                  <path d="m6 6 12 12" />
-                </svg>
-                End Event
-              </button>
-              <button
                 (click)="openDialog(event.event_id)"
                 [disabled]="
                   event.status === 'done' ||
@@ -441,6 +439,43 @@
                   <path d="m15 5 4 4" />
                 </svg>
                 Edit Event
+              </button>
+              <button
+                (click)="endEvent(event.event_id)"
+                [disabled]="
+                  event.status === 'done' ||
+                  event.is_cancelled === 1 ||
+                  event.status == 'ongoing'
+                "
+                [ngClass]="{
+                  'cursor-not-allowed bg-gray-400 text-gray-200':
+                    event.status == 'done' ||
+                    event.status == 'ongoing' ||
+                    !(event.is_cancelled === 0),
+
+                  'text-white bg-light-background border border-light-border hover:bg-light-foregroud':
+                    event.status == 'upcoming' && event.is_cancelled !== 1
+                }"
+                type="button"
+                aria-expanded="false"
+                class="inline-flex py-2 px-5 items-center justify-center rounded-md focus:outline-none shadow-md"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-x"
+                >
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+                End Event
               </button>
             </div>
           </div>
