@@ -281,6 +281,24 @@ export const routes: Routes = [
       },
 
       {
+        path: 'event-certificate',
+        loadComponent: () =>
+          import('./modules/organizer/pages/certpage/certpage.component').then(
+            (c) => c.CertpageComponent
+          ),
+        children: [
+          {
+            path: 'certification/:id',
+            loadComponent: () =>
+              import(
+                './shared/components/certificate/certificate.component'
+              ).then((c) => c.CertificateComponent),
+          },
+        ],
+        canActivate: [AuthenGuard],
+      },
+
+      {
         path: 'attendance-submissions',
         loadComponent: () =>
           import(

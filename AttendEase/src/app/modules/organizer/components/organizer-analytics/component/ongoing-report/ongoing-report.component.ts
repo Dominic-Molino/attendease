@@ -105,7 +105,12 @@ export class OngoingReportComponent implements OnInit {
       case 'registrationToMaxAttendees':
         labels = ['Active Users', 'Max Attendees'];
         data = [event.registered_users, event.max_attendees];
-        backgroundColor = ['#73300a', '#c75519'];
+        backgroundColor = [
+          '#f5a623', // Soft orange
+          '#9bb9d8', // Soft blue
+          '#f8b400', // Lighter orange
+          '#6c8ebf', // Darker blue
+        ];
         message = `Out of ${event.max_attendees} potential attendees, ${event.registered_users} have registered.`;
         break;
 
@@ -120,14 +125,10 @@ export class OngoingReportComponent implements OnInit {
           labels = [...coursesDataLabel];
           data = [...coursesData];
           backgroundColor = [
-            '#73300a',
-            '#c75519',
-            '#ff8a00',
-            '#f6aa54',
-            '#3e2723',
-            '#5d4037',
-            '#795548',
-            '#8d6e63',
+            '#f5a623', // Soft orange
+            '#9bb9d8', // Soft blue
+            '#f8b400', // Lighter orange
+            '#6c8ebf', // Darker blue
           ];
           const courses = event.registered_by_course
             .map(
@@ -151,14 +152,10 @@ export class OngoingReportComponent implements OnInit {
           labels = [...yearLevelsDataLabel];
           data = [...yearLevelsData];
           backgroundColor = [
-            '#73300a',
-            '#c75519',
-            '#ff8a00',
-            '#f6aa54',
-            '#3e2723',
-            '#5d4037',
-            '#795548',
-            '#8d6e63',
+            '#f5a623', // Soft orange
+            '#9bb9d8', // Soft blue
+            '#f8b400', // Lighter orange
+            '#6c8ebf', // Darker blue
           ];
           const yearLevels = event.registered_by_year_level
             .map(
@@ -181,14 +178,10 @@ export class OngoingReportComponent implements OnInit {
           labels = [...blocksDataLabel];
           data = [...blocksData];
           backgroundColor = [
-            '#73300a',
-            '#c75519',
-            '#ff8a00',
-            '#f6aa54',
-            '#3e2723',
-            '#5d4037',
-            '#795548',
-            '#8d6e63',
+            '#f5a623', // Soft orange
+            '#9bb9d8', // Soft blue
+            '#f8b400', // Lighter orange
+            '#6c8ebf', // Darker blue
           ];
           const blocks = event.registered_by_block
             .map(

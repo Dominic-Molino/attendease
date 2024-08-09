@@ -1,0 +1,59 @@
+<main class="!scroll-smooth w-full h-screen">
+  <div class="mt-16 p-4 h-screen" *ngIf="events.length > 0">
+    <aside
+      id="default-sidebar"
+      class="fixed top-0 left-0 z-40 w-56 h-screen transition-transform -translate-x-full sm:translate-x-0"
+      aria-label="Sidebar"
+    >
+      <div
+        class="h-full mt-16 px-3 py-4 overflow-y-auto bg-white border-r border-dark-border dark:bg-gray-800"
+      >
+        <h5 class="text-base font-medium mb-2 text-gray-900 dark:text-white">
+          Past Events
+        </h5>
+        <ul class="space-y-2 font-medium">
+          <li *ngFor="let event of events">
+            <div
+              (click)="goToReport(event.event_id)"
+              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-calendar-check"
+              >
+                <path d="M8 2v4" />
+                <path d="M16 2v4" />
+                <rect width="18" height="18" x="3" y="4" rx="2" />
+                <path d="M3 10h18" />
+                <path d="m9 16 2 2 4-4" />
+              </svg>
+              <span class="ms-3">{{ event.event_name }}</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <router-outlet></router-outlet>
+  </div>
+
+  <section class="mt-16" *ngIf="events.length === 0">
+    <div class="py-4 px-4 mx-auto x-w-screen-xl lg:py-16 lg:px-6ma">
+      <div class="max-w-screen-sm text-center mx-auto">
+        <h1 class="text-gray-500 text-6xl block">(￣ ￣|||)</h1>
+        <h1 class="text-gray-500 text-6xl block">No Past Events Found</h1>
+        <p class="text-gray-500 text-xl">
+          It looks like there are no past events at the moment.
+        </p>
+      </div>
+    </div>
+  </section>
+</main>

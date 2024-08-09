@@ -1,0 +1,131 @@
+<main class="!scroll-smooth w-full h-screen dark:bg-black">
+  <div class="sm:ml-[215px]">
+    <button
+      (click)="generatePdf()"
+      *ngIf="user.length > 0 && user"
+      class="text-white absolute z-30 bg-light-background hover:bg-light-foregroud focus:outline-none focus:ring-0 font-medium rounded-md text-sm px-5 py-2.5 me-2 mb-2"
+    >
+      Download Certificates
+    </button>
+    <div class="flex flex-col gap-3 items-center justify-center">
+      <div class="" #certificateTemplate *ngFor="let student of user">
+        <div
+          style="
+            position: relative;
+            width: 800px;
+            height: 600px;
+            box-shadow: 0 2px 8px 0 rgba(63, 69, 81, 0.16);
+            overflow: hidden;
+          "
+        >
+          <img
+            style="width: 800px; height: 600px"
+            class="absolute -z-50"
+            src="./../../../../assets/images/bg.png"
+          />
+          <div class="flex flex-col justify-center relative top-[120px]">
+            <div class="text-center mb-5">
+              <h2 class="title text-5xl">Certificate</h2>
+              <p class="title text-2xl">of Participation</p>
+            </div>
+            <div class="text-center">
+              <span class="text-lg messsage">This is to certify that</span>
+            </div>
+            <div class="text-center -mt-5">
+              <span class="name tracking-wider text-[58px] underline"
+                >{{ student.student_first_name }}
+                {{ student.student_last_name }}</span
+              >
+            </div>
+            <div class="w-3/4 mx-auto">
+              <p class="messsage text-center font-medium">
+                has successfully participated in the {{ student.event_name }} ,
+                held on {{ student.event_start_date | date : "longDate" }}. We
+                acknowledge your active participation and contribution during
+                this event and appreciate your enthusiasm and commitment.
+              </p>
+            </div>
+            <div class="mt-10 flex justify-between font-medium">
+              <div class="ms-28">
+                <h1 class="messsage underline">LINDA CASELA ABARINTOS</h1>
+                <p class="messsage text-center">Dean</p>
+              </div>
+              <div class="me-44">
+                <h1 class="messsage underline uppercase text-center">
+                  {{ student.organizer_first_name }}
+                  {{ student.organizer_last_name }}
+                </h1>
+                <p class="messsage text-center">Organizer</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- <div class="pm-certificate-border col-xs-12">
+          <div class="row pm-certificate-header">
+            <div class="pm-certificate-title cursive col-xs-12 text-center">
+              <h2>Certificate of Participation</h2>
+            </div>
+          </div>
+          <div class="row pm-certificate-body -mt-10">
+            <div class="pm-certificate-block">
+              <div class="pm-earned col-xs-8 text-center">
+                <span class="pm-earned-text padding-0 block cursive"
+                  >This is to certify that</span
+                >
+              </div>
+
+              <div class="col-xs-12">
+                <div class="row">
+                  <div
+                    class="pm-certificate-name underline margin-0 col-xs-8 text-center"
+                  >
+                    <span class="pm-name-text bold"
+                      >{{ student.student_first_name }}
+                      {{ student.student_last_name }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-xs-12 mt-2">
+                <div class="row">
+                  <div class="pm-course-title col-xs-8 text-center">
+                    <span class="pm-earned-text block cursive text-justify"
+                      >has successfully participated in the
+                      {{ student.event_name }} , held on
+                      {{ student.event_start_date | date : "longDate" }}.We
+                      acknowledge your active participation and contribution
+                      during this event and appreciate your enthusiasm and
+                      commitment.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="w-full">
+              <div class="pm-certificate-footer">
+                <div class="text-center flex gap-80">
+                  <div>
+                    <span class="pm-empty-space block underline"></span>
+                    <p class="text-sm">LINDA CASELA ABARINTOS</p>
+                    <span class="text-xs">Dean </span>
+                  </div>
+                  <div>
+                    <span class="pm-empty-space block underline"></span>
+                    <p class="text-sm capitalize">
+                      {{ student.organizer_first_name }}
+                      {{ student.organizer_last_name }}
+                    </p>
+                    <span class="text-xs">Organizer</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> -->

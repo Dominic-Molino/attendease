@@ -186,4 +186,8 @@ export class EventService {
   getDoneEventsOfOrg(org_id: any): Observable<any> {
     return this.http.get<any>(`${this.API_URL}getdoneeventsoforg/${org_id}`);
   }
+
+  certificate(id: any): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}certificate/${id}`);
+  }
 }

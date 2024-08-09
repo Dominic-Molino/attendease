@@ -664,14 +664,10 @@ class GetEvent extends GlobalMethods
     {
         try {
             $stmt = $this->pdo->prepare("
-            SELECT COUNT(*) as present_count
-            FROM (
-                SELECT DISTINCT a.user_id
-                FROM attendance a
-                JOIN feedback f ON a.event_id = f.event_id AND a.user_id = f.user_id
-                WHERE a.event_id = :event_id
-                  AND a.remarks = 1
-            ) AS present_users
+             SELECT COUNT(DISTINCT user_id) AS present_count
+            FROM attendance
+            WHERE event_id = :event_id
+              AND remarks = 1
         ");
             $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
             $stmt->execute();
@@ -780,6 +776,37 @@ class GetEvent extends GlobalMethods
                 'avg_venue_rating' => null,
                 'avg_logistics_rating' => null
             ];
+        }
+    }
+
+    public function getPresentUsersDetails($event_id)
+    {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT 
+                    a.user_id, 
+                    u.first_name AS student_first_name, 
+                    u.last_name AS student_last_name, 
+                    e.event_name, 
+                    e.event_start_date, 
+                    e.event_end_date,
+                    org.first_name AS organizer_first_name,
+                    org.last_name AS organizer_last_name
+                FROM attendance a
+                JOIN user u ON a.user_id = u.user_id
+                JOIN events e ON a.event_id = e.event_id
+                JOIN user org ON e.organizer_user_id = org.user_id
+                WHERE a.event_id = :event_id
+                  AND a.remarks = 1
+            ");
+            $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $this->sendPayload($result, 'success', 'Successfully retrieved present users details.', 200);
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return $this->sendPayload(null, 'error', 'Failed to retrieve present users details.', 500);
         }
     }
 }

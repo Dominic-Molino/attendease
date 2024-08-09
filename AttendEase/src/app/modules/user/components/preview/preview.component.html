@@ -245,7 +245,13 @@
                     {{ event?.event_type }}
                   </h3>
                 </li>
-                <li class="mb-5 ms-4">
+                <li
+                  class="mb-5 ms-4"
+                  *ngIf="
+                    event?.event_type === 'online' ||
+                    event?.event_type === 'hybrid'
+                  "
+                >
                   <span
                     class="absolute flex items-center justify-center w-6 h-6 bg-light-background rounded-full -start-3"
                   >
